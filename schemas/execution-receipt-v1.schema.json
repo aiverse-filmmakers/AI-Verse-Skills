@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aiverse.local/schemas/execution-receipt-v1.schema.json",
+  "title": "AI-Verse Execution Receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract", "status", "summary", "effects", "verification", "warnings", "trace_id"],
+  "properties": {
+    "contract": {
+      "const": "aiverse-execution-receipt-v1"
+    },
+    "status": {
+      "enum": ["success", "partial", "blocked", "failed", "aborted"]
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1
+    },
+    "skill": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {"type": "string"},
+        "version": {"type": "string"},
+        "content_hash": {"type": "string"}
+      }
+    },
+    "effects": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["type"],
+        "properties": {
+          "type": {"type": "string"},
+          "targets": {
+            "type": "array",
+            "items": {"type": "string"}
+          },
+          "details": {"type": "object"}
+        }
+      }
+    },
+    "verification": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["check", "status"],
+        "properties": {
+          "check": {"type": "string", "minLength": 1},
+          "status": {"enum": ["passed", "failed", "skipped", "blocked"]},
+          "evidence": {},
+          "command": {"type": "string"},
+          "exit_code": {"type": "integer"}
+        }
+      }
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["kind", "ref"],
+        "properties": {
+          "kind": {"type": "string"},
+          "ref": {"type": "string"},
+          "content_hash": {"type": "string"}
+        }
+      }
+    },
+    "warnings": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "remaining_uncertainty": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "trace_id": {
+      "type": "string",
+      "minLength": 1
+    }
+  }
+}
