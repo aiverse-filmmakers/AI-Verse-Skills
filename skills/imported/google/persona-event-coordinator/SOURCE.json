@@ -1,0 +1,11 @@
+{
+  "source_namespace": "google",
+  "upstream_repo": "googleworkspace/cli",
+  "upstream_path": "skills/persona-event-coordinator",
+  "upstream_commit": "a3768d0e82ad83cca2da97724e46bea4ff0e6dbd",
+  "upstream_blob_sha": "a6a63e2fa5e18d3d22ab1de4f677a8e46b1f1ccd",
+  "license": "Apache-2.0",
+  "import_type": "original-vendored",
+  "modified": false,
+  "imported_at": "2026-09-09"
+}
