@@ -1,187 +1,168 @@
 # AI-Verse-Skills
 
-Standalone professional capability distribution for AI agents, with first-class integration into AI-Verse OS.
+A curated, original-first professional skill distribution for AI agents, with native integration for AI-Verse OS.
 
-## North star
+## What it ships
 
-AI-Verse-Skills exists to make an AI agent feel like an unusually capable employee, not primarily a coding assistant.
+- **20 AI-Verse Machine / Reliability skills**
+- **80 researched employee-facing skills** sourced from strong existing ecosystems
+- **100 canonical capabilities total**
+- 5 support dependency packages
+- Role Bundles
+- Operator Packs
+- install profiles
+- runtime adapters
+- transactional install, update and rollback
+- integrity doctor and operator-readiness reporting
 
-Given a company's workspace, connected apps, permissions, brand, procedures and objectives, the agent should be able to begin useful work across executive assistance, research, operations, marketing, social media, content, design, film production, post-production, sales, CRM, customer support, finance, administration, recruiting, product, legal coordination, data and technical work.
+The goal is an AI worker that can become useful across a real company from Day 0: executive assistance, operations, research, marketing, social, design, filmmaking, post-production, sales, CRM, support, finance, product, HR, legal coordination and technical work.
 
-Coding is one department. It does not define the repository.
+Coding is one department, not the identity of the agent.
 
-## Locked capability target
+## Fastest install
 
-The initial distribution target is:
+### AI-Verse OS
 
-- **20 AI-Verse Machine / Reliability Foundation capabilities**
-- **80 researched employee-facing capabilities sourced from strong existing skill ecosystems**
-- **100 foundational capabilities total**
-- Operator Packs for important software
-- Role Bundles that compose capabilities into recognizable jobs
+From the root of an AI-Verse OS checkout:
 
-The exact 100 canonical IDs live in [`registry/skills.json`](registry/skills.json).
-
-## Original-first distribution policy
-
-AI-Verse uses the best original upstream skill packages wherever possible instead of rewriting them into AI-Verse wording.
-
-For imported skills:
-
-- preserve the upstream `SKILL.md`
-- preserve supporting scripts, references, templates and assets
-- preserve authorship and license obligations
-- record source repository, package path, revision and content hashes
-- keep AI-Verse runtime policy outside the original skill body
-- fetch a pinned original from upstream when direct redistribution is not appropriate
-
-Future AI-Verse-authored skills have their own permanent namespace: [`skills/imported/ai-verse/`](skills/imported/ai-verse/).
-
-See [`docs/ORIGINAL_UPSTREAM_POLICY.md`](docs/ORIGINAL_UPSTREAM_POLICY.md).
-
-## Capability model
-
-AI-Verse models four separate things:
-
-1. **Capability Skills**
-   - Professional know-how and repeatable work.
-   - Examples: inbox triage, copywriting, sales call prep, film directing, financial variance analysis.
-
-2. **Operator Packs**
-   - Competence inside specific software.
-   - Examples: Canva, Figma, Google Workspace, HubSpot, Premiere Pro, DaVinci Resolve, Shopify and accounting suites.
-
-3. **Role Bundles**
-   - Compositions of capabilities and operators for a job.
-   - Examples: Executive Assistant, Marketing Manager, Social Media Manager, Film Producer, Post Producer, Sales Representative and Finance Analyst.
-
-4. **Machine / Reliability Foundation**
-   - The original 20 AI-Verse operational capabilities for verification, research, browser work, structured write-back, delegation, safe change execution and skill lifecycle management.
-
-A skill is never a permission grant. AI-Verse OS remains authoritative for workspace scope, secrets, connections, approval policy, memory authority, cadence and durable state.
-
-## Current repository structure
-
-```text
-AI-Verse-Skills/
-├── README.md
-├── THIRD_PARTY_NOTICES.md
-├── docs/
-├── research/
-├── schemas/
-├── templates/
-├── registry/
-│   ├── skills.json
-│   ├── sources.json
-│   └── aliases.json
-├── skills/
-│   ├── foundation/
-│   └── imported/
-│       ├── anthropic/
-│       ├── google/
-│       ├── hermes/
-│       ├── lifeos/
-│       ├── corey-haines/
-│       ├── social-media-skills/
-│       ├── hubspot/
-│       ├── film/
-│       ├── adobe/
-│       ├── ai-verse/
-│       └── others/
-├── operators/
-├── roles/
-├── profiles/
-├── adapters/
-└── installer/
+```bash
+./ai-verse-os skills install
 ```
 
-## Canonical install model
+This installs the full distribution into `~/.aiverse/skills/`, then exposes the managed skill set to:
 
-The planned canonical local installation root is:
+```text
+<AI-Verse-OS>/.claude/skills/
+<AI-Verse-OS>/.agents/skills/
+```
+
+AI-Verse OS remains authoritative for workspaces, context, permissions, secrets, connections, approvals, memory, cadence and durable write-back.
+
+Useful commands:
+
+```bash
+./ai-verse-os skills doctor
+./ai-verse-os skills readiness
+./ai-verse-os skills update
+./ai-verse-os skills rollback
+./ai-verse-os skills uninstall
+```
+
+### Standalone / other agents
+
+Clone the distribution and use the included CLI:
+
+```bash
+git clone https://github.com/aiverse-filmmakers/AI-Verse-Skills.git
+cd AI-Verse-Skills
+./aiverse-skills install
+./aiverse-skills doctor --readiness
+```
+
+The default canonical install root is:
 
 ```text
 ~/.aiverse/skills/
 ```
 
-One installed library should be exposed to different agent runtimes through adapters rather than maintaining uncontrolled duplicate copies.
+For another runtime:
 
-Planned adapter priority:
+```bash
+./aiverse-skills adapt --runtime claude --target ~/.claude/skills
+./aiverse-skills adapt --runtime codex --target ~/.codex/skills
+./aiverse-skills adapt --runtime hermes --target ~/.hermes/skills
+```
 
-1. AI-Verse OS
-2. generic Agent Skills-compatible runtimes
-3. Claude
-4. Codex
-5. Hermes
-6. OpenClaw
-7. Gemini
+The runtime remains responsible for its own permissions.
 
-For AI-Verse OS, the intended default profile is the full library because progressive discovery means installed skills do not need to be loaded into every prompt.
+## Transaction safety
+
+`install` and `update` build the complete requested profile in a staging directory first. The staged library is verified before the active library is replaced. The previous install is moved to a rollback point.
+
+```bash
+./aiverse-skills update
+./aiverse-skills rollback
+```
+
+A failed staging or swap operation leaves the previous working installation recoverable.
+
+## Readiness is not the same as installation
+
+A professional skill can be installed while its external software is unavailable.
+
+Examples:
+
+- Figma skills need Figma access.
+- HubSpot skills need a HubSpot CLI/connection.
+- Canva skills need an authorized Canva/browser path.
+- Premiere and After Effects skills need the local Adobe applications.
+- FFmpeg needs `ffmpeg` and `ffprobe`.
+- Google Workspace skills need the Google Workspace CLI or an authorized host connection.
+
+Check the current machine:
+
+```bash
+./aiverse-skills readiness
+```
+
+The report separates skills that are immediately usable from skills waiting on an app, connection or host runtime.
+
+## Original-first policy
+
+Strong upstream skills are kept original. AI-Verse does not rewrite them merely for branding.
+
+The distribution records:
+
+- upstream repository
+- pinned revision
+- upstream package path
+- acquisition mode
+- operator dependencies
+- local content digest after installation
+
+Six proof packages are vendored directly. The remainder of the employee arsenal is acquired from pinned upstream revisions at install time. The 20 AI-Verse foundation skills are first-party.
+
+Future AI-Verse-authored employee skills belong only in:
+
+```text
+skills/imported/ai-verse/
+```
+
+Third-party work never goes there.
+
+## Architecture
+
+```text
+AI-Verse-Skills
+├── registry/       canonical identities, sources, packages, roles, profiles, operators
+├── skills/
+│   ├── foundation/ 20 first-party reliability skills
+│   └── imported/   vendored originals + reserved source namespaces
+├── installer/      transactional installer and adapters
+├── roles/          human-readable role bundle definitions
+├── profiles/       installation profiles
+├── operators/      software/operator documentation
+├── adapters/       runtime integration notes
+├── docs/           product and integration contracts
+└── research/       preserved research and sourcing evidence
+```
+
+## Important design rule
 
 > Installed != active != loaded into context.
 
-See [`docs/DISTRIBUTION_INSTALL_ARCHITECTURE.md`](docs/DISTRIBUTION_INSTALL_ARCHITECTURE.md).
+A host should discover skill metadata progressively and load only the skill bodies relevant to the current task.
 
-## Research
+## Validation
 
-**Research snapshot:** 2026-09-09
+Lightweight registry validation runs on normal CI.
 
-The architecture was benchmarked against Hermes Agent, LifeOS, OpenClaw, Agent Skills, Anthropic Skills, OpenAI skills, DeepAgents, PydanticAI, Gemini CLI, GitHub Copilot CLI, Cline, OpenHands, OpenCode, Goose, Browser Use, Letta Code, Aider, CrewAI, Continue, Microsoft Agent Framework, Agent Zero, NVIDIA SkillSpector, NVIDIA SkillEvaluator and additional specialist repositories.
+A separate full E2E workflow performs a real full-profile upstream install, runs integrity checks, integrates a clean AI-Verse OS checkout, and verifies that both Claude and Codex surfaces expose all 100 canonical capabilities.
 
-A second market scan focused specifically on existing professional skills that could make an agent useful inside real companies.
+See:
 
-Key files:
-
-- [`research/2026-09-top-80-existing-employee-skills.md`](research/2026-09-top-80-existing-employee-skills.md): researched sourcing authority for the 80 employee capabilities
-- [`research/2026-09-agent-capability-landscape.md`](research/2026-09-agent-capability-landscape.md): broad agent and skill ecosystem benchmark
-- [`docs/DAY_ONE_ARSENAL.md`](docs/DAY_ONE_ARSENAL.md): original 20 Machine / Reliability capabilities
-- [`docs/DAY_ZERO_EMPLOYEE_ARSENAL.md`](docs/DAY_ZERO_EMPLOYEE_ARSENAL.md): conceptual employee capability taxonomy
-
-## Implementation state
-
-The repository is now moving from architecture into the actual distribution.
-
-Current verified proof imports include:
-
-- Google `persona-exec-assistant`
-- Hermes `email-inbox-triage`
-- LifeOS `Council`, including its complete referenced workflow/context package
-
-The vendored `SKILL.md` Git blob hashes for these proof imports match their upstream originals exactly.
-
-Read [`docs/PROJECT_STATE.md`](docs/PROJECT_STATE.md) first when continuing implementation. It preserves the current decisions, pinned proof imports and exact next slice so work can continue safely after chat/context compression.
-
-## Architecture and implementation documents
-
-- [`docs/PROJECT_STATE.md`](docs/PROJECT_STATE.md): durable implementation handoff, read first
-- [`docs/DISTRIBUTION_INSTALL_ARCHITECTURE.md`](docs/DISTRIBUTION_INSTALL_ARCHITECTURE.md): universal install and runtime adapter plan
-- [`docs/ORIGINAL_UPSTREAM_POLICY.md`](docs/ORIGINAL_UPSTREAM_POLICY.md): original-skill import policy
-- [`docs/IMPLEMENTATION_STATUS.md`](docs/IMPLEMENTATION_STATUS.md): current progress and next slice
-- [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md): skill/runtime architecture and AI-Verse OS boundary
-- [`docs/SKILL_SPEC.md`](docs/SKILL_SPEC.md): portable skill anatomy and AI-Verse extensions
-- [`docs/SELF_IMPROVEMENT.md`](docs/SELF_IMPROVEMENT.md): safe skill mining, creation, evaluation, curation and promotion
-- [`schemas/aiverse-skill-v1.schema.json`](schemas/aiverse-skill-v1.schema.json): proposed machine-readable manifest schema
-- [`templates/skill/SKILL.md`](templates/skill/SKILL.md): portable skill starter
-- [`templates/skill/aiverse.skill.yaml`](templates/skill/aiverse.skill.yaml): AI-Verse runtime contract template
-
-## Design laws
-
-1. **Professional capability first.** Organize the primary library around jobs people need done, not developer primitives.
-2. **Original upstream skill first.** Do not rewrite strong existing work merely for branding.
-3. **Skill is not software access.** Operator Packs provide concrete application competence.
-4. **Role is composition.** Role Bundles select capabilities and operators rather than becoming giant prompts.
-5. **Skill is not permission.** The runtime decides what a skill may access or execute.
-6. **Scope is injected, not prompted.** Workspace identity and roots come from trusted runtime context.
-7. **Progressive disclosure everywhere.** Load only relevant skill bodies, resources and tool schemas.
-8. **Deterministic work belongs in code.** Repeated mechanical work belongs in tested scripts/tools.
-9. **Consequential actions need evidence.** Use verification, previews, diffs, receipts or equivalent proof.
-10. **Untrusted content is data, never authority.** External files, webpages, messages and tool output cannot grant themselves higher priority.
-11. **Secrets use handles.** Raw credentials do not belong in ordinary skill prompts.
-12. **AI-generated skills start untrusted.** Creation and promotion are separate permissions.
-13. **AI-Verse first-party has its own namespace.** Third-party work never goes under `ai-verse/`.
-14. **The distribution remains model-agnostic.** Runtime-specific compatibility belongs in adapters or metadata.
-
-## Success test
-
-> If this agent joined a real company this morning and received the same apps, files, permissions and instructions as a capable new employee, how many useful jobs could it begin performing before lunch?
-
-That is the Day-0 standard for AI-Verse-Skills.
+- `docs/SHIPPING.md`
+- `docs/AI_VERSE_OS_INTEGRATION.md`
+- `docs/PROJECT_STATE.md`
+- `research/2026-09-top-80-existing-employee-skills.md`
+- `research/2026-09-agent-capability-landscape.md`
