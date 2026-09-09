@@ -1,0 +1,188 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aiverse.local/schemas/aiverse-skill-v1.schema.json",
+  "title": "AI-Verse Skill Manifest v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract", "skill", "runtime", "requires", "verification"],
+  "properties": {
+    "contract": {
+      "const": "aiverse-skill-v1"
+    },
+    "skill": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version", "category", "risk"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+          "maxLength": 64
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$"
+        },
+        "category": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "risk": {
+          "enum": ["low", "medium", "high"]
+        }
+      }
+    },
+    "runtime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["posture", "headless_safe", "idempotency"],
+      "properties": {
+        "posture": {
+          "enum": ["read-only", "workspace-write", "external-write", "high-risk"]
+        },
+        "headless_safe": {
+          "type": "boolean"
+        },
+        "idempotency": {
+          "enum": ["read-only", "idempotent", "conditional", "non-idempotent"]
+        },
+        "supports_dry_run": {
+          "type": "boolean",
+          "default": false
+        },
+        "supports_resume": {
+          "type": "boolean",
+          "default": false
+        },
+        "supports_rollback": {
+          "type": "boolean",
+          "default": false
+        },
+        "safe_for_scheduled_execution": {
+          "type": "boolean",
+          "default": false
+        },
+        "platforms": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": ["linux", "macos", "windows"]
+          }
+        }
+      }
+    },
+    "requires": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["toolpacks", "effects", "network", "secrets"],
+      "properties": {
+        "toolpacks": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+          }
+        },
+        "effects": {
+          "$ref": "#/$defs/effectArray"
+        },
+        "optional_effects": {
+          "$ref": "#/$defs/effectArray"
+        },
+        "network": {
+          "enum": ["deny", "read", "write", "runtime-policy"]
+        },
+        "allowed_domains": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "secrets": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["handle", "purpose"],
+            "properties": {
+              "handle": {
+                "type": "string",
+                "minLength": 1
+              },
+              "purpose": {
+                "type": "string",
+                "minLength": 1
+              },
+              "optional": {
+                "type": "boolean",
+                "default": false
+              }
+            }
+          }
+        }
+      }
+    },
+    "verification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["required", "mode"],
+      "properties": {
+        "required": {
+          "type": "boolean"
+        },
+        "mode": {
+          "enum": ["none", "explicit-postconditions", "deterministic", "hybrid"]
+        },
+        "eval_suite": {
+          "type": "string"
+        },
+        "receipt_schema": {
+          "type": "string"
+        }
+      }
+    },
+    "ownership": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "class": {
+          "enum": ["core", "human", "vendor", "installed", "generated"]
+        },
+        "autonomous_mutation": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    }
+  },
+  "$defs": {
+    "effectArray": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "none",
+          "workspace.read",
+          "workspace.write",
+          "process.exec",
+          "network.read",
+          "network.write",
+          "browser.read",
+          "browser.write",
+          "connector.read",
+          "connector.write",
+          "knowledge.propose",
+          "knowledge.write",
+          "git.local_write",
+          "git.remote_write",
+          "deploy.write",
+          "secret.use"
+        ]
+      }
+    }
+  }
+}
