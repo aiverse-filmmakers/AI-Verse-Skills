@@ -1,14 +1,5 @@
-# Install Profiles
+# Installation Profiles
 
-Planned install profiles:
+Profiles select which employee-facing packages to install. Foundation reliability skills are available with every profile unless a future policy explicitly disables them.
 
-- universal
-- creator
-- business
-- filmmaker
-- marketing
-- sales
-- finance
-- full
-
-AI-Verse OS should normally use `full`. Progressive discovery keeps installed skills out of context until relevant.
+The authoritative definitions are `registry/profiles.json`. AI-Verse OS normally uses `full`; narrower profiles are for other agents and constrained environments.

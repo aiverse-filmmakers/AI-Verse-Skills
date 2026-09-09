@@ -1,7 +1,5 @@
 # Operator Packs
 
-Operator Packs provide application-specific software competence while professional skills remain portable.
+Operator Packs describe competence inside specific software or services. They are not permission grants and they are not counted among the 100 canonical professional/foundation capabilities.
 
-Planned families include office/collaboration, creative/design, film/post, CRM/marketing, commerce/web and finance/admin.
-
-Examples: Canva, Figma, Google Workspace, HubSpot, Premiere Pro, DaVinci Resolve, After Effects, Shopify and accounting suites.
+The authoritative catalog is `registry/operators.json`. A host runtime decides whether an operator is actually available and injects only the connection/secret handles and effects the current workspace is allowed to use.

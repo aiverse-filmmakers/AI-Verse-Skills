@@ -1,6 +1,1 @@
-{
-  "schema_version": 1,
-  "snapshot": "2026-09-09",
-  "policy": "Aliases map user language and canonical capabilities without renaming upstream packages.",
-  "aliases": {}
-}
+{"schema_version":1,"canonical_to_upstream":{"k-ppt-generation":{"canonical":"ppt-generation","upstream_name":"ppt-generation","repo":"bytedance/deer-flow"},"k-product-marketing":{"canonical":"product-marketing-context","upstream_name":"product-marketing","repo":"coreyhaines31/marketingskills"},"k-cash-flow":{"canonical":"cash-flow-snapshot","upstream_name":"cash-flow","repo":"anthropics/knowledge-work-plugins"},"k-spec-writing":{"canonical":"write-spec","upstream_name":"spec-writing","repo":"anthropics/knowledge-work-plugins"},"k-roadmap":{"canonical":"roadmap-update","upstream_name":"roadmap-management","repo":"anthropics/knowledge-work-plugins"},"k-after-effects":{"canonical":"after-effects-assistant","upstream_name":"after-effects","repo":"aedev-tools/adobe-agent-skills"}},"legacy_user_aliases":{"executive-assistant":"persona-exec-assistant","project-manager":"persona-project-manager","hr-coordinator":"persona-hr-coordinator","event-coordinator":"persona-event-coordinator","pptx":"ppt-generation","spec-writing":"write-spec","roadmap-management":"roadmap-update","cash-flow":"cash-flow-snapshot","product-marketing":"product-marketing-context"}}
