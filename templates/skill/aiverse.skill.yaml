@@ -1,0 +1,38 @@
+contract: aiverse-skill-v1
+
+skill:
+  name: example-skill
+  version: 1.0.0
+  category: example
+  risk: low
+
+runtime:
+  posture: read-only
+  headless_safe: true
+  idempotency: read-only
+  supports_dry_run: false
+  supports_resume: false
+  supports_rollback: false
+  safe_for_scheduled_execution: false
+  platforms:
+    - linux
+    - macos
+    - windows
+
+requires:
+  toolpacks: []
+  effects:
+    - workspace.read
+  optional_effects: []
+  network: deny
+  allowed_domains: []
+  secrets: []
+
+verification:
+  required: true
+  mode: explicit-postconditions
+  eval_suite: evals/
+
+ownership:
+  class: human
+  autonomous_mutation: false
