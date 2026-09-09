@@ -134,9 +134,11 @@ Role Bundles compose skills plus Operator Packs into jobs such as Executive Assi
 
 Roles are composition, not giant always-on persona prompts.
 
+Dependencies required by selected skills are treated as Operator/dependency packages and do not inflate the canonical 100-capability count.
+
 ## Current physical implementation
 
-The permanent top-level implementation layers now exist:
+The permanent top-level implementation layers exist:
 
 - `skills/`
 - `registry/`
@@ -147,54 +149,95 @@ The permanent top-level implementation layers now exist:
 - `installer/`
 - existing `schemas/`, `templates/`, `docs/`, `research/`
 
-The source and canonical skill registries exist:
+The registries are:
 
-- `registry/sources.json`
-- `registry/skills.json`
-- `registry/aliases.json`
+- `registry/sources.json` - approved source namespaces/repositories
+- `registry/skills.json` - canonical 100 capability identities/ranks
+- `registry/packages.json` - authoritative current acquisition/import state and source pins
+- `registry/aliases.json` - canonical alias layer, initially empty
 
-## Verified proof imports
+`registry/packages.json` is authoritative for whether a package is actually vendored/fetched. The bootstrap `state` values inside `registry/skills.json` can lag until bulk reconciliation.
 
-Three upstream originals are currently vendored as proof of the distribution model:
+## Verified original imports
+
+Six upstream originals are physically vendored.
 
 ### Google Executive Assistant
 
-Path:
-`skills/imported/google/persona-exec-assistant/`
+Path: `skills/imported/google/persona-exec-assistant/`  
+Upstream: `googleworkspace/cli` at `a3768d0e82ad83cca2da97724e46bea4ff0e6dbd`  
+License: Apache-2.0  
+Original `SKILL.md` verified by Git blob hash.
 
-Upstream:
-`googleworkspace/cli` at commit `a3768d0e82ad83cca2da97724e46bea4ff0e6dbd`
+### Google Project Manager
 
-License:
-Apache-2.0
+Path: `skills/imported/google/persona-project-manager/`  
+Upstream: `googleworkspace/cli` at `a3768d0e82ad83cca2da97724e46bea4ff0e6dbd`  
+License: Apache-2.0  
+Original `SKILL.md` is vendored with exact upstream blob provenance.
 
-The vendored `SKILL.md` blob SHA exactly matches upstream.
+### Google HR Coordinator
+
+Path: `skills/imported/google/persona-hr-coordinator/`  
+Upstream: `googleworkspace/cli` at `a3768d0e82ad83cca2da97724e46bea4ff0e6dbd`  
+License: Apache-2.0  
+Original `SKILL.md` is vendored with exact upstream blob provenance.
+
+### Google Event Coordinator
+
+Path: `skills/imported/google/persona-event-coordinator/`  
+Upstream: `googleworkspace/cli` at `a3768d0e82ad83cca2da97724e46bea4ff0e6dbd`  
+License: Apache-2.0  
+Original `SKILL.md` is vendored with exact upstream blob provenance.
 
 ### Hermes Email Inbox Triage
 
-Path:
-`skills/imported/hermes/email-inbox-triage/`
-
-Upstream:
-`NousResearch/hermes-agent` at commit `7dc796463d543a57270779b7f71f37f18b6faa5e`
-
-Skill license:
-MIT
-
-The vendored `SKILL.md` blob SHA exactly matches upstream.
+Path: `skills/imported/hermes/email-inbox-triage/`  
+Upstream: `NousResearch/hermes-agent` at `7dc796463d543a57270779b7f71f37f18b6faa5e`  
+Skill license: MIT  
+Original `SKILL.md` verified by Git blob hash.
 
 ### LifeOS Council
 
-Path:
-`skills/imported/lifeos/Council/`
+Path: `skills/imported/lifeos/Council/`  
+Upstream: `danielmiessler/LifeOS` at `5e2f2e8c0abde612da0e99c16c0d07d4ec21b88c`  
+License: MIT  
+The complete package is vendored: `SKILL.md`, three context files and two workflow files. `SOURCE.json` records all upstream blob hashes. Original `SKILL.md` verified by Git blob hash.
 
-Upstream:
-`danielmiessler/LifeOS` at commit `5e2f2e8c0abde612da0e99c16c0d07d4ec21b88c`
+## Source pins already captured
 
-License:
-MIT
+Current September 2026 source revisions have been recorded for:
 
-The complete package is vendored: `SKILL.md`, three context files and two workflow files. `SOURCE.json` records all upstream blob hashes. The vendored `SKILL.md` blob SHA exactly matches upstream.
+- `anthropics/skills` -> `41bbe19d1a1a7eaab5e7bb9050a417e5c6cffc8f`
+- `anthropics/knowledge-work-plugins` -> `34e1eae3e1cca0be18bc85067cc6dd78d1f5d4e5`
+- `googleworkspace/cli` -> `a3768d0e82ad83cca2da97724e46bea4ff0e6dbd`
+- `NousResearch/hermes-agent` -> `7dc796463d543a57270779b7f71f37f18b6faa5e`
+- `danielmiessler/LifeOS` -> `5e2f2e8c0abde612da0e99c16c0d07d4ec21b88c`
+- `coreyhaines31/marketingskills` -> `5b2c0007766c6a1cf1d53fd8fc73e979e0821022`
+- `social-media-skills/skills` -> `6e30eeb2f6736bda8683b6bbaa674af3641d7945`
+- `HubSpot/agent-cli-skills` -> `71f2bdefcc0247b1f378cb98186800dc57b6f6b1`
+- `bytedance/deer-flow` -> `3c7d3303d3ef9335b6d91b49acff1a6f6609936c`
+- `62656456/ai-film-skills` -> `678edc06d3318c1516f6eb73503f740427fdd831`
+- `zhangzhangco/film-production-skills` -> `47b2a6a432235e716fa2aa0d08eefae76fdb34fd`
+- `kajisho5/ffmpeg-skill` -> `0055f7b295ab4d5ef4dc30af76638775eccd0667`
+- `Kemerd/premiere-agent` -> `77ed50f4bff14b67b054a64d26aedd7ec217b701`
+- `aedev-tools/adobe-agent-skills` -> `00f131ee5481cd597e6f63f997d92c6fe26586a0`
+
+Do not re-research these pins unless intentionally updating the snapshot.
+
+## Dependency discovery
+
+The four Google persona packages reveal an important install rule: ranked employee capabilities can depend on upstream utility/operator skills.
+
+Known Google dependencies include:
+
+- `gws-gmail`
+- `gws-calendar`
+- `gws-drive`
+- `gws-chat`
+- `gws-sheets`
+
+These will be acquired as dependency/operator packages. They do not increase the canonical 100-capability count.
 
 ## Next implementation slice
 
@@ -202,14 +245,15 @@ Continue from here, do not restart research.
 
 1. Resolve exact upstream path/package tree for every remaining employee skill in `registry/skills.json`.
 2. Verify repository/package license status.
-3. Vendor every redistributable original package complete with all supporting files.
-4. For originals that should remain upstream, create pinned `upstream-fetch` records rather than rewriting them.
+3. Vendor every directly redistributable original package where that is the cleanest distribution choice.
+4. For originals better kept upstream, create pinned `upstream-fetch` records rather than rewriting them.
 5. Pin exact source commit/tag and content hashes.
-6. Change registry package states from `catalogued` to `vendored` or `upstream-fetch`.
-7. Create/maintain `THIRD_PARTY_NOTICES.md`.
-8. After the 80 are source-complete, package the 20 AI-Verse foundation skills.
-9. Then build aliases/collision policy, Role Bundles and Operator Pack catalog.
-10. Only after package catalog completion, implement installer/runtime adapters/doctor/update.
+6. Use `registry/packages.json` as authoritative package acquisition state and later reconcile `registry/skills.json` in bulk.
+7. Maintain `THIRD_PARTY_NOTICES.md` as packages are added.
+8. Register dependency/operator packages required by the originals.
+9. After the 80 are source-complete, package the 20 AI-Verse foundation skills.
+10. Then build aliases/collision policy, Role Bundles and Operator Pack catalog.
+11. Only after package catalog completion, implement installer/runtime adapters/doctor/update.
 
 ## Do not regress these decisions
 
@@ -219,4 +263,5 @@ Continue from here, do not restart research.
 - Do not let skills own workspace isolation, secrets, memory authority or scheduling.
 - Do not load the full 100-skill bodies into every prompt.
 - Do not use `ai-verse/` for third-party skills.
+- Do not count dependencies/operators as extra canonical employee capabilities.
 - Do not discard research files after implementation begins.
