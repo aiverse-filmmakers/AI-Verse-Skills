@@ -1,0 +1,18 @@
+{
+  "source_namespace": "lifeos",
+  "upstream_repo": "danielmiessler/LifeOS",
+  "upstream_path": "LifeOS/install/skills/Council",
+  "upstream_commit": "5e2f2e8c0abde612da0e99c16c0d07d4ec21b88c",
+  "upstream_blobs": {
+    "SKILL.md": "c3827a336ef9a520598b9768b827ddafa1e3f8dc",
+    "CouncilMembers.md": "65a1b58b78351f66a1bbacb9002f8dceee315512",
+    "OutputFormat.md": "045da24cf5b5d1621e2382f11a91531701409781",
+    "RoundStructure.md": "f4a0e0169f6abf6793ee1c7271f1ab9850ceee57",
+    "Workflows/Debate.md": "559aa01abdb2a3411efc9d61bf9165a02861d16b",
+    "Workflows/Quick.md": "b0c31f39a3e8333c8444af8862091718e108e20c"
+  },
+  "license": "MIT",
+  "import_type": "original-vendored",
+  "modified": false,
+  "imported_at": "2026-09-09"
+}
