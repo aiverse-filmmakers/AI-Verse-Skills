@@ -1,0 +1,11 @@
+{
+  "source_namespace": "google",
+  "upstream_repo": "googleworkspace/cli",
+  "upstream_path": "skills/persona-exec-assistant",
+  "upstream_commit": "a3768d0e82ad83cca2da97724e46bea4ff0e6dbd",
+  "upstream_blob_sha": "8e0dc8607d241ec5fb6ecb7fa86a2f5e3b8504eb",
+  "license": "Apache-2.0",
+  "import_type": "original-vendored",
+  "modified": false,
+  "imported_at": "2026-09-09"
+}
