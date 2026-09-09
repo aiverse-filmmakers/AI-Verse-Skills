@@ -12,8 +12,11 @@ License: Apache License 2.0
 Current vendored package(s):
 
 - `persona-exec-assistant`
+- `persona-project-manager`
+- `persona-hr-coordinator`
+- `persona-event-coordinator`
 
-AI-Verse preserves the original skill body and records exact upstream provenance in the package `SOURCE.json`.
+AI-Verse preserves the original skill bodies and records exact upstream provenance in each package `SOURCE.json`.
 
 ## Nous Research Hermes Agent
 
