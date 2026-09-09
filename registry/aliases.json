@@ -1,0 +1,6 @@
+{
+  "schema_version": 1,
+  "snapshot": "2026-09-09",
+  "policy": "Aliases map user language and canonical capabilities without renaming upstream packages.",
+  "aliases": {}
+}
