@@ -1,100 +1,74 @@
-# Native AI-Verse OS Integration
+# Native AI-Verse OS Compatibility
 
-## Goal
+## Separation rule
 
-AI-Verse-Skills remains a standalone distribution, while AI-Verse OS receives a first-class capability surface without duplicating authority or canonical user state.
+AI-Verse-Skills and AI-Verse OS are separate repositories and separate installations.
 
-## Canonical locations
+AI-Verse-Skills must never:
 
-Skill library:
+- vendor AI-Verse OS files
+- write skill packages into the AI-Verse OS repository
+- create symlinks inside the AI-Verse OS repository
+- make AI-Verse OS installation implicitly install the Skills distribution
+
+AI-Verse OS may reference the external installed distribution when it exists.
+
+## Canonical external location
 
 ```text
 ~/.aiverse/skills/
 ```
 
-AI-Verse OS managed integration manifest:
-
-```text
-<OS>/runtime/skills/ai-verse-skills.json
-```
-
-Runtime surfaces:
-
-```text
-<OS>/.claude/skills/
-<OS>/.agents/skills/
-```
-
-The integration manifest is derived/disposable. The canonical installed package manifest is:
+Canonical install manifest:
 
 ```text
 ~/.aiverse/skills/.aiverse/installed.json
 ```
 
-## Install
+AI-Verse OS can use that external manifest/root during capability discovery. No skill copy is required inside the OS repository.
 
-From AI-Verse OS:
-
-```bash
-./ai-verse-os skills install
-```
-
-The OS helper finds or acquires the AI-Verse-Skills repository and invokes:
+## Explicit installation only
 
 ```bash
-aiverse-skills install --profile full --aiverse-os <OS_ROOT>
+ai-verse-os install
 ```
 
-The installer:
+installs only AI-Verse OS.
 
-1. resolves the full profile,
-2. fetches exact pinned upstream revisions,
-3. copies complete skill packages into a staging library,
-4. computes package digests,
-5. verifies the staged library,
-6. atomically replaces the canonical library,
-7. keeps the previous library as a rollback point,
-8. exposes canonical packages to Claude and Codex OS surfaces,
-9. records only the integration mapping under `runtime/`.
-
-## Collision policy
-
-The installer never silently overwrites an unmanaged OS skill.
-
-A destination may be replaced automatically only when the previous AI-Verse-Skills integration manifest says it is managed by this distribution.
-
-`--force-os` exists for deliberate collision takeover.
-
-## Updates
+The optional Skills distribution is installed only by an explicit second command:
 
 ```bash
-./ai-verse-os skills update
+ai-verse-os skills install
 ```
 
-An update is a fresh transactional materialization from the distribution's current pinned registry. Existing symlinked OS surfaces keep pointing at the stable canonical root.
+That command acquires the separate AI-Verse-Skills tool checkout under the user's AI-Verse tools area and invokes its external installer.
 
-## Rollback
+## Lifecycle
 
 ```bash
-./ai-verse-os skills rollback
+ai-verse-os skills install
+ai-verse-os skills update
+ai-verse-os skills rollback
+ai-verse-os skills doctor
+ai-verse-os skills readiness
+ai-verse-os skills list
+ai-verse-os skills uninstall
 ```
 
-Rollback swaps the active library with the newest rollback point and refreshes OS integration state.
+All lifecycle state remains outside the OS repository.
 
-## Readiness
+## Capability discovery contract
 
-```bash
-./ai-verse-os skills readiness
-```
+When the external manifest exists, AI-Verse OS may treat its canonical packages as an additional capability catalog after the OS's own built-in capabilities.
 
-Installed skills are split into:
+Recommended discovery order:
 
-- immediately ready
-- conditional on an app
-- conditional on a connection
-- conditional on host runtime features
-
-This is deliberately separate from installation.
+1. identify scope and intent
+2. consider built-in OS capabilities
+3. if installed, inspect external AI-Verse-Skills metadata
+4. select only the smallest relevant capability set
+5. load only the required SKILL.md bodies/resources
+6. execute under OS-owned permissions and workspace boundaries
 
 ## Authority boundary
 

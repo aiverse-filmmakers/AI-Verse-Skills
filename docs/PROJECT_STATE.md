@@ -5,7 +5,7 @@
 
 ## Product identity
 
-AI-Verse-Skills is the standalone professional capability distribution for AI agents, with native integration into AI-Verse OS.
+AI-Verse-Skills is the standalone professional capability distribution for AI agents. It is especially compatible with AI-Verse OS, but remains a completely separate repository and installation.
 
 The target is a creative, smart, broadly employable AI worker. Coding is one department, not the personality of the system.
 
@@ -21,7 +21,16 @@ The target is a creative, smart, broadly employable AI worker. Coding is one dep
 Canonical identity: `registry/skills.json`  
 Acquisition authority: `registry/packages.json`
 
-The older bootstrap `state` fields inside `registry/skills.json` are descriptive only; actual installability is determined by the physical 20 foundation packages plus `registry/packages.json`.
+## Critical separation decisions
+
+These are explicit user requirements and must not regress:
+
+1. AI-Verse-Skills and AI-Verse OS stay in separate repositories.
+2. No AI-Verse-Skills package is copied, vendored or symlinked into the AI-Verse OS repository.
+3. No AI-Verse OS file is copied into AI-Verse-Skills.
+4. `ai-verse-os install` installs only the OS.
+5. AI-Verse-Skills is installed only through a separate explicit action such as `ai-verse-os skills install` or the standalone Skills CLI.
+6. AI-Verse OS references/discovers the external Skills installation when present.
 
 ## Original-first decision
 
@@ -66,28 +75,17 @@ e2e
 
 Install and update are transactional. A complete verified staged library is swapped into place only after successful acquisition.
 
-## AI-Verse OS integration
+## AI-Verse OS compatibility
 
-Native user command:
-
-```bash
-./ai-verse-os skills install
-```
-
-OS integration exposes all canonical packages into:
+The OS may reference:
 
 ```text
-.claude/skills/
-.agents/skills/
+~/.aiverse/skills/.aiverse/installed.json
 ```
 
-and writes derived integration state to:
+and load selected external packages directly from `~/.aiverse/skills/` during capability discovery.
 
-```text
-runtime/skills/ai-verse-skills.json
-```
-
-The OS remains authoritative for scope, permissions, secrets, connections, memory, scheduling and write-back.
+There is no OS-repo materialization step.
 
 ## Operator readiness
 
@@ -95,21 +93,19 @@ Installation does not imply software availability.
 
 `readiness` checks local dependencies where deterministic detection is possible and reports connector/host requirements otherwise.
 
-Current operator catalog includes Google Workspace, Canva, Figma, HubSpot, Premiere Pro, After Effects, FFmpeg, Shopify, Airtable, Notion, spreadsheet tooling and browser/computer-use.
-
 ## Validation
 
 Normal CI validates registry integrity and full-profile dry-run planning.
 
-Full E2E CI performs a real full upstream install and clean AI-Verse OS integration, then checks:
+Full E2E CI performs a real full upstream install and checks:
 
 - 100 canonical installed packages
 - package digests
-- Claude surface count
-- Codex surface count
-- native OS integration manifest
 - transactional update
 - rollback
+- full-profile integrity after rollback
+
+AI-Verse OS's own CLI smoke/E2E verifies that its optional `skills` subcommand installs externally and leaves the OS repository unchanged.
 
 ## Research preservation
 
@@ -125,8 +121,6 @@ Do not delete:
 These are the durable research/decision record.
 
 ## Future work after v1
-
-Future work is additive, not required to reconstruct v1:
 
 - add more first-party AI-Verse employee skills under `skills/imported/ai-verse/`
 - add additional role bundles/operator packs

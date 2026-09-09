@@ -3,9 +3,9 @@
   "adapters": [
     {
       "id": "aiverse-os",
-      "mode": "native-managed",
+      "mode": "external-reference",
       "priority": 1,
-      "description": "Installs to the canonical AI-Verse library, exposes managed entries to the OS Claude/Codex skill surfaces, and writes a derived integration manifest without transferring OS authority to skills."
+      "description": "AI-Verse OS discovers the external canonical AI-Verse-Skills installation and its manifest directly. No skill packages, copies or symlinks are placed inside the OS repository."
     },
     {
       "id": "agent-skills",
@@ -17,13 +17,13 @@
       "id": "claude",
       "mode": "directory-link",
       "priority": 3,
-      "description": "Link/copy selected installed packages into a user-selected Claude skills directory."
+      "description": "Link/copy selected installed packages into a user-selected Claude skills directory when explicitly requested."
     },
     {
       "id": "codex",
       "mode": "directory-link",
       "priority": 4,
-      "description": "Link/copy selected installed packages into a user-selected Codex skills directory."
+      "description": "Link/copy selected installed packages into a user-selected Codex skills directory when explicitly requested."
     },
     {
       "id": "hermes",
@@ -44,5 +44,5 @@
       "description": "Expose packages to a user-selected Gemini skill root."
     }
   ],
-  "rule": "Adapters expose skills; they never grant filesystem scope, secrets, connections, approvals, memory authority, or scheduling."
+  "rule": "Adapters expose or reference skills; they never grant filesystem scope, secrets, connections, approvals, memory authority, or scheduling. AI-Verse OS compatibility is external-reference only."
 }

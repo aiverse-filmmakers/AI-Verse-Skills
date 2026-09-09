@@ -17,18 +17,12 @@ permissions:
   contents: read
 
 jobs:
-  full-install-aiverse-os:
+  full-external-install:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
       - name: Checkout AI-Verse-Skills
         uses: actions/checkout@v4
-
-      - name: Checkout AI-Verse OS
-        uses: actions/checkout@v4
-        with:
-          repository: aiverse-filmmakers/AI-Verse-OS
-          path: _e2e/AI-Verse-OS
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -43,35 +37,35 @@ jobs:
           python installer/aiverse_skills.py \
             --root "$RUNNER_TEMP/aiverse-skills" \
             --cache "$RUNNER_TEMP/aiverse-cache" \
-            install --profile full --aiverse-os "$GITHUB_WORKSPACE/_e2e/AI-Verse-OS"
+            install --profile full
 
-      - name: Integrity and OS integration doctor
+      - name: Integrity doctor
         run: |
           python installer/aiverse_skills.py \
             --root "$RUNNER_TEMP/aiverse-skills" \
-            doctor --aiverse-os "$GITHUB_WORKSPACE/_e2e/AI-Verse-OS" --readiness
+            doctor --readiness
 
       - name: E2E capability count
         run: |
           python installer/aiverse_skills.py \
             --root "$RUNNER_TEMP/aiverse-skills" \
-            e2e --aiverse-os "$GITHUB_WORKSPACE/_e2e/AI-Verse-OS"
+            e2e
 
       - name: Exercise transactional update
         run: |
           python installer/aiverse_skills.py \
             --root "$RUNNER_TEMP/aiverse-skills" \
             --cache "$RUNNER_TEMP/aiverse-cache" \
-            update --aiverse-os "$GITHUB_WORKSPACE/_e2e/AI-Verse-OS"
+            update
           python installer/aiverse_skills.py \
             --root "$RUNNER_TEMP/aiverse-skills" \
-            doctor --aiverse-os "$GITHUB_WORKSPACE/_e2e/AI-Verse-OS"
+            doctor
 
       - name: Exercise rollback
         run: |
           python installer/aiverse_skills.py \
             --root "$RUNNER_TEMP/aiverse-skills" \
-            rollback --aiverse-os "$GITHUB_WORKSPACE/_e2e/AI-Verse-OS"
+            rollback
           python installer/aiverse_skills.py \
             --root "$RUNNER_TEMP/aiverse-skills" \
-            e2e --aiverse-os "$GITHUB_WORKSPACE/_e2e/AI-Verse-OS"
+            e2e

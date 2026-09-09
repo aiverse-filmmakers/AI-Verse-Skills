@@ -1,13 +1,13 @@
 # AI-Verse-Skills
 
-A curated, original-first professional skill distribution for AI agents, with native integration for AI-Verse OS.
+A curated, original-first professional skill distribution for AI agents, with first-class compatibility with AI-Verse OS while remaining a completely separate repository and installation.
 
 ## What it ships
 
 - **20 AI-Verse Machine / Reliability skills**
 - **80 researched employee-facing skills** sourced from strong existing ecosystems
 - **100 canonical capabilities total**
-- 5 support dependency packages
+- support dependencies
 - Role Bundles
 - Operator Packs
 - install profiles
@@ -19,38 +19,24 @@ The goal is an AI worker that can become useful across a real company from Day 0
 
 Coding is one department, not the identity of the agent.
 
-## Fastest install
+## Repository separation rule
 
-### AI-Verse OS
+AI-Verse-Skills and AI-Verse OS remain independent.
 
-From the root of an AI-Verse OS checkout:
+- Installing AI-Verse OS does **not** install AI-Verse-Skills.
+- Installing AI-Verse-Skills does **not** copy, symlink or vendor skills into the AI-Verse OS repository.
+- AI-Verse OS does not get copied into this repository.
+- The optional integration is reference/discovery based.
 
-```bash
-./ai-verse-os skills install
-```
-
-This installs the full distribution into `~/.aiverse/skills/`, then exposes the managed skill set to:
+Canonical Skills install root:
 
 ```text
-<AI-Verse-OS>/.claude/skills/
-<AI-Verse-OS>/.agents/skills/
+~/.aiverse/skills/
 ```
 
-AI-Verse OS remains authoritative for workspaces, context, permissions, secrets, connections, approvals, memory, cadence and durable write-back.
+## Install
 
-Useful commands:
-
-```bash
-./ai-verse-os skills doctor
-./ai-verse-os skills readiness
-./ai-verse-os skills update
-./ai-verse-os skills rollback
-./ai-verse-os skills uninstall
-```
-
-### Standalone / other agents
-
-Clone the distribution and use the included CLI:
+### Standalone
 
 ```bash
 git clone https://github.com/aiverse-filmmakers/AI-Verse-Skills.git
@@ -59,42 +45,52 @@ cd AI-Verse-Skills
 ./aiverse-skills doctor --readiness
 ```
 
-The default canonical install root is:
+### Optional command through AI-Verse OS
 
-```text
-~/.aiverse/skills/
-```
-
-For another runtime:
+AI-Verse OS exposes a convenience command, but it is deliberately separate from OS installation:
 
 ```bash
-./aiverse-skills adapt --runtime claude --target ~/.claude/skills
-./aiverse-skills adapt --runtime codex --target ~/.codex/skills
-./aiverse-skills adapt --runtime hermes --target ~/.hermes/skills
+ai-verse-os install
 ```
 
-The runtime remains responsible for its own permissions.
+installs **only AI-Verse OS**.
+
+Later, only if the user explicitly wants the skill distribution:
+
+```bash
+ai-verse-os skills install
+```
+
+That command installs AI-Verse-Skills externally under `~/.aiverse/skills/`. It does not modify the OS repository with skill packages.
+
+Other lifecycle commands:
+
+```bash
+ai-verse-os skills doctor
+ai-verse-os skills readiness
+ai-verse-os skills update
+ai-verse-os skills rollback
+ai-verse-os skills uninstall
+```
 
 ## Transaction safety
 
-`install` and `update` build the complete requested profile in a staging directory first. The staged library is verified before the active library is replaced. The previous install is moved to a rollback point.
+`install` and `update` build the complete requested profile in a staging directory first. The staged library is verified before the active library is replaced. The previous install becomes a rollback point.
 
 ```bash
 ./aiverse-skills update
 ./aiverse-skills rollback
 ```
 
-A failed staging or swap operation leaves the previous working installation recoverable.
+## Readiness is not installation
 
-## Readiness is not the same as installation
-
-A professional skill can be installed while its external software is unavailable.
+A professional skill can be installed while its required software is unavailable.
 
 Examples:
 
 - Figma skills need Figma access.
-- HubSpot skills need a HubSpot CLI/connection.
-- Canva skills need an authorized Canva/browser path.
+- HubSpot skills need HubSpot access.
+- Canva skills need Canva/browser access.
 - Premiere and After Effects skills need the local Adobe applications.
 - FFmpeg needs `ffmpeg` and `ffprobe`.
 - Google Workspace skills need the Google Workspace CLI or an authorized host connection.
@@ -120,8 +116,6 @@ The distribution records:
 - operator dependencies
 - local content digest after installation
 
-Six proof packages are vendored directly. The remainder of the employee arsenal is acquired from pinned upstream revisions at install time. The 20 AI-Verse foundation skills are first-party.
-
 Future AI-Verse-authored employee skills belong only in:
 
 ```text
@@ -130,34 +124,29 @@ skills/imported/ai-verse/
 
 Third-party work never goes there.
 
-## Architecture
+## Runtime compatibility
 
-```text
-AI-Verse-Skills
-├── registry/       canonical identities, sources, packages, roles, profiles, operators
-├── skills/
-│   ├── foundation/ 20 first-party reliability skills
-│   └── imported/   vendored originals + reserved source namespaces
-├── installer/      transactional installer and adapters
-├── roles/          human-readable role bundle definitions
-├── profiles/       installation profiles
-├── operators/      software/operator documentation
-├── adapters/       runtime integration notes
-├── docs/           product and integration contracts
-└── research/       preserved research and sourcing evidence
+Generic agents can explicitly adapt the external library into a runtime-owned skill directory when desired:
+
+```bash
+./aiverse-skills adapt --runtime claude --target ~/.claude/skills
+./aiverse-skills adapt --runtime codex --target ~/.codex/skills
+./aiverse-skills adapt --runtime hermes --target ~/.hermes/skills
 ```
+
+AI-Verse OS is intentionally different: it references/discovers the external library directly and does not materialize the distribution inside the OS repository.
 
 ## Important design rule
 
 > Installed != active != loaded into context.
 
-A host should discover skill metadata progressively and load only the skill bodies relevant to the current task.
+A host should discover skill metadata progressively and load only skill bodies relevant to the current task.
 
 ## Validation
 
-Lightweight registry validation runs on normal CI.
+Normal CI validates registry integrity and full-profile planning.
 
-A separate full E2E workflow performs a real full-profile upstream install, runs integrity checks, integrates a clean AI-Verse OS checkout, and verifies that both Claude and Codex surfaces expose all 100 canonical capabilities.
+A full E2E workflow performs a real full-profile pinned upstream install, verifies all package digests, exercises transactional update and rollback, and confirms the full profile contains all 100 canonical capabilities.
 
 See:
 

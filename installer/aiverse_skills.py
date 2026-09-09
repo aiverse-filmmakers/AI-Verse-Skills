@@ -2,8 +2,9 @@
 """AI-Verse Skills distribution installer.
 
 Original-first, pinned, transactional installer for the 100-capability AI-Verse
-Skills distribution. The installer owns package materialization only. Host
-runtimes keep authority over workspace scope, secrets, approvals and actions.
+Skills distribution. This repository remains physically separate from AI-Verse
+OS and all other host runtimes. Installation never writes into an AI-Verse OS
+repository.
 """
 from __future__ import annotations
 
@@ -25,8 +26,10 @@ DEFAULT_ROOT = Path.home() / ".aiverse" / "skills"
 DEFAULT_CACHE = Path.home() / ".cache" / "aiverse-skills" / "sources"
 FRONT_NAME = re.compile(r"(?m)^name:\s*[\"']?([^\"'\n]+)")
 
+
 def load(rel):
     return json.loads((REPO_ROOT / rel).read_text(encoding="utf-8"))
+
 
 def run(cmd, cwd=None):
     p = subprocess.run(cmd, cwd=cwd, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -34,15 +37,16 @@ def run(cmd, cwd=None):
         raise RuntimeError(f"Command failed ({p.returncode}): {' '.join(map(str, cmd))}\n{p.stderr.strip()}")
     return p.stdout
 
+
 def cache_name(repo, commit):
     return repo.replace("/", "__") + "@" + commit
+
 
 def checkout(repo, commit, cache, offline=False):
     dst = cache / cache_name(repo, commit)
     if (dst / ".git").exists():
         try:
-            got = run(["git", "rev-parse", "HEAD"], dst).strip()
-            if got == commit:
+            if run(["git", "rev-parse", "HEAD"], dst).strip() == commit:
                 return dst
         except Exception:
             pass
@@ -53,8 +57,6 @@ def checkout(repo, commit, cache, offline=False):
         raise RuntimeError("git is required for upstream-fetch packages")
     dst.parent.mkdir(parents=True, exist_ok=True)
     tmp = dst.with_name(dst.name + ".partial-" + uuid.uuid4().hex[:8])
-    if tmp.exists():
-        shutil.rmtree(tmp)
     tmp.mkdir()
     try:
         run(["git", "init", "-q"], tmp)
@@ -67,6 +69,7 @@ def checkout(repo, commit, cache, offline=False):
         raise
     return dst
 
+
 def front_name(skill_md):
     text = skill_md.read_text(encoding="utf-8", errors="replace")
     if not text.startswith("---"):
@@ -74,6 +77,7 @@ def front_name(skill_md):
     end = text.find("\n---", 3)
     m = FRONT_NAME.search(text[: end if end >= 0 else len(text)])
     return m.group(1).strip() if m else None
+
 
 def resolve(root, selector, cid):
     typ = selector["type"]
@@ -105,6 +109,7 @@ def resolve(root, selector, cid):
         raise RuntimeError(f"{cid}: selector {selector['name']!r} resolved {len(found)} packages")
     return found[0]
 
+
 def digest(root):
     h = hashlib.sha256()
     for p in sorted(x for x in root.rglob("*") if x.is_file() and ".git" not in x.parts):
@@ -112,6 +117,7 @@ def digest(root):
         h.update(p.read_bytes())
         h.update(b"\0")
     return h.hexdigest()
+
 
 def copy_pkg(src, dst):
     if dst.exists() or dst.is_symlink():
@@ -121,6 +127,7 @@ def copy_pkg(src, dst):
             dst.unlink()
     dst.parent.mkdir(parents=True, exist_ok=True)
     shutil.copytree(src, dst, symlinks=True, ignore=shutil.ignore_patterns(".git"))
+
 
 def expand_registry(reg):
     employees, support = {}, {}
@@ -160,6 +167,7 @@ def expand_registry(reg):
         }
     return employees, support
 
+
 def install_plan(profile_name, root):
     reg = load("registry/packages.json")
     profiles = load("registry/profiles.json")
@@ -182,6 +190,7 @@ def install_plan(profile_name, root):
         out.append(("support", sid, None, root / p["target"], p))
     return out
 
+
 def manifest_for(profile, installed):
     return {
         "schema_version": 2,
@@ -191,6 +200,7 @@ def manifest_for(profile, installed):
         "installed_at": dt.datetime.now(dt.timezone.utc).isoformat(),
         "packages": installed,
     }
+
 
 def build_stage(profile, stage, cache, offline=False):
     jobs = install_plan(profile, stage)
@@ -206,17 +216,15 @@ def build_stage(profile, stage, cache, offline=False):
         if not (src / "SKILL.md").exists():
             raise RuntimeError(f"{cid}: source package missing SKILL.md")
         copy_pkg(src, dst)
-        installed.append(
-            {
-                "kind": kind,
-                "id": cid,
-                "path": str(dst.relative_to(stage)),
-                "source_repo": p.get("repo") if p else "aiverse-filmmakers/AI-Verse-Skills",
-                "source_commit": p.get("commit") if p else None,
-                "operators": p.get("operators", []) if p else [],
-                "digest_sha256": digest(dst),
-            }
-        )
+        installed.append({
+            "kind": kind,
+            "id": cid,
+            "path": str(dst.relative_to(stage)),
+            "source_repo": p.get("repo") if p else "aiverse-filmmakers/AI-Verse-Skills",
+            "source_commit": p.get("commit") if p else None,
+            "operators": p.get("operators", []) if p else [],
+            "digest_sha256": digest(dst),
+        })
         print("staged", cid)
     meta = stage / ".aiverse"
     meta.mkdir(parents=True, exist_ok=True)
@@ -225,12 +233,12 @@ def build_stage(profile, stage, cache, offline=False):
     )
     return installed
 
+
 def verify_root(root):
     mf = root / ".aiverse" / "installed.json"
     errors = []
     if not mf.exists():
-        errors.append(f"missing install manifest: {mf}")
-        return errors
+        return [f"missing install manifest: {mf}"]
     try:
         data = json.loads(mf.read_text(encoding="utf-8"))
     except Exception as e:
@@ -243,19 +251,19 @@ def verify_root(root):
             errors.append(f"{p['id']}: content digest changed")
     return errors
 
+
 def backup_dir(root):
     stamp = dt.datetime.now(dt.timezone.utc).strftime("%Y%m%dT%H%M%SZ")
     base = root.parent / "backups"
     base.mkdir(parents=True, exist_ok=True)
     return base / f"{root.name}-{stamp}-{uuid.uuid4().hex[:6]}"
 
+
 def transactional_install(profile, root, cache, offline=False):
     root = root.resolve()
     root.parent.mkdir(parents=True, exist_ok=True)
     stage = root.parent / f".{root.name}.stage-{uuid.uuid4().hex[:8]}"
     backup = None
-    if stage.exists():
-        shutil.rmtree(stage)
     stage.mkdir()
     try:
         installed = build_stage(profile, stage, cache, offline)
@@ -276,96 +284,21 @@ def transactional_install(profile, root, cache, offline=False):
         shutil.rmtree(stage, ignore_errors=True)
         raise
 
+
 def load_manifest(root):
     mf = root / ".aiverse" / "installed.json"
     if not mf.exists():
         raise RuntimeError(f"No AI-Verse-Skills install found at {root}")
     return json.loads(mf.read_text(encoding="utf-8"))
 
-def managed_integration_manifest(os_root):
-    return os_root / "runtime" / "skills" / "ai-verse-skills.json"
-
-def expose_one(src, dst, managed_before, force=False):
-    key = str(dst)
-    if dst.exists() or dst.is_symlink():
-        allowed = key in managed_before
-        if not allowed and not force:
-            raise RuntimeError(f"Refusing to replace unmanaged OS skill: {dst}")
-        if dst.is_dir() and not dst.is_symlink():
-            shutil.rmtree(dst)
-        else:
-            dst.unlink()
-    dst.parent.mkdir(parents=True, exist_ok=True)
-    try:
-        dst.symlink_to(src, target_is_directory=True)
-        return "symlink"
-    except OSError:
-        shutil.copytree(src, dst, symlinks=True)
-        return "copy"
-
-def integrate_aiverse_os(root, os_root, force=False):
-    root = root.resolve()
-    os_root = os_root.expanduser().resolve()
-    required = ["AI-VERSE.yaml", "AGENTS.md", "skills/registry.yaml"]
-    missing = [x for x in required if not (os_root / x).exists()]
-    if missing:
-        raise RuntimeError(f"Not an AI-Verse OS root ({os_root}); missing: {', '.join(missing)}")
-    manifest = load_manifest(root)
-    state_path = managed_integration_manifest(os_root)
-    old = {}
-    if state_path.exists():
-        try:
-            old_data = json.loads(state_path.read_text(encoding="utf-8"))
-            old = {x["target"]: x for x in old_data.get("materialized", [])}
-        except Exception:
-            old = {}
-    materialized = []
-    for p in manifest["packages"]:
-        if p["kind"] == "support":
-            continue
-        src = root / p["path"]
-        for runtime_dir, runtime in [(".claude/skills", "claude"), (".agents/skills", "codex")]:
-            dst = os_root / runtime_dir / p["id"]
-            mode = expose_one(src, dst, old, force)
-            materialized.append(
-                {"id": p["id"], "runtime": runtime, "source": str(src), "target": str(dst), "mode": mode}
-            )
-    state_path.parent.mkdir(parents=True, exist_ok=True)
-    state = {
-        "schema_version": 1,
-        "distribution": "AI-Verse-Skills",
-        "canonical_root": str(root),
-        "profile": manifest["profile"],
-        "install_manifest": str(root / ".aiverse" / "installed.json"),
-        "materialized": materialized,
-        "generated_at": dt.datetime.now(dt.timezone.utc).isoformat(),
-    }
-    state_path.write_text(json.dumps(state, indent=2) + "\n", encoding="utf-8")
-    return materialized
-
-def remove_managed_integration(os_root):
-    os_root = os_root.expanduser().resolve()
-    state_path = managed_integration_manifest(os_root)
-    if not state_path.exists():
-        return 0
-    data = json.loads(state_path.read_text(encoding="utf-8"))
-    removed = 0
-    for item in data.get("materialized", []):
-        dst = Path(item["target"])
-        if dst.exists() or dst.is_symlink():
-            if dst.is_dir() and not dst.is_symlink():
-                shutil.rmtree(dst)
-            else:
-                dst.unlink()
-            removed += 1
-    state_path.unlink(missing_ok=True)
-    return removed
 
 def command_exists(*names):
     return any(shutil.which(x) for x in names)
 
+
 def env_ready(name):
     return os.environ.get(name, "").strip().lower() in {"1", "true", "yes", "ready", "connected"}
+
 
 def app_exists(kind):
     system = platform.system()
@@ -383,14 +316,12 @@ def app_exists(kind):
             return any(base.glob("Adobe/Adobe After Effects*"))
     return False
 
+
 def operator_status(op):
     oid = op["id"]
     if oid == "ffmpeg":
-        ready = command_exists("ffmpeg") and command_exists("ffprobe")
-        return "ready" if ready else "missing-local-dependency"
-    if oid == "premiere-pro":
-        return "ready" if app_exists(oid) else "missing-local-app"
-    if oid == "after-effects":
+        return "ready" if command_exists("ffmpeg") and command_exists("ffprobe") else "missing-local-dependency"
+    if oid in {"premiere-pro", "after-effects"}:
         return "ready" if app_exists(oid) else "missing-local-app"
     if oid == "google-workspace":
         return "ready" if (command_exists("gws") or env_ready("AI_VERSE_CONNECTION_GOOGLE_WORKSPACE")) else "needs-connection"
@@ -405,9 +336,8 @@ def operator_status(op):
     }
     if oid in env_map:
         return "ready" if env_ready(env_map[oid]) else "needs-connection"
-    if oid in {"spreadsheets", "browser-computer-use"}:
-        return "host-runtime"
     return "host-runtime"
+
 
 def readiness(root):
     ops = load("registry/operators.json")["operators"]
@@ -421,10 +351,12 @@ def readiness(root):
             if not required or all(statuses.get(x) == "ready" for x in required):
                 out["skills"]["ready"].append(p["id"])
             else:
-                out["skills"]["conditional"].append(
-                    {"id": p["id"], "operators": {x: statuses.get(x, "unknown") for x in required}}
-                )
+                out["skills"]["conditional"].append({
+                    "id": p["id"],
+                    "operators": {x: statuses.get(x, "unknown") for x in required},
+                })
     return out
+
 
 def cmd_install(a):
     root = Path(a.root).expanduser()
@@ -435,22 +367,20 @@ def cmd_install(a):
             print(f"{kind:10} {cid:32} -> {dst} [{origin}]")
         return
     installed, backup = transactional_install(a.profile, root, cache, a.offline)
-    if a.aiverse_os:
-        integrate_aiverse_os(root, Path(a.aiverse_os), a.force_os)
     print(f"Installed {len(installed)} packages into {root}")
     if backup:
         print("Rollback point:", backup)
+
 
 def cmd_update(a):
     root = Path(a.root).expanduser()
     existing = load_manifest(root)
     profile = a.profile or existing.get("profile", "full")
     installed, backup = transactional_install(profile, root, Path(a.cache).expanduser(), a.offline)
-    if a.aiverse_os:
-        integrate_aiverse_os(root, Path(a.aiverse_os), a.force_os)
     print(f"Updated {len(installed)} packages in {root}")
     if backup:
         print("Rollback point:", backup)
+
 
 def cmd_rollback(a):
     root = Path(a.root).expanduser().resolve()
@@ -470,27 +400,12 @@ def cmd_rollback(a):
         if swap.exists() and not root.exists():
             os.replace(swap, root)
         raise
-    if a.aiverse_os:
-        integrate_aiverse_os(root, Path(a.aiverse_os), a.force_os)
-    print("Rolled back to", chosen.name)
+    print("Rolled back using", chosen.name)
+
 
 def cmd_doctor(a):
     root = Path(a.root).expanduser()
     errors = verify_root(root)
-    if a.aiverse_os:
-        os_root = Path(a.aiverse_os).expanduser().resolve()
-        state = managed_integration_manifest(os_root)
-        if not state.exists():
-            errors.append(f"AI-Verse OS integration manifest missing: {state}")
-        else:
-            try:
-                data = json.loads(state.read_text(encoding="utf-8"))
-                for item in data.get("materialized", []):
-                    d = Path(item["target"])
-                    if not (d.exists() or d.is_symlink()):
-                        errors.append(f"AI-Verse OS materialization missing: {d}")
-            except Exception as e:
-                errors.append(f"invalid AI-Verse OS integration manifest: {e}")
     if errors:
         for e in errors:
             print("ERROR", e)
@@ -500,6 +415,7 @@ def cmd_doctor(a):
         r = readiness(root)
         print(f"Skills immediately ready: {len(r['skills']['ready'])}")
         print(f"Skills requiring app/connection/runtime support: {len(r['skills']['conditional'])}")
+
 
 def cmd_readiness(a):
     root = Path(a.root).expanduser()
@@ -518,6 +434,7 @@ def cmd_readiness(a):
             req = ", ".join(f"{k}={v}" for k, v in item["operators"].items())
             print(f"  {item['id']:<32} {req}")
 
+
 def cmd_list(a):
     reg = load("registry/packages.json")
     rows = []
@@ -527,11 +444,9 @@ def cmd_list(a):
     for rank, cid, sid, mode in sorted(rows):
         print(f"{rank:>2}  {cid:<32} {sid:<20} {mode}")
 
+
 def cmd_uninstall(a):
     root = Path(a.root).expanduser()
-    if a.aiverse_os:
-        n = remove_managed_integration(Path(a.aiverse_os))
-        print(f"Removed {n} managed AI-Verse OS skill links/copies")
     if not (root / ".aiverse" / "installed.json").exists():
         raise RuntimeError(f"Refusing to remove unrecognized directory: {root}")
     backup = backup_dir(root)
@@ -539,21 +454,16 @@ def cmd_uninstall(a):
     print("Uninstalled", root)
     print("Recoverable copy:", backup)
 
+
 def cmd_adapt(a):
     root = Path(a.root).expanduser()
-    if a.runtime == "aiverse-os":
-        if not a.target:
-            raise RuntimeError("--target must be the AI-Verse OS root for runtime aiverse-os")
-        materialized = integrate_aiverse_os(root, Path(a.target), a.force)
-        print(f"Integrated {len(materialized)} runtime skill entries into AI-Verse OS")
-        return
     target = Path(a.target).expanduser()
     mf = root / ".aiverse" / "installed.json"
     if not mf.exists():
         raise RuntimeError("Install the library before adapting it")
     runtimes = {x["id"] for x in load("registry/runtime-adapters.json")["adapters"]}
-    if a.runtime not in runtimes:
-        raise RuntimeError(f"Unknown runtime: {a.runtime}")
+    if a.runtime not in runtimes or a.runtime == "aiverse-os":
+        raise RuntimeError("AI-Verse OS uses the external library directly; do not materialize skills into the OS repo")
     target.mkdir(parents=True, exist_ok=True)
     index = []
     for p in json.loads(mf.read_text(encoding="utf-8"))["packages"]:
@@ -580,6 +490,7 @@ def cmd_adapt(a):
     )
     print(f"Exposed {len(index)} packages to {target}")
 
+
 def cmd_e2e(a):
     root = Path(a.root).expanduser()
     errors = verify_root(root)
@@ -587,35 +498,12 @@ def cmd_e2e(a):
     canonical = [p for p in manifest["packages"] if p["kind"] != "support"]
     if manifest.get("profile") == "full" and len(canonical) != 100:
         errors.append(f"full profile materialized {len(canonical)} canonical packages, expected 100")
-    if a.aiverse_os:
-        os_root = Path(a.aiverse_os).expanduser()
-        state = managed_integration_manifest(os_root)
-        if not state.exists():
-            errors.append("AI-Verse OS integration state missing")
-        else:
-            data = json.loads(state.read_text(encoding="utf-8"))
-            by_runtime = {}
-            for x in data.get("materialized", []):
-                by_runtime.setdefault(x["runtime"], 0)
-                by_runtime[x["runtime"]] += 1
-            if manifest.get("profile") == "full":
-                for runtime in ("claude", "codex"):
-                    if by_runtime.get(runtime) != 100:
-                        errors.append(f"AI-Verse OS {runtime} surface exposes {by_runtime.get(runtime,0)}, expected 100")
     if errors:
         for e in errors:
             print("ERROR", e)
         raise SystemExit(1)
     print(f"E2E OK: {len(canonical)} canonical packages; profile={manifest.get('profile')}")
 
-def add_common_install_args(q, profile_default=True):
-    if profile_default:
-        q.add_argument("--profile", default="full")
-    else:
-        q.add_argument("--profile")
-    q.add_argument("--offline", action="store_true")
-    q.add_argument("--aiverse-os", metavar="PATH")
-    q.add_argument("--force-os", action="store_true", help="replace colliding unmanaged OS skill paths")
 
 def parser():
     p = argparse.ArgumentParser(prog="ai-verse-skills")
@@ -624,21 +512,20 @@ def parser():
     sub = p.add_subparsers(dest="cmd", required=True)
 
     q = sub.add_parser("install")
-    add_common_install_args(q, True)
+    q.add_argument("--profile", default="full")
+    q.add_argument("--offline", action="store_true")
     q.add_argument("--dry-run", action="store_true")
     q.set_defaults(fn=cmd_install)
 
     q = sub.add_parser("update")
-    add_common_install_args(q, False)
+    q.add_argument("--profile")
+    q.add_argument("--offline", action="store_true")
     q.set_defaults(fn=cmd_update)
 
     q = sub.add_parser("rollback")
-    q.add_argument("--aiverse-os", metavar="PATH")
-    q.add_argument("--force-os", action="store_true")
     q.set_defaults(fn=cmd_rollback)
 
     q = sub.add_parser("doctor")
-    q.add_argument("--aiverse-os", metavar="PATH")
     q.add_argument("--readiness", action="store_true")
     q.set_defaults(fn=cmd_doctor)
 
@@ -650,7 +537,6 @@ def parser():
     q.set_defaults(fn=cmd_list)
 
     q = sub.add_parser("uninstall")
-    q.add_argument("--aiverse-os", metavar="PATH")
     q.set_defaults(fn=cmd_uninstall)
 
     q = sub.add_parser("adapt")
@@ -660,9 +546,9 @@ def parser():
     q.set_defaults(fn=cmd_adapt)
 
     q = sub.add_parser("e2e")
-    q.add_argument("--aiverse-os", metavar="PATH")
     q.set_defaults(fn=cmd_e2e)
     return p
+
 
 def main():
     a = parser().parse_args()
@@ -671,6 +557,7 @@ def main():
     except RuntimeError as e:
         print("ERROR:", e, file=sys.stderr)
         raise SystemExit(2)
+
 
 if __name__ == "__main__":
     main()

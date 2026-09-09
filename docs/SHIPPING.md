@@ -9,13 +9,14 @@ AI-Verse-Skills is considered shippable only when all of the following are true:
 1. Registry validation passes.
 2. All 20 foundation packages exist.
 3. All 80 employee capabilities have a pinned acquisition record.
-4. A full clean install can materialize 100 canonical capabilities.
+4. A full clean install can materialize 100 canonical capabilities under the external Skills root.
 5. `doctor` verifies every installed package digest.
-6. AI-Verse OS integration exposes all 100 capabilities to both `.claude/skills/` and `.agents/skills/`.
-7. Update is transactional and creates a rollback point.
-8. Rollback restores the previous verified library.
-9. Operator readiness reports unavailable software/connections instead of pretending every skill is executable.
-10. CI contains a full networked E2E install test in addition to lightweight validation.
+6. Update is transactional and creates a rollback point.
+7. Rollback restores the previous verified library.
+8. Operator readiness reports unavailable software/connections instead of pretending every skill is executable.
+9. AI-Verse OS can discover/reference the external Skills installation without copying or symlinking skill packages into the OS repo.
+10. Installing AI-Verse OS alone never installs AI-Verse-Skills.
+11. CI contains a full networked E2E install test in addition to lightweight validation.
 
 ## Distribution model
 
@@ -27,47 +28,27 @@ The distribution is original-first.
 - The installer copies the complete selected skill package directory, not only `SKILL.md`.
 - Installed package digests are recorded in `.aiverse/installed.json`.
 
+## Repository isolation
+
+The Skills installer writes only to its own external installation/cache/tool locations unless the user explicitly invokes a generic runtime adapter with a target they chose.
+
+AI-Verse OS compatibility does not use such an adapter. The OS references the external library directly.
+
 ## Safety boundary
 
 Installation grants no permissions.
 
-The host runtime owns:
-
-- filesystem/workspace scope
-- secrets
-- app connections
-- browser/computer-use authority
-- approvals
-- memory authority
-- cadence/scheduling
-- durable write-back
+The host runtime owns filesystem/workspace scope, secrets, app connections, approvals, memory authority, cadence and durable write-back.
 
 ## Release verification
-
-Lightweight:
 
 ```bash
 python scripts/validate_registry.py
 python installer/aiverse_skills.py install --profile full --dry-run
-```
-
-Full local verification:
-
-```bash
-python installer/aiverse_skills.py install --profile full --root /tmp/aiverse-skills-e2e
-python installer/aiverse_skills.py doctor --root /tmp/aiverse-skills-e2e
-```
-
-AI-Verse OS verification:
-
-```bash
-python installer/aiverse_skills.py install --profile full \
-  --root /tmp/aiverse-skills-e2e \
-  --aiverse-os /path/to/AI-Verse-OS
-python installer/aiverse_skills.py doctor \
-  --root /tmp/aiverse-skills-e2e \
-  --aiverse-os /path/to/AI-Verse-OS
-python installer/aiverse_skills.py e2e \
-  --root /tmp/aiverse-skills-e2e \
-  --aiverse-os /path/to/AI-Verse-OS
+python installer/aiverse_skills.py --root /tmp/aiverse-skills-e2e install --profile full
+python installer/aiverse_skills.py --root /tmp/aiverse-skills-e2e doctor
+python installer/aiverse_skills.py --root /tmp/aiverse-skills-e2e e2e
+python installer/aiverse_skills.py --root /tmp/aiverse-skills-e2e update
+python installer/aiverse_skills.py --root /tmp/aiverse-skills-e2e rollback
+python installer/aiverse_skills.py --root /tmp/aiverse-skills-e2e e2e
 ```

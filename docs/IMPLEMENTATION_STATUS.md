@@ -21,10 +21,9 @@
 - operator readiness
 - safe uninstall with recoverable backup
 - generic runtime adaptation
-- native AI-Verse OS integration
-- AI-Verse OS managed integration manifest
+- external-only AI-Verse OS compatibility contract
 - lightweight CI
-- full E2E install workflow
+- full E2E external install workflow
 - durable project/research documentation
 
 ## Canonical acquisition state
@@ -35,22 +34,16 @@
 - The other selected employee packages are pinned upstream-fetch packages.
 - The 20 AI-Verse foundation packages are physically implemented under `skills/foundation/`.
 
+## Separation guarantee
+
+AI-Verse-Skills does not copy or symlink its packages into AI-Verse OS.
+
+AI-Verse OS installation does not automatically install AI-Verse-Skills. The optional distribution requires a separate explicit command.
+
 ## User-required steps
 
 Repository automation cannot create third-party OAuth/app access on a user's behalf.
 
-After installation, a user may still need to:
-
-- connect Google Workspace
-- connect Canva
-- connect Figma
-- connect HubSpot
-- connect Shopify
-- connect Airtable
-- connect Notion
-- install/authorize Premiere Pro
-- install/authorize After Effects
-- install FFmpeg
-- provide a host runtime with browser/computer-use where required
+After installation, a user may still need to connect or install Google Workspace, Canva, Figma, HubSpot, Shopify, Airtable, Notion, Premiere Pro, After Effects, FFmpeg, and/or a host browser/computer-use capability.
 
 Use `ai-verse-skills readiness` to see what is missing on a specific machine.
