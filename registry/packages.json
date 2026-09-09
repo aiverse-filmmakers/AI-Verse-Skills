@@ -1,0 +1,97 @@
+{
+  "schema_version": 1,
+  "snapshot": "2026-09-09",
+  "authority": "This file is authoritative for package acquisition/import state. registry/skills.json is the canonical capability list and its bootstrap state field may lag until bulk reconciliation.",
+  "vendored": [
+    {
+      "canonical_id": "persona-exec-assistant",
+      "source": "google",
+      "repo": "googleworkspace/cli",
+      "path": "skills/persona-exec-assistant",
+      "commit": "a3768d0e82ad83cca2da97724e46bea4ff0e6dbd",
+      "license": "Apache-2.0",
+      "target": "skills/imported/google/persona-exec-assistant",
+      "modified": false,
+      "verified_original": true
+    },
+    {
+      "canonical_id": "persona-project-manager",
+      "source": "google",
+      "repo": "googleworkspace/cli",
+      "path": "skills/persona-project-manager",
+      "commit": "a3768d0e82ad83cca2da97724e46bea4ff0e6dbd",
+      "license": "Apache-2.0",
+      "target": "skills/imported/google/persona-project-manager",
+      "modified": false,
+      "verified_original": true
+    },
+    {
+      "canonical_id": "persona-hr-coordinator",
+      "source": "google",
+      "repo": "googleworkspace/cli",
+      "path": "skills/persona-hr-coordinator",
+      "commit": "a3768d0e82ad83cca2da97724e46bea4ff0e6dbd",
+      "license": "Apache-2.0",
+      "target": "skills/imported/google/persona-hr-coordinator",
+      "modified": false,
+      "verified_original": true
+    },
+    {
+      "canonical_id": "persona-event-coordinator",
+      "source": "google",
+      "repo": "googleworkspace/cli",
+      "path": "skills/persona-event-coordinator",
+      "commit": "a3768d0e82ad83cca2da97724e46bea4ff0e6dbd",
+      "license": "Apache-2.0",
+      "target": "skills/imported/google/persona-event-coordinator",
+      "modified": false,
+      "verified_original": true
+    },
+    {
+      "canonical_id": "email-inbox-triage",
+      "source": "hermes",
+      "repo": "NousResearch/hermes-agent",
+      "path": "skills/email/email-inbox-triage",
+      "commit": "7dc796463d543a57270779b7f71f37f18b6faa5e",
+      "license": "MIT",
+      "target": "skills/imported/hermes/email-inbox-triage",
+      "modified": false,
+      "verified_original": true
+    },
+    {
+      "canonical_id": "Council",
+      "source": "lifeos",
+      "repo": "danielmiessler/LifeOS",
+      "path": "LifeOS/install/skills/Council",
+      "commit": "5e2f2e8c0abde612da0e99c16c0d07d4ec21b88c",
+      "license": "MIT",
+      "target": "skills/imported/lifeos/Council",
+      "modified": false,
+      "verified_original": true,
+      "complete_multifile_package": true
+    }
+  ],
+  "source_pins_in_progress": {
+    "anthropics/skills": "41bbe19d1a1a7eaab5e7bb9050a417e5c6cffc8f",
+    "anthropics/knowledge-work-plugins": "34e1eae3e1cca0be18bc85067cc6dd78d1f5d4e5",
+    "googleworkspace/cli": "a3768d0e82ad83cca2da97724e46bea4ff0e6dbd",
+    "NousResearch/hermes-agent": "7dc796463d543a57270779b7f71f37f18b6faa5e",
+    "danielmiessler/LifeOS": "5e2f2e8c0abde612da0e99c16c0d07d4ec21b88c",
+    "coreyhaines31/marketingskills": "5b2c0007766c6a1cf1d53fd8fc73e979e0821022",
+    "social-media-skills/skills": "6e30eeb2f6736bda8683b6bbaa674af3641d7945",
+    "HubSpot/agent-cli-skills": "71f2bdefcc0247b1f378cb98186800dc57b6f6b1",
+    "bytedance/deer-flow": "3c7d3303d3ef9335b6d91b49acff1a6f6609936c",
+    "62656456/ai-film-skills": "678edc06d3318c1516f6eb73503f740427fdd831",
+    "zhangzhangco/film-production-skills": "47b2a6a432235e716fa2aa0d08eefae76fdb34fd",
+    "kajisho5/ffmpeg-skill": "0055f7b295ab4d5ef4dc30af76638775eccd0667",
+    "Kemerd/premiere-agent": "77ed50f4bff14b67b054a64d26aedd7ec217b701",
+    "aedev-tools/adobe-agent-skills": "00f131ee5481cd597e6f63f997d92c6fe26586a0"
+  },
+  "dependency_rule": "Dependencies needed by a ranked capability do not increase the 100-capability count. They are acquired as dependency/operator packages and exposed only when required.",
+  "known_dependency_examples": {
+    "persona-exec-assistant": ["gws-gmail", "gws-calendar", "gws-drive", "gws-chat"],
+    "persona-project-manager": ["gws-drive", "gws-sheets", "gws-calendar", "gws-gmail", "gws-chat"],
+    "persona-hr-coordinator": ["gws-gmail", "gws-calendar", "gws-drive", "gws-chat"],
+    "persona-event-coordinator": ["gws-calendar", "gws-gmail", "gws-drive", "gws-chat", "gws-sheets"]
+  }
+}
