@@ -18,23 +18,25 @@ The repository is intentionally separated from the AI-Verse OS core. The core re
 
 The architecture is based on a broad benchmark of current agent systems and skill ecosystems, including Hermes Agent, LifeOS, OpenClaw, Agent Skills, Anthropic Skills, OpenAI Codex skills, LangChain DeepAgents, PydanticAI, Gemini CLI, GitHub Copilot CLI, Cline, OpenHands, OpenCode, Goose, Browser Use, Letta Code, Aider, CrewAI, Continue, Microsoft Agent Framework, Agent Zero, NVIDIA SkillSpector, NVIDIA SkillEvaluator, Block Agent Skills and additional cross-platform skill collections.
 
+A second market scan then focused specifically on **existing professional skills that make an agent employable across real departments**. The result is a researched top 80 sourcing shortlist on top of the original 20 reliability/technical skills.
+
 ## Capability model
 
 AI-Verse should model four different things separately:
 
 1. **Capability Skills**
    - Know how to perform a class of professional work.
-   - Examples: `social-media-manager`, `producer`, `fp-and-a-analyst`, `meeting-operator`, `creative-director`.
+   - Examples: social media management, producing, FP&A, meeting operations and creative direction.
    - Portable `SKILL.md` instructions with progressive disclosure.
 
 2. **Operator Packs**
    - Know how to perform work inside specific software.
-   - Examples: Canva, Figma, Google Workspace, Microsoft 365, HubSpot, Salesforce, Premiere Pro, DaVinci Resolve, Shopify, QuickBooks.
+   - Examples: Canva, Figma, Google Workspace, Microsoft 365, HubSpot, Salesforce, Premiere Pro, DaVinci Resolve, Shopify and QuickBooks.
    - Can use direct APIs, connectors/MCP, browser automation or computer-use depending on the runtime grant.
 
 3. **Role Bundles**
    - Combine the capabilities and operator packs needed for a job.
-   - Examples: Executive Assistant, Marketing Manager, Social Media Manager, Film Producer, Post Producer, Sales Representative, Account Manager, Finance Analyst, Research Analyst, Customer Support Agent.
+   - Examples: Executive Assistant, Marketing Manager, Social Media Manager, Film Producer, Post Producer, Sales Representative, Account Manager, Finance Analyst, Research Analyst and Customer Support Agent.
    - A role bundle is composition, not a giant replacement persona prompt.
 
 4. **Machine / Reliability Foundation**
@@ -47,18 +49,19 @@ Runtime permissions remain separate from all four. A skill can request capabilit
 
 The current target is:
 
-- **80 employee-facing capability skills**
+- **80 researched employee-facing skills**
 - **20 Machine / Reliability Foundation skills**
 - **operator packs** for major business and creative applications
 - **role bundles** that make the agent useful in a job immediately
 
-This gives AI-Verse roughly 100 first-party foundational skills before application-specific and industry-specific expansions are counted.
+This gives AI-Verse **100 foundational first-party capabilities** before application-specific and industry-specific expansions are counted.
 
 Progressive discovery means breadth does not require loading 100 skill bodies into every prompt.
 
 ## Documents
 
-- [`docs/DAY_ZERO_EMPLOYEE_ARSENAL.md`](docs/DAY_ZERO_EMPLOYEE_ARSENAL.md) - new primary capability map: 80 employee-facing skills, operator packs, role bundles and implementation waves.
+- [`research/2026-09-top-80-existing-employee-skills.md`](research/2026-09-top-80-existing-employee-skills.md) - **current sourcing authority:** researched top 80 existing professional skills to add on top of the original 20, including source repositories, rationale and adoption mode.
+- [`docs/DAY_ZERO_EMPLOYEE_ARSENAL.md`](docs/DAY_ZERO_EMPLOYEE_ARSENAL.md) - conceptual capability map and role/operator architecture; useful as taxonomy, but the researched top-80 file above is the implementation sourcing priority.
 - [`docs/DAY_ONE_ARSENAL.md`](docs/DAY_ONE_ARSENAL.md) - original 20 operational skills; retained as the Machine / Reliability Foundation rather than the primary user-facing arsenal.
 - [`research/2026-09-agent-capability-landscape.md`](research/2026-09-agent-capability-landscape.md) - broad benchmark and architecture lessons from current systems.
 - [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) - recommended repository and runtime architecture.
