@@ -45,33 +45,11 @@ cd AI-Verse-Skills
 ./aiverse-skills doctor --readiness
 ```
 
-### Optional command through AI-Verse OS
+### AI-Verse OS integration status
 
-AI-Verse OS exposes a convenience command, but it is deliberately separate from OS installation:
+The agreed [provider v1 contract and implementation mapping](docs/AI_VERSE_OS_INTEGRATION.md) defines external discovery without copying packages into OS. The current OS CLI does not yet expose `ai-verse-os skills` commands, and this installer does not yet emit the v1 capability index. Use the standalone commands above today.
 
-```bash
-ai-verse-os install
-```
-
-installs **only AI-Verse OS**.
-
-Later, only if the user explicitly wants the skill distribution:
-
-```bash
-ai-verse-os skills install
-```
-
-That command installs AI-Verse-Skills externally under `~/.aiverse/skills/`. It does not modify the OS repository with skill packages.
-
-Other lifecycle commands:
-
-```bash
-ai-verse-os skills doctor
-ai-verse-os skills readiness
-ai-verse-os skills update
-ai-verse-os skills rollback
-ai-verse-os skills uninstall
-```
+OS installation remains independent and never implicitly installs this distribution.
 
 ## Transaction safety
 
@@ -101,7 +79,7 @@ Check the current machine:
 ./aiverse-skills readiness
 ```
 
-The report separates skills that are immediately usable from skills waiting on an app, connection or host runtime.
+The current report provides dependency hints. It does not verify workspace access or authorize actions; the provider v1 contract separates these host-owned checks from package readiness.
 
 ## Original-first policy
 
@@ -134,7 +112,7 @@ Generic agents can explicitly adapt the external library into a runtime-owned sk
 ./aiverse-skills adapt --runtime hermes --target ~/.hermes/skills
 ```
 
-AI-Verse OS is intentionally different: it references/discovers the external library directly and does not materialize the distribution inside the OS repository.
+The planned AI-Verse OS integration uses external discovery and does not materialize the distribution inside the OS repository. See the provider contract for implementation status.
 
 ## Important design rule
 

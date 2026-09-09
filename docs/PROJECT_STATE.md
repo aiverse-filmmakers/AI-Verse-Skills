@@ -1,5 +1,7 @@
 # AI-Verse-Skills Project State
 
+> Provider integration status: [the pinned v1 contract](AI_VERSE_OS_INTEGRATION.md) governs the next implementation stage and supersedes older integration claims below. OS external discovery and `ai-verse-os skills` commands are not shipped in the inspected OS v0.1.0; the current Skills manifest is legacy schema 2 without a v1 capability index. Existing distribution functionality remains separate.
+
 **Read this file first when continuing implementation.**  
 **Last updated:** 2026-09-09
 
@@ -105,7 +107,7 @@ Full E2E CI performs a real full upstream install and checks:
 - rollback
 - full-profile integrity after rollback
 
-AI-Verse OS's own CLI smoke/E2E verifies that its optional `skills` subcommand installs externally and leaves the OS repository unchanged.
+A future OS integration test must verify external discovery and that optional lifecycle delegation leaves the OS repository unchanged; the current OS CLI has no `skills` subcommand.
 
 ## Research preservation
 
