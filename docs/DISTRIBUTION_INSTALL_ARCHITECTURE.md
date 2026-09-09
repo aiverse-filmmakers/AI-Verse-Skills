@@ -1,5 +1,7 @@
 # AI-Verse Skills Distribution and Install Architecture
 
+> Provider integration status: [the pinned v1 contract](AI_VERSE_OS_INTEGRATION.md) governs the next implementation stage and supersedes older integration claims below. OS external discovery and `ai-verse-os skills` commands are not shipped in the inspected OS v0.1.0; the current Skills manifest is legacy schema 2 without a v1 capability index. Existing distribution functionality remains separate.
+
 **Status:** locked architecture for implementation  
 **Snapshot:** 2026-09-09
 
