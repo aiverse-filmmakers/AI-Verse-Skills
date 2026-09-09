@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "snapshot": "2026-09-09",
+  "policy": "original-upstream-first",
+  "sources": {
+    "ai-verse": {
+      "namespace": "ai-verse",
+      "repo": "aiverse-filmmakers/AI-Verse-Skills",
+      "folder": "skills/imported/ai-verse",
+      "distribution": "first-party",
+      "license_status": "repository-policy",
+      "notes": "Reserved for future AI-Verse-authored skills."
+    },
+    "anthropic": {
+      "namespace": "anthropic",
+      "repo": [
+        "anthropics/skills",
+        "anthropics/knowledge-work-plugins"
+      ],
+      "folder": "skills/imported/anthropic",
+      "distribution": "original-upstream",
+      "license_status": "per-package-verify"
+    },
+    "google": {
+      "namespace": "google",
+      "repo": "googleworkspace/cli",
+      "folder": "skills/imported/google",
+      "distribution": "original-upstream",
+      "license_status": "per-package-verify"
+    },
+    "hermes": {
+      "namespace": "hermes",
+      "repo": "NousResearch/hermes-agent",
+      "folder": "skills/imported/hermes",
+      "distribution": "original-upstream",
+      "license_status": "MIT/per-package"
+    },
+    "lifeos": {
+      "namespace": "lifeos",
+      "repo": "danielmiessler/LifeOS",
+      "folder": "skills/imported/lifeos",
+      "distribution": "original-upstream",
+      "license_status": "MIT"
+    },
+    "corey-haines": {
+      "namespace": "corey-haines",
+      "repo": "coreyhaines31/marketingskills",
+      "folder": "skills/imported/corey-haines",
+      "distribution": "original-upstream",
+      "license_status": "MIT"
+    },
+    "social-media-skills": {
+      "namespace": "social-media-skills",
+      "repo": "social-media-skills/skills",
+      "folder": "skills/imported/social-media-skills",
+      "distribution": "original-upstream",
+      "license_status": "per-package-verify"
+    },
+    "hubspot": {
+      "namespace": "hubspot",
+      "repo": "hubspot/agent-cli-skills",
+      "folder": "skills/imported/hubspot",
+      "distribution": "original-upstream",
+      "license_status": "per-package-verify"
+    },
+    "film": {
+      "namespace": "film",
+      "repo": [
+        "62656456/ai-film-skills",
+        "zhangzhangco/film-production-skills",
+        "kajisho5/ffmpeg-skill",
+        "Kemerd/premiere-agent",
+        "InfoEconFilms/premiere-agent"
+      ],
+      "folder": "skills/imported/film",
+      "distribution": "original-upstream",
+      "license_status": "per-package-verify"
+    },
+    "adobe": {
+      "namespace": "adobe",
+      "repo": "aedev-tools/adobe-agent-skills",
+      "folder": "skills/imported/adobe",
+      "distribution": "original-upstream",
+      "license_status": "per-package-verify"
+    },
+    "others": {
+      "namespace": "others",
+      "repo": [
+        "bytedance/deer-flow",
+        "figma/mcp-server-guide",
+        "novoads"
+      ],
+      "folder": "skills/imported/others",
+      "distribution": "original-upstream",
+      "license_status": "per-package-verify",
+      "notes": "Curated sources that do not yet warrant a dedicated namespace."
+    }
+  }
+}
