@@ -1,0 +1,11 @@
+{
+  "source_namespace": "google",
+  "upstream_repo": "googleworkspace/cli",
+  "upstream_path": "skills/persona-project-manager",
+  "upstream_commit": "a3768d0e82ad83cca2da97724e46bea4ff0e6dbd",
+  "upstream_blob_sha": "995872c18dc63b4607bb4afe02ba69026191ac3e",
+  "license": "Apache-2.0",
+  "import_type": "original-vendored",
+  "modified": false,
+  "imported_at": "2026-09-09"
+}
