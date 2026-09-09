@@ -1,0 +1,52 @@
+{
+  "contract": "aiverse-tool-v1",
+  "name": "example.inspect",
+  "version": "1.0.0",
+  "description": "Describe one deterministic executable operation using retrieval-friendly language.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "target": {
+        "type": "string"
+      }
+    },
+    "required": ["target"],
+    "additionalProperties": false
+  },
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "status": {
+        "type": "string"
+      }
+    },
+    "required": ["status"],
+    "additionalProperties": true
+  },
+  "effects": [
+    "workspace.read"
+  ],
+  "idempotency": "read-only",
+  "network": "deny",
+  "cancellable": true,
+  "streaming": false,
+  "timeout_ms": 30000,
+  "supports_dry_run": false,
+  "requires": {
+    "binaries": [],
+    "connections": [],
+    "secret_handles": [],
+    "platforms": [
+      "linux",
+      "macos",
+      "windows"
+    ]
+  },
+  "errors": [
+    {
+      "code": "INVALID_TARGET",
+      "description": "The requested target is invalid or outside the granted execution scope.",
+      "retryable": false
+    }
+  ]
+}
