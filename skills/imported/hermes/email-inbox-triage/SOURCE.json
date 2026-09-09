@@ -1,0 +1,12 @@
+{
+  "source_namespace": "hermes",
+  "upstream_repo": "NousResearch/hermes-agent",
+  "upstream_path": "skills/email/email-inbox-triage",
+  "upstream_commit": "7dc796463d543a57270779b7f71f37f18b6faa5e",
+  "upstream_blob_sha": "f35cb4e4e8e18508c22e2701b753aef6042f89de",
+  "license": "MIT",
+  "license_basis": "SKILL.md frontmatter",
+  "import_type": "original-vendored",
+  "modified": false,
+  "imported_at": "2026-09-09"
+}
