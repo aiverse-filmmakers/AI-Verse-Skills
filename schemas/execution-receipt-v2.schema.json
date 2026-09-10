@@ -1,0 +1,148 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aiverse.local/schemas/execution-receipt-v2.schema.json",
+  "title": "AI-Verse Execution Receipt v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract",
+    "receipt_id",
+    "status",
+    "summary",
+    "binding",
+    "effect",
+    "verification_context",
+    "verification",
+    "warnings",
+    "remaining_uncertainty",
+    "trace_id"
+  ],
+  "properties": {
+    "contract": {"const": "aiverse-execution-receipt-v2"},
+    "receipt_id": {"type": "string", "minLength": 1},
+    "status": {"enum": ["success", "partial", "blocked", "failed", "aborted"]},
+    "summary": {"type": "string", "minLength": 1},
+    "binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "request_fingerprint",
+        "scope",
+        "action_class",
+        "operation",
+        "provider_id",
+        "capability_id",
+        "generation_id",
+        "package_digest"
+      ],
+      "properties": {
+        "request_fingerprint": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+        "scope": {"type": "string", "pattern": "^(operator|workspace:[a-z0-9][a-z0-9._-]{0,127})$"},
+        "action_class": {
+          "enum": [
+            "read_local",
+            "read_connected",
+            "write_local_reversible",
+            "modify_canonical_state",
+            "external_write_reversible",
+            "send_message",
+            "publish_publicly",
+            "spend_money",
+            "create_commit_or_pr",
+            "merge_or_deploy",
+            "delete_data",
+            "change_permissions",
+            "security_sensitive",
+            "high_stakes_domain_action"
+          ]
+        },
+        "operation": {"type": "string", "minLength": 1},
+        "provider_id": {"const": "aiverse-skills"},
+        "capability_id": {"type": "string", "pattern": "^aiverse-skills:[a-z0-9][a-z0-9-]*$"},
+        "generation_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,191}$"},
+        "package_digest": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["algorithm", "value"],
+          "properties": {
+            "algorithm": {"const": "aiverse-package-sha256-v1"},
+            "value": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+          }
+        }
+      }
+    },
+    "effect": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "source_kind", "source_ref", "independence"],
+      "properties": {
+        "state": {"enum": ["occurred", "not_occurred", "uncertain"]},
+        "source_kind": {"enum": ["skill_runtime", "ai_verse_os", "user", "external_authority", "independent_evaluator"]},
+        "source_ref": {"type": "string", "minLength": 1},
+        "independence": {"enum": ["same_context", "fresh_context", "independent_model", "external_authoritative"]},
+        "observed_at": {"type": "string", "format": "date-time"},
+        "details": {"type": "object"}
+      }
+    },
+    "verification_context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["evaluator_id", "independence"],
+      "properties": {
+        "evaluator_id": {"type": "string", "minLength": 1},
+        "independence": {"enum": ["same_context", "fresh_context", "independent_model", "external_authoritative"]},
+        "builder_context_id": {"type": "string", "minLength": 1},
+        "evaluator_context_id": {"type": "string", "minLength": 1}
+      }
+    },
+    "verification": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["criterion_id", "status", "evidence"],
+        "properties": {
+          "criterion_id": {"type": "string", "minLength": 1},
+          "status": {"enum": ["unverified", "passed", "failed", "insufficient_evidence", "not_applicable"]},
+          "rationale": {"type": "string"},
+          "evidence": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["ref", "kind", "source_kind", "source_ref", "independence"],
+              "properties": {
+                "ref": {"type": "string", "minLength": 1},
+                "kind": {"enum": ["observation", "measurement", "canonical_state", "user_confirmation", "authoritative_external", "independent_evaluation"]},
+                "source_kind": {"enum": ["skill_runtime", "ai_verse_os", "user", "external_authority", "independent_evaluator"]},
+                "source_ref": {"type": "string", "minLength": 1},
+                "independence": {"enum": ["same_context", "fresh_context", "independent_model", "external_authoritative"]},
+                "claim": {"type": "string"},
+                "observed_at": {"type": "string", "format": "date-time"},
+                "expires_at": {"type": "string", "format": "date-time"},
+                "scope": {"type": "string", "pattern": "^(operator|workspace:[a-z0-9][a-z0-9._-]{0,127})$"},
+                "integrity": {"type": "string"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["kind", "ref"],
+        "properties": {
+          "kind": {"type": "string", "minLength": 1},
+          "ref": {"type": "string", "minLength": 1},
+          "content_hash": {"type": "string"}
+        }
+      }
+    },
+    "warnings": {"type": "array", "items": {"type": "string"}},
+    "remaining_uncertainty": {"type": "array", "items": {"type": "string"}},
+    "trace_id": {"type": "string", "minLength": 1}
+  }
+}
