@@ -1,12 +1,12 @@
 # AI-Verse OS Capability Provider Integration
 
-Status: Skills provider v1 producer implemented; OS discovery/runtime integration remains a separate stage.
+Status: Skills provider v1, OS scoped discovery, supported OS host-adapter composition, and Brain receipt integration are implemented.
 
 ## Canonical contract
 
 AI-Verse OS owns the shared [Capability Provider Contract v1](https://github.com/aiverse-filmmakers/AI-Verse-OS/blob/1d2280a031a60b5dd5cee23eabd19677debf1352/system/contracts/capability-provider-v1/README.md), including its [index schema](https://github.com/aiverse-filmmakers/AI-Verse-OS/blob/1d2280a031a60b5dd5cee23eabd19677debf1352/system/contracts/capability-provider-v1/capability-index.schema.json). These links pin the agreed revision. This producer implementation does not redefine that contract. Contract changes require an explicit pin update and compatibility review.
 
-## Current implementation versus next stage
+## Current implementation
 
 The standalone checkout commands remain:
 
@@ -24,9 +24,9 @@ New immutable generations publish manifest schema 3 with `provider_contract: aiv
 
 The index publishes only selectable foundation/employee capabilities. Support-only packages remain installation members but are excluded from discovery. Each indexed capability carries a qualified `aiverse-skills:<id>` identity, static description/version/path, `aiverse-package-sha256-v1` digest, operators, and dependencies. The producer does not publish global runtime readiness, permission, or approval.
 
-The current readiness command remains a local dependency hint, not verified workspace access or action authorization. Real connection/readiness verification is a later integration stage.
+The readiness command reports live-verified operator readiness where a supported probe exists, but readiness still does not grant workspace access, action permission, or approval. Those remain host/runtime policy decisions.
 
-The current OS runtime does not yet consume this provider. OS provider discovery, scoped ranking/selection, local/workspace provider aggregation, and runtime invocation remain separate work. Skills does not add an OS resolver or write provider state into the OS repository in this stage.
+AI-Verse OS now consumes this provider through its scoped capability resolver, combining OS, distributed Skills, local personal, and active-workspace providers without moving Skills packages into the OS repository. The supported OS host adapter exposes those resolved capabilities to Brain and demonstrates a generation-pinned, read-only local capability invocation with a validated Skills v2 receipt. Skills still does not own the OS resolver or write provider state into the OS repository.
 
 ## Separation and ownership
 
@@ -63,20 +63,22 @@ The installer writes the final manifest first, hashes its exact UTF-8 bytes, and
 
 Install, update, rollback, and uninstall are serialized by the immutable generation lifecycle. Activation uses one atomic active-generation pointer; executions pin a generation before loading instructions/resources. Provider metadata lives with those immutable generation bytes, so rollback restores the exact previous manifest/index/package set and uninstall does not delete a generation already available to in-flight work.
 
-OS will compute contextual readiness for the active scope/runtime from package integrity, runtime support, verified connections, permission, and approval. Expired evidence becomes unknown. A binary or environment flag is not a live connection test. The static Skills index does not claim `READY` globally.
+OS remains responsible for contextual execution permission and scope. Skills readiness v2 supplies runtime/operator evidence separately from the static provider index; the static index does not claim `READY` globally, and readiness never substitutes for OS permission or Brain approval.
 
-The future OS resolver must apply relevance before limiting candidates, protect qualified identities and system aliases, and only load selected package bodies/resources. An absent optional library must be quiet and require no network activity. Broken/unsupported libraries are excluded and diagnosed without breaking OS; an explicitly requested unavailable capability must be reported.
+The implemented OS resolver applies relevance before limiting candidates, protects qualified identities and system aliases, and loads only selected package bodies/resources at execution time. An absent optional library is quiet and requires no network activity. Broken or unsupported libraries are excluded and diagnosed without breaking OS; an explicitly requested unavailable capability is reported.
 
 ## Existing extension compatibility
 
 OS provider discovery must preserve the existing local extension registry and Memory integration. Skills lifecycle operations remain external and do not modify tracked OS files or claim ownership of Memory adapters.
 
-Brain integration must consume the future OS resolver and normalize Skills receipts into verified host outcomes. `trace_id` is correlation, not external-effect proof. Skills evidence does not itself close Brain objectives. Full requirements and acceptance cases remain in the pinned canonical contract.
+Brain integration now consumes OS-resolved capabilities through the supported OS host adapter. The adapter pins the Skills generation before loading a capability and validates the resulting v2 receipt with Skills' semantic validator; Brain independently verifies the exact capability/generation/digest binding and translates receipt outcomes conservatively. `trace_id` remains correlation only, and Skills evidence does not itself close Brain objectives.
 
-## Next implementation gates
+## Integration status
 
-1. **Implemented here:** emit and validate immutable provider-v1 generation metadata and capability index from the standalone Skills installer.
-2. Implement scoped OS provider discovery and selection across OS, distributed Skills, local personal, and active-workspace providers.
-3. Prove real runtime resource loading/invocation and contextual readiness separately from static provider metadata.
-4. Verify absent/degraded providers, scope isolation, protected aliases, stale indexes, and generation changes during execution.
-5. Complete the separate Brain host adapter/receipt integration and final four-component acceptance suite before claiming integrated autonomous operation.
+1. **Implemented:** immutable provider-v1 generation metadata and capability index from the standalone Skills installer.
+2. **Implemented:** scoped OS provider discovery and selection across OS, distributed Skills, local personal, and active-workspace providers.
+3. **Implemented:** supported OS host-adapter composition with generation-pinned read-only capability invocation and Skills v2 receipt validation.
+4. **Implemented:** acceptance coverage for absent/degraded providers, scope isolation, protected aliases, stale indexes, and generation changes during execution.
+5. **Implemented:** Brain receipt verification plus the maintained four-component OS host acceptance path.
+
+This does not mean every capability can execute every external operator automatically. Operator-specific execution still depends on its runtime support, live readiness, OS permission, Brain policy/approval, and receipt/effect verification.
