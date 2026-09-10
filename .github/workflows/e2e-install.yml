@@ -2,6 +2,14 @@ name: Full E2E Install
 
 on:
   workflow_dispatch:
+  pull_request:
+    paths:
+      - "installer/**"
+      - "registry/**"
+      - "skills/**"
+      - "scripts/**"
+      - "tests/**"
+      - ".github/workflows/e2e-install.yml"
   push:
     branches: [main]
     paths:
@@ -9,6 +17,7 @@ on:
       - "registry/**"
       - "skills/**"
       - "scripts/**"
+      - "tests/**"
       - ".github/workflows/e2e-install.yml"
   schedule:
     - cron: "17 4 * * 1"
@@ -29,8 +38,10 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Validate registries
-        run: python scripts/validate_registry.py
+      - name: Validate registries and generation lifecycle
+        run: |
+          python scripts/validate_registry.py
+          python -m unittest discover -s tests -v
 
       - name: Full pinned upstream install
         run: |
@@ -39,19 +50,28 @@ jobs:
             --cache "$RUNNER_TEMP/aiverse-cache" \
             install --profile full
 
-      - name: Integrity doctor
+      - name: Integrity doctor and capability count
         run: |
           python installer/aiverse_skills.py \
             --root "$RUNNER_TEMP/aiverse-skills" \
             doctor --readiness
-
-      - name: E2E capability count
-        run: |
           python installer/aiverse_skills.py \
             --root "$RUNNER_TEMP/aiverse-skills" \
             e2e
 
-      - name: Exercise transactional update
+      - name: Pin execution generation and copy adapter
+        run: |
+          python installer/aiverse_skills.py \
+            --root "$RUNNER_TEMP/aiverse-skills" \
+            pin --json > "$RUNNER_TEMP/pin-before.json"
+          python installer/aiverse_skills.py \
+            --root "$RUNNER_TEMP/aiverse-skills" \
+            adapt --runtime codex --target "$RUNNER_TEMP/codex-skills" --copy
+          python installer/aiverse_skills.py \
+            --root "$RUNNER_TEMP/aiverse-skills" \
+            adapter-verify --target "$RUNNER_TEMP/codex-skills"
+
+      - name: Exercise immutable update
         run: |
           python installer/aiverse_skills.py \
             --root "$RUNNER_TEMP/aiverse-skills" \
@@ -61,7 +81,81 @@ jobs:
             --root "$RUNNER_TEMP/aiverse-skills" \
             doctor
 
-      - name: Exercise rollback
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          from installer.aiverse_skills_v3 import digest
+
+          temp = Path(os.environ["RUNNER_TEMP"])
+          pin = json.loads((temp / "pin-before.json").read_text(encoding="utf-8"))
+          generation = Path(pin["generation_path"])
+          manifest = json.loads((generation / ".aiverse" / "installed.json").read_text(encoding="utf-8"))
+          assert manifest["generation_id"] == pin["generation_id"]
+          for package in manifest["packages"]:
+              package_path = generation / package["path"]
+              assert (package_path / "SKILL.md").is_file()
+              assert digest(package_path) == package["digest_sha256"]
+          print("Pinned pre-update generation remains complete and immutable")
+          PY
+
+          if python installer/aiverse_skills.py \
+            --root "$RUNNER_TEMP/aiverse-skills" \
+            adapter-verify --target "$RUNNER_TEMP/codex-skills"; then
+            echo "ERROR: stale copied adapter was accepted after update" >&2
+            exit 1
+          fi
+          python installer/aiverse_skills.py \
+            --root "$RUNNER_TEMP/aiverse-skills" \
+            adapter-verify --target "$RUNNER_TEMP/codex-skills" --allow-stale
+
+      - name: Exercise pointer-only rollback
+        run: |
+          python installer/aiverse_skills.py \
+            --root "$RUNNER_TEMP/aiverse-skills" \
+            rollback
+          python installer/aiverse_skills.py \
+            --root "$RUNNER_TEMP/aiverse-skills" \
+            pin --json > "$RUNNER_TEMP/pin-after-rollback.json"
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          temp = Path(os.environ["RUNNER_TEMP"])
+          before = json.loads((temp / "pin-before.json").read_text(encoding="utf-8"))
+          after = json.loads((temp / "pin-after-rollback.json").read_text(encoding="utf-8"))
+          assert after["generation_id"] == before["generation_id"], (before, after)
+          print("Rollback restored the exact previously pinned generation")
+          PY
+          python installer/aiverse_skills.py \
+            --root "$RUNNER_TEMP/aiverse-skills" \
+            adapter-verify --target "$RUNNER_TEMP/codex-skills"
+          python installer/aiverse_skills.py \
+            --root "$RUNNER_TEMP/aiverse-skills" \
+            e2e
+
+      - name: Exercise uninstall without deleting pinned generation
+        run: |
+          python installer/aiverse_skills.py \
+            --root "$RUNNER_TEMP/aiverse-skills" \
+            uninstall
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          temp = Path(os.environ["RUNNER_TEMP"])
+          pin = json.loads((temp / "pin-before.json").read_text(encoding="utf-8"))
+          generation = Path(pin["generation_path"])
+          manifest = json.loads((generation / ".aiverse" / "installed.json").read_text(encoding="utf-8"))
+          assert manifest["generation_id"] == pin["generation_id"]
+          assert all((generation / p["path"] / "SKILL.md").is_file() for p in manifest["packages"])
+          print("Uninstall deactivated the library without deleting in-flight generation bytes")
+          PY
+          python installer/aiverse_skills.py \
+            --root "$RUNNER_TEMP/aiverse-skills" \
+            adapter-verify --target "$RUNNER_TEMP/codex-skills" --allow-stale
+
+      - name: Recover after uninstall
         run: |
           python installer/aiverse_skills.py \
             --root "$RUNNER_TEMP/aiverse-skills" \
