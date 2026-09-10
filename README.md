@@ -12,7 +12,7 @@ A curated, original-first professional skill distribution for AI agents, with fi
 - Operator Packs
 - install profiles
 - runtime adapters
-- transactional install, update and rollback
+- immutable-generation install, update, rollback and uninstall lifecycle
 - integrity doctor and operator-readiness reporting
 
 The goal is an AI worker that can become useful across a real company from Day 0: executive assistance, operations, research, marketing, social, design, filmmaking, post-production, sales, CRM, support, finance, product, HR, legal coordination and technical work.
@@ -34,6 +34,8 @@ Canonical Skills install root:
 ~/.aiverse/skills/
 ```
 
+Installed package bytes live in immutable generations beneath that root. The active generation is selected by one atomic pointer rather than by replacing a live package tree.
+
 ## Install
 
 ### Standalone
@@ -51,14 +53,40 @@ The agreed [provider v1 contract and implementation mapping](docs/AI_VERSE_OS_IN
 
 OS installation remains independent and never implicitly installs this distribution.
 
-## Transaction safety
+## Immutable generation safety
 
-`install` and `update` build the complete requested profile in a staging directory first. The staged library is verified before the active library is replaced. The previous install becomes a rollback point.
+`install` and `update` build a complete profile in staging, verify it, commit it under:
+
+```text
+~/.aiverse/skills/.aiverse/generations/<generation-id>/
+```
+
+and then atomically replace only:
+
+```text
+~/.aiverse/skills/.aiverse/active.json
+```
+
+The previous generation is retained unchanged. `rollback` switches that pointer back; `uninstall` deactivates the library without deleting generation bytes that an in-flight execution may still be using.
+
+Lifecycle mutations are serialized with a per-install lock so install, update, rollback and uninstall cannot interleave.
 
 ```bash
 ./aiverse-skills update
 ./aiverse-skills rollback
+./aiverse-skills uninstall
 ```
+
+A runtime must pin the active generation before loading a skill or one of its helper scripts:
+
+```bash
+./aiverse-skills pin --json
+./aiverse-skills pin --package document-authoring --json
+```
+
+Once pinned, use the returned generation path for the entire execution. Never resolve `SKILL.md` from one active generation and a later script from another.
+
+See [`docs/IMMUTABLE_GENERATIONS.md`](docs/IMMUTABLE_GENERATIONS.md).
 
 ## Readiness is not installation
 
@@ -93,6 +121,7 @@ The distribution records:
 - acquisition mode
 - operator dependencies
 - local content digest after installation
+- immutable generation ID and generation digest
 
 Future AI-Verse-authored employee skills belong only in:
 
@@ -112,6 +141,14 @@ Generic agents can explicitly adapt the external library into a runtime-owned sk
 ./aiverse-skills adapt --runtime hermes --target ~/.hermes/skills
 ```
 
+Each adapter manifest is bound to the generation it materialized. If the canonical active generation changes, a copied adapter becomes stale and must not be treated as current until refreshed. Check it with:
+
+```bash
+./aiverse-skills adapter-verify --target ~/.codex/skills
+```
+
+`--allow-stale` verifies that an older adapter still matches its own immutable generation without claiming it is current.
+
 The planned AI-Verse OS integration uses external discovery and does not materialize the distribution inside the OS repository. See the provider contract for implementation status.
 
 ## Important design rule
@@ -122,12 +159,13 @@ A host should discover skill metadata progressively and load only skill bodies r
 
 ## Validation
 
-Normal CI validates registry integrity and full-profile planning.
+Normal CI validates registry integrity, generation-lifecycle adversarial tests and full-profile planning.
 
-A full E2E workflow performs a real full-profile pinned upstream install, verifies all package digests, exercises transactional update and rollback, and confirms the full profile contains all 100 canonical capabilities.
+The full E2E workflow performs a real pinned upstream install and verifies all package digests. It pins an execution generation, creates a copied adapter, updates the distribution, proves the old execution remains complete, rejects the now-stale adapter, rolls back to the exact previous generation, uninstalls without deleting pinned bytes, and recovers the installation.
 
 See:
 
+- `docs/IMMUTABLE_GENERATIONS.md`
 - `docs/SHIPPING.md`
 - `docs/AI_VERSE_OS_INTEGRATION.md`
 - `docs/PROJECT_STATE.md`
