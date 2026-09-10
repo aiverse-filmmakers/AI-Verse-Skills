@@ -265,16 +265,22 @@ def _history_without(history: List[str], *excluded: Optional[str]) -> List[str]:
 
 
 def activate_generation(root: Path, generation_id: str) -> Dict[str, object]:
-    """Atomically switch the one active generation pointer."""
+    """Atomically switch the one active generation pointer.
+
+    A missing pointer is valid only for first activation. A malformed existing
+    pointer is never treated as absence because overwriting it would silently
+    destroy rollback state.
+    """
 
     root = Path(root).resolve()
     path = generation_path(root, generation_id)
     if not path.is_dir():
         raise RuntimeError(f"Cannot activate missing generation: {generation_id}")
     manifest = read_generation_manifest(root, generation_id)
-    try:
+    pointer_path = active_pointer_path(root)
+    if pointer_path.exists():
         current = read_active_pointer(root, allow_uninstalled=True)
-    except RuntimeError:
+    else:
         current = {"state": "uninstalled", "generation_id": None, "history": []}
     current_id = current.get("generation_id") if current.get("state") == "active" else None
     history = list(current.get("history", []))
@@ -290,7 +296,7 @@ def activate_generation(root: Path, generation_id: str) -> Dict[str, object]:
         "activated_at": dt.datetime.now(dt.timezone.utc).isoformat(),
         "history": history,
     }
-    _atomic_json_write(active_pointer_path(root), pointer)
+    _atomic_json_write(pointer_path, pointer)
     return pointer
 
 
