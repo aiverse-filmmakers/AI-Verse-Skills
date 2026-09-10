@@ -1,0 +1,42 @@
+name: Runtime Readiness
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "installer/readiness_v2.py"
+      - "installer/aiverse_skills.py"
+      - "registry/operators.json"
+      - "tests/test_readiness_v2.py"
+      - "docs/READINESS_VERIFICATION.md"
+      - ".github/workflows/readiness.yml"
+  pull_request:
+    paths:
+      - "installer/readiness_v2.py"
+      - "installer/aiverse_skills.py"
+      - "registry/operators.json"
+      - "tests/test_readiness_v2.py"
+      - "docs/READINESS_VERIFICATION.md"
+      - ".github/workflows/readiness.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  readiness-contract:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python: ["3.9", "3.12"]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Test live readiness contract
+        run: python -m unittest tests.test_readiness_v2 -v
+      - name: Verify public readiness CLI imports
+        run: python installer/aiverse_skills.py --root "${{ runner.temp }}/not-installed" readiness --json
