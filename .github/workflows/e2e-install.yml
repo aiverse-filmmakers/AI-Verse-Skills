@@ -33,10 +33,20 @@ jobs:
       - name: Checkout AI-Verse-Skills
         uses: actions/checkout@v4
 
+      - name: Checkout pinned provider contract
+        uses: actions/checkout@v4
+        with:
+          repository: aiverse-filmmakers/AI-Verse-OS
+          ref: 1d2280a031a60b5dd5cee23eabd19677debf1352
+          path: _provider-contract-os
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+
+      - name: Install contract validator
+        run: python -m pip install jsonschema
 
       - name: Validate registries and generation lifecycle
         run: |
@@ -49,6 +59,59 @@ jobs:
             --root "$RUNNER_TEMP/aiverse-skills" \
             --cache "$RUNNER_TEMP/aiverse-cache" \
             install --profile full
+
+      - name: Validate capability provider v1 output
+        run: |
+          python installer/aiverse_skills.py \
+            --root "$RUNNER_TEMP/aiverse-skills" \
+            pin --json > "$RUNNER_TEMP/provider-pin.json"
+          python - <<'PY'
+          import hashlib
+          import json
+          import os
+          from pathlib import Path
+          import jsonschema
+          from installer.provider_contract_v1 import package_digest_v1, verify_provider_generation
+
+          temp = Path(os.environ["RUNNER_TEMP"])
+          workspace = Path(os.environ["GITHUB_WORKSPACE"])
+          pin = json.loads((temp / "provider-pin.json").read_text(encoding="utf-8"))
+          generation = Path(pin["generation_path"])
+          manifest_path = generation / ".aiverse" / "installed.json"
+          index_path = generation / ".aiverse" / "capability-index.json"
+          manifest_bytes = manifest_path.read_bytes()
+          manifest = json.loads(manifest_bytes)
+          index = json.loads(index_path.read_text(encoding="utf-8"))
+          schema = json.loads((workspace / "_provider-contract-os" / "system" / "contracts" / "capability-provider-v1" / "capability-index.schema.json").read_text(encoding="utf-8"))
+
+          jsonschema.validate(index, schema)
+          assert manifest["schema_version"] == 3
+          assert manifest["provider_contract"] == "aiverse-capability-provider-v1"
+          assert manifest["provider_id"] == "aiverse-skills"
+          assert manifest["generation_id"] == pin["generation_id"] == index["generation_id"]
+          assert index["manifest_sha256"] == hashlib.sha256(manifest_bytes).hexdigest()
+          assert verify_provider_generation(generation, pin["generation_id"]) == []
+
+          packages = [p for p in manifest["packages"] if p["kind"] != "support"]
+          support_ids = {p["id"] for p in manifest["packages"] if p["kind"] == "support"}
+          records = {r["id"]: r for r in index["capabilities"]}
+          assert len(records) == len(packages)
+          assert all(p["qualified_id"] in records for p in packages)
+          assert all(not any(record_id.endswith(":" + support_id) for record_id in records) for support_id in support_ids)
+
+          for package in packages:
+              record = records[package["qualified_id"]]
+              assert record["path"] == package["path"]
+              assert record["version"] == package["version"]
+              assert record["digest"] == package["digest"]
+              assert record["operators"] == package["operators"]
+              assert record["dependencies"] == package["dependencies"]
+              assert record["visibility"] == "shared"
+              assert record["package_state"] == "valid"
+              assert "readiness" not in record and "permission" not in record and "approval" not in record
+              assert package_digest_v1(generation / package["path"]) == package["digest"]["value"]
+          print(f"Provider v1 OK: {len(records)} selectable capabilities bound to {pin['generation_id']}")
+          PY
 
       - name: Integrity doctor and capability count
         run: |
@@ -86,17 +149,19 @@ jobs:
           import os
           from pathlib import Path
           from installer.aiverse_skills_v3 import digest
+          from installer.provider_contract_v1 import verify_provider_generation
 
           temp = Path(os.environ["RUNNER_TEMP"])
           pin = json.loads((temp / "pin-before.json").read_text(encoding="utf-8"))
           generation = Path(pin["generation_path"])
           manifest = json.loads((generation / ".aiverse" / "installed.json").read_text(encoding="utf-8"))
           assert manifest["generation_id"] == pin["generation_id"]
+          assert verify_provider_generation(generation, pin["generation_id"]) == []
           for package in manifest["packages"]:
               package_path = generation / package["path"]
               assert (package_path / "SKILL.md").is_file()
               assert digest(package_path) == package["digest_sha256"]
-          print("Pinned pre-update generation remains complete and immutable")
+          print("Pinned pre-update generation remains complete, indexed, and immutable")
           PY
 
           if python installer/aiverse_skills.py \
@@ -121,11 +186,13 @@ jobs:
           import json
           import os
           from pathlib import Path
+          from installer.provider_contract_v1 import verify_provider_generation
           temp = Path(os.environ["RUNNER_TEMP"])
           before = json.loads((temp / "pin-before.json").read_text(encoding="utf-8"))
           after = json.loads((temp / "pin-after-rollback.json").read_text(encoding="utf-8"))
           assert after["generation_id"] == before["generation_id"], (before, after)
-          print("Rollback restored the exact previously pinned generation")
+          assert verify_provider_generation(Path(after["generation_path"]), after["generation_id"]) == []
+          print("Rollback restored the exact previously pinned provider generation")
           PY
           python installer/aiverse_skills.py \
             --root "$RUNNER_TEMP/aiverse-skills" \
@@ -143,13 +210,15 @@ jobs:
           import json
           import os
           from pathlib import Path
+          from installer.provider_contract_v1 import verify_provider_generation
           temp = Path(os.environ["RUNNER_TEMP"])
           pin = json.loads((temp / "pin-before.json").read_text(encoding="utf-8"))
           generation = Path(pin["generation_path"])
           manifest = json.loads((generation / ".aiverse" / "installed.json").read_text(encoding="utf-8"))
           assert manifest["generation_id"] == pin["generation_id"]
           assert all((generation / p["path"] / "SKILL.md").is_file() for p in manifest["packages"])
-          print("Uninstall deactivated the library without deleting in-flight generation bytes")
+          assert verify_provider_generation(generation, pin["generation_id"]) == []
+          print("Uninstall deactivated the library without deleting in-flight provider generation bytes")
           PY
           python installer/aiverse_skills.py \
             --root "$RUNNER_TEMP/aiverse-skills" \
