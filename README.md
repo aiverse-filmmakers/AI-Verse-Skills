@@ -38,7 +38,7 @@ Installed package bytes live in immutable generations beneath that root. The act
 
 ## Install
 
-### Standalone
+### macOS / Linux
 
 ```bash
 git clone https://github.com/aiverse-filmmakers/AI-Verse-Skills.git
@@ -47,9 +47,20 @@ cd AI-Verse-Skills
 ./aiverse-skills doctor --readiness
 ```
 
+### Windows PowerShell
+
+```powershell
+git clone https://github.com/aiverse-filmmakers/AI-Verse-Skills.git
+Set-Location AI-Verse-Skills
+.\aiverse-skills.ps1 install
+.\aiverse-skills.ps1 doctor --readiness
+```
+
+The portable fallback on every platform is `python installer/aiverse_skills.py <command>`.
+
 ### AI-Verse OS integration status
 
-The agreed [provider v1 contract and implementation mapping](docs/AI_VERSE_OS_INTEGRATION.md) defines external discovery without copying packages into OS. The current OS CLI does not yet expose `ai-verse-os skills` commands, and this installer does not yet emit the v1 capability index. Use the standalone commands above today.
+The [provider v1 contract and implementation mapping](docs/AI_VERSE_OS_INTEGRATION.md) is implemented. New immutable generations emit the provider-v1 capability index, and AI-Verse OS discovers the external provider directly without copying packages into the OS repository. The OS CLI does not need to install Skills or own its lifecycle.
 
 OS installation remains independent and never implicitly installs this distribution.
 
@@ -149,7 +160,7 @@ Each adapter manifest is bound to the generation it materialized. If the canonic
 
 `--allow-stale` verifies that an older adapter still matches its own immutable generation without claiming it is current.
 
-The planned AI-Verse OS integration uses external discovery and does not materialize the distribution inside the OS repository. See the provider contract for implementation status.
+AI-Verse OS integration uses external provider-v1 discovery and does not materialize the distribution inside the OS repository. The OS host reads selected packages from their pinned immutable generation; it does not require the Skills source checkout at runtime.
 
 ## Important design rule
 
