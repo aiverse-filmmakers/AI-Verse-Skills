@@ -16,6 +16,11 @@ import re
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Mapping, Optional
 
+try:
+    from . import generation_lifecycle as lifecycle
+except ImportError:
+    import generation_lifecycle as lifecycle
+
 ADMISSION_SCHEMA_VERSION = 1
 ADMISSION_FILENAME = "admission.json"
 _TEXT_SUFFIXES = {
@@ -275,6 +280,7 @@ def apply_admission(impl: Any) -> None:
     original_verify_stage = impl.verify_stage
     original_verify_root = impl.verify_root
     original_pin = impl.pin_active_generation
+    original_rollback = impl.rollback_active_generation
 
     def write_stage_manifest(profile, installed, generation_id, stage):
         original_write(profile, installed, generation_id, stage)
@@ -306,10 +312,20 @@ def apply_admission(impl: Any) -> None:
             raise RuntimeError("Pinned generation failed package admission verification:\n" + "\n".join(errors))
         return pinned
 
+    def rollback(root, digest_fn):
+        pinned = original_rollback(Path(root), digest_fn)
+        errors = verify_admission_generation(impl, pinned.generation_path, pinned.generation_id)
+        if errors:
+            raise RuntimeError("Rollback generation failed package admission verification:\n" + "\n".join(errors))
+        return pinned
+
     impl._write_stage_manifest = write_stage_manifest
     impl.verify_stage = verify_stage
     impl.verify_root = verify_root
     impl.pin_active_generation = pin
+    impl.rollback_active_generation = rollback
+    lifecycle.pin_active_generation = pin
+    lifecycle.rollback_active_generation = rollback
     impl.build_admission_report = lambda root, manifest: build_admission_report(impl, Path(root), manifest)
     impl.write_admission_metadata = lambda root: write_admission_metadata(impl, Path(root))
     impl.verify_admission_generation = lambda root, generation_id=None: verify_admission_generation(
