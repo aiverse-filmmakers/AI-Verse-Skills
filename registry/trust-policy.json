@@ -1,0 +1,147 @@
+{
+  "schema_version": 1,
+  "policy": {
+    "install_admission": "Pinned packages may be installed after deterministic security admission even when source trust is not elevated.",
+    "separation": "integrity, admission, trust, readiness and authorization are independent states",
+    "unknown_redistribution": "fetch-only",
+    "no_implicit_authorization": true
+  },
+  "sources": {
+    "aiverse-filmmakers/AI-Verse-Skills": {
+      "license": "Apache-2.0",
+      "redistribution": "redistributable",
+      "trust": "first-party",
+      "ownership": "first_party",
+      "vendoring_allowed": true,
+      "auto_mutation": false
+    },
+    "googleworkspace/cli": {
+      "license": "Apache-2.0",
+      "redistribution": "redistributable",
+      "trust": "reviewed-upstream",
+      "ownership": "curated_upstream",
+      "vendoring_allowed": true,
+      "auto_mutation": false
+    },
+    "NousResearch/hermes-agent": {
+      "license": "MIT",
+      "redistribution": "redistributable",
+      "trust": "reviewed-upstream",
+      "ownership": "curated_upstream",
+      "vendoring_allowed": true,
+      "auto_mutation": false
+    },
+    "danielmiessler/LifeOS": {
+      "license": "MIT",
+      "redistribution": "redistributable",
+      "trust": "reviewed-upstream",
+      "ownership": "curated_upstream",
+      "vendoring_allowed": true,
+      "auto_mutation": false
+    },
+    "coreyhaines31/marketingskills": {
+      "license": "MIT",
+      "redistribution": "fetch-only",
+      "trust": "reviewed-upstream",
+      "ownership": "curated_upstream",
+      "vendoring_allowed": false,
+      "auto_mutation": false
+    },
+    "kajisho5/ffmpeg-skill": {
+      "license": "MIT",
+      "redistribution": "fetch-only",
+      "trust": "reviewed-upstream",
+      "ownership": "curated_upstream",
+      "vendoring_allowed": false,
+      "auto_mutation": false
+    },
+    "bytedance/deer-flow": {
+      "license": "upstream-controlled",
+      "redistribution": "fetch-only",
+      "trust": "external",
+      "ownership": "external",
+      "vendoring_allowed": false,
+      "auto_mutation": false
+    },
+    "anthropics/skills": {
+      "license": "upstream-controlled",
+      "redistribution": "fetch-only",
+      "trust": "external",
+      "ownership": "external",
+      "vendoring_allowed": false,
+      "auto_mutation": false
+    },
+    "anthropics/knowledge-work-plugins": {
+      "license": "upstream-controlled",
+      "redistribution": "fetch-only",
+      "trust": "external",
+      "ownership": "external",
+      "vendoring_allowed": false,
+      "auto_mutation": false
+    },
+    "figma/mcp-server-guide": {
+      "license": "upstream-controlled",
+      "redistribution": "fetch-only",
+      "trust": "external",
+      "ownership": "external",
+      "vendoring_allowed": false,
+      "auto_mutation": false
+    },
+    "social-media-skills/skills": {
+      "license": "upstream-controlled",
+      "redistribution": "fetch-only",
+      "trust": "external",
+      "ownership": "external",
+      "vendoring_allowed": false,
+      "auto_mutation": false
+    },
+    "novoads/agent-skills": {
+      "license": "upstream-controlled",
+      "redistribution": "fetch-only",
+      "trust": "external",
+      "ownership": "external",
+      "vendoring_allowed": false,
+      "auto_mutation": false
+    },
+    "62656456/ai-film-skills": {
+      "license": "upstream-controlled",
+      "redistribution": "fetch-only",
+      "trust": "external",
+      "ownership": "external",
+      "vendoring_allowed": false,
+      "auto_mutation": false
+    },
+    "zhangzhangco/film-production-skills": {
+      "license": "upstream-controlled",
+      "redistribution": "fetch-only",
+      "trust": "external",
+      "ownership": "external",
+      "vendoring_allowed": false,
+      "auto_mutation": false
+    },
+    "Kemerd/premiere-agent": {
+      "license": "upstream-controlled",
+      "redistribution": "fetch-only",
+      "trust": "external",
+      "ownership": "external",
+      "vendoring_allowed": false,
+      "auto_mutation": false
+    },
+    "aedev-tools/adobe-agent-skills": {
+      "license": "upstream-controlled",
+      "redistribution": "fetch-only",
+      "trust": "external",
+      "ownership": "external",
+      "vendoring_allowed": false,
+      "auto_mutation": false
+    },
+    "HubSpot/agent-cli-skills": {
+      "license": "upstream-controlled",
+      "redistribution": "fetch-only",
+      "trust": "external",
+      "ownership": "external",
+      "vendoring_allowed": false,
+      "auto_mutation": false
+    }
+  }
+}
