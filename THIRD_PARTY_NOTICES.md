@@ -1,30 +1,30 @@
 # Third-Party Notices
 
-AI-Verse-Skills is an original-first distribution. Selected third-party skill packages remain attributable to their upstream authors and repositories.
+AI-Verse-Skills is an original-first distribution. Third-party Skill packages remain attributable to their upstream authors and are governed by their upstream terms. The repository's MIT license covers AI-Verse-owned repository code and content only. It does not relicense third-party packages.
 
-The authoritative machine-readable source list and exact pinned revisions are `registry/sources.json` and `registry/packages.json`.
+The authoritative package pins are in `registry/packages.json`. The public-beta redistribution, trust and ownership decisions are in `registry/trust-policy.json`.
 
-## Source ecosystems in the September 2026 distribution
+## Public-beta distribution decisions
 
-| Source | Repository | Distribution handling |
-|---|---|---|
-| Google Workspace CLI | `googleworkspace/cli` | Apache-2.0; selected proof packages vendored, dependencies/pinned packages fetched as recorded |
-| Hermes Agent | `NousResearch/hermes-agent` | MIT; selected proof package vendored, other selected packages pinned/fetched |
-| ByteDance DeerFlow | `bytedance/deer-flow` | selected package pinned/fetched from upstream |
-| Anthropic Skills | `anthropics/skills` | selected packages pinned/fetched from upstream |
-| LifeOS | `danielmiessler/LifeOS` | MIT; Council proof package vendored, other selected packages pinned/fetched |
-| Anthropic Knowledge Work Plugins | `anthropics/knowledge-work-plugins` | selected packages pinned/fetched from upstream |
-| Figma MCP Server Guide | `figma/mcp-server-guide` | selected packages pinned/fetched from upstream |
-| Social Media Skills | `social-media-skills/skills` | selected packages pinned/fetched from upstream |
-| Marketing Skills | `coreyhaines31/marketingskills` | MIT; selected packages pinned/fetched |
-| NovoAds Agent Skills | `novoads/agent-skills` | selected package pinned/fetched from upstream |
-| AI Film Skills | `62656456/ai-film-skills` | selected packages pinned/fetched from upstream |
-| Film Production Skills | `zhangzhangco/film-production-skills` | MIT; selected packages pinned/fetched |
-| FFmpeg Skill | `kajisho5/ffmpeg-skill` | MIT; selected package pinned/fetched |
-| Premiere Agent | `Kemerd/premiere-agent` | selected repository package pinned/fetched from upstream |
-| Adobe Agent Skills | `aedev-tools/adobe-agent-skills` | selected package pinned/fetched from upstream |
-| HubSpot Agent CLI Skills | `HubSpot/agent-cli-skills` | selected packages pinned/fetched from upstream |
+| Source | Repository | License decision | Public-beta handling |
+|---|---|---|---|
+| Google Workspace CLI | `googleworkspace/cli` | Apache-2.0 | Redistributable where recorded; selected proof packages may be vendored |
+| Hermes Agent | `NousResearch/hermes-agent` | MIT | Redistributable where recorded; selected proof package may be vendored |
+| LifeOS | `danielmiessler/LifeOS` | MIT | Redistributable where recorded; selected proof package may be vendored |
+| Marketing Skills | `coreyhaines31/marketingskills` | MIT | Fetch-only in the public-beta distribution |
+| FFmpeg Skill | `kajisho5/ffmpeg-skill` | MIT | Fetch-only in the public-beta distribution |
+| ByteDance DeerFlow | `bytedance/deer-flow` | Upstream-controlled | Fetch-only |
+| Anthropic Skills | `anthropics/skills` | Upstream-controlled | Fetch-only |
+| Anthropic Knowledge Work Plugins | `anthropics/knowledge-work-plugins` | Upstream-controlled | Fetch-only |
+| Figma MCP Server Guide | `figma/mcp-server-guide` | Upstream-controlled | Fetch-only |
+| Social Media Skills | `social-media-skills/skills` | Upstream-controlled | Fetch-only |
+| NovoAds Agent Skills | `novoads/agent-skills` | Upstream-controlled | Fetch-only |
+| AI Film Skills | `62656456/ai-film-skills` | Upstream-controlled | Fetch-only |
+| Film Production Skills | `zhangzhangco/film-production-skills` | Upstream-controlled | Fetch-only |
+| Premiere Agent | `Kemerd/premiere-agent` | Upstream-controlled | Fetch-only |
+| Adobe Agent Skills | `aedev-tools/adobe-agent-skills` | Upstream-controlled | Fetch-only |
+| HubSpot Agent CLI Skills | `HubSpot/agent-cli-skills` | Upstream-controlled | Fetch-only |
 
-AI-Verse does not claim authorship of third-party skill content.
+"Upstream-controlled" means AI-Verse is not making a broader redistribution claim for public beta. The installer fetches the exact pinned upstream package rather than vendoring it into the distribution.
 
-For an installed package, inspect the copied package's own license/notice files where provided and the source metadata in the install manifest. Upstream terms remain controlling for upstream work.
+AI-Verse does not claim authorship of third-party Skill content. Installed package provenance, source revision and content digests remain inspectable in immutable generation metadata.
