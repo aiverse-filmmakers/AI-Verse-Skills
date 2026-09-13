@@ -183,7 +183,10 @@ def build_admission_report(impl: Any, generation_root: Path, manifest: Mapping[s
             "status": "deny", "findings": [{"severity": "deny", "code": "package-missing", "path": str(package_path)}]
         }
         source_trust = str(policy.get("trust", "external"))
-        trusted = source_trust in {"first-party", "reviewed-upstream", "learned-promoted"} and security["status"] != "deny"
+        trusted = (
+            source_trust in {"first-party", "reviewed-upstream", "learned-promoted"}
+            and security["status"] == "pass"
+        )
         admitted = integrity.get("status") == "verified" and security["status"] != "deny"
         if not admitted:
             blocked = True
