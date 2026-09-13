@@ -276,6 +276,11 @@ def _write_stage_manifest(profile, installed, generation_id, stage):
     _atomic_json_write(meta / "installed.json", manifest_for(profile, installed, generation_id, stage))
 
 
+def manifest_relative_path(stage, path):
+    """Serialize generation package paths in the provider contract's POSIX form."""
+    return path.relative_to(stage).as_posix()
+
+
 def build_stage(profile, stage, cache, generation_id, offline=False):
     jobs = install_plan(profile, stage)
     installed, checkouts = [], {}
@@ -293,7 +298,7 @@ def build_stage(profile, stage, cache, generation_id, offline=False):
         installed.append({
             "kind": kind,
             "id": cid,
-            "path": str(dst.relative_to(stage)),
+            "path": manifest_relative_path(stage, dst),
             "source_repo": p.get("repo") if p else "aiverse-filmmakers/AI-Verse-Skills",
             "source_commit": p.get("commit") if p else None,
             "operators": p.get("operators", []) if p else [],
