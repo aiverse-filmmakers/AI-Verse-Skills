@@ -5,44 +5,58 @@
       "id": "aiverse-os",
       "mode": "external-reference",
       "priority": 1,
-      "description": "AI-Verse OS discovers the external canonical AI-Verse-Skills installation and its manifest directly. No skill packages, copies or symlinks are placed inside the OS repository."
+      "description": "AI-Verse OS discovers the external canonical AI-Verse-Skills installation and its manifest directly. No skill packages, copies or symlinks are placed inside the OS repository.",
+      "public_beta_support": "end-to-end",
+      "acceptance": "discover-select-load-invoke-receipt verified by the maintained AI-Verse OS host acceptance path"
     },
     {
       "id": "agent-skills",
       "mode": "directory",
       "priority": 2,
-      "description": "Expose portable skill package directories to Agent Skills-compatible runtimes."
+      "description": "Expose portable skill package directories to Agent Skills-compatible runtimes.",
+      "public_beta_support": "package-exposure",
+      "acceptance": "portable directory exposure only; no claim that an arbitrary host completed a real invocation"
     },
     {
       "id": "claude",
       "mode": "directory-link",
       "priority": 3,
-      "description": "Link/copy selected installed packages into a user-selected Claude skills directory when explicitly requested."
+      "description": "Link/copy selected installed packages into a user-selected Claude skills directory when explicitly requested.",
+      "public_beta_support": "adapter-exposure",
+      "acceptance": "generation-pinned exposure/verification only; runtime execution remains runtime-owned and is not a public-beta invocation claim"
     },
     {
       "id": "codex",
       "mode": "directory-link",
       "priority": 4,
-      "description": "Link/copy selected installed packages into a user-selected Codex skills directory when explicitly requested."
+      "description": "Link/copy selected installed packages into a user-selected Codex skills directory when explicitly requested.",
+      "public_beta_support": "adapter-exposure",
+      "acceptance": "generation-pinned exposure/verification only; runtime execution remains runtime-owned and is not a public-beta invocation claim"
     },
     {
       "id": "hermes",
       "mode": "directory-link",
       "priority": 5,
-      "description": "Expose packages to a user-selected Hermes skills directory while preserving original package content."
+      "description": "Expose packages to a user-selected Hermes skills directory while preserving original package content.",
+      "public_beta_support": "adapter-exposure",
+      "acceptance": "generation-pinned exposure/verification only; runtime execution remains runtime-owned and is not a public-beta invocation claim"
     },
     {
       "id": "openclaw",
       "mode": "directory-link",
       "priority": 6,
-      "description": "Expose packages to a user-selected OpenClaw skill root; runtime permissions remain OpenClaw-owned."
+      "description": "Expose packages to a user-selected OpenClaw skill root; runtime permissions remain OpenClaw-owned.",
+      "public_beta_support": "adapter-exposure",
+      "acceptance": "generation-pinned exposure/verification only; runtime execution remains runtime-owned and is not a public-beta invocation claim"
     },
     {
       "id": "gemini",
       "mode": "directory-link",
       "priority": 7,
-      "description": "Expose packages to a user-selected Gemini skill root."
+      "description": "Expose packages to a user-selected Gemini skill root.",
+      "public_beta_support": "adapter-exposure",
+      "acceptance": "generation-pinned exposure/verification only; runtime execution remains runtime-owned and is not a public-beta invocation claim"
     }
   ],
-  "rule": "Adapters expose or reference skills; they never grant filesystem scope, secrets, connections, approvals, memory authority, or scheduling. AI-Verse OS compatibility is external-reference only."
+  "rule": "Adapters expose or reference skills; they never grant filesystem scope, secrets, connections, approvals, memory authority, or scheduling. AI-Verse OS compatibility is external-reference only. Only aiverse-os is currently a public-beta end-to-end invocation claim. Other entries are exposure compatibility surfaces until a real runtime-specific invocation acceptance is added."
 }
