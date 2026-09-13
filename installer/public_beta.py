@@ -389,19 +389,36 @@ def apply_public_beta(impl: Any) -> None:
             choices["doctor"].add_argument("--depth", choices=DOCTOR_DEPTHS, default="system")
 
         def wrap_existing(name):
+            def record_lifecycle_action(root):
+                root = Path(root).expanduser().resolve()
+                if name == "uninstall":
+                    _write_integration(impl, root, "uninstalled")
+                elif name in {"install", "rollback"}:
+                    _write_integration(
+                        impl,
+                        root,
+                        "enabled" if _setup_path(root).is_file() else "installed",
+                    )
+                elif name == "update":
+                    current = _json_load(_integration_path(root), {})
+                    if current.get("action") not in {"enabled", "installed"}:
+                        _write_integration(
+                            impl,
+                            root,
+                            "enabled" if _setup_path(root).is_file() else "installed",
+                        )
+
             def command(a):
                 if getattr(a, "json", False):
                     output = _capture(original[name], a)
-                    if name == "uninstall":
-                        _write_integration(impl, Path(a.root).expanduser().resolve(), "uninstalled")
+                    record_lifecycle_action(a.root)
                     payload = status_report(impl, Path(a.root))
                     payload["command"] = name
                     payload["legacy_output"] = output
                     _print(payload, True)
                 else:
                     original[name](a)
-                    if name == "uninstall":
-                        _write_integration(impl, Path(a.root).expanduser().resolve(), "uninstalled")
+                    record_lifecycle_action(a.root)
             return command
 
         for name in ("install", "update", "rollback", "uninstall"):
