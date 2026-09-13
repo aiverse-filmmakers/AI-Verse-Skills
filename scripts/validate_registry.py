@@ -47,6 +47,10 @@ for sid,s in packages["sources"].items():
             errors.append(f"source {sid}: missing license decision")
         if policy.get("redistribution") not in {"redistributable","fetch-only","private-local"}:
             errors.append(f"source {sid}: invalid redistribution decision")
+        if s.get("license") != policy.get("license"):
+            errors.append(f"source {sid}: package registry license disagrees with trust policy")
+        if s.get("redistribution") != policy.get("redistribution"):
+            errors.append(f"source {sid}: package registry redistribution disagrees with trust policy")
         if any(p.get("vendored") for p in s.get("packages",[])) and not policy.get("vendoring_allowed"):
             errors.append(f"source {sid}: vendored package but vendoring is not allowed")
 
