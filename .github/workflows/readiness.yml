@@ -5,18 +5,32 @@ on:
     branches: [main]
     paths:
       - "installer/readiness_v2.py"
+      - "installer/admission.py"
+      - "installer/learning.py"
+      - "installer/public_beta.py"
       - "installer/aiverse_skills.py"
       - "registry/operators.json"
+      - "registry/trust-policy.json"
+      - "registry/runtime-adapters.json"
       - "tests/test_readiness_v2.py"
+      - "tests/test_public_beta_learning.py"
       - "docs/READINESS_VERIFICATION.md"
+      - "docs/PUBLIC_BETA.md"
       - ".github/workflows/readiness.yml"
   pull_request:
     paths:
       - "installer/readiness_v2.py"
+      - "installer/admission.py"
+      - "installer/learning.py"
+      - "installer/public_beta.py"
       - "installer/aiverse_skills.py"
       - "registry/operators.json"
+      - "registry/trust-policy.json"
+      - "registry/runtime-adapters.json"
       - "tests/test_readiness_v2.py"
+      - "tests/test_public_beta_learning.py"
       - "docs/READINESS_VERIFICATION.md"
+      - "docs/PUBLIC_BETA.md"
       - ".github/workflows/readiness.yml"
   workflow_dispatch:
 
@@ -36,7 +50,12 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python }}
-      - name: Test live readiness contract
-        run: python -m unittest tests.test_readiness_v2 -v
-      - name: Verify public readiness CLI imports
-        run: python installer/aiverse_skills.py --root "${{ runner.temp }}/not-installed" readiness --json
+      - name: Validate public-beta registries
+        run: python scripts/validate_registry.py
+      - name: Test live readiness and public-beta learning contracts
+        run: python -m unittest tests.test_readiness_v2 tests.test_public_beta_learning -v
+      - name: Verify public lifecycle CLI imports
+        run: |
+          python installer/aiverse_skills.py --root "${{ runner.temp }}/not-installed" status --json
+          python installer/aiverse_skills.py --root "${{ runner.temp }}/not-installed" descriptor --json
+          python installer/aiverse_skills.py --root "${{ runner.temp }}/not-installed" readiness --json
