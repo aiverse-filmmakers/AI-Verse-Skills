@@ -1,560 +1,269 @@
-# Safe Self-Improvement for AI-Verse-Skills
+# Governed Self-Improvement for AI-Verse Skills
 
-## Goal
+**Current status:** implemented for public beta.
 
-Allow AI-Verse to learn reusable operational capabilities from successful work without turning self-improvement into uncontrolled self-modification.
+The canonical cross-component and lifecycle contract is [PUBLIC_BETA.md](PUBLIC_BETA.md). This document explains the Skills-owned implementation.
 
-The recommended model is inspired by the strongest parts of current Hermes Agent, OpenClaw Skill Workshop, LifeOS SuggestSkills/CreateSkill separation, Letta's separation of skills from runtime enforcement, and NVIDIA's skill security/evaluation pipeline.
+## Core law
 
-## Core rule
+A candidate may be proposed more freely than it may be promoted.
 
-**The agent may propose capabilities more freely than it may promote capabilities.**
+Skills owns reusable procedure state. It does not own Brain strategy, general Memory, Gateway execution authority or Automations scheduling.
 
-Creation and trust are different permissions.
-
-A successful workflow should not immediately become a trusted `SKILL.md` merely because the agent believes it was successful.
-
-## Lifecycle
+The public-beta default is:
 
 ```text
-Execution traces
-      |
-      v
-Skill Miner
-  read-only analysis
-      |
-      v
-Proposal
-  redacted + evidence-linked
-      |
-      v
-Workshop / Quarantine
-      |
-      +--> deterministic validation
-      +--> security scan
-      +--> semantic deduplication
-      +--> trigger/non-trigger evals
-      +--> sandboxed live task evals
-      |
-      v
-Promotion decision
-      |
-      +--> reject
-      +--> revise
-      +--> keep in workshop
-      +--> promote to generated/trusted
-      |
-      v
-Usage monitoring
-      |
-      v
-Curator
-  improve / merge / archive AI-owned skills
+propose
 ```
 
-## 1. Observe execution without storing raw everything
-
-Self-improvement should operate on structured execution metadata rather than blindly saving complete private conversations forever.
-
-Recommended trace fields:
+## Implemented lifecycle
 
 ```text
-trace_id
-workspace_class or opaque workspace id
-skill versions invoked
-tool calls and effect classes
-result status
-verification outcomes
-user correction/frustration signals
-retries/failure recoveries
-artifacts produced
-duration/cost if available
-model/runtime versions
-redacted task summary
+candidate
+-> proposal
+-> evaluating
+-> pending_approval | auto_eligible
+-> applied
+   OR rejected
+   OR quarantined
 ```
 
-Private content should be minimized and, where possible, represented by hashes or redacted summaries.
-
-The skill miner should not need secret values or raw credential-bearing tool payloads.
-
-## 2. What is skill-worthy?
-
-A workflow is a good skill candidate when one or more of these repeat:
-
-### Repeated successful sequence
-
-The agent repeatedly performs substantially the same operational pattern and the sequence is non-trivial.
-
-Example:
-
-- inspect repository
-- map dependency graph
-- locate migration boundary
-- patch three related files
-- run targeted tests
-- run schema validation
-- produce migration notes
-
-### Repeated failure shield
-
-The same failure recurs and a proven recovery/verification pattern repeatedly fixes it.
-
-This is often more valuable than a happy-path workflow.
-
-### Repeated contract
-
-The user or system repeatedly needs the same structured output or verification standard.
-
-### Repeated expensive discovery
-
-The agent repeatedly has to rediscover non-obvious operational facts that are stable enough to encode procedurally.
-
-### Repeated frustration
-
-LifeOS's current SuggestSkills design highlights a useful signal: a topic may appear to be "covered" while the user repeatedly hits the same failure class inside it. Frustration and repeated corrections should be weighted above raw topic frequency.
-
-## 3. What is NOT skill-worthy?
-
-Do not create skills for:
-
-- one-off facts
-- transient project state
-- user personality preferences
-- a single URL or credential
-- generic advice a strong model already knows
-- behavior steering that belongs in core/user preferences
-- a workflow whose only content is "call tool X"
-- tasks already genuinely covered by an existing skill
-- project-specific private facts that should live in the workspace truth layer
-
-A skill should represent reusable procedural leverage.
-
-## 4. `skill-miner` must be read-only
-
-This separation is important enough to enforce at the runtime level.
-
-`skill-miner` may:
-
-- inspect eligible trace metadata
-- cluster repeated patterns
-- inspect existing skill bodies for real coverage
-- calculate recurrence/value/frustration signals
-- propose candidate skills
-
-It may not:
-
-- create trusted skill files
-- edit existing trusted skills
-- modify policy
-- grant tool permissions
-
-Output example:
-
-```yaml
-proposal_id: sp_2026_09_001
-candidate_name: migration-verifier
-evidence:
-  qualifying_traces: 7
-  verified_successes: 6
-  repeated_failures: 3
-  user_corrections: 2
-coverage_check:
-  nearest_existing_skills:
-    - database-migration-guardian
-  gap: "Current skill validates schema migration but does not own cross-service compatibility verification."
-confidence: medium
-recommended_action: extend-existing-skill
-```
-
-This follows the strong permission-boundary idea in LifeOS SuggestSkills: discovery proposes, creation mutates.
-
-## 5. Workshop proposal package
-
-When a proposal is accepted for development, `skill-forge` creates a candidate inside Workshop/quarantine.
-
-Suggested local structure:
+The state is persisted under:
 
 ```text
-workshop/proposals/<proposal-id>/
-├── proposal.yaml
-├── candidate/
-│   ├── SKILL.md
-│   ├── aiverse.skill.yaml
-│   ├── references/
-│   ├── scripts/
-│   └── evals/
-├── evidence/
-│   ├── trace-hashes.json
-│   └── redacted-patterns.md
-└── reports/
-    ├── static-validation.json
-    ├── security.json
-    ├── dedup.json
-    └── live-eval.json
+<skills-root>/.aiverse/learning/
+├── config.json
+├── proposals/
+├── archive/
+├── usage.json
+├── skill-state.json
+├── budget.json
+└── audit.ndjson
 ```
 
-Workshop state does not need to be committed to the public repository.
+The audit ledger is hash-chained. Candidate package bytes remain outside active immutable generations until promotion.
 
-## 6. Candidate authoring
+## Modes
 
-`skill-forge` should create the smallest reusable package that captures the leverage.
+### off
 
-It should ask:
+Automatic review and curator-driven candidate creation are disabled.
 
-1. Is this a new skill or an extension to an existing one?
-2. What is the invariant success contract?
-3. What part is model judgment?
-4. What part should become deterministic code?
-5. What toolpacks are actually required?
-6. What are the side effects?
-7. What should be impossible outside the active workspace?
-8. What real failure cases need regression tests?
+Explicit user learning remains available:
 
-The forge should avoid copying entire previous conversations into a skill.
+```bash
+aiverse-skills learn ...
+aiverse-skills refine ...
+```
 
-## 7. Admission gate: Tier 1 deterministic validation
+### propose
 
-Before any semantic or live testing:
+Foreground correction, successful-procedure review and curator work may create proposals. Promotion requires approval.
 
-### Schema
+### auto
 
-- valid `SKILL.md` frontmatter
-- valid AI-Verse manifest
-- valid names/version
-- no broken required references
-- scripts have valid declared dependencies
+Auto does not mean unrestricted self-modification.
 
-### Privacy
+Public-beta auto promotion is restricted to eligible low-risk maintenance where all of these remain true:
 
-- no credentials
-- no private keys
-- no tokens
-- no personal absolute paths
-- no client/customer data unless candidate is explicitly private and policy allows it
-- no accidental environment dumps
+- target ownership is `agent_learned` or `workspace_local`;
+- target is not protected;
+- candidate is a repair/update or reversible archive review;
+- no requested capability/dependency expansion exists;
+- deterministic security admission passes;
+- no duplicate gate blocks it;
+- target generation and package digest still match the evaluated target;
+- current mode and policy still allow auto.
 
-### Security
+A newly created active Skill still requires approval.
 
-- prompt injection patterns
-- unicode/invisible instruction smuggling
-- suspicious shell/download/exec chains
-- environment variable harvesting
-- data exfiltration paths
-- dependency confusion/typosquatting signals
-- unsafe archives/symlinks
-- excessive tool requirements
-- MCP/tool poisoning indicators if applicable
+## Protected Skills
 
-### Code quality
-
-- scripts parse/compile
-- lint or equivalent
-- deterministic tests pass
-- no host-global writes in tests
-
-### Licensing/provenance
-
-- source recorded
-- license compatibility checked for copied/reused material
-
-NVIDIA SkillSpector and SkillEvaluator are direct implementation references for this stage.
-
-## 8. Admission gate: Tier 2 semantic analysis
-
-The candidate then undergoes semantic checks.
-
-### Cross-skill duplication
-
-Does an existing skill already solve this problem?
-
-Do not compare only names/descriptions. Read candidate and nearest skill bodies.
-
-Possible decisions:
-
-- new capability
-- extend existing skill
-- merge with existing generated skill
-- reject as redundant
-
-### Intra-skill redundancy
-
-Does `SKILL.md` repeat itself, contain unnecessary model choreography, or duplicate references?
-
-### Permission minimization
-
-Could the same skill work with fewer toolpacks/effects?
-
-### Portability
-
-Has environment-specific logic leaked into portable instructions?
-
-### Trigger quality
-
-Does the description over-trigger or under-trigger?
-
-## 9. Admission gate: Tier 3 live evaluation
-
-Run the candidate in an isolated disposable workspace.
-
-Never live-test a new generated skill directly against the user's production workspace merely to see what happens.
-
-### Required eval classes
-
-- positive activation cases
-- negative activation cases
-- representative normal tasks
-- blocked/missing-permission tasks
-- adversarial prompt-injection tasks
-- path traversal attempts
-- corrupted/malformed input
-- real regression traces when safely reproducible
-
-### Compare against baseline
-
-For improvements to an existing skill, test:
-
-- old version
-- candidate version
-
-A candidate should show actual improvement rather than merely different prose.
-
-### Evaluate outcomes, not wording
-
-Do not grade whether the model says the phrase "I verified the fix." Grade whether the verification actually happened and passed.
-
-## 10. Promotion
-
-A proposal becomes trusted only after policy says it can.
-
-Recommended initial policy:
-
-- human approval for all new skills
-- human approval for material permission/effect expansion
-- optional automated patch/minor promotion for AI-owned skills only after the evaluator is mature
-- never auto-promote a candidate that failed or skipped required security stages
-
-Promotion should be one auditable operation that records:
+The following ownership classes cannot be autonomously overwritten:
 
 ```text
-proposal id
-skill name/version
-content hash
-parent version if any
-source trace hashes
-security result
-dedup result
-live eval result
-approver/policy
-promotion timestamp
+first_party
+curated_upstream
+user_authored
+external
 ```
 
-Git provides an additional rollback layer but should not be the only provenance record.
+Corrections may still become evidence. The safe public-beta outcome is an upstream change or a separately owned learned Skill, not silent mutation of the protected package.
 
-## 11. Ownership classes
+## Explicit learning
 
-Every skill should have a policy ownership class in registry metadata.
+```bash
+aiverse-skills learn --envelope candidate.json --candidate-dir ./candidate-skill
+aiverse-skills refine --envelope repair.json --candidate-dir ./candidate-skill
+```
 
-Suggested values:
+A package candidate must contain `SKILL.md`.
 
-### `core`
+Candidate packages are copied into the proposal store with a size bound. Symlinks are not allowed in learned candidate packages.
 
-Foundational AI-Verse-maintained capability. Autonomous curator cannot edit.
+## Foreground correction
 
-### `human`
+Gateway may trigger a repair candidate after a failed Skill use.
 
-Human-authored/customized. Autonomous curator cannot edit unless explicitly adopted.
+For repair/update candidates, Skills records:
 
-### `vendor`
+- target Skill id;
+- target ownership/protection;
+- exact active generation id;
+- target package digest;
+- bounded evidence references;
+- requested capabilities/dependencies;
+- risk/confidence.
 
-Installed from an external trusted source. Curator can flag stale/conflicting behavior but cannot rewrite.
+Apply uses compare-and-set semantics. If the active generation or target package digest changed after evaluation, promotion fails closed.
 
-### `installed`
+## Background review and cost limits
 
-Third-party package. Curator can recommend upgrade/removal but not rewrite source silently.
+Automations or Gateway may wake review work, but Skills remains the state owner.
 
-### `generated`
+Current deterministic controls include:
 
-AI-Verse generated and explicitly eligible for autonomous maintenance under policy.
+- maximum pending proposals;
+- maximum candidate bytes;
+- maximum background reviews per day;
+- explicit mode;
+- no raw transcript/credential fields in candidate envelopes;
+- no scheduler inside Skills.
 
-This mirrors Hermes's useful distinction: the field controlling autonomous mutation is a policy boundary, not merely a historical authorship claim.
+## Evaluation
 
-## 12. Curator
+```bash
+aiverse-skills proposals evaluate <proposal-id>
+```
 
-The curator is a maintenance agent for AI-owned/generated skills.
+Evaluation checks:
 
-It should run at a lower cadence than ordinary execution and use cheap deterministic signals before model judgment.
+- candidate structure;
+- package safety scan;
+- secret-like content;
+- symlink containment;
+- permission/dependency expansion request;
+- target ownership;
+- exact target generation/digest;
+- duplicate/overlap signal;
+- provenance presence.
 
-Responsibilities:
+Possible results include `pending_approval`, `auto_eligible` and `quarantined`.
 
-- identify stale unused generated skills
-- detect overlapping generated skills
-- detect repeated corrections after skill execution
-- suggest or apply narrow improvements when policy allows
-- merge duplicates
-- archive obsolete generated skills
-- keep eval/corrections corpus current
+## Promotion
 
-It should not:
+```bash
+aiverse-skills proposals apply <proposal-id> --approved-by <principal>
+```
 
-- auto-delete permanently
-- rewrite core/human/vendor skills
-- expand permissions because a skill keeps failing
-- silently weaken verification
-- remove regression tests to make scores improve
+Promotion:
 
-## 13. Archive, do not erase
+1. pins the current active generation;
+2. records that generation as rollback backup;
+3. copies it to a staging area;
+4. adds/replaces the learned package;
+5. regenerates provider-v1 metadata;
+6. regenerates admission metadata;
+7. verifies the complete candidate generation;
+8. commits a new immutable generation;
+9. atomically activates it;
+10. records proposal state and audit events.
 
-Hermes currently favors recoverable archive over autonomous deletion. AI-Verse should do the same.
+Active Skill bytes are never edited in place.
 
-Suggested:
+## Rollback
+
+```bash
+aiverse-skills proposals rollback <proposal-id>
+```
+
+Learning rollback only succeeds while that proposal's applied generation is still current. It refuses to overwrite a newer generation.
+
+General immutable-generation rollback remains:
+
+```bash
+aiverse-skills rollback
+```
+
+## Usage
+
+```bash
+aiverse-skills usage record <skill-id> --success
+aiverse-skills usage record <skill-id> --failure
+```
+
+Skills records bounded lifecycle counters and timestamps, not general user history.
+
+## Curator
+
+```bash
+aiverse-skills curator run
+```
+
+Current curator behavior:
+
+- marks learned Skills stale after configured inactivity;
+- creates reversible archive-review proposals;
+- detects high-overlap learned Skills;
+- creates consolidation candidates;
+- preserves provenance and audit history.
+
+Archive and restore:
+
+```bash
+aiverse-skills curator archive <skill-id> --approved-by <principal>
+aiverse-skills curator restore <skill-id>
+```
+
+Archive removes the learned Skill from the newly active immutable generation while preserving the source generation for reversible restore.
+
+There is no autonomous hard deletion.
+
+## Package admission
+
+Self-learning uses the same separation as normal packages:
 
 ```text
-workshop/archive/<skill-name>/<version>/
+integrity != admitted != trusted != ready != authorized
 ```
 
-or a git-backed archive registry.
+Promotion cannot grant execution authorization.
 
-Archive should retain:
+## Privacy
 
-- content hash
-- reason
-- previous usage metrics
-- replacement skill if any
-- promotion lineage
+The proposal envelope prefers opaque/bounded `evidence_refs` instead of copied conversations.
 
-## 14. Corrections log
+Envelope fields representing raw transcripts, credentials, secrets, private keys or raw tool outputs are refused.
 
-Each actively maintained generated skill should accumulate a lightweight corrections record.
+Candidate package content also passes deterministic safety scanning before promotion.
 
-Example:
+## Acceptance coverage
 
-```yaml
-- date: 2026-09-09
-  failure: "Over-triggered on requests to only explain a stack trace."
-  trace_hash: "..."
-  correction: "Added negative routing case and activation eval."
-  regression_eval: "evals/routing-007.yaml"
-```
+The public-beta test suite exercises:
 
-Real corrections are high-value training/evaluation material.
+- off/propose/auto behavior;
+- explicit learn while automatic learning is off;
+- immutable create/promotion;
+- bounded auto repair of an agent-learned Skill;
+- protected first-party mutation refusal;
+- secret candidate quarantine;
+- generation/digest compare-and-set protection;
+- usage tracking;
+- stale/archive proposal creation;
+- physical archive removal;
+- restore;
+- rollback protection;
+- later-task learned Skill rediscovery and generation-bound successful execution receipt validation;
+- Linux, macOS and Windows lifecycle/parser behavior.
 
-## 15. Skill telemetry
+## Future-only improvements
 
-Track enough to improve routing and quality without turning the system into surveillance.
+These are not required for public-beta completion:
 
-Useful aggregate metrics:
-
-- activation count
-- explicit vs automatic activation
-- task success rate
-- verification pass rate
-- approval-denial rate
-- user correction rate
-- abort rate
-- average retries
-- dominant failure categories
-- last used
-- version-specific regressions
-
-Do not optimize solely for activation count. A skill that activates less often but precisely can be healthier.
-
-## 16. When the agent should offer to save a workflow
-
-Hermes currently supports the useful interaction where, after solving a complex problem, the agent can offer to save the approach as a skill.
-
-AI-Verse can support that, but the action should create a proposal, not direct production capability.
-
-Good offer threshold:
-
-- task was non-trivial
-- workflow appears reusable
-- outcome was verified
-- no existing skill already covers it
-- the reusable portion can be separated from private project state
-
-## 17. Learning from source material
-
-Hermes `/learn` shows a strong model for turning docs, code, URLs, or a prior workflow into an on-demand skill.
-
-AI-Verse should support two distinct outputs:
-
-### Procedural skill
-
-Use when source material describes how to reliably perform an operation.
-
-### Knowledge/reference package
-
-Use when the material is primarily domain knowledge. Keep the main `SKILL.md` lean and place distilled topic references under `references/`.
-
-Do not compress a large source into one lossy giant prompt.
-
-## 18. External skill installation
-
-External skills should enter the same trust pipeline as generated skills, with source provenance added.
-
-Recommended install process:
-
-```text
-fetch/stage
--> pin source commit/hash
--> enumerate exact bundle files
--> reject unsafe symlink escapes
--> static/security scan
--> semantic capability/permission review
--> optional live eval
--> install disabled or approval-required
--> enable after policy approval
-```
-
-A public registry listing is discovery, not trust.
-
-## 19. Self-improvement and workspace isolation
-
-Self-improvement must never use a project workspace as an excuse to mutate the global Skills repository directly.
-
-A project execution can emit a reusable-work proposal with redacted evidence.
-
-The global skill forge operates in its own trusted Workshop scope.
-
-This avoids:
-
-- project prompt injection writing global skills
-- client/private data leaking into public skills
-- one compromised repository persisting malicious instructions globally
-
-## 20. Recommended initial automation policy
-
-For the first production version:
-
-### Automatically allowed
-
-- collect redacted skill-worthiness signals
-- generate read-only skill proposals
-- run deterministic validation
-- run static security scanning
-- run semantic dedup analysis
-- run isolated live evals
-- archive already-generated skills when policy threshold is met, provided archive is reversible
-
-### Human approval required
-
-- promote a brand-new skill
-- modify a core/human/vendor skill
-- expand required effect classes
-- add shell/network/deployment authority
-- add new external dependencies with executable install steps
-- publish a skill publicly
-
-### Never automatically allowed
-
-- copy raw secrets into skills
-- copy raw private workspace content into a public skill
-- rewrite core OS policy
-- weaken workspace isolation
-- remove safety evals merely to pass promotion
-
-## Final model
-
-Self-improvement should make AI-Verse more competent while leaving a clear chain of evidence for why a capability exists, what proved it works, what it can access, who allowed it, and how to undo it.
-
-That is the difference between a self-improving capability system and an agent that simply edits its own prompt files.
+- richer embedding-based deduplication;
+- hosted multi-user policy/reputation services;
+- automatic upstream pull-request creation;
+- enterprise security/compliance scanner integrations;
+- marketplace signing/reputation;
+- broad live invocation acceptance for every external runtime adapter;
+- autonomous hard deletion.
