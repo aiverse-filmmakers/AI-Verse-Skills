@@ -67,9 +67,20 @@ def _policy_for(impl: Any, package: Mapping[str, Any]) -> Dict[str, Any]:
             "auto_mutation": True,
         }
     source_repo = str(package.get("source_repo") or "aiverse-filmmakers/AI-Verse-Skills")
-    policy = _load_policy(impl)["sources"].get(source_repo)
+    policy_doc = _load_policy(impl)
+    policy = policy_doc["sources"].get(source_repo)
     if not isinstance(policy, dict):
-        raise RuntimeError(f"No trust/admission policy for source repository: {source_repo}")
+        # Unknown sources are never implicitly trusted or redistributable.
+        # Registry validation still requires explicit decisions for every
+        # package shipped by the public distribution.
+        return {
+            "license": "upstream-controlled",
+            "redistribution": str(policy_doc.get("policy", {}).get("unknown_redistribution", "fetch-only")),
+            "trust": "external",
+            "ownership": "external",
+            "vendoring_allowed": False,
+            "auto_mutation": False,
+        }
     return dict(policy)
 
 
@@ -302,21 +313,25 @@ def apply_admission(impl: Any) -> None:
             generation_root = impl.generation_path(Path(root), generation_id)
         except RuntimeError as exc:
             return errors + [str(exc)]
-        errors.extend(verify_admission_generation(impl, generation_root, generation_id))
+        manifest = impl.read_generation_manifest(Path(root), generation_id)
+        if manifest.get("provider_contract") == "aiverse-capability-provider-v1":
+            errors.extend(verify_admission_generation(impl, generation_root, generation_id))
         return errors
 
     def pin(root, digest_fn):
         pinned = original_pin(Path(root), digest_fn)
-        errors = verify_admission_generation(impl, pinned.generation_path, pinned.generation_id)
-        if errors:
-            raise RuntimeError("Pinned generation failed package admission verification:\n" + "\n".join(errors))
+        if pinned.manifest.get("provider_contract") == "aiverse-capability-provider-v1":
+            errors = verify_admission_generation(impl, pinned.generation_path, pinned.generation_id)
+            if errors:
+                raise RuntimeError("Pinned generation failed package admission verification:\n" + "\n".join(errors))
         return pinned
 
     def rollback(root, digest_fn):
         pinned = original_rollback(Path(root), digest_fn)
-        errors = verify_admission_generation(impl, pinned.generation_path, pinned.generation_id)
-        if errors:
-            raise RuntimeError("Rollback generation failed package admission verification:\n" + "\n".join(errors))
+        if pinned.manifest.get("provider_contract") == "aiverse-capability-provider-v1":
+            errors = verify_admission_generation(impl, pinned.generation_path, pinned.generation_id)
+            if errors:
+                raise RuntimeError("Rollback generation failed package admission verification:\n" + "\n".join(errors))
         return pinned
 
     impl._write_stage_manifest = write_stage_manifest
