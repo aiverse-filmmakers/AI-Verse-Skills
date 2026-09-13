@@ -145,7 +145,8 @@ def status_report(impl: Any, root: Path) -> Dict[str, Any]:
     return {
         "component_id": "ai-verse-skills",
         "state": state,
-        "installed": state != "absent" or bool(pointer.get("history")),
+        "installed": state != "absent",
+        "preserved_state": bool(pointer.get("history")),
         "setup": bool(setup),
         "enabled": active,
         "healthy": healthy,
@@ -230,6 +231,12 @@ def doctor_report(impl: Any, root: Path, depth: str = "system") -> Dict[str, Any
             checks["learning"] = {"ok": bool(ls["audit_ledger"]["valid"]), "report": ls}
         except Exception as exc:
             checks["learning"] = {"ok": False, "error": str(exc)}
+    if depth == "system":
+        checks["setup"] = {
+            "ok": status.get("state") == "ready",
+            "state": status.get("state"),
+            "detail": "System-depth doctor requires completed setup and an enabled healthy provider.",
+        }
     ok = all(bool(v.get("ok")) for v in checks.values())
     return {
         "component_id": "ai-verse-skills",
