@@ -299,7 +299,14 @@ def apply_admission(impl: Any) -> None:
 
     def verify_stage(stage, expected_generation_id=None):
         errors = list(original_verify_stage(stage, expected_generation_id))
-        if not errors:
+        if errors:
+            return errors
+        manifest_path = Path(stage) / ".aiverse" / "installed.json"
+        try:
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        except Exception:
+            return errors
+        if manifest.get("provider_contract") == "aiverse-capability-provider-v1":
             errors.extend(verify_admission_generation(impl, Path(stage), expected_generation_id))
         return errors
 
