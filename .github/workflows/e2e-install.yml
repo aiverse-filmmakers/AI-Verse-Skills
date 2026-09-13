@@ -113,8 +113,11 @@ jobs:
           print(f"Provider v1 OK: {len(records)} selectable capabilities bound to {pin['generation_id']}")
           PY
 
-      - name: Integrity doctor and capability count
+      - name: Setup, integrity doctor and capability count
         run: |
+          python installer/aiverse_skills.py \
+            --root "$RUNNER_TEMP/aiverse-skills" \
+            setup --json > "$RUNNER_TEMP/setup.json"
           python installer/aiverse_skills.py \
             --root "$RUNNER_TEMP/aiverse-skills" \
             doctor --readiness
