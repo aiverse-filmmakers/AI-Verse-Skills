@@ -1,50 +1,23 @@
 # AI-Verse-Skills
 
-A curated, original-first professional skill distribution for AI agents, with first-class compatibility with AI-Verse OS while remaining a completely separate repository and installation.
+AI-Verse-Skills is the reusable procedure and capability package owner for AI-Verse. It ships exact pinned packages, immutable generations, provider discovery metadata, live readiness reporting, package admission, runtime adapters, execution receipts, and the governed Skill Workshop self-learning lifecycle.
 
-## What it ships
-
-- **20 AI-Verse Machine / Reliability skills**
-- **80 researched employee-facing skills** sourced from strong existing ecosystems
-- **100 canonical capabilities total**
-- support dependencies
-- Role Bundles
-- Operator Packs
-- install profiles
-- runtime adapters
-- immutable-generation install, update, rollback and uninstall lifecycle
-- integrity doctor and operator-readiness reporting
-
-The goal is an AI worker that can become useful across a real company from Day 0: executive assistance, operations, research, marketing, social, design, filmmaking, post-production, sales, CRM, support, finance, product, HR, legal coordination and technical work.
-
-Coding is one department, not the identity of the agent.
-
-## Repository separation rule
-
-AI-Verse-Skills and AI-Verse OS remain independent.
-
-- Installing AI-Verse OS does **not** install AI-Verse-Skills.
-- Installing AI-Verse-Skills does **not** copy, symlink or vendor skills into the AI-Verse OS repository.
-- AI-Verse OS does not get copied into this repository.
-- The optional integration is reference/discovery based.
-
-Canonical Skills install root:
+The default canonical install root is:
 
 ```text
 ~/.aiverse/skills/
 ```
 
-Installed package bytes live in immutable generations beneath that root. The active generation is selected by one atomic pointer rather than by replacing a live package tree.
+AI-Verse OS, Skills, Memory, Brain, Gateway and Automations remain separate owners. Installing Skills does not grant permissions, credentials, approvals, workspace access, scheduling authority or strategic control.
 
-## Install
+## 1. Install
 
-### macOS / Linux
+### macOS and Linux
 
 ```bash
 git clone https://github.com/aiverse-filmmakers/AI-Verse-Skills.git
 cd AI-Verse-Skills
 ./aiverse-skills install
-./aiverse-skills doctor --readiness
 ```
 
 ### Windows PowerShell
@@ -53,132 +26,229 @@ cd AI-Verse-Skills
 git clone https://github.com/aiverse-filmmakers/AI-Verse-Skills.git
 Set-Location AI-Verse-Skills
 .\aiverse-skills.ps1 install
-.\aiverse-skills.ps1 doctor --readiness
 ```
 
-The portable fallback on every platform is `python installer/aiverse_skills.py <command>`.
-
-### AI-Verse OS integration status
-
-The [provider v1 contract and implementation mapping](docs/AI_VERSE_OS_INTEGRATION.md) is implemented. New immutable generations emit the provider-v1 capability index, and AI-Verse OS discovers the external provider directly without copying packages into the OS repository. The OS CLI does not need to install Skills or own its lifecycle.
-
-OS installation remains independent and never implicitly installs this distribution.
-
-## Immutable generation safety
-
-`install` and `update` build a complete profile in staging, verify it, commit it under:
-
-```text
-~/.aiverse/skills/.aiverse/generations/<generation-id>/
-```
-
-and then atomically replace only:
-
-```text
-~/.aiverse/skills/.aiverse/active.json
-```
-
-The previous generation is retained unchanged. `rollback` switches that pointer back; `uninstall` deactivates the library without deleting generation bytes that an in-flight execution may still be using.
-
-Lifecycle mutations are serialized with a per-install lock so install, update, rollback and uninstall cannot interleave.
+Portable fallback:
 
 ```bash
-./aiverse-skills update
-./aiverse-skills rollback
-./aiverse-skills uninstall
+python installer/aiverse_skills.py install
 ```
 
-A runtime must pin the active generation before loading a skill or one of its helper scripts:
+Install creates a complete verified immutable generation before changing the active pointer. It does not perform setup or grant runtime authority.
+
+## 2. Setup
 
 ```bash
-./aiverse-skills pin --json
-./aiverse-skills pin --package document-authoring --json
+./aiverse-skills setup
+./aiverse-skills setup --json
 ```
 
-Once pinned, use the returned generation path for the entire execution. Never resolve `SKILL.md` from one active generation and a later script from another.
+Setup verifies the currently active immutable generation, provider-v1 metadata, package admission metadata and the supported AI-Verse OS discovery route. The default root is dynamically discoverable. A custom root is reported as requiring explicit host/provider configuration rather than silently editing another repository.
 
-See [`docs/IMMUTABLE_GENERATIONS.md`](docs/IMMUTABLE_GENERATIONS.md).
+Setup also initializes Skills-owned learning state with the public-beta default mode:
 
-## Readiness is not installation
+```text
+propose
+```
 
-A professional skill can be installed while its required software is unavailable.
+## 3. Verify
 
-Examples:
+Fast state:
 
-- Figma skills need Figma access.
-- HubSpot skills need HubSpot access.
-- Canva skills need Canva/browser access.
-- Premiere and After Effects skills need the local Adobe applications.
-- FFmpeg needs `ffmpeg` and `ffprobe`.
-- Google Workspace skills need the Google Workspace CLI or an authorized host connection.
+```bash
+./aiverse-skills status
+./aiverse-skills status --json
+```
 
-Check the current machine:
+Deep verification:
+
+```bash
+./aiverse-skills doctor
+./aiverse-skills doctor --depth structural
+./aiverse-skills doctor --depth runtime
+./aiverse-skills doctor --depth system --json
+```
+
+Runtime/operator readiness:
 
 ```bash
 ./aiverse-skills readiness
+./aiverse-skills readiness --json
 ```
 
-The current report provides dependency hints. It does not verify workspace access or authorize actions; the provider v1 contract separates these host-owned checks from package readiness.
+Machine-readable component descriptor:
 
-## Original-first policy
+```bash
+./aiverse-skills descriptor --json
+```
 
-Strong upstream skills are kept original. AI-Verse does not rewrite them merely for branding.
+Public state vocabulary includes `absent`, `installed`, `setup-required`, `disabled`, `unhealthy`, `migration-required` and `ready`.
 
-The distribution records:
+### Trust and authority are separate
 
-- upstream repository
-- pinned revision
-- upstream package path
-- acquisition mode
-- operator dependencies
-- local content digest after installation
-- immutable generation ID and generation digest
-
-Future AI-Verse-authored employee skills belong only in:
+AI-Verse Skills deliberately keeps these independent:
 
 ```text
-skills/imported/ai-verse/
+integrity != admitted != trusted != ready != authorized
 ```
 
-Third-party work never goes there.
+- **integrity** means bytes match immutable generation metadata.
+- **admitted** means deterministic package admission did not block the package.
+- **trusted** is the source/package trust class.
+- **ready** means required runtime/operator support is usable now.
+- **authorized** belongs to the host/user policy and is never granted by Skills.
 
-## Runtime compatibility
+Imported and external packages are statically scanned before admission. Secret-like material, unsafe symlink escapes and selected high-risk patterns are rejected or surfaced for review. Unknown redistribution rights are treated as fetch-only.
 
-Generic agents can explicitly adapt the external library into a runtime-owned skill directory when desired:
+## 4. Use
+
+Pin one immutable generation before loading a Skill:
 
 ```bash
-./aiverse-skills adapt --runtime claude --target ~/.claude/skills
+./aiverse-skills pin --json
+./aiverse-skills pin --package verification-harness --json
+```
+
+A consumer must use the returned generation for the entire execution. Do not load `SKILL.md` from one generation and helper files from another.
+
+### Runtime support claims
+
+Current public-beta support is intentionally precise:
+
+- **AI-Verse OS:** end-to-end provider discovery, selection, generation-pinned load/invoke path and verified receipt acceptance are the current public-beta execution claim.
+- **Agent Skills-compatible directories:** package exposure compatibility only.
+- **Claude, Codex, Hermes, OpenClaw and Gemini adapters:** generation-pinned exposure/verification only until a maintained runtime-specific invocation acceptance exists.
+
+Example explicit exposure:
+
+```bash
 ./aiverse-skills adapt --runtime codex --target ~/.codex/skills
-./aiverse-skills adapt --runtime hermes --target ~/.hermes/skills
-```
-
-Each adapter manifest is bound to the generation it materialized. If the canonical active generation changes, a copied adapter becomes stale and must not be treated as current until refreshed. Check it with:
-
-```bash
 ./aiverse-skills adapter-verify --target ~/.codex/skills
 ```
 
-`--allow-stale` verifies that an older adapter still matches its own immutable generation without claiming it is current.
+Adapter exposure never grants permissions or connection access.
 
-AI-Verse OS integration uses external provider-v1 discovery and does not materialize the distribution inside the OS repository. The OS host reads selected packages from their pinned immutable generation; it does not require the Skills source checkout at runtime.
+### Governed self-learning
 
-## Important design rule
+Inspect or set learning mode:
 
-> Installed != active != loaded into context.
+```bash
+./aiverse-skills learning status
+./aiverse-skills learning mode off
+./aiverse-skills learning mode propose
+./aiverse-skills learning mode auto
+```
 
-A host should discover skill metadata progressively and load only skill bodies relevant to the current task.
+Explicit learning and refinement:
+
+```bash
+./aiverse-skills learn --envelope candidate.json --candidate-dir ./candidate-skill
+./aiverse-skills refine --envelope repair.json --candidate-dir ./candidate-skill
+```
+
+Proposal workflow:
+
+```bash
+./aiverse-skills proposals list
+./aiverse-skills proposals inspect <proposal-id>
+./aiverse-skills proposals evaluate <proposal-id>
+./aiverse-skills proposals apply <proposal-id> --approved-by <principal>
+./aiverse-skills proposals reject <proposal-id> --reason "..."
+./aiverse-skills proposals quarantine <proposal-id> --reason "..."
+./aiverse-skills proposals rollback <proposal-id>
+```
+
+Curator:
+
+```bash
+./aiverse-skills curator status
+./aiverse-skills curator run
+./aiverse-skills curator archive <skill-id> --approved-by <principal>
+./aiverse-skills curator restore <skill-id>
+```
+
+Usage:
+
+```bash
+./aiverse-skills usage record <skill-id> --success
+./aiverse-skills usage record <skill-id> --failure
+```
+
+The Workshop stores proposals separately from active Skills. Production changes always create a new immutable generation. First-party, curated-upstream, user-authored and external Skills are protected from autonomous rewriting. Public-beta `auto` promotion is limited to low-risk eligible learned/local maintenance with no permission or dependency expansion and all mandatory gates passing.
+
+See [docs/PUBLIC_BETA.md](docs/PUBLIC_BETA.md) and [docs/SELF_IMPROVEMENT.md](docs/SELF_IMPROVEMENT.md).
+
+## 5. Update, disable and uninstall
+
+Update software/package content transactionally:
+
+```bash
+./aiverse-skills update
+./aiverse-skills update --json
+```
+
+Rollback active generation:
+
+```bash
+./aiverse-skills rollback
+```
+
+Disable without deleting preserved generations:
+
+```bash
+./aiverse-skills disable
+./aiverse-skills enable
+```
+
+Uninstall product integration while preserving immutable state by default:
+
+```bash
+./aiverse-skills uninstall
+```
+
+Destructive retention cleanup is a separate explicit command:
+
+```bash
+./aiverse-skills purge --keep 2 --yes
+```
+
+Purge never runs automatically and preserves active/history generations plus generations referenced by learning rollback/archive provenance.
+
+## 6. What setup does and does not grant
+
+Setup does:
+
+- verify the active immutable generation;
+- verify provider and package admission metadata;
+- report OS discoverability;
+- initialize Skills-owned Workshop state;
+- record that component setup completed.
+
+Setup does not:
+
+- transfer canonical authority;
+- grant filesystem/workspace permissions;
+- grant external account or secret access;
+- authorize a Skill invocation;
+- activate Brain goals;
+- schedule background work;
+- write into sibling repositories.
+
+## Distribution and licensing
+
+The repository-owned code is licensed under MIT. Third-party packages remain governed by their upstream terms.
+
+`registry/trust-policy.json` is the public-beta redistribution/admission decision record. Packages with explicit redistribution permission may be vendored as recorded. Sources without a final redistribution grant are fetch-only from their exact pinned upstream revision.
+
+See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
 ## Validation
 
-Normal CI validates registry integrity, generation-lifecycle adversarial tests and full-profile planning.
+Core validation:
 
-The full E2E workflow performs a real pinned upstream install and verifies all package digests. It pins an execution generation, creates a copied adapter, updates the distribution, proves the old execution remains complete, rejects the now-stale adapter, rolls back to the exact previous generation, uninstalls without deleting pinned bytes, and recovers the installation.
+```bash
+python scripts/validate_registry.py
+python -m unittest discover -s tests -v
+```
 
-See:
-
-- `docs/IMMUTABLE_GENERATIONS.md`
-- `docs/SHIPPING.md`
-- `docs/AI_VERSE_OS_INTEGRATION.md`
-- `docs/PROJECT_STATE.md`
-- `research/2026-09-top-80-existing-employee-skills.md`
-- `research/2026-09-agent-capability-landscape.md`
+The full networked E2E workflow verifies pinned upstream installation, provider metadata, package digests, immutable update, stale-adapter rejection, rollback, uninstall preservation and recovery. Public-beta lifecycle and learning acceptance runs on Linux, macOS and Windows across supported Python versions.

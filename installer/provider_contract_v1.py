@@ -139,7 +139,7 @@ def generation_content_digest(root: Path) -> str:
 
     root = Path(root)
     h = hashlib.sha256()
-    excluded = {".aiverse/installed.json", f".aiverse/{INDEX_FILENAME}"}
+    excluded = {".aiverse/installed.json", f".aiverse/{INDEX_FILENAME}", ".aiverse/admission.json"}
     entries = [p for p in root.rglob("*") if p.is_file() or p.is_symlink()]
     for path in sorted(entries, key=lambda p: p.relative_to(root).as_posix()):
         rel = path.relative_to(root).as_posix()
@@ -188,7 +188,7 @@ def enrich_packages(impl: Any, installed: Iterable[Mapping[str, Any]], generatio
         static_item = static.get(package_id, {})
         portable = package_digest_v1(package)
         operators = sorted({str(x) for x in item.get("operators", static_item.get("operators", [])) if str(x)})
-        dependencies = sorted({str(x) for x in static_item.get("deps", []) if str(x)})
+        dependencies = sorted({str(x) for x in item.get("dependencies", static_item.get("deps", [])) if str(x)})
         version = meta.get("version") or item.get("source_commit") or static_item.get("commit") or distribution_version
         name = meta.get("name") or package_id
         description = meta.get("description") or f"Installed AI-Verse capability {name}."
