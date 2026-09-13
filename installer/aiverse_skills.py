@@ -10,13 +10,19 @@ try:
     from . import aiverse_skills_v3 as _impl
     from .provider_contract_v1 import apply_provider_contract_v1
     from .readiness_v2 import apply_readiness_v2
+    from .admission import apply_admission
+    from .public_beta import apply_public_beta
 except ImportError:
     import aiverse_skills_v3 as _impl
     from provider_contract_v1 import apply_provider_contract_v1
     from readiness_v2 import apply_readiness_v2
+    from admission import apply_admission
+    from public_beta import apply_public_beta
 
 apply_provider_contract_v1(_impl)
 apply_readiness_v2(_impl)
+apply_admission(_impl)
+apply_public_beta(_impl)
 
 # Preserve the established import surface for callers that import this module.
 for _name in dir(_impl):
