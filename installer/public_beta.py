@@ -548,5 +548,10 @@ def apply_public_beta(impl: Any) -> None:
     impl.parser = parser
     impl.status_report = lambda root: status_report(impl, Path(root))
     impl.setup_component = lambda root: setup_component(impl, Path(root))
+    impl.enable_component = lambda root: enable_component(impl, Path(root))
+    impl.disable_component = lambda root: disable_component(impl, Path(root))
     impl.doctor_report = lambda root, depth="system": doctor_report(impl, Path(root), depth)
     impl.component_descriptor = lambda root: component_descriptor(impl, Path(root))
+    impl.purge_generations = lambda root, keep=2, confirmed=False: purge_generations(
+        impl, Path(root), keep=keep, confirmed=confirmed
+    )
