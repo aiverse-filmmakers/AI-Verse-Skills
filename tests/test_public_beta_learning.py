@@ -5,6 +5,7 @@ import unittest
 from pathlib import Path
 
 from installer import aiverse_skills as skills
+from installer import execution_receipt_v2
 from installer import learning
 
 
@@ -101,6 +102,57 @@ class PublicBetaLearningTests(unittest.TestCase):
         learned = [p for p in pin.manifest["packages"] if p["id"] == "learned-test"][0]
         self.assertEqual(learned["kind"], "learned")
         self.assertEqual(learned["ownership"], "agent_learned")
+
+        # Later-task acceptance: a fresh consumer pins the promoted generation,
+        # loads the learned Skill from that exact generation, and submits a
+        # generation/digest-bound successful receipt before usage is recorded.
+        skill_md = pin.package_path("learned-test") / "SKILL.md"
+        self.assertIn("Perform the procedure", skill_md.read_text(encoding="utf-8"))
+        binding = {
+            "request_fingerprint": "a" * 64,
+            "scope": "workspace:learning-acceptance",
+            "action_class": "read_local",
+            "operation": "learned.acceptance",
+            "provider_id": "aiverse-skills",
+            "capability_id": learned["qualified_id"],
+            "generation_id": pin.generation_id,
+            "package_digest": learned["digest"],
+        }
+        receipt = {
+            "contract": "aiverse-execution-receipt-v2",
+            "receipt_id": "receipt-learned-acceptance",
+            "status": "success",
+            "summary": "Promoted learned Skill was selected and loaded successfully.",
+            "binding": binding,
+            "effect": {
+                "state": "not_occurred",
+                "source_kind": "skill_runtime",
+                "source_ref": "learned-use:1",
+                "independence": "same_context",
+            },
+            "verification_context": {
+                "evaluator_id": "ai-verse-os",
+                "independence": "same_context",
+            },
+            "verification": [{
+                "criterion_id": "skill-loaded",
+                "status": "passed",
+                "evidence": [{
+                    "ref": f"generation:{pin.generation_id}:learned-test",
+                    "kind": "measurement",
+                    "source_kind": "ai_verse_os",
+                    "source_ref": "provider-load-check:1",
+                    "independence": "same_context",
+                }],
+            }],
+            "warnings": [],
+            "remaining_uncertainty": [],
+            "trace_id": "trace-learned-acceptance",
+        }
+        validated = execution_receipt_v2.validate_receipt(receipt, expected_binding=binding)
+        self.assertEqual(validated["status"], "success")
+        usage = learning.record_usage(skills, self.root, "learned-test", success=True)
+        self.assertEqual(usage["success_count"], 1)
 
     def test_auto_repair_only_for_agent_learned_and_compare_and_set_bound(self):
         create = learning.submit_candidate(
@@ -244,6 +296,7 @@ class PublicBetaLearningTests(unittest.TestCase):
         self.assertEqual(archived["skill_id"], "archive-me")
         pin = skills.pin_active_generation(self.root, skills.digest)
         self.assertIsNone(learning._find_package(pin.manifest, "archive-me"))
+        self.assertFalse((pin.generation_path / "learned" / "archive-me").exists())
 
         restored = learning.restore_archived(skills, self.root, "archive-me")
         self.assertEqual(restored["skill_id"], "archive-me")
@@ -254,6 +307,37 @@ class PublicBetaLearningTests(unittest.TestCase):
         # applied generation is still active. The earlier create is no longer current.
         with self.assertRaisesRegex(RuntimeError, "newer generation"):
             learning.rollback_learning_change(skills, self.root, proposal["proposal_id"])
+
+    def test_curator_creates_evaluable_archive_review(self):
+        proposal = learning.submit_candidate(
+            skills,
+            self.root,
+            {
+                "kind": "create",
+                "skill_id": "curator-stale",
+                "evidence_refs": ["user:learn"],
+                "risk": "low",
+                "confidence": 1.0,
+            },
+            self._candidate("curator-stale"),
+            trigger="explicit-learn",
+            explicit=True,
+        )
+        learning.evaluate_proposal(skills, self.root, proposal["proposal_id"])
+        learning.apply_proposal(skills, self.root, proposal["proposal_id"], approved_by="test-user")
+
+        config = learning.ensure_learning_state(skills, self.root)
+        config["stale_after_days"] = 0
+        config["archive_review_after_days"] = 0
+        skills._atomic_json_write(learning._paths(self.root)["config"], config)
+
+        result = learning.curator_run(skills, self.root)
+        self.assertIn("curator-stale", result["stale"])
+        self.assertEqual(len(result["archive_proposals"]), 1)
+        archive_proposal = learning._load_proposal(self.root, result["archive_proposals"][0])
+        self.assertEqual(archive_proposal["state"], "proposal")
+        evaluated = learning.evaluate_proposal(skills, self.root, archive_proposal["proposal_id"])
+        self.assertEqual(evaluated["state"], "pending_approval")
 
     def test_cli_parser_exposes_public_beta_commands(self):
         parser = skills.parser()
