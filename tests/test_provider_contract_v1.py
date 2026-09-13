@@ -3,7 +3,7 @@ import json
 import os
 import tempfile
 import unittest
-from pathlib import Path
+from pathlib import Path, PureWindowsPath
 
 from installer import aiverse_skills as public_impl
 from installer import aiverse_skills_v3 as impl
@@ -66,6 +66,14 @@ class ProviderFixture:
 
 
 class ProviderContractV1Tests(unittest.TestCase):
+    def test_generation_manifest_paths_use_posix_separators_on_windows(self):
+        stage = PureWindowsPath(r"C:\\skills\\generation")
+        package = stage / "foundation" / "api-integration-engineer"
+        self.assertEqual(
+            impl.manifest_relative_path(stage, package),
+            "foundation/api-integration-engineer",
+        )
+
     def test_public_entrypoint_enables_provider_v1_producer(self):
         with tempfile.TemporaryDirectory() as temp:
             stage, _ = ProviderFixture.stage(Path(temp))
