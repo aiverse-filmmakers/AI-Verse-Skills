@@ -395,6 +395,11 @@ def submit_candidate(
             proposal["candidate_digest_sha256"] = candidate_digest
             proposal["state"] = "proposal"
             proposal["history"].append({"state": "proposal", "at": _utc_now(), "by": "candidate-attached"})
+        elif env["kind"] == "archive-review":
+            # Archive review mutates lifecycle state rather than Skill package bytes,
+            # so there is no candidate directory to attach before evaluation.
+            proposal["state"] = "proposal"
+            proposal["history"].append({"state": "proposal", "at": _utc_now(), "by": "archive-review"})
         _save_proposal(impl, root, proposal)
         append_audit(root, "learning.candidate.submitted", {
             "proposal_id": proposal_id,
@@ -790,6 +795,9 @@ def _archive_skill_locked(
     stage = _stage_from_active(impl, root, pin)
     try:
         packages = [x for x in _raw_packages(pin.manifest) if x.get("id") != skill_id]
+        archived_path = stage / str(package["path"])
+        if archived_path.exists():
+            shutil.rmtree(archived_path)
         generation_id = _finalize_generation(impl, root, pin, stage, packages)
         stage = None
     finally:
