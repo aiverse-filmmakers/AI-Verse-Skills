@@ -84,6 +84,13 @@
       "required": false
     },
     {
+      "id": "originality_gate",
+      "capabilities": [],
+      "when": "new_substantial_visual_direction_and_not_bypassed",
+      "required": false,
+      "policy": "references/originality-policy.json"
+    },
+    {
       "id": "design_system_persistence",
       "capabilities": [],
       "when": "persistent_product_visual_grammar_needed",
@@ -230,6 +237,7 @@
       "reference_analysis",
       "ui_ux_intelligence",
       "visual_direction",
+      "originality_gate",
       "design_system_persistence",
       "library_selection",
       "target_implementation",
@@ -249,6 +257,7 @@
       "ui_ux_intelligence",
       "visual_direction",
       "prototype_divergence",
+      "originality_gate",
       "design_system_persistence",
       "library_selection",
       "target_implementation",
@@ -268,6 +277,7 @@
       "ui_ux_intelligence",
       "visual_direction",
       "prototype_divergence",
+      "originality_gate",
       "design_system_persistence",
       "library_selection",
       "target_implementation",
@@ -285,6 +295,7 @@
       "reference_analysis",
       "ui_ux_intelligence",
       "visual_direction",
+      "originality_gate",
       "design_system_persistence",
       "library_selection",
       "target_implementation",
@@ -314,6 +325,7 @@
       "ui_ux_intelligence",
       "visual_direction",
       "prototype_divergence",
+      "originality_gate",
       "design_system_persistence",
       "target_implementation",
       "render_preview",
@@ -328,6 +340,7 @@
       "ui_ux_intelligence",
       "visual_direction",
       "prototype_divergence",
+      "originality_gate",
       "design_system_persistence",
       "target_implementation",
       "motion_build",
@@ -342,6 +355,7 @@
       "target_detection",
       "ui_ux_intelligence",
       "visual_direction",
+      "originality_gate",
       "design_system_persistence",
       "interaction_physics",
       "target_implementation",
@@ -359,6 +373,7 @@
     "Do not prototype micro changes.",
     "Do not create or rewrite DESIGN.md for a tiny one-off fix.",
     "Do not change the implementation stack merely because a specialist is installed.",
-    "Do not load all experts into one context."
+    "Do not load all experts into one context.",
+    "Do not run the originality gate as a novelty requirement for exact-reference recreation or established-product maintenance."
   ]
 }
