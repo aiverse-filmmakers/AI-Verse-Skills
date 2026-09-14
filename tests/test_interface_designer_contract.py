@@ -136,7 +136,7 @@ class InterfaceDesignerContractTests(unittest.TestCase):
             "## Read Rule",
             "## Create Rule",
             "## Update Rule",
-            "Existing `DESIGN.md`",
+            "If a project-level `DESIGN.md` exists",
             "Do not create it for:",
             "preserve unrelated existing decisions",
             "Do not define mobile as",
