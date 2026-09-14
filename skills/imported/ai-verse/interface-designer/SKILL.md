@@ -88,7 +88,7 @@ When the project already exists, detect rather than assume. Do not change stacks
 
 ## Step 4: Select Stages
 
-Read [references/routing.md](references/routing.md) and choose only the stages needed for the current scope and target.
+Read [references/routing.md](references/routing.md) for expert meanings and [references/orchestration.json](references/orchestration.json) for the canonical conditional stage graph. Choose only the stages needed for the current scope and target.
 
 The maximum full-product path is:
 
