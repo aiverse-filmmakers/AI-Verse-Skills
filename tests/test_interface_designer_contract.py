@@ -621,6 +621,33 @@ class InterfaceDesignerContractTests(unittest.TestCase):
         self.assertIn("animate-expo", mobile["experts"])
         self.assertIn("safe_area", mobile["qa"])
 
+    def test_all_target_experts_are_registered_or_explicit_fail_closed_future_dependencies(self):
+        refs = ROOT / "skills/imported/ai-verse/interface-designer/references"
+        graph = json.loads((refs / "orchestration.json").read_text(encoding="utf-8"))
+        skills = json.loads((ROOT / "registry/skills.json").read_text(encoding="utf-8"))
+        registered = {item["id"] for item in skills["employee"]}
+        future = graph.get("future_dependencies", {})
+
+        for target, experts in graph["target_experts"].items():
+            for expert in experts:
+                if expert in registered:
+                    continue
+                self.assertIn(expert, future, f"{target}: unresolved expert {expert}")
+                spec = future[expert]
+                self.assertEqual(spec["status"], "planned_not_registered")
+                self.assertEqual(spec["behavior_when_unavailable"], "BLOCK_AND_REPORT_UNAVAILABLE")
+                self.assertIn(target, spec["required_for_targets"])
+
+        self.assertNotIn("video-editor", registered)
+        self.assertEqual(
+            graph["target_experts"]["CODE_DRIVEN_VIDEO_MOTION_HANDOFF"],
+            ["video-editor"],
+        )
+        self.assertEqual(
+            future["video-editor"]["behavior_when_unavailable"],
+            "BLOCK_AND_REPORT_UNAVAILABLE",
+        )
+
     def test_vercel_review_rules_are_generation_pinned(self):
         package = ROOT / "skills/imported/vercel/web-design-guidelines"
         skill = (package / "SKILL.md").read_text(encoding="utf-8")
