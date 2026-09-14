@@ -199,6 +199,27 @@ class InterfaceDesignerContractTests(unittest.TestCase):
         self.assertIn("originality_gate", graph["scope_pipelines"]["DESIGN_SYSTEM_CHANGE"])
         self.assertIn("Do not create a shared cross-member fingerprint registry.", guide)
 
+    def test_signature_interaction_is_experience_scoped_not_decorative_app_ceremony(self):
+        refs = ROOT / "skills/imported/ai-verse/interface-designer/references"
+        policy = json.loads((refs / "signature-interaction-policy.json").read_text(encoding="utf-8"))
+        guide = (refs / "signature-interaction.md").read_text(encoding="utf-8")
+        graph = json.loads((refs / "orchestration.json").read_text(encoding="utf-8"))
+
+        self.assertIn("scroll_immersive", policy["required_when"])
+        for app_type in ("dashboard", "admin_tool", "crud_application", "settings"):
+            self.assertIn(app_type, policy["optional_functional_when"])
+        self.assertIn("decorative_motion_only", policy["invalid_examples"])
+        self.assertIn("standard_drawer_or_sheet", policy["invalid_examples"])
+        self.assertEqual(
+            policy["exact_reference_behavior"],
+            "use_reference_signature_if_present_do_not_invent_competing_behavior",
+        )
+
+        self.assertNotIn("signature_interaction", graph["scope_pipelines"]["MICRO_CHANGE"])
+        self.assertIn("signature_interaction", graph["scope_pipelines"]["FULL_PRODUCT"])
+        self.assertIn("signature_interaction", graph["scope_pipelines"]["SCROLL_IMMERSIVE"])
+        self.assertIn("A missing signature interaction must not fail a dashboard", guide)
+
     def test_vercel_review_rules_are_generation_pinned(self):
         package = ROOT / "skills/imported/vercel/web-design-guidelines"
         skill = (package / "SKILL.md").read_text(encoding="utf-8")
