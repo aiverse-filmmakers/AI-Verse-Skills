@@ -1,0 +1,92 @@
+{
+  "schema_version": 1,
+  "capability": "interface-designer",
+  "gate": "state-based-visual-qa",
+  "result_states": [
+    "VERIFIED_PASS",
+    "VERIFIED_FAIL",
+    "NOT_APPLICABLE",
+    "UNVERIFIED_BLOCKED"
+  ],
+  "evidence_required_for_verified_result": true,
+  "source_inspection_is_visual_evidence": false,
+  "state_groups": {
+    "data_async": [
+      "initial",
+      "loading",
+      "empty",
+      "populated",
+      "error",
+      "partial_data",
+      "retry_recovery",
+      "stale_or_offline_if_supported"
+    ],
+    "control": [
+      "default",
+      "hover",
+      "focus_visible",
+      "active_pressed",
+      "selected",
+      "disabled",
+      "validation_error",
+      "success_confirmed"
+    ],
+    "disclosure_overlay": [
+      "collapsed",
+      "expanded",
+      "menu_open",
+      "popover_open",
+      "tooltip",
+      "dialog_open",
+      "sheet_or_drawer_open",
+      "nested_overlay_if_supported"
+    ],
+    "navigation": [
+      "current_location",
+      "active_tab_or_section",
+      "deep_linked_state",
+      "back_forward",
+      "destructive_confirmation_or_undo"
+    ],
+    "theme_preference": [
+      "light",
+      "dark",
+      "high_contrast_if_supported",
+      "reduced_motion",
+      "text_scaling_or_zoom_if_relevant"
+    ],
+    "viewport": [
+      "desktop",
+      "tablet",
+      "mobile"
+    ]
+  },
+  "inspect": [
+    "hierarchy",
+    "clipping_overflow",
+    "horizontal_scroll",
+    "overlap",
+    "contrast",
+    "truncation",
+    "empty_space_balance",
+    "asset_integrity",
+    "focus_visibility",
+    "disabled_legibility",
+    "overlay_containment",
+    "scroll_lock",
+    "layering",
+    "layout_shift",
+    "long_content",
+    "error_recovery_clarity",
+    "design_md_consistency",
+    "reference_fidelity_if_applicable"
+  ],
+  "fix_loop": [
+    "record_visible_defect",
+    "apply_smallest_relevant_fix",
+    "rerender_affected_state",
+    "record_new_result",
+    "rerun_neighboring_states_when_shared_layout_or_tokens_changed"
+  ],
+  "completion": "all_required_states_verified_not_applicable_or_explicitly_blocked_and_all_failures_fixed_or_reported"
+}
