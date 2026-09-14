@@ -1,0 +1,17 @@
+{
+  "source_namespace": "vercel",
+  "upstream_repo": "vercel-labs/agent-skills",
+  "upstream_path": "skills/web-design-guidelines",
+  "upstream_commit": "063bee94c3f4df8453406c830b0a7df0f2860278",
+  "license": "MIT",
+  "import_type": "original-vendored-adapted",
+  "modified": true,
+  "adaptation": {
+    "reason": "AI-Verse immutable generations must not fetch mutable main-branch rules during execution.",
+    "change": "Replaced runtime fetch of mutable Web Interface Guidelines main with a package-local pinned reference.",
+    "guideline_repo": "vercel-labs/web-interface-guidelines",
+    "guideline_path": "command.md",
+    "guideline_commit": "e3d624baaf29dc1fc645aff3e38f03e564d2d6b1"
+  },
+  "imported_at": "2026-09-14"
+}
