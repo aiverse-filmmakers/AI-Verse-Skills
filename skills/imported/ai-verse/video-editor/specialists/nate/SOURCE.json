@@ -16,6 +16,8 @@
   "imported_specialists": [
     "edit-video",
     "cut-silences",
-    "cut-mistakes"
+    "cut-mistakes",
+    "short-form-edit",
+    "video-storytelling"
   ]
 }
