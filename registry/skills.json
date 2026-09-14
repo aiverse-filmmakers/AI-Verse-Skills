@@ -3,8 +3,8 @@
   "snapshot": "2026-09-14",
   "counts": {
     "foundation": 20,
-    "employee": 99,
-    "total": 119
+    "employee": 100,
+    "total": 120
   },
   "foundation": [
     {
@@ -1118,6 +1118,16 @@
       "path": "plugins/nateherk-design/skills/scroll-craft",
       "implementation": "original-upstream",
       "state": "catalogued"
+    },
+    {
+      "rank": 100,
+      "id": "video-editor",
+      "category": "film-media",
+      "source": "ai-verse",
+      "repo": "aiverse-filmmakers/AI-Verse-Skills",
+      "path": "skills/imported/ai-verse/video-editor",
+      "implementation": "ai-verse-native",
+      "state": "vendored"
     }
   ]
 }
