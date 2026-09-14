@@ -174,7 +174,7 @@ Usage:
 ./aiverse-skills usage record <skill-id> --failure
 ```
 
-The Workshop stores proposals separately from active Skills. Production changes always create a new immutable generation. First-party, curated-upstream, user-authored and external Skills are protected from autonomous rewriting. Public-beta `auto` promotion is limited to low-risk eligible learned/local maintenance with no permission or dependency expansion and all mandatory gates passing.
+The Workshop stores proposals separately from active Skills. Production changes always create a new immutable generation. First-party, curated-upstream, user-authored and external Skills are protected from autonomous rewriting. In opt-in `auto` mode, a genuinely new low-risk `agent_learned` Skill may also promote automatically when deterministic security/admission, duplicate, provenance, confidence, permission/dependency/Connection/credential, scope and exact-generation gates all pass. `workspace_local` auto-create remains separately disabled unless owner configuration explicitly enables it. Every auto promotion retains the previous immutable generation as a rollback target.
 
 See [docs/PUBLIC_BETA.md](docs/PUBLIC_BETA.md) and [docs/SELF_IMPROVEMENT.md](docs/SELF_IMPROVEMENT.md).
 
