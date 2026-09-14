@@ -401,7 +401,9 @@ def submit_candidate(
         if proposal_dir.exists():
             existing = _load_proposal(root, proposal_id)
             if existing.get("submission_fingerprint") == submission_fingerprint:
-                return existing
+                replay = dict(existing)
+                replay["idempotent_replay"] = True
+                return replay
             raise RuntimeError(f"Proposal id {proposal_id} was already used for different learning input")
 
         target_skill_id = env.get("target_skill_id")
