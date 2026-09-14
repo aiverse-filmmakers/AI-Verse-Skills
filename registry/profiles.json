@@ -2,7 +2,7 @@
   "schema_version": 1,
   "profiles": {
     "full": {
-      "description": "All 119 current canonical capabilities plus required support packages.",
+      "description": "All 120 current canonical capabilities plus required support packages.",
       "include_foundation": true,
       "employee_skills": [
         "persona-exec-assistant",
@@ -103,7 +103,8 @@
         "improve-animations",
         "find-animation-opportunities",
         "animate-expo",
-        "scroll-craft"
+        "scroll-craft",
+        "video-editor"
       ]
     },
     "universal": {
@@ -141,6 +142,7 @@
       "include_foundation": true,
       "employee_skills": [
         "interface-designer",
+        "video-editor",
         "brand-guidelines",
         "canvas-design",
         "figma-use",
@@ -255,6 +257,7 @@
       "include_foundation": true,
       "employee_skills": [
         "interface-designer",
+        "video-editor",
         "director-agent",
         "ai-storyboard-director",
         "produce-ai-video",
