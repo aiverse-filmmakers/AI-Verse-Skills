@@ -20,12 +20,20 @@
     "short-form-edit",
     "video-storytelling",
     "hyperframes-video-beats",
-    "style-library"
+    "style-library",
+    "website-to-hyperframes"
   ],
   "excluded_assets": [
     "AIS logo and brand materials",
     "Nate example-project brand assets",
     "Nate root style-library asset catalog",
     "Nate style-templates demonstration media"
+  ],
+  "website_to_video_adaptations": [
+    "Preserve seven-step capture -> DESIGN.md -> script -> storyboard -> VO/timing -> build -> verify workflow.",
+    "Replace deprecated hyperframes validate with current hyperframes check.",
+    "Use project-root asset paths such as assets/... instead of ../assets/ assumptions.",
+    "Resolve transition/runtime guidance through the canonical HyperFrames 0.8.40 provider.",
+    "Use provider-aware TTS/auth instead of hard-coded Nate-environment MCP names."
   ]
 }
