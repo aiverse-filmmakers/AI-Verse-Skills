@@ -102,6 +102,30 @@ class InterfaceDesignerContractTests(unittest.TestCase):
         for source_id, commit in expected_pins.items():
             self.assertEqual(packages["sources"][source_id]["commit"], commit)
 
+    def test_conditional_pipeline_graph_prevents_context_bloat(self):
+        graph = json.loads(
+            (ROOT / "skills/imported/ai-verse/interface-designer/references/orchestration.json")
+            .read_text(encoding="utf-8")
+        )
+        self.assertIn("MICRO_CHANGE", graph["scope_pipelines"])
+        self.assertNotIn("prototype_divergence", graph["scope_pipelines"]["MICRO_CHANGE"])
+        self.assertNotIn("visual_direction", graph["scope_pipelines"]["MICRO_CHANGE"])
+        self.assertIn("prototype_divergence", graph["scope_pipelines"]["FULL_PRODUCT"])
+        self.assertEqual(
+            graph["target_experts"]["REACT_WEB_APP"],
+            ["react-best-practices", "composition-patterns"],
+        )
+        self.assertEqual(graph["target_experts"]["PLAIN_HTML_CSS_JS_ARTIFACT"], [])
+        self.assertEqual(graph["target_experts"]["REACT_NATIVE_EXPO"], ["animate-expo"])
+        self.assertEqual(
+            graph["conditional_experts"]["scroll_craft"]["capability"],
+            "scroll-craft",
+        )
+        self.assertIn(
+            "Do not load all experts into one context.",
+            graph["invariants"],
+        )
+
     def test_vercel_review_rules_are_generation_pinned(self):
         package = ROOT / "skills/imported/vercel/web-design-guidelines"
         skill = (package / "SKILL.md").read_text(encoding="utf-8")
