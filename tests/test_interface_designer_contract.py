@@ -646,7 +646,7 @@ class InterfaceDesignerContractTests(unittest.TestCase):
         )
         self.assertNotIn("video-editor", future)
         integration = graph["registered_integrations"]["video-editor"]
-        self.assertEqual(integration["status"], "registered_release_candidate")
+        self.assertEqual(integration["status"], "registered")
         self.assertEqual(integration["direction"], "interface-designer -> video-editor")
         self.assertEqual(integration["boundary"], "presentation-handoff-only")
         self.assertIn("transcript truth", integration["does_not_own"])
