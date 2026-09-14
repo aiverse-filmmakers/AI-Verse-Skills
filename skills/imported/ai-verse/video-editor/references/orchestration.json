@@ -306,9 +306,11 @@
     ]
   },
   "fail_closed": [
-    "Do not mark the Video Editor selectable until Nate-derived editorial specialists are installed or intentionally mapped.",
-    "Do not mark the Video Editor selectable until the HyperFrames 0.8.40 provider is registered and pinned.",
+    "Do not promote or merge Video Editor unless Nate-derived editorial provenance and behavior tests pass.",
+    "Do not promote or merge Video Editor unless HyperFrames 0.8.40 is pinned to the accepted immutable commit and all required support dependencies install.",
+    "Do not expose HyperFrames provider support packages as member-facing canonical capabilities.",
     "Do not use Interface Designer as an editorial fallback.",
     "Do not claim final media verification from composition source alone."
-  ]
+  ],
+  "release_gate_state": "registered-release-candidate"
 }
