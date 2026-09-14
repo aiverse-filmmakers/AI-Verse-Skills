@@ -240,6 +240,29 @@ class InterfaceDesignerContractTests(unittest.TestCase):
         self.assertIn("experience_curve", graph["scope_pipelines"]["SCROLL_IMMERSIVE"])
         self.assertIn("Do not create an experience curve for:", guide)
 
+    def test_visual_qa_requires_rendered_evidence_and_truthful_blocked_states(self):
+        refs = ROOT / "skills/imported/ai-verse/interface-designer/references"
+        policy = json.loads((refs / "visual-qa-policy.json").read_text(encoding="utf-8"))
+        guide = (refs / "visual-qa.md").read_text(encoding="utf-8")
+        graph = json.loads((refs / "orchestration.json").read_text(encoding="utf-8"))
+
+        self.assertTrue(policy["evidence_required_for_verified_result"])
+        self.assertFalse(policy["source_inspection_is_visual_evidence"])
+        for result in ("VERIFIED_PASS", "VERIFIED_FAIL", "NOT_APPLICABLE", "UNVERIFIED_BLOCKED"):
+            self.assertIn(result, policy["result_states"])
+        for state in ("loading", "empty", "populated", "error"):
+            self.assertIn(state, policy["state_groups"]["data_async"])
+        for state in ("hover", "focus_visible", "disabled"):
+            self.assertIn(state, policy["state_groups"]["control"])
+        self.assertIn("reduced_motion", policy["state_groups"]["theme_preference"])
+        self.assertEqual(policy["state_groups"]["viewport"], ["desktop", "tablet", "mobile"])
+
+        stage = next(s for s in graph["stages"] if s["id"] == "visual_state_qa")
+        self.assertEqual(stage["policy"], "references/visual-qa-policy.json")
+        self.assertTrue(stage["evidence_required"])
+        self.assertIn("UNVERIFIED_BLOCKED", guide)
+        self.assertIn("Source inspection alone does not prove visual appearance.", guide)
+
     def test_vercel_review_rules_are_generation_pinned(self):
         package = ROOT / "skills/imported/vercel/web-design-guidelines"
         skill = (package / "SKILL.md").read_text(encoding="utf-8")
