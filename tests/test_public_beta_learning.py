@@ -73,7 +73,7 @@ class PublicBetaLearningTests(unittest.TestCase):
         enabled = skills.enable_component(self.root)
         self.assertEqual(enabled["state"], "ready")
 
-    def test_create_requires_approval_even_in_auto_then_promotes_immutably(self):
+    def test_safe_create_auto_promotes_immutably_and_is_rollbackable(self):
         learning.set_learning_mode(skills, self.root, "auto")
         proposal = learning.submit_candidate(
             skills,
@@ -90,12 +90,11 @@ class PublicBetaLearningTests(unittest.TestCase):
             trigger="explicit-learn",
             explicit=True,
         )
-        evaluated = learning.evaluate_proposal(skills, self.root, proposal["proposal_id"])
-        self.assertEqual(evaluated["state"], "pending_approval")
         before = skills.pin_active_generation(self.root, skills.digest).generation_id
-        applied = learning.apply_proposal(
-            skills, self.root, proposal["proposal_id"], approved_by="test-user"
+        applied = learning.evaluate_proposal(
+            skills, self.root, proposal["proposal_id"], auto_apply=True
         )
+        self.assertEqual(applied["approved_by"], "policy:auto")
         self.assertEqual(applied["state"], "applied")
         self.assertNotEqual(applied["applied_generation_id"], before)
         pin = skills.pin_active_generation(self.root, skills.digest)
@@ -153,6 +152,185 @@ class PublicBetaLearningTests(unittest.TestCase):
         self.assertEqual(validated["status"], "success")
         usage = learning.record_usage(skills, self.root, "learned-test", success=True)
         self.assertEqual(usage["success_count"], 1)
+
+        rolled = learning.rollback_learning_change(skills, self.root, proposal["proposal_id"])
+        self.assertEqual(rolled["rollback_generation_id"], before)
+        restored = skills.pin_active_generation(self.root, skills.digest)
+        self.assertEqual(restored.generation_id, before)
+        self.assertIsNone(learning._find_package(restored.manifest, "learned-test"))
+
+    def test_auto_create_negative_gates_remain_pending_or_quarantined(self):
+        learning.set_learning_mode(skills, self.root, "auto")
+
+        cases = [
+            ("medium-risk", {"risk": "medium"}, "pending_approval"),
+            ("low-confidence", {"confidence": 0.89}, "pending_approval"),
+            ("capability-expansion", {"requested_capabilities": ["network.write"]}, "pending_approval"),
+            ("dependency-expansion", {"requested_dependencies": ["new-runtime"]}, "pending_approval"),
+            ("connection-required", {"requires_connection": True}, "pending_approval"),
+            ("credential-required", {"requires_credential": True}, "pending_approval"),
+            ("protected-ownership", {"source_ownership": "user_authored"}, "pending_approval"),
+        ]
+        for suffix, changes, expected in cases:
+            envelope = {
+                "kind": "create",
+                "skill_id": f"gate-{suffix}",
+                "summary": "Reusable procedure under gate test",
+                "evidence_refs": [f"memory:{suffix}"],
+                "risk": "low",
+                "confidence": 0.95,
+            }
+            envelope.update(changes)
+            proposal = learning.submit_candidate(
+                skills,
+                self.root,
+                envelope,
+                self._candidate(f"gate-{suffix}", f"Procedure unique to {suffix}."),
+                trigger="post-run",
+                explicit=False,
+            )
+            evaluated = learning.evaluate_proposal(skills, self.root, proposal["proposal_id"])
+            self.assertEqual(evaluated["state"], expected, suffix)
+
+        secret = learning.submit_candidate(
+            skills,
+            self.root,
+            {
+                "kind": "create",
+                "skill_id": "gate-secret",
+                "evidence_refs": ["memory:secret"],
+                "risk": "low",
+                "confidence": 0.99,
+            },
+            self._candidate(
+                "gate-secret",
+                "-----BEGIN PRIVATE KEY-----\nnot-real\n-----END PRIVATE KEY-----",
+            ),
+            trigger="post-run",
+            explicit=False,
+        )
+        secret_eval = learning.evaluate_proposal(skills, self.root, secret["proposal_id"])
+        self.assertEqual(secret_eval["state"], "quarantined")
+
+    def test_workspace_local_auto_requires_explicit_config_and_scope(self):
+        learning.set_learning_mode(skills, self.root, "auto")
+        envelope = {
+            "kind": "create",
+            "skill_id": "workspace-local-test",
+            "scope": {"workspace_id": "client-alpha"},
+            "source_ownership": "workspace_local",
+            "evidence_refs": ["memory:workspace-success"],
+            "risk": "low",
+            "confidence": 0.97,
+        }
+        first = learning.submit_candidate(
+            skills,
+            self.root,
+            envelope,
+            self._candidate("workspace-local-test", "Workspace-specific reusable procedure."),
+            trigger="post-run",
+            explicit=False,
+        )
+        first_eval = learning.evaluate_proposal(skills, self.root, first["proposal_id"])
+        self.assertEqual(first_eval["state"], "pending_approval")
+
+        config = learning.ensure_learning_state(skills, self.root)
+        config["auto_workspace_local"] = True
+        skills._atomic_json_write(learning._paths(self.root)["config"], config)
+
+        second_envelope = dict(envelope)
+        second_envelope["skill_id"] = "workspace-local-auto"
+        second = learning.submit_candidate(
+            skills,
+            self.root,
+            second_envelope,
+            self._candidate("workspace-local-auto", "Another workspace-specific reusable procedure."),
+            trigger="post-run",
+            explicit=False,
+        )
+        applied = learning.evaluate_proposal(
+            skills, self.root, second["proposal_id"], auto_apply=True
+        )
+        self.assertEqual(applied["state"], "applied")
+        pin = skills.pin_active_generation(self.root, skills.digest)
+        package = learning._find_package(pin.manifest, "workspace-local-auto")
+        self.assertEqual(package["ownership"], "workspace_local")
+
+        invalid = dict(envelope)
+        invalid["skill_id"] = "workspace-local-invalid"
+        invalid["scope"] = {}
+        with self.assertRaisesRegex(RuntimeError, "scope.workspace_id"):
+            learning.submit_candidate(
+                skills,
+                self.root,
+                invalid,
+                self._candidate("workspace-local-invalid"),
+                trigger="post-run",
+                explicit=False,
+            )
+
+    def test_auto_create_is_generation_bound_and_duplicate_safe(self):
+        learning.set_learning_mode(skills, self.root, "auto")
+        candidate = learning.submit_candidate(
+            skills,
+            self.root,
+            {
+                "kind": "create",
+                "skill_id": "generation-bound",
+                "evidence_refs": ["memory:generation-bound"],
+                "risk": "low",
+                "confidence": 0.99,
+            },
+            self._candidate("generation-bound", "A generation-bound reusable procedure."),
+            trigger="post-run",
+            explicit=False,
+        )
+
+        # Advance the active generation before evaluation using an explicitly
+        # approved proposal. The stale auto candidate must not auto-promote.
+        other = learning.submit_candidate(
+            skills,
+            self.root,
+            {
+                "kind": "create",
+                "skill_id": "generation-advance",
+                "evidence_refs": ["user:explicit"],
+                "risk": "low",
+                "confidence": 1.0,
+            },
+            self._candidate("generation-advance", "Explicit generation advance procedure."),
+            trigger="explicit-learn",
+            explicit=True,
+        )
+        other_eval = learning.evaluate_proposal(skills, self.root, other["proposal_id"])
+        self.assertEqual(other_eval["state"], "auto_eligible")
+        learning.apply_proposal(skills, self.root, other["proposal_id"], approved_by="test-user")
+
+        stale = learning.evaluate_proposal(skills, self.root, candidate["proposal_id"])
+        self.assertEqual(stale["state"], "pending_approval")
+        self.assertTrue(stale["evaluation"]["base_generation_changed"])
+
+        active = skills.pin_active_generation(self.root, skills.digest)
+        duplicate_dir = self._candidate("duplicate-new")
+        source = active.package_path("generation-advance") / "SKILL.md"
+        (duplicate_dir / "SKILL.md").write_text(source.read_text(encoding="utf-8"), encoding="utf-8")
+        duplicate = learning.submit_candidate(
+            skills,
+            self.root,
+            {
+                "kind": "create",
+                "skill_id": "duplicate-new",
+                "evidence_refs": ["memory:duplicate"],
+                "risk": "low",
+                "confidence": 0.99,
+            },
+            duplicate_dir,
+            trigger="post-run",
+            explicit=False,
+        )
+        dup_eval = learning.evaluate_proposal(skills, self.root, duplicate["proposal_id"])
+        self.assertEqual(dup_eval["state"], "pending_approval")
+        self.assertTrue(dup_eval["evaluation"]["dedup"]["duplicate"])
 
     def test_auto_repair_only_for_agent_learned_and_compare_and_set_bound(self):
         create = learning.submit_candidate(

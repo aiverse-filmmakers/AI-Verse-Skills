@@ -31,6 +31,7 @@ DEFAULT_CONFIG = {
     "archive_review_after_days": 90,
     "duplicate_similarity_threshold": 0.88,
     "raw_evidence_storage": False,
+    "auto_workspace_local": False,
 }
 FINAL_STATES = {"applied", "rejected", "quarantined"}
 AUTO_OWNERS = {"agent_learned", "workspace_local"}
@@ -93,6 +94,11 @@ def ensure_learning_state(impl: Any, root: Path) -> Dict[str, Any]:
         raise RuntimeError("Unsupported Skills learning configuration schema")
     if config.get("mode") not in {"off", "propose", "auto"}:
         raise RuntimeError("Invalid Skills learning mode")
+    if "auto_workspace_local" not in config:
+        config["auto_workspace_local"] = False
+        impl._atomic_json_write(p["config"], config)
+    if not isinstance(config.get("auto_workspace_local"), bool):
+        raise RuntimeError("auto_workspace_local must be a boolean")
     for key, default in (("usage", {}), ("skill_state", {}), ("budget", {})):
         if not p[key].is_file():
             impl._atomic_json_write(p[key], default)
@@ -270,12 +276,30 @@ def _validate_envelope(envelope: Mapping[str, Any]) -> Dict[str, Any]:
     confidence = float(data.get("confidence", 0.0))
     if confidence < 0.0 or confidence > 1.0:
         raise RuntimeError("confidence must be within 0..1")
+    source_ownership = str(data.get("source_ownership") or "agent_learned")
+    if source_ownership not in AUTO_OWNERS | PROTECTED_OWNERS:
+        raise RuntimeError(f"Unsupported source ownership: {source_ownership}")
+    scope = data.get("scope", {})
+    if not isinstance(scope, Mapping):
+        raise RuntimeError("scope must be an object")
+    scope = dict(scope)
+    if source_ownership == "workspace_local":
+        workspace_id = scope.get("workspace_id")
+        if not isinstance(workspace_id, str) or not re.fullmatch(r"[a-z0-9][a-z0-9-]{0,127}", workspace_id):
+            raise RuntimeError("workspace_local candidates require scope.workspace_id")
+    for flag in ("requires_connection", "requires_credential"):
+        if flag in data and not isinstance(data.get(flag), bool):
+            raise RuntimeError(f"{flag} must be boolean")
     data["kind"] = kind
     data["risk"] = risk
     data["confidence"] = confidence
     data["evidence_refs"] = refs
     data["requested_capabilities"] = list(data.get("requested_capabilities", []))
     data["requested_dependencies"] = list(data.get("requested_dependencies", []))
+    data["source_ownership"] = source_ownership
+    data["scope"] = scope
+    data["requires_connection"] = bool(data.get("requires_connection", False))
+    data["requires_credential"] = bool(data.get("requires_credential", False))
     return data
 
 
@@ -365,7 +389,7 @@ def submit_candidate(
             "kind": env["kind"],
             "skill_id": skill_id or None,
             "target_skill_id": target_skill_id,
-            "scope": env.get("scope", {}),
+            "scope": env["scope"],
             "summary": str(env.get("summary", ""))[:2000],
             "evidence_refs": env["evidence_refs"],
             "success_signal": env.get("success_signal", []),
@@ -374,9 +398,13 @@ def submit_candidate(
             "confidence": env["confidence"],
             "requested_capabilities": env["requested_capabilities"],
             "requested_dependencies": env["requested_dependencies"],
-            "source_ownership": str(env.get("source_ownership") or "agent_learned"),
+            "requires_connection": env["requires_connection"],
+            "requires_credential": env["requires_credential"],
+            "source_ownership": env["source_ownership"],
             "target_ownership": target_ownership,
             "protected_target": bool(target_ownership in PROTECTED_OWNERS) if target_ownership else False,
+            "base_generation_id": pin.generation_id,
+            "base_generation_digest": pin.generation_digest_sha256,
             "target_generation_id": pin.generation_id if target_package else None,
             "target_package_digest": target_package.get("digest_sha256") if target_package else None,
             "source_skill_ids": list(env.get("source_skill_ids", [])),
@@ -484,9 +512,11 @@ def evaluate_proposal(impl: Any, root: Path, proposal_id: str, *, auto_apply: bo
             security = scan_package(candidate)
             dedup = _dedup_report(impl, root, proposal, candidate)
         permission_expansion = bool(proposal.get("requested_capabilities") or proposal.get("requested_dependencies"))
+        connection_expansion = bool(proposal.get("requires_connection") or proposal.get("requires_credential"))
+        pin = impl.pin_active_generation(root, impl.digest)
+        base_generation_changed = pin.generation_id != proposal.get("base_generation_id")
         target_changed = False
         if proposal.get("target_skill_id"):
-            pin = impl.pin_active_generation(root, impl.digest)
             current = _find_package(pin.manifest, str(proposal["target_skill_id"]))
             target_changed = (
                 pin.generation_id != proposal.get("target_generation_id")
@@ -499,8 +529,13 @@ def evaluate_proposal(impl: Any, root: Path, proposal_id: str, *, auto_apply: bo
             "security": security,
             "dedup": dedup,
             "permission_expansion": permission_expansion,
+            "connection_expansion": connection_expansion,
             "target_changed": target_changed,
+            "base_generation_changed": base_generation_changed,
             "provenance_complete": bool(proposal.get("evidence_refs") or proposal.get("explicit")),
+            "scope_valid": isinstance(proposal.get("scope"), dict),
+            "evaluated_generation_id": pin.generation_id,
+            "evaluated_generation_digest": pin.generation_digest_sha256,
             "evaluated_at": _utc_now(),
         }
         proposal["evaluation"] = evaluation
@@ -510,15 +545,34 @@ def evaluate_proposal(impl: Any, root: Path, proposal_id: str, *, auto_apply: bo
             reason = "security-deny" if security["status"] == "deny" else "target-changed"
             proposal["quarantine_reason"] = reason
         else:
+            create_owner = proposal.get("source_ownership")
+            create_owner_auto = (
+                create_owner == "agent_learned"
+                or (create_owner == "workspace_local" and config.get("auto_workspace_local") is True)
+            )
+            ownership_eligible = (
+                create_owner_auto
+                if proposal.get("kind") == "create"
+                else proposal.get("target_ownership") in AUTO_OWNERS
+            )
+            create_confidence_ok = (
+                proposal.get("kind") != "create"
+                or float(proposal.get("confidence", 0.0)) >= 0.9
+            )
             auto_eligible = (
                 config["mode"] == "auto"
-                and proposal.get("kind") in {"repair", "update", "archive-review"}
-                and proposal.get("target_ownership") in AUTO_OWNERS
+                and proposal.get("kind") in {"create", "repair", "update", "archive-review"}
+                and ownership_eligible
                 and not proposal.get("protected_target")
                 and proposal.get("risk") == "low"
+                and create_confidence_ok
                 and not permission_expansion
+                and not connection_expansion
                 and not dedup.get("duplicate")
                 and security["status"] == "pass"
+                and evaluation["provenance_complete"]
+                and evaluation["scope_valid"]
+                and not base_generation_changed
             )
             proposal["state"] = "auto_eligible" if auto_eligible else "pending_approval"
 
@@ -530,7 +584,9 @@ def evaluate_proposal(impl: Any, root: Path, proposal_id: str, *, auto_apply: bo
             "state": proposal["state"],
             "security": security["status"],
             "permission_expansion": permission_expansion,
+            "connection_expansion": connection_expansion,
             "target_changed": target_changed,
+            "base_generation_changed": base_generation_changed,
         })
 
     if auto_apply and proposal.get("state") == "auto_eligible":
@@ -642,6 +698,12 @@ def apply_proposal(
             )
 
         pin = impl.pin_active_generation(root, impl.digest)
+        evaluation = proposal.get("evaluation") if isinstance(proposal.get("evaluation"), dict) else {}
+        if state == "auto_eligible" and (
+            pin.generation_id != evaluation.get("evaluated_generation_id")
+            or pin.generation_digest_sha256 != evaluation.get("evaluated_generation_digest")
+        ):
+            raise RuntimeError("Active generation changed after evaluation; re-evaluate before auto promotion")
         if proposal.get("target_skill_id"):
             current = _find_package(pin.manifest, str(proposal["target_skill_id"]))
             if (
@@ -675,7 +737,11 @@ def apply_proposal(
                     "source_commit": None,
                     "operators": [],
                     "dependencies": [],
-                    "ownership": "agent_learned",
+                    "ownership": (
+                        proposal.get("source_ownership")
+                        if proposal.get("source_ownership") in AUTO_OWNERS
+                        else "agent_learned"
+                    ),
                     "digest_sha256": impl.digest(stage / target_rel),
                 })
             else:
@@ -715,8 +781,13 @@ def apply_proposal(
         proposal["updated_at"] = _utc_now()
         proposal["history"].append({"state": "applied", "at": _utc_now(), "by": proposal["approved_by"]})
         _save_proposal(impl, root, proposal)
+        learned_ownership = (
+            proposal.get("source_ownership")
+            if proposal.get("source_ownership") in AUTO_OWNERS
+            else "agent_learned"
+        )
         _record_skill_state(
-            impl, root, skill_id, "active", ownership="agent_learned",
+            impl, root, skill_id, "active", ownership=learned_ownership,
             protected=False, generation_id=generation_id, source_proposal_id=proposal_id,
         )
         append_audit(root, "learning.promotion.applied", {
