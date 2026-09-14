@@ -1,6 +1,6 @@
 ---
 name: video-editor
-description: Orchestrate real video editing from footage, transcript, script, URL, or reference through transcript truth, silence and mistake passes, EDLs, short-form or long-form editorial structure, visual beats, captions/B-roll, HyperFrames assembly, media QA, and final render. Use for full edits and multi-stage video-post workflows. Route narrow requests such as silence removal directly to the relevant specialist once registered. Do not use Interface Designer as the editorial authority.
+description: Orchestrate real video editing from footage, transcript, script, URL, or reference through transcript truth, silence and mistake passes, EDLs, short-form or long-form editorial structure, visual beats, captions/B-roll, HyperFrames assembly, media QA, and final render. Use for full edits and multi-stage video-post workflows. Route narrow requests such as silence removal directly to the relevant internal specialist. Do not use Interface Designer as the editorial authority.
 version: 0.1.0
 license: MIT
 metadata:
@@ -8,7 +8,7 @@ metadata:
     ownership: first-party
     category: film-media
     composite: true
-    registration: fail-closed-until-provider-integration
+    registration: registered-release-candidate
 ---
 
 # AI-Verse Video Editor
@@ -21,11 +21,15 @@ This Skill is the member-facing editor/orchestrator. It coordinates specialist S
 
 ## Current Registration State
 
-This package is intentionally **not selectable yet**.
+This package is a **registered release candidate** on the Video Editor implementation branch.
 
-It remains fail-closed until the pinned Nate-derived editorial specialists and the accepted HyperFrames provider are integrated, provenance is complete, and the Video Editor regression/media gates pass.
+Its Nate-derived editorial specialists are package-local and provenance-locked. The
+accepted HyperFrames 0.8.40 provider family is pinned as internal support dependencies.
 
-Do not treat the presence of this directory as release readiness.
+Registration is not release acceptance. PR #14 remains draft until the remaining
+cross-skill, media-QA, regression, documentation, and final release gates pass.
+
+Do not equate registry presence with a completed public-beta release.
 
 ## Read First
 
