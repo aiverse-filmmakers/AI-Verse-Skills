@@ -315,6 +315,59 @@ class InterfaceDesignerContractTests(unittest.TestCase):
         self.assertTrue(stage["evidence_required"])
         self.assertIn("not complete merely because desktop CSS fits inside a smaller viewport", guide)
 
+    def test_required_routing_fixtures_resolve_to_valid_scopes_targets_and_experts(self):
+        refs = ROOT / "skills/imported/ai-verse/interface-designer/references"
+        graph = json.loads((refs / "orchestration.json").read_text(encoding="utf-8"))
+        fixture_doc = json.loads((refs / "routing-fixtures.json").read_text(encoding="utf-8"))
+        skills = json.loads((ROOT / "registry/skills.json").read_text(encoding="utf-8"))
+        registered = {item["id"] for item in skills["employee"]}
+        stage_ids = {stage["id"] for stage in graph["stages"]}
+        expected_ids = {
+            "tiny-padding-change",
+            "dashboard-from-scratch",
+            "recreate-screenshot",
+            "draggable-floating-panel",
+            "react-refactor",
+            "cinematic-scroll-landing",
+            "expo-sheet-interaction",
+            "finished-ui-review",
+        }
+        fixtures = {item["id"]: item for item in fixture_doc["fixtures"]}
+        self.assertEqual(set(fixtures), expected_ids)
+
+        for fixture in fixtures.values():
+            self.assertIn(fixture["scope"], graph["scopes"])
+            self.assertIn(fixture["target"], graph["targets"])
+            scope_pipeline = graph["scope_pipelines"][fixture["scope"]]
+            for stage in fixture.get("expected_stages", []):
+                self.assertIn(stage, stage_ids)
+                self.assertIn(stage, scope_pipeline)
+            for stage in fixture.get("forbidden_stages", []):
+                self.assertNotIn(stage, fixture.get("expected_stages", []))
+            for expert in fixture.get("expected_experts", []):
+                self.assertIn(expert, registered)
+            for expert in fixture.get("forbidden_experts", []):
+                self.assertNotIn(expert, fixture.get("expected_experts", []))
+
+        micro = fixtures["tiny-padding-change"]
+        self.assertEqual(micro["expected_experts"], [])
+        self.assertEqual(micro["scope"], "MICRO_CHANGE")
+        self.assertEqual(micro["target"], "EXISTING_WEB_STACK")
+
+        dashboard = fixtures["dashboard-from-scratch"]
+        self.assertEqual(
+            graph["target_experts"][dashboard["target"]],
+            ["react-best-practices", "composition-patterns"],
+        )
+
+        scroll = fixtures["cinematic-scroll-landing"]
+        self.assertIn("scroll-craft", scroll["expected_experts"])
+        self.assertIn("scroll_state_qa", scroll["expected_stages"])
+
+        expo = fixtures["expo-sheet-interaction"]
+        self.assertEqual(graph["target_experts"][expo["target"]], ["animate-expo"])
+        self.assertIn("apple-design", expo["expected_experts"])
+
     def test_vercel_review_rules_are_generation_pinned(self):
         package = ROOT / "skills/imported/vercel/web-design-guidelines"
         skill = (package / "SKILL.md").read_text(encoding="utf-8")
