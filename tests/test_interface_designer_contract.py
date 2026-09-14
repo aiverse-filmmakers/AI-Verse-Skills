@@ -521,6 +521,52 @@ class InterfaceDesignerContractTests(unittest.TestCase):
             ["canva"],
         )
 
+    def test_design_experts_cannot_bypass_admission_integrity_authority_or_workspace_scope(self):
+        refs = ROOT / "skills/imported/ai-verse/interface-designer/references"
+        boundary = json.loads((refs / "security-boundaries.json").read_text(encoding="utf-8"))
+        preservation = json.loads((refs / "expert-preservation.json").read_text(encoding="utf-8"))
+        originality = json.loads((refs / "originality-policy.json").read_text(encoding="utf-8"))
+        packages = json.loads((ROOT / "registry/packages.json").read_text(encoding="utf-8"))
+        trust = json.loads((ROOT / "registry/trust-policy.json").read_text(encoding="utf-8"))
+        admission = (ROOT / "installer/admission.py").read_text(encoding="utf-8")
+        lifecycle = (ROOT / "installer/generation_lifecycle.py").read_text(encoding="utf-8")
+
+        for marker in (
+            "Admission is deliberately separate from integrity",
+            "Unknown sources are never implicitly trusted",
+            "security = scan_package",
+            "integrity = _package_integrity",
+            "\"authorized\": False",
+            "host/user execution authority, never granted by Skills admission",
+        ):
+            self.assertIn(marker, admission)
+        self.assertIn("never mutated after commit", lifecycle)
+        self.assertIn("single atomic pointer replacement", lifecycle)
+
+        forbidden_fields = set(boundary["forbidden_package_override_fields"])
+        for source in preservation["sources"]:
+            trust_entry = trust["sources"][source["repo"]]
+            self.assertFalse(trust_entry["auto_mutation"])
+            registry_source = packages["sources"][source["source_id"]]
+            for package in registry_source["packages"]:
+                self.assertTrue(forbidden_fields.isdisjoint(package.keys()))
+
+        self.assertIn(
+            "other_member_private_design_history",
+            originality["forbidden_comparison_scope"],
+        )
+        self.assertIn(
+            "cross_member_private_fingerprint_registry",
+            originality["forbidden_comparison_scope"],
+        )
+
+        orchestrator = next(
+            pkg
+            for pkg in packages["sources"]["ai-verse"]["packages"]
+            if pkg["id"] == "interface-designer"
+        )
+        self.assertTrue(forbidden_fields.isdisjoint(orchestrator.keys()))
+
     def test_vercel_review_rules_are_generation_pinned(self):
         package = ROOT / "skills/imported/vercel/web-design-guidelines"
         skill = (package / "SKILL.md").read_text(encoding="utf-8")
