@@ -2,7 +2,7 @@
   "schema_version": 1,
   "profiles": {
     "full": {
-      "description": "All 101 current canonical capabilities plus required support packages.",
+      "description": "All 119 current canonical capabilities plus required support packages.",
       "include_foundation": true,
       "employee_skills": [
         "persona-exec-assistant",
@@ -85,7 +85,25 @@
         "review-contract",
         "legal-risk-assessment",
         "vendor-check",
-        "interface-designer"
+        "interface-designer",
+        "frontend-design",
+        "ui-ux-pro-max",
+        "react-best-practices",
+        "composition-patterns",
+        "web-design-guidelines",
+        "shadcn",
+        "design-first-ui-prompting",
+        "video-to-superprompt",
+        "stitched-full-page-capture",
+        "apple-design",
+        "animate",
+        "prototype",
+        "review-animations",
+        "pick-ui-library",
+        "improve-animations",
+        "find-animation-opportunities",
+        "animate-expo",
+        "scroll-craft"
       ]
     },
     "universal": {
@@ -157,7 +175,25 @@
         "whisper",
         "internal-comms",
         "Council",
-        "Ideate"
+        "Ideate",
+        "frontend-design",
+        "ui-ux-pro-max",
+        "react-best-practices",
+        "composition-patterns",
+        "web-design-guidelines",
+        "shadcn",
+        "design-first-ui-prompting",
+        "video-to-superprompt",
+        "stitched-full-page-capture",
+        "apple-design",
+        "animate",
+        "prototype",
+        "review-animations",
+        "pick-ui-library",
+        "improve-animations",
+        "find-animation-opportunities",
+        "animate-expo",
+        "scroll-craft"
       ]
     },
     "business": {
@@ -243,7 +279,25 @@
         "copywriting",
         "ad-creative",
         "Council",
-        "Ideate"
+        "Ideate",
+        "frontend-design",
+        "ui-ux-pro-max",
+        "react-best-practices",
+        "composition-patterns",
+        "web-design-guidelines",
+        "shadcn",
+        "design-first-ui-prompting",
+        "video-to-superprompt",
+        "stitched-full-page-capture",
+        "apple-design",
+        "animate",
+        "prototype",
+        "review-animations",
+        "pick-ui-library",
+        "improve-animations",
+        "find-animation-opportunities",
+        "animate-expo",
+        "scroll-craft"
       ]
     },
     "marketing": {
@@ -274,7 +328,25 @@
         "baoyu-article-illustrator",
         "theme-factory",
         "Council",
-        "RedTeam"
+        "RedTeam",
+        "frontend-design",
+        "ui-ux-pro-max",
+        "react-best-practices",
+        "composition-patterns",
+        "web-design-guidelines",
+        "shadcn",
+        "design-first-ui-prompting",
+        "video-to-superprompt",
+        "stitched-full-page-capture",
+        "apple-design",
+        "animate",
+        "prototype",
+        "review-animations",
+        "pick-ui-library",
+        "improve-animations",
+        "find-animation-opportunities",
+        "animate-expo",
+        "scroll-craft"
       ]
     },
     "sales": {
