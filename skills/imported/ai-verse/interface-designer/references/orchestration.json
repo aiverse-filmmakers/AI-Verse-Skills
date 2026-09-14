@@ -1,0 +1,444 @@
+{
+  "schema_version": 1,
+  "capability": "interface-designer",
+  "principle": "Load the smallest expert subset that satisfies the current scope, target, references, and verification needs.",
+  "scopes": [
+    "MICRO_CHANGE",
+    "COMPONENT",
+    "SCREEN",
+    "MULTI_SCREEN_FLOW",
+    "FULL_PRODUCT",
+    "REFERENCE_RECREATION",
+    "INTERACTION_HEAVY",
+    "DESIGN_SYSTEM_CHANGE",
+    "SCROLL_IMMERSIVE",
+    "MOBILE_EXPO"
+  ],
+  "targets": [
+    "PLAIN_HTML_CSS_JS_ARTIFACT",
+    "EXISTING_WEB_STACK",
+    "REACT_WEB_APP",
+    "PWA",
+    "FIGMA",
+    "CANVA_OR_STATIC_DESIGN_TOOL",
+    "DESKTOP_WEBVIEW_APP",
+    "NATIVE_DESKTOP_APP",
+    "REACT_NATIVE_EXPO",
+    "PROTOTYPE_ONLY",
+    "DESIGN_ONLY_HANDOFF",
+    "CODE_DRIVEN_VIDEO_MOTION_HANDOFF"
+  ],
+  "stages": [
+    {
+      "id": "local_authority",
+      "capabilities": [],
+      "when": "always",
+      "required": true
+    },
+    {
+      "id": "target_detection",
+      "capabilities": [],
+      "when": "always",
+      "required": true
+    },
+    {
+      "id": "reference_analysis",
+      "capabilities": [
+        "video-to-superprompt",
+        "stitched-full-page-capture"
+      ],
+      "when": "reference_present",
+      "required": false,
+      "select": "media_specific"
+    },
+    {
+      "id": "design_specification",
+      "capabilities": [
+        "design-first-ui-prompting"
+      ],
+      "when": "brief_is_vague_or_builder_spec_needed",
+      "required": false
+    },
+    {
+      "id": "ui_ux_intelligence",
+      "capabilities": [
+        "ui-ux-pro-max"
+      ],
+      "when": "scope_is_substantial_or_design_system_changes",
+      "required": false
+    },
+    {
+      "id": "experience_curve",
+      "capabilities": [],
+      "when": "meaningful_multi_stage_experience",
+      "required": false,
+      "policy": "references/experience-curve-policy.json"
+    },
+    {
+      "id": "visual_direction",
+      "capabilities": [
+        "frontend-design"
+      ],
+      "when": "new_or_changed_visual_direction",
+      "required": false
+    },
+    {
+      "id": "prototype_divergence",
+      "capabilities": [
+        "prototype"
+      ],
+      "when": "substantial_choice_is_ambiguous_or_options_requested",
+      "required": false
+    },
+    {
+      "id": "originality_gate",
+      "capabilities": [],
+      "when": "new_substantial_visual_direction_and_not_bypassed",
+      "required": false,
+      "policy": "references/originality-policy.json"
+    },
+    {
+      "id": "signature_interaction",
+      "capabilities": [],
+      "when": "experience_surface_requires_distinctive_product_specific_interaction",
+      "required": false,
+      "policy": "references/signature-interaction-policy.json"
+    },
+    {
+      "id": "design_system_persistence",
+      "capabilities": [],
+      "when": "persistent_product_visual_grammar_needed",
+      "required": false,
+      "artifact": "DESIGN.md"
+    },
+    {
+      "id": "library_selection",
+      "capabilities": [
+        "pick-ui-library"
+      ],
+      "when": "new_ui_dependency_choice_needed",
+      "required": false
+    },
+    {
+      "id": "target_implementation",
+      "capabilities": [],
+      "when": "implementation_requested",
+      "required": false,
+      "select": "target_specific"
+    },
+    {
+      "id": "interaction_physics",
+      "capabilities": [
+        "apple-design"
+      ],
+      "when": "direct_manipulation_gesture_or_spatial_physics",
+      "required": false
+    },
+    {
+      "id": "motion_build",
+      "capabilities": [
+        "animate"
+      ],
+      "when": "meaningful_ui_motion_required",
+      "required": false
+    },
+    {
+      "id": "render_preview",
+      "capabilities": [],
+      "when": "implementation_or_visual_output_exists",
+      "required": false
+    },
+    {
+      "id": "visual_state_qa",
+      "capabilities": [],
+      "when": "substantial_ui_or_changed_state_exists",
+      "required": false,
+      "policy": "references/visual-qa-policy.json",
+      "evidence_required": true
+    },
+    {
+      "id": "scroll_state_qa",
+      "capabilities": [],
+      "when": "scroll_is_primary_interaction_or_state_driver",
+      "required": false,
+      "policy": "references/scroll-qa-policy.json",
+      "evidence_required": true
+    },
+    {
+      "id": "mobile_art_direction_qa",
+      "capabilities": [],
+      "when": "substantial_interface_has_or_requires_mobile_surface",
+      "required": false,
+      "policy": "references/mobile-art-direction-policy.json",
+      "evidence_required": true
+    },
+    {
+      "id": "motion_review",
+      "capabilities": [
+        "review-animations"
+      ],
+      "when": "significant_motion_exists",
+      "required": false
+    },
+    {
+      "id": "web_review",
+      "capabilities": [
+        "web-design-guidelines"
+      ],
+      "when": "substantial_web_ui_delivery",
+      "required": false
+    },
+    {
+      "id": "fix_and_reverify",
+      "capabilities": [],
+      "when": "any_gate_fails",
+      "required": false
+    }
+  ],
+  "target_experts": {
+    "PLAIN_HTML_CSS_JS_ARTIFACT": [],
+    "EXISTING_WEB_STACK": [],
+    "REACT_WEB_APP": [
+      "react-best-practices",
+      "composition-patterns"
+    ],
+    "PWA": [],
+    "FIGMA": [
+      "figma-use",
+      "figma-generate-design"
+    ],
+    "CANVA_OR_STATIC_DESIGN_TOOL": [
+      "canva"
+    ],
+    "DESKTOP_WEBVIEW_APP": [],
+    "NATIVE_DESKTOP_APP": [],
+    "REACT_NATIVE_EXPO": [
+      "animate-expo"
+    ],
+    "PROTOTYPE_ONLY": [
+      "prototype"
+    ],
+    "DESIGN_ONLY_HANDOFF": [],
+    "CODE_DRIVEN_VIDEO_MOTION_HANDOFF": [
+      "video-editor"
+    ]
+  },
+  "conditional_experts": {
+    "shadcn": {
+      "capability": "shadcn",
+      "when": "components_json_present_or_shadcn_selected"
+    },
+    "scroll_craft": {
+      "capability": "scroll-craft",
+      "when": "scroll_is_primary_storytelling_or_interaction_mechanism"
+    },
+    "motion_audit": {
+      "capability": "improve-animations",
+      "when": "user_requests_existing_motion_audit_or_improvement"
+    },
+    "motion_opportunities": {
+      "capability": "find-animation-opportunities",
+      "when": "explicit_mature_product_polish_pass"
+    }
+  },
+  "scope_pipelines": {
+    "MICRO_CHANGE": [
+      "local_authority",
+      "target_detection",
+      "target_implementation",
+      "render_preview",
+      "fix_and_reverify"
+    ],
+    "COMPONENT": [
+      "local_authority",
+      "target_detection",
+      "reference_analysis",
+      "ui_ux_intelligence",
+      "library_selection",
+      "target_implementation",
+      "interaction_physics",
+      "motion_build",
+      "render_preview",
+      "visual_state_qa",
+      "motion_review",
+      "fix_and_reverify"
+    ],
+    "SCREEN": [
+      "local_authority",
+      "target_detection",
+      "reference_analysis",
+      "ui_ux_intelligence",
+      "visual_direction",
+      "originality_gate",
+      "signature_interaction",
+      "design_system_persistence",
+      "library_selection",
+      "target_implementation",
+      "interaction_physics",
+      "motion_build",
+      "render_preview",
+      "visual_state_qa",
+      "mobile_art_direction_qa",
+      "motion_review",
+      "web_review",
+      "fix_and_reverify"
+    ],
+    "MULTI_SCREEN_FLOW": [
+      "local_authority",
+      "target_detection",
+      "reference_analysis",
+      "design_specification",
+      "ui_ux_intelligence",
+      "experience_curve",
+      "visual_direction",
+      "prototype_divergence",
+      "originality_gate",
+      "signature_interaction",
+      "design_system_persistence",
+      "library_selection",
+      "target_implementation",
+      "interaction_physics",
+      "motion_build",
+      "render_preview",
+      "visual_state_qa",
+      "mobile_art_direction_qa",
+      "motion_review",
+      "web_review",
+      "fix_and_reverify"
+    ],
+    "FULL_PRODUCT": [
+      "local_authority",
+      "target_detection",
+      "reference_analysis",
+      "design_specification",
+      "ui_ux_intelligence",
+      "experience_curve",
+      "visual_direction",
+      "prototype_divergence",
+      "originality_gate",
+      "signature_interaction",
+      "design_system_persistence",
+      "library_selection",
+      "target_implementation",
+      "interaction_physics",
+      "motion_build",
+      "render_preview",
+      "visual_state_qa",
+      "mobile_art_direction_qa",
+      "motion_review",
+      "web_review",
+      "fix_and_reverify"
+    ],
+    "REFERENCE_RECREATION": [
+      "local_authority",
+      "target_detection",
+      "reference_analysis",
+      "ui_ux_intelligence",
+      "experience_curve",
+      "visual_direction",
+      "originality_gate",
+      "signature_interaction",
+      "design_system_persistence",
+      "library_selection",
+      "target_implementation",
+      "interaction_physics",
+      "motion_build",
+      "render_preview",
+      "visual_state_qa",
+      "scroll_state_qa",
+      "mobile_art_direction_qa",
+      "motion_review",
+      "web_review",
+      "fix_and_reverify"
+    ],
+    "INTERACTION_HEAVY": [
+      "local_authority",
+      "target_detection",
+      "ui_ux_intelligence",
+      "interaction_physics",
+      "target_implementation",
+      "motion_build",
+      "render_preview",
+      "visual_state_qa",
+      "motion_review",
+      "fix_and_reverify"
+    ],
+    "DESIGN_SYSTEM_CHANGE": [
+      "local_authority",
+      "target_detection",
+      "ui_ux_intelligence",
+      "visual_direction",
+      "prototype_divergence",
+      "originality_gate",
+      "design_system_persistence",
+      "target_implementation",
+      "render_preview",
+      "visual_state_qa",
+      "web_review",
+      "fix_and_reverify"
+    ],
+    "SCROLL_IMMERSIVE": [
+      "local_authority",
+      "target_detection",
+      "reference_analysis",
+      "ui_ux_intelligence",
+      "experience_curve",
+      "visual_direction",
+      "prototype_divergence",
+      "originality_gate",
+      "signature_interaction",
+      "design_system_persistence",
+      "target_implementation",
+      "motion_build",
+      "render_preview",
+      "visual_state_qa",
+      "scroll_state_qa",
+      "mobile_art_direction_qa",
+      "motion_review",
+      "web_review",
+      "fix_and_reverify"
+    ],
+    "MOBILE_EXPO": [
+      "local_authority",
+      "target_detection",
+      "ui_ux_intelligence",
+      "visual_direction",
+      "originality_gate",
+      "design_system_persistence",
+      "interaction_physics",
+      "target_implementation",
+      "motion_build",
+      "render_preview",
+      "visual_state_qa",
+      "mobile_art_direction_qa",
+      "motion_review",
+      "fix_and_reverify"
+    ]
+  },
+  "invariants": [
+    "Do not load React specialists unless React or Next is the actual target.",
+    "Do not load shadcn unless the project uses it or it was intentionally selected.",
+    "Do not load Scroll Craft for ordinary application screens.",
+    "Do not prototype micro changes.",
+    "Do not create or rewrite DESIGN.md for a tiny one-off fix.",
+    "Do not change the implementation stack merely because a specialist is installed.",
+    "Do not load all experts into one context.",
+    "Do not run the originality gate as a novelty requirement for exact-reference recreation or established-product maintenance.",
+    "Do not require a decorative signature interaction for dashboards, admin tools, settings, CRUD or other utility applications.",
+    "Do not add an experience curve to ordinary CRUD, routine dashboard inspection, settings, simple search/filtering or micro changes.",
+    "Do not force scroll-specific QA infrastructure onto ordinary interfaces whose scroll is only document overflow.",
+    "Do not treat a desktop layout that merely shrinks as sufficient mobile art direction for a substantial interface.",
+    "A target that requires an unregistered future dependency must block/report unavailable rather than pretending the dependency executed."
+  ],
+  "future_dependencies": {
+    "video-editor": {
+      "status": "planned_not_registered",
+      "required_for_targets": [
+        "CODE_DRIVEN_VIDEO_MOTION_HANDOFF"
+      ],
+      "behavior_when_unavailable": "BLOCK_AND_REPORT_UNAVAILABLE",
+      "owner_project": "AI-Verse Video Editor",
+      "note": "Do not silently substitute another video-editing runtime. Design-only handoff may still be produced when that satisfies the user request."
+    }
+  }
+}

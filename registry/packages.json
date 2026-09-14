@@ -1,11 +1,11 @@
 {
   "schema_version": 3,
-  "snapshot": "2026-09-09",
+  "snapshot": "2026-09-14",
   "counts": {
     "foundation": 20,
-    "employee": 80,
+    "employee": 99,
     "support": 5,
-    "canonical_total": 100
+    "canonical_total": 119
   },
   "policy": {
     "original_first": true,
@@ -728,6 +728,194 @@
         }
       ],
       "redistribution": "fetch-only"
+    },
+    "ai-verse": {
+      "repo": "aiverse-filmmakers/AI-Verse-Skills",
+      "commit": "910cf45fae6c18b3823c163471cfe43efc8cd47b",
+      "namespace": "ai-verse",
+      "license": "MIT",
+      "packages": [
+        {
+          "rank": 81,
+          "id": "interface-designer",
+          "category": "creative-design",
+          "vendored": true,
+          "path": "skills/imported/ai-verse/interface-designer"
+        }
+      ],
+      "redistribution": "redistributable"
+    },
+    "anthropic-frontend": {
+      "repo": "anthropics/skills",
+      "commit": "34040c9c568585f6929bedeaad110ad08f079624",
+      "namespace": "anthropic",
+      "license": "upstream-controlled",
+      "packages": [
+        {
+          "rank": 82,
+          "id": "frontend-design",
+          "category": "creative-design",
+          "path": "skills/frontend-design"
+        }
+      ],
+      "redistribution": "fetch-only"
+    },
+    "nextlevelbuilder-ui": {
+      "repo": "nextlevelbuilder/ui-ux-pro-max-skill",
+      "commit": "7f69fed6a2717900085f1bc3b263721f8ba025e2",
+      "namespace": "nextlevelbuilder",
+      "license": "MIT",
+      "packages": [
+        {
+          "rank": 83,
+          "id": "ui-ux-pro-max",
+          "category": "creative-design",
+          "path": ".claude/skills/ui-ux-pro-max"
+        }
+      ],
+      "redistribution": "redistributable"
+    },
+    "vercel-design": {
+      "repo": "vercel-labs/agent-skills",
+      "commit": "063bee94c3f4df8453406c830b0a7df0f2860278",
+      "namespace": "vercel",
+      "license": "MIT",
+      "packages": [
+        {
+          "rank": 84,
+          "id": "react-best-practices",
+          "category": "creative-design",
+          "path": "skills/react-best-practices"
+        },
+        {
+          "rank": 85,
+          "id": "composition-patterns",
+          "category": "creative-design",
+          "path": "skills/composition-patterns"
+        },
+        {
+          "rank": 86,
+          "id": "web-design-guidelines",
+          "category": "creative-design",
+          "vendored": true,
+          "path": "skills/web-design-guidelines"
+        }
+      ],
+      "redistribution": "redistributable"
+    },
+    "shadcn-ui": {
+      "repo": "shadcn-ui/ui",
+      "commit": "2b3e6d4f8d9161fe5c19340dc383aade392012dd",
+      "namespace": "shadcn",
+      "license": "MIT",
+      "packages": [
+        {
+          "rank": 87,
+          "id": "shadcn",
+          "category": "creative-design",
+          "path": "skills/shadcn"
+        }
+      ],
+      "redistribution": "redistributable"
+    },
+    "mengto-ui": {
+      "repo": "MengTo/Skills",
+      "commit": "321c769739b823de5eb94eb3a52aa1974fe783a2",
+      "namespace": "mengto",
+      "license": "MIT",
+      "packages": [
+        {
+          "rank": 88,
+          "id": "design-first-ui-prompting",
+          "category": "creative-design",
+          "path": "agent-skills/ui/design-first-ui-prompting"
+        },
+        {
+          "rank": 89,
+          "id": "video-to-superprompt",
+          "category": "creative-design",
+          "path": "agent-skills/codex/video-to-superprompt"
+        },
+        {
+          "rank": 90,
+          "id": "stitched-full-page-capture",
+          "category": "creative-design",
+          "path": "agent-skills/codex/stitched-full-page-capture"
+        }
+      ],
+      "redistribution": "redistributable"
+    },
+    "emil-design": {
+      "repo": "emilkowalski/skills",
+      "commit": "d23d7f88a2e21c9e4b1418c7abe420f5c1052ba7",
+      "namespace": "emil",
+      "license": "MIT",
+      "packages": [
+        {
+          "rank": 91,
+          "id": "apple-design",
+          "category": "creative-design",
+          "path": "skills/apple-design"
+        },
+        {
+          "rank": 92,
+          "id": "animate",
+          "category": "creative-design",
+          "path": "skills/animate"
+        },
+        {
+          "rank": 93,
+          "id": "prototype",
+          "category": "creative-design",
+          "path": "skills/prototype"
+        },
+        {
+          "rank": 94,
+          "id": "review-animations",
+          "category": "creative-design",
+          "path": "skills/review-animations"
+        },
+        {
+          "rank": 95,
+          "id": "pick-ui-library",
+          "category": "creative-design",
+          "path": "skills/pick-ui-library"
+        },
+        {
+          "rank": 96,
+          "id": "improve-animations",
+          "category": "creative-design",
+          "path": "skills/improve-animations"
+        },
+        {
+          "rank": 97,
+          "id": "find-animation-opportunities",
+          "category": "creative-design",
+          "path": "skills/find-animation-opportunities"
+        },
+        {
+          "rank": 98,
+          "id": "animate-expo",
+          "category": "creative-design",
+          "path": "skills/animate-expo"
+        }
+      ],
+      "redistribution": "redistributable"
+    },
+    "scroll-craft": {
+      "repo": "nateherkai/scroll-craft",
+      "commit": "0b816225945e45380397d6a0487efa3c98916858",
+      "namespace": "nateherk",
+      "license": "MIT",
+      "packages": [
+        {
+          "rank": 99,
+          "id": "scroll-craft",
+          "category": "creative-design",
+          "path": "plugins/nateherk-design/skills/scroll-craft"
+        }
+      ],
+      "redistribution": "redistributable"
     }
   },
   "support": [

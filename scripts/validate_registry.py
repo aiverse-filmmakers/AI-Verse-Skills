@@ -18,10 +18,26 @@ runtime_adapters=load("registry/runtime-adapters.json")
 
 foundation=skills["foundation"]
 employee=skills["employee"]
-if len(foundation)!=20:
-    errors.append(f"foundation count {len(foundation)} != 20")
-if len(employee)!=80:
-    errors.append(f"employee count {len(employee)} != 80")
+declared=skills.get("counts",{})
+package_counts=packages.get("counts",{})
+
+expected_foundation=declared.get("foundation")
+expected_employee=declared.get("employee")
+expected_total=declared.get("total")
+
+if expected_foundation != len(foundation):
+    errors.append(f"foundation count {len(foundation)} != declared {expected_foundation}")
+if expected_employee != len(employee):
+    errors.append(f"employee count {len(employee)} != declared {expected_employee}")
+if expected_total != len(foundation)+len(employee):
+    errors.append(f"canonical total {len(foundation)+len(employee)} != declared {expected_total}")
+
+if package_counts.get("foundation") != len(foundation):
+    errors.append("package registry foundation count disagrees with skills registry")
+if package_counts.get("employee") != len(employee):
+    errors.append("package registry employee count disagrees with skills registry")
+if package_counts.get("canonical_total") != len(foundation)+len(employee):
+    errors.append("package registry canonical total disagrees with skills registry")
 
 ids=[x["id"] for x in foundation]+[x["id"] for x in employee]
 if len(ids)!=len(set(ids)):
@@ -72,7 +88,7 @@ for sid,s in packages["sources"].items():
                 errors.append(f"{cid}: vendored SKILL.md missing at {d}")
 
 if set(pkgids)!=known_employee:
-    errors.append("package registry does not match exactly the 80 employee skills")
+    errors.append("package registry does not match exactly the declared employee skills")
 
 claims={x.get("id"):x.get("public_beta_support") for x in runtime_adapters.get("adapters",[])}
 if claims.get("aiverse-os")!="end-to-end":

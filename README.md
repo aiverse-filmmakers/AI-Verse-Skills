@@ -100,6 +100,12 @@ integrity != admitted != trusted != ready != authorized
 
 Imported and external packages are statically scanned before admission. Secret-like material, unsafe symlink escapes and selected high-risk patterns are rejected or surfaced for review. Unknown redistribution rights are treated as fetch-only.
 
+## Interface Designer
+
+Members can use **AI-Verse Interface Designer** as one stack-neutral capability for websites, persistent HTML artifacts, dashboards, app interfaces, reference recreation, interaction design, immersive scroll work and visual QA.
+
+See [docs/INTERFACE_DESIGNER.md](docs/INTERFACE_DESIGNER.md).
+
 ## 4. Use
 
 Pin one immutable generation before loading a Skill:

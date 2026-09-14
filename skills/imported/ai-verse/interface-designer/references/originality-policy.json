@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "capability": "interface-designer",
+  "gate": "design-fingerprint",
+  "source_inspiration": {
+    "repo": "nateherkai/scroll-craft",
+    "commit": "0b816225945e45380397d6a0487efa3c98916858",
+    "reference": "plugins/nateherk-design/skills/scroll-craft/references/uniqueness.md"
+  },
+  "dimensions": [
+    "information_architecture",
+    "navigation_model",
+    "layout_grammar",
+    "density",
+    "typography_hierarchy",
+    "surface_material_treatment",
+    "interaction_model",
+    "motion_language",
+    "primary_composition",
+    "signature_element"
+  ],
+  "structural_dimensions": [
+    "information_architecture",
+    "navigation_model",
+    "layout_grammar",
+    "interaction_model",
+    "primary_composition",
+    "signature_element"
+  ],
+  "run_when": [
+    "new_substantial_visual_direction",
+    "substantial_redesign",
+    "new_product",
+    "reference_inspired_not_exact",
+    "design_system_change_with_new_direction"
+  ],
+  "bypass_when": [
+    "micro_change",
+    "established_design_md_consistency",
+    "exact_reference_recreation",
+    "platform_required_convention",
+    "accessibility_required_behavior",
+    "explicit_user_intent_to_preserve_existing_system"
+  ],
+  "comparison_scope": [
+    "current_project_design_md",
+    "same_authorized_workspace_prior_fingerprints",
+    "current_user_supplied_references",
+    "project_owned_authorized_design_archives"
+  ],
+  "forbidden_comparison_scope": [
+    "other_member_private_design_history",
+    "cross_member_private_fingerprint_registry"
+  ],
+  "reskin_review": {
+    "structural_matches_threshold": 5,
+    "structural_dimensions_total": 6,
+    "action": "require_structural_justification_or_meaningful_structural_revision"
+  },
+  "high_similarity_review": {
+    "total_matches_threshold": 8,
+    "total_dimensions": 10,
+    "allowed_justifications": [
+      "exact_reference_fidelity",
+      "established_design_md",
+      "platform_convention",
+      "accessibility",
+      "explicit_user_intent"
+    ],
+    "otherwise": "revise_at_least_one_meaningful_structural_dimension"
+  }
+}

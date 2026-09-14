@@ -1,0 +1,294 @@
+{
+  "schema_version": 1,
+  "capability": "interface-designer",
+  "purpose": "Preservation contract for third-party design experts used by AI-Verse Interface Designer. Exact commit pins remain canonical in registry/packages.json; this file records the core identity/taste signals that must survive future provider updates or adaptations.",
+  "sources": [
+    {
+      "source_id": "anthropic-frontend",
+      "repo": "anthropics/skills",
+      "commit": "34040c9c568585f6929bedeaad110ad08f079624",
+      "license": "upstream-controlled",
+      "redistribution": "fetch-only",
+      "packages": [
+        {
+          "id": "frontend-design",
+          "path": "skills/frontend-design",
+          "expected_files": [
+            "SKILL.md"
+          ],
+          "core_markers": [
+            "distinctive, intentional visual design",
+            "distinct visual identity",
+            "typography"
+          ]
+        }
+      ]
+    },
+    {
+      "source_id": "nextlevelbuilder-ui",
+      "repo": "nextlevelbuilder/ui-ux-pro-max-skill",
+      "commit": "7f69fed6a2717900085f1bc3b263721f8ba025e2",
+      "license": "MIT",
+      "redistribution": "redistributable",
+      "packages": [
+        {
+          "id": "ui-ux-pro-max",
+          "path": ".claude/skills/ui-ux-pro-max",
+          "expected_files": [
+            "SKILL.md"
+          ],
+          "core_markers": [
+            "UI/UX design intelligence",
+            "79 searchable styles",
+            "119 UX guidelines"
+          ]
+        }
+      ]
+    },
+    {
+      "source_id": "vercel-design",
+      "repo": "vercel-labs/agent-skills",
+      "commit": "063bee94c3f4df8453406c830b0a7df0f2860278",
+      "license": "MIT",
+      "redistribution": "redistributable",
+      "packages": [
+        {
+          "id": "react-best-practices",
+          "path": "skills/react-best-practices",
+          "expected_files": [
+            "SKILL.md"
+          ],
+          "core_markers": [
+            "React and Next.js performance optimization",
+            "Vercel Engineering"
+          ]
+        },
+        {
+          "id": "composition-patterns",
+          "path": "skills/composition-patterns",
+          "expected_files": [
+            "SKILL.md"
+          ],
+          "core_markers": [
+            "React composition patterns that scale",
+            "boolean prop proliferation"
+          ]
+        },
+        {
+          "id": "web-design-guidelines",
+          "path": "skills/web-design-guidelines",
+          "local_path": "skills/imported/vercel/web-design-guidelines",
+          "adaptation": "pinned-local-guideline-snapshot",
+          "expected_files": [
+            "SKILL.md",
+            "SOURCE.json",
+            "references/command.md"
+          ],
+          "core_markers": [
+            "references/command.md"
+          ],
+          "adaptation_commit": "e3d624baaf29dc1fc645aff3e38f03e564d2d6b1"
+        }
+      ]
+    },
+    {
+      "source_id": "shadcn-ui",
+      "repo": "shadcn-ui/ui",
+      "commit": "2b3e6d4f8d9161fe5c19340dc383aade392012dd",
+      "license": "MIT",
+      "redistribution": "redistributable",
+      "packages": [
+        {
+          "id": "shadcn",
+          "path": "skills/shadcn",
+          "expected_files": [
+            "SKILL.md"
+          ],
+          "core_markers": [
+            "components.json",
+            "component registries",
+            "project context"
+          ]
+        }
+      ]
+    },
+    {
+      "source_id": "mengto-ui",
+      "repo": "MengTo/Skills",
+      "commit": "321c769739b823de5eb94eb3a52aa1974fe783a2",
+      "license": "MIT",
+      "redistribution": "redistributable",
+      "packages": [
+        {
+          "id": "design-first-ui-prompting",
+          "path": "agent-skills/ui/design-first-ui-prompting",
+          "expected_files": [
+            "SKILL.md"
+          ],
+          "core_markers": [
+            "design-first prompting",
+            "Prompt like a design system"
+          ]
+        },
+        {
+          "id": "video-to-superprompt",
+          "path": "agent-skills/codex/video-to-superprompt",
+          "expected_files": [
+            "SKILL.md"
+          ],
+          "core_markers": [
+            "reference video",
+            "animations",
+            "transitions"
+          ]
+        },
+        {
+          "id": "stitched-full-page-capture",
+          "path": "agent-skills/codex/stitched-full-page-capture",
+          "expected_files": [
+            "SKILL.md"
+          ],
+          "core_markers": [
+            "full-page screenshots",
+            "lazy-loaded",
+            "scroll-animated"
+          ]
+        }
+      ]
+    },
+    {
+      "source_id": "emil-design",
+      "repo": "emilkowalski/skills",
+      "commit": "d23d7f88a2e21c9e4b1418c7abe420f5c1052ba7",
+      "license": "MIT",
+      "redistribution": "redistributable",
+      "packages": [
+        {
+          "id": "apple-design",
+          "path": "skills/apple-design",
+          "expected_files": [
+            "SKILL.md"
+          ],
+          "core_markers": [
+            "fluid, physical motion",
+            "gesture-driven UI",
+            "momentum and interruptible transitions"
+          ]
+        },
+        {
+          "id": "animate",
+          "path": "skills/animate",
+          "expected_files": [
+            "SKILL.md"
+          ],
+          "core_markers": [
+            "Build an animation from scratch",
+            "should it animate at all",
+            "how it interrupts"
+          ]
+        },
+        {
+          "id": "prototype",
+          "path": "skills/prototype",
+          "expected_files": [
+            "SKILL.md"
+          ],
+          "core_markers": [
+            "multiple genuinely different versions",
+            "visual picker",
+            "divergence skill"
+          ]
+        },
+        {
+          "id": "review-animations",
+          "path": "skills/review-animations",
+          "expected_files": [
+            "SKILL.md"
+          ],
+          "core_markers": [
+            "high craft bar",
+            "Default to flagging",
+            "approval is earned"
+          ]
+        },
+        {
+          "id": "pick-ui-library",
+          "path": "skills/pick-ui-library",
+          "expected_files": [
+            "SKILL.md"
+          ],
+          "core_markers": [
+            "curated, opinionated list",
+            "lookup skill"
+          ]
+        },
+        {
+          "id": "improve-animations",
+          "path": "skills/improve-animations",
+          "expected_files": [
+            "SKILL.md"
+          ],
+          "core_markers": [
+            "senior motion advisor",
+            "prioritized audit",
+            "Read-only"
+          ]
+        },
+        {
+          "id": "find-animation-opportunities",
+          "path": "skills/find-animation-opportunities",
+          "expected_files": [
+            "SKILL.md"
+          ],
+          "core_markers": [
+            "places that don't animate but should",
+            "reject everything that shouldn't"
+          ]
+        },
+        {
+          "id": "animate-expo",
+          "path": "skills/animate-expo",
+          "expected_files": [
+            "SKILL.md"
+          ],
+          "core_markers": [
+            "React Native and Expo",
+            "Reanimated",
+            "Gesture Handler"
+          ]
+        }
+      ]
+    },
+    {
+      "source_id": "scroll-craft",
+      "repo": "nateherkai/scroll-craft",
+      "commit": "0b816225945e45380397d6a0487efa3c98916858",
+      "license": "MIT",
+      "redistribution": "redistributable",
+      "packages": [
+        {
+          "id": "scroll-craft",
+          "path": "plugins/nateherk-design/skills/scroll-craft",
+          "expected_files": [
+            "SKILL.md",
+            "references/uniqueness.md",
+            "references/feel.md",
+            "templates/FINGERPRINTS.md"
+          ],
+          "core_markers": [
+            "page grammar",
+            "bespoke signature move",
+            "separate mobile composition"
+          ]
+        }
+      ]
+    }
+  ],
+  "invariants": [
+    "Every source commit is a full immutable 40-character Git SHA.",
+    "No provider update may silently replace a pinned source with main, master, latest, HEAD, or another mutable ref.",
+    "Provider taste/methodology remains inside the provider package; the AI-Verse orchestrator routes to it rather than paraphrasing it away.",
+    "A vendored adaptation must preserve upstream identity, license metadata, exact source commit, adaptation reason, and bounded local changes.",
+    "Anthropic frontend-design remains fetch-only unless a future explicit license review changes the redistribution decision."
+  ]
+}

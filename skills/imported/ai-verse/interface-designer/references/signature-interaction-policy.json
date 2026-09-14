@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "capability": "interface-designer",
+  "rule": "signature-interaction",
+  "source_inspiration": {
+    "repo": "nateherkai/scroll-craft",
+    "commit": "0b816225945e45380397d6a0487efa3c98916858",
+    "reference": "plugins/nateherk-design/skills/scroll-craft/references/uniqueness.md#3-the-signature-move"
+  },
+  "required_when": [
+    "brand_experience",
+    "campaign_experience",
+    "launch_experience",
+    "immersive_product_story",
+    "portfolio_editorial_experience",
+    "scroll_immersive"
+  ],
+  "optional_functional_when": [
+    "dashboard",
+    "admin_tool",
+    "settings",
+    "crud_application",
+    "productivity_software",
+    "monitoring_surface",
+    "chat_interface",
+    "forms",
+    "checkout",
+    "dense_operational_tool"
+  ],
+  "valid_if": [
+    "meaningful_to_product_or_story",
+    "memorable_without_library_name",
+    "not_generic_parameter_tweak",
+    "implemented_not_only_described",
+    "accessible_alternative_when_needed",
+    "reduced_motion_safe",
+    "does_not_obstruct_primary_task"
+  ],
+  "invalid_examples": [
+    "hover_color_only",
+    "shadow_change_only",
+    "spring_parameter_change",
+    "easing_parameter_change",
+    "generic_parallax",
+    "standard_carousel",
+    "standard_command_palette",
+    "standard_drawer_or_sheet",
+    "more_cards",
+    "recolored_existing_effect",
+    "decorative_motion_only"
+  ],
+  "exact_reference_behavior": "use_reference_signature_if_present_do_not_invent_competing_behavior",
+  "persistence": "record_in_design_md_only_if_it_becomes_reusable_product_grammar"
+}

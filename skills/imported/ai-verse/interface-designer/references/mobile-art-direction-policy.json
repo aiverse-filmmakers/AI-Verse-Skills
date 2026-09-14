@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "capability": "interface-designer",
+  "gate": "mobile-art-direction",
+  "run_when": [
+    "full_product_with_mobile_surface",
+    "multi_screen_flow_with_mobile_surface",
+    "major_responsive_screen",
+    "pwa",
+    "mobile_web_experience",
+    "react_native_expo",
+    "scroll_experience_with_mobile_surface",
+    "reference_recreation_with_mobile_requirement"
+  ],
+  "result_if_desktop_only": "NOT_APPLICABLE_with_product_constraint",
+  "result_if_cannot_render": "UNVERIFIED_BLOCKED",
+  "checks": [
+    "information_hierarchy",
+    "navigation",
+    "touch_and_direct_manipulation",
+    "layout_order_density",
+    "media_crop_layering",
+    "safe_areas_and_device_chrome",
+    "overlays_and_focus",
+    "mobile_motion",
+    "reduced_motion"
+  ],
+  "touch_rule": "apply_target_platform_or_accessibility_minimums_do_not_invent_one_universal_pixel_value",
+  "hover_rule": "hover_only_actions_require_touch_path",
+  "media_rule": "reauthor_crop_and_layering_when_needed_do_not_only_scale_desktop",
+  "design_md_section": "Responsive & Mobile Direction",
+  "evidence_required": true
+}
