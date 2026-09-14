@@ -30,12 +30,12 @@ FONTS — use @font-face with the captured font files, NOT Google Fonts:
 
 Read DESIGN.md for exact colors and Do's/Don'ts.
 Read techniques.md for animation code patterns.
-Invoke /hyperframes for composition structure rules.
+Use the installed canonical HyperFrames provider guidance for composition structure rules.
 ```
 
 After each sub-agent finishes, verify the composition references `assets/` — if it used inline SVGs or Google Fonts instead of the captured files, fix it before moving on.
 
-Invoke the `/hyperframes` skill first — it has the rules for data attributes, timeline contracts, deterministic rendering, and layout. Everything below supplements those rules, not replaces them.
+Read the installed canonical HyperFrames provider guidance first. It owns data attributes, timeline contracts, deterministic rendering, media behavior, and layout/runtime correctness. Everything below supplements those rules, not replaces them.
 
 ---
 
@@ -168,7 +168,7 @@ This reference is adapted from Nate's pinned source for HyperFrames 0.8.40.
 
 Current provider rules override any older technical example in this document. In particular:
 
-- asset paths in compositions are project-root paths such as `assets/...`, not `../assets/...`;
+- asset paths in compositions are project-root paths such as `assets/...`, never parent-relative asset paths;
 - do not use a second bundled HyperFrames documentation tree;
 - use `data-duration` for authored visible duration;
 - keep repeats finite;
