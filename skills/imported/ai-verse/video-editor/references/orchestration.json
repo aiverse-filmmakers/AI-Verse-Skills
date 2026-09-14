@@ -1,0 +1,314 @@
+{
+  "schema_version": 1,
+  "capability": "video-editor",
+  "principle": "Preserve editorial truth first, then invoke the smallest specialist set needed to produce and verify the requested media.",
+  "scopes": [
+    "SILENCE_ONLY",
+    "MISTAKE_RETAKE_ONLY",
+    "CAPTIONS_ONLY",
+    "MOTION_GRAPHICS_ONLY",
+    "SHORT_FORM_EDIT",
+    "LONG_FORM_TALKING_HEAD",
+    "WEBSITE_PROMO",
+    "REFERENCE_LED_EDIT",
+    "FULL_EDIT"
+  ],
+  "stages": [
+    {
+      "id": "source_intake",
+      "when": "always",
+      "required": true,
+      "authority": "video-editor"
+    },
+    {
+      "id": "transcription",
+      "capabilities": [
+        "video.transcribe"
+      ],
+      "when": "transcript_missing_and_speech_relevant",
+      "required": false
+    },
+    {
+      "id": "silence_pass",
+      "capabilities": [
+        "video.cut.silence"
+      ],
+      "when": "silence_removal_requested_or_full_edit",
+      "required": false
+    },
+    {
+      "id": "mistake_review",
+      "capabilities": [
+        "video.cut.mistakes"
+      ],
+      "when": "spoken_mistake_cleanup_requested_or_full_edit",
+      "required": false
+    },
+    {
+      "id": "edl_truth",
+      "capabilities": [
+        "video.edl"
+      ],
+      "when": "timeline_changes",
+      "required": true
+    },
+    {
+      "id": "shortform_editorial",
+      "capabilities": [
+        "video.shortform.edit",
+        "video.hook_payoff"
+      ],
+      "when": "short_form",
+      "required": false
+    },
+    {
+      "id": "longform_storytelling",
+      "capabilities": [
+        "video.longform.storytelling"
+      ],
+      "when": "long_form_visual_storytelling",
+      "required": false
+    },
+    {
+      "id": "reference_analysis",
+      "capabilities": [
+        "video.reference_analysis"
+      ],
+      "when": "reference_present",
+      "required": false
+    },
+    {
+      "id": "visual_plan",
+      "capabilities": [
+        "video.caption",
+        "video.broll.plan",
+        "video.motion_beats"
+      ],
+      "when": "visual_enrichment_requested_or_full_edit",
+      "required": false
+    },
+    {
+      "id": "style_direction",
+      "capabilities": [
+        "video.style_select"
+      ],
+      "when": "substantial_visual_direction_needed",
+      "required": false
+    },
+    {
+      "id": "interface_design_handoff",
+      "capabilities": [
+        "interface-designer"
+      ],
+      "when": "specialist_visual_art_direction_would_materially_help",
+      "required": false,
+      "boundary": "presentation-only"
+    },
+    {
+      "id": "hyperframes_compose",
+      "capabilities": [
+        "video.hyperframes.compose",
+        "video.gsap.motion"
+      ],
+      "when": "code_driven_video_output",
+      "required": false
+    },
+    {
+      "id": "media_processing",
+      "capabilities": [
+        "video.ffmpeg.media"
+      ],
+      "when": "preprocessing_transcode_mux_or_media_operation_needed",
+      "required": false
+    },
+    {
+      "id": "structural_qa",
+      "capabilities": [
+        "video.qa.structural"
+      ],
+      "when": "timeline_or_composition_changed",
+      "required": true,
+      "evidence_required": true
+    },
+    {
+      "id": "preview_and_draft",
+      "capabilities": [
+        "video.hyperframes.compose"
+      ],
+      "when": "renderable_video_project",
+      "required": false,
+      "evidence_required": true
+    },
+    {
+      "id": "visual_qa",
+      "capabilities": [
+        "video.qa.visual"
+      ],
+      "when": "visual_output_changed",
+      "required": false,
+      "evidence_required": true
+    },
+    {
+      "id": "audio_sync_qa",
+      "capabilities": [
+        "video.qa.audio_sync"
+      ],
+      "when": "audio_or_cut_timing_changed",
+      "required": false,
+      "evidence_required": true
+    },
+    {
+      "id": "fix_and_reverify",
+      "when": "any_gate_fails",
+      "required": false
+    },
+    {
+      "id": "final_render",
+      "capabilities": [
+        "video.render.final"
+      ],
+      "when": "final_encoded_delivery_requested",
+      "required": false,
+      "evidence_required": true
+    }
+  ],
+  "scope_pipelines": {
+    "SILENCE_ONLY": [
+      "source_intake",
+      "transcription",
+      "silence_pass",
+      "edl_truth",
+      "structural_qa",
+      "audio_sync_qa"
+    ],
+    "MISTAKE_RETAKE_ONLY": [
+      "source_intake",
+      "transcription",
+      "mistake_review",
+      "edl_truth",
+      "structural_qa",
+      "audio_sync_qa"
+    ],
+    "CAPTIONS_ONLY": [
+      "source_intake",
+      "transcription",
+      "visual_plan",
+      "hyperframes_compose",
+      "structural_qa",
+      "preview_and_draft",
+      "visual_qa",
+      "final_render"
+    ],
+    "MOTION_GRAPHICS_ONLY": [
+      "source_intake",
+      "reference_analysis",
+      "visual_plan",
+      "style_direction",
+      "interface_design_handoff",
+      "hyperframes_compose",
+      "structural_qa",
+      "preview_and_draft",
+      "visual_qa",
+      "final_render"
+    ],
+    "SHORT_FORM_EDIT": [
+      "source_intake",
+      "transcription",
+      "silence_pass",
+      "mistake_review",
+      "edl_truth",
+      "shortform_editorial",
+      "reference_analysis",
+      "visual_plan",
+      "style_direction",
+      "interface_design_handoff",
+      "hyperframes_compose",
+      "media_processing",
+      "structural_qa",
+      "preview_and_draft",
+      "visual_qa",
+      "audio_sync_qa",
+      "fix_and_reverify",
+      "final_render"
+    ],
+    "LONG_FORM_TALKING_HEAD": [
+      "source_intake",
+      "transcription",
+      "silence_pass",
+      "mistake_review",
+      "edl_truth",
+      "longform_storytelling",
+      "reference_analysis",
+      "visual_plan",
+      "style_direction",
+      "interface_design_handoff",
+      "hyperframes_compose",
+      "media_processing",
+      "structural_qa",
+      "preview_and_draft",
+      "visual_qa",
+      "audio_sync_qa",
+      "fix_and_reverify",
+      "final_render"
+    ],
+    "WEBSITE_PROMO": [
+      "source_intake",
+      "reference_analysis",
+      "visual_plan",
+      "style_direction",
+      "interface_design_handoff",
+      "hyperframes_compose",
+      "media_processing",
+      "structural_qa",
+      "preview_and_draft",
+      "visual_qa",
+      "audio_sync_qa",
+      "fix_and_reverify",
+      "final_render"
+    ],
+    "REFERENCE_LED_EDIT": [
+      "source_intake",
+      "transcription",
+      "edl_truth",
+      "reference_analysis",
+      "shortform_editorial",
+      "visual_plan",
+      "style_direction",
+      "interface_design_handoff",
+      "hyperframes_compose",
+      "structural_qa",
+      "preview_and_draft",
+      "visual_qa",
+      "audio_sync_qa",
+      "fix_and_reverify",
+      "final_render"
+    ],
+    "FULL_EDIT": [
+      "source_intake",
+      "transcription",
+      "silence_pass",
+      "mistake_review",
+      "edl_truth",
+      "shortform_editorial",
+      "longform_storytelling",
+      "reference_analysis",
+      "visual_plan",
+      "style_direction",
+      "interface_design_handoff",
+      "hyperframes_compose",
+      "media_processing",
+      "structural_qa",
+      "preview_and_draft",
+      "visual_qa",
+      "audio_sync_qa",
+      "fix_and_reverify",
+      "final_render"
+    ]
+  },
+  "fail_closed": [
+    "Do not mark the Video Editor selectable until Nate-derived editorial specialists are installed or intentionally mapped.",
+    "Do not mark the Video Editor selectable until the HyperFrames 0.8.40 provider is registered and pinned.",
+    "Do not use Interface Designer as an editorial fallback.",
+    "Do not claim final media verification from composition source alone."
+  ]
+}
