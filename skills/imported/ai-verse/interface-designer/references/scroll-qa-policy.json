@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "capability": "interface-designer",
+  "gate": "scroll-state-qa",
+  "run_when": [
+    "scroll_immersive",
+    "scrollytelling",
+    "scroll_scrubbed_media",
+    "scroll_driven_state_machine",
+    "continuous_spatial_journey",
+    "pinned_narrative_sequence",
+    "scroll_defining_reference_recreation"
+  ],
+  "skip_when": [
+    "ordinary_dashboard",
+    "settings_page",
+    "standard_feed",
+    "ordinary_form",
+    "documentation_page_with_normal_scroll"
+  ],
+  "sample": [
+    "initial_state",
+    "every_semantic_transition_or_waypoint",
+    "midpoint_of_long_continuous_transition",
+    "final_state",
+    "representative_background_or_media_crossings"
+  ],
+  "fixed_percentage_samples_are_fallback_only": true,
+  "checks": [
+    "progression_advances",
+    "pinned_states_release",
+    "no_unexplained_dead_scroll",
+    "major_content_reaches_visibility",
+    "ending_resolves",
+    "background_legibility",
+    "media_state_sync",
+    "progress_indicator_sync",
+    "reduced_motion_complete",
+    "mobile_progression_intentional"
+  ],
+  "reduced_motion_failures": [
+    "motion_only_information_missing",
+    "content_left_hidden",
+    "stuck_pin",
+    "scrub_frame_required_for_understanding",
+    "empty_scroll_span_after_motion_removed"
+  ],
+  "tooling_rule": "use_simplest_trustworthy_rendered_verifier_do_not_force_scroll_craft_harness_on_ordinary_apps"
+}
