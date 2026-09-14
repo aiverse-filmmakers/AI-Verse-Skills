@@ -147,7 +147,23 @@ Do not preserve obsolete renderer instructions merely because they existed in th
 
 ## Interface Designer Boundary
 
-Video Editor may request Interface Designer expertise for:
+When presentation expertise would materially improve the video, read
+[references/interface-designer-handoff.md](references/interface-designer-handoff.md)
+and its machine-readable contract
+[references/interface-designer-handoff.json](references/interface-designer-handoff.json).
+
+There are exactly four allowed handoff modes:
+
+- `VISUAL_DIRECTION` for substantial graphic language, typography, palette, composition, or visual-system work;
+- `REFERENCE_RECREATION` for visual reconstruction from supplied references without stealing editorial pacing analysis;
+- `PROTOTYPE_VISUAL_DIRECTIONS` for bounded divergent presentation options before a costly full build;
+- `MOTION_TASTE` for specialist pacing, easing, continuity, emphasis, and gesture advice inside locked editorial/runtime constraints.
+
+Video Editor sends locked editorial meaning and only the visual context needed for
+the selected handoff. Interface Designer returns presentation decisions to Video
+Editor, which remains responsible for implementation and verification.
+
+Interface Designer may contribute:
 
 - visual direction;
 - typography;
@@ -155,7 +171,8 @@ Video Editor may request Interface Designer expertise for:
 - palette hierarchy;
 - reference reconstruction;
 - prototype visual directions;
-- design-system cleanup.
+- design-system cleanup;
+- general motion taste.
 
 Interface Designer must not own:
 
@@ -165,11 +182,14 @@ Interface Designer must not own:
 - retake/mistake judgment;
 - source-time mapping;
 - hook/payoff editorial logic;
+- caption timing truth;
 - audio/video synchronization;
 - HyperFrames runtime correctness;
 - final media acceptance.
 
-If generic interface-motion advice conflicts with HyperFrames runtime rules, HyperFrames wins for the video deliverable.
+If generic interface-motion advice conflicts with HyperFrames runtime rules,
+HyperFrames wins for implementation. If visual preference conflicts with locked
+editorial truth, editorial truth wins.
 
 ## Verification Contract
 
