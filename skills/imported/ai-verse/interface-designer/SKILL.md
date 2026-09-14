@@ -126,7 +126,7 @@ Specialist correctness beats generic taste inside its domain. Examples:
 
 ## Step 6: Persist Design Intent
 
-For substantial products, screens, flows, or design-system changes, use the project-local `DESIGN.md` contract.
+For substantial products, screens, flows, or design-system changes, use the project-local `DESIGN.md` contract in [references/design-md-contract.md](references/design-md-contract.md). Use [references/DESIGN.template.md](references/DESIGN.template.md) only as a starting structure, never as mandatory empty ceremony.
 
 An existing `DESIGN.md` must be read before design changes.
 
@@ -144,7 +144,7 @@ Persist stable visual grammar such as:
 - accessibility constraints;
 - signature interaction when one exists.
 
-Do not create DESIGN.md ceremony for a tiny one-off fix.
+Do not create DESIGN.md ceremony for a tiny one-off fix. Update an existing DESIGN.md only when the accepted reusable product grammar actually changed.
 
 ## Step 7: Originality Without Randomness
 
