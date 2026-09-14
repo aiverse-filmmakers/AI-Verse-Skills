@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "capability": "interface-designer",
+  "conclusion": "zero-destructive-removals",
+  "preserved_capabilities": [
+    {
+      "id": "brand-guidelines",
+      "classification": "KEEP_NARROW",
+      "reason": "Anthropic-brand styling is a brand-specific specialist, not a general interface designer."
+    },
+    {
+      "id": "canvas-design",
+      "classification": "KEEP",
+      "reason": "Static PNG/PDF/poster design is a different deliverable class."
+    },
+    {
+      "id": "theme-factory",
+      "classification": "KEEP_NARROW",
+      "reason": "Cross-artifact theming remains useful and does not own interface architecture."
+    },
+    {
+      "id": "figma-use",
+      "classification": "SPECIALIST_DEPENDENCY",
+      "reason": "Figma tool/API correctness is target-specific and conditionally routed."
+    },
+    {
+      "id": "figma-generate-design",
+      "classification": "SPECIALIST_DEPENDENCY",
+      "reason": "Composed Figma screen generation remains target-specific."
+    },
+    {
+      "id": "canva",
+      "classification": "KEEP",
+      "reason": "Canva social/creator workflow is a distinct design surface."
+    },
+    {
+      "id": "design-and-templates",
+      "classification": "KEEP",
+      "reason": "Social graphics brand-kit/template work is distinct from product UI."
+    },
+    {
+      "id": "baoyu-article-illustrator",
+      "classification": "KEEP",
+      "reason": "Article illustration is not an interface-design duplicate."
+    }
+  ],
+  "removed_capabilities": [],
+  "replacement_aliases": [],
+  "invariants": [
+    "No existing design-facing capability is removed solely because Interface Designer overlaps its broad category.",
+    "Target-specific specialists remain independently addressable and conditionally routable.",
+    "A future removal requires an explicit supersession record plus regression coverage before deletion.",
+    "No compatibility alias is required while no public capability ID is removed or renamed."
+  ]
+}
