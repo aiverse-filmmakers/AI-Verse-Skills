@@ -432,7 +432,7 @@
   ],
   "registered_integrations": {
     "video-editor": {
-      "status": "registered_release_candidate",
+      "status": "registered",
       "targets": [
         "CODE_DRIVEN_VIDEO_MOTION_HANDOFF"
       ],
