@@ -157,6 +157,14 @@
       "evidence_required": true
     },
     {
+      "id": "scroll_state_qa",
+      "capabilities": [],
+      "when": "scroll_is_primary_interaction_or_state_driver",
+      "required": false,
+      "policy": "references/scroll-qa-policy.json",
+      "evidence_required": true
+    },
+    {
       "id": "motion_review",
       "capabilities": [
         "review-animations"
@@ -326,6 +334,7 @@
       "motion_build",
       "render_preview",
       "visual_state_qa",
+      "scroll_state_qa",
       "motion_review",
       "web_review",
       "fix_and_reverify"
@@ -371,6 +380,7 @@
       "motion_build",
       "render_preview",
       "visual_state_qa",
+      "scroll_state_qa",
       "motion_review",
       "web_review",
       "fix_and_reverify"
@@ -401,6 +411,7 @@
     "Do not load all experts into one context.",
     "Do not run the originality gate as a novelty requirement for exact-reference recreation or established-product maintenance.",
     "Do not require a decorative signature interaction for dashboards, admin tools, settings, CRUD or other utility applications.",
-    "Do not add an experience curve to ordinary CRUD, routine dashboard inspection, settings, simple search/filtering or micro changes."
+    "Do not add an experience curve to ordinary CRUD, routine dashboard inspection, settings, simple search/filtering or micro changes.",
+    "Do not force scroll-specific QA infrastructure onto ordinary interfaces whose scroll is only document overflow."
   ]
 }
