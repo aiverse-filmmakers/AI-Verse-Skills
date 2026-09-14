@@ -1,9 +1,6 @@
 name: Video Editor Release Acceptance
 
 on:
-  push:
-    branches:
-      - feature/video-editor-2026-09-14
   pull_request:
     branches:
       - main
