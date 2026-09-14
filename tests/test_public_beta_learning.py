@@ -392,6 +392,90 @@ class PublicBetaLearningTests(unittest.TestCase):
                 skills, self.root, protected["proposal_id"], approved_by="test-user"
             )
 
+    def test_learning_candidate_ids_cannot_escape_owner_paths(self):
+        for field, value in (
+            ("skill_id", "../escape"),
+            ("skill_id", "nested/path"),
+            ("target_skill_id", "..\\escape"),
+        ):
+            envelope = {
+                "kind": "create" if field == "skill_id" else "repair",
+                "skill_id": "safe-new" if field != "skill_id" else value,
+                "target_skill_id": "verification-harness" if field != "target_skill_id" else value,
+                "evidence_refs": ["gateway:route"],
+                "risk": "low",
+                "confidence": 0.95,
+            }
+            if envelope["kind"] == "create":
+                envelope.pop("target_skill_id", None)
+            with self.subTest(field=field, value=value):
+                with self.assertRaisesRegex(RuntimeError, "safe bounded Skill id"):
+                    learning.submit_candidate(
+                        skills,
+                        self.root,
+                        envelope,
+                        self._candidate("safe-fixture"),
+                        trigger="post-run",
+                        explicit=False,
+                    )
+
+    def test_routed_candidate_submission_is_idempotent_but_identity_bound(self):
+        candidate_dir = self._candidate("retry-safe", "A retry-safe reusable procedure.")
+        envelope = {
+            "candidate_id": "learn-retry-safe",
+            "kind": "create",
+            "skill_id": "retry-safe",
+            "scope": {"aiverse_scope": "workspace:alpha"},
+            "evidence_refs": ["run:retry-safe", "session:retry-safe"],
+            "risk": "low",
+            "confidence": 0.95,
+            "source_ownership": "agent_learned",
+        }
+        first = learning.submit_candidate(
+            skills,
+            self.root,
+            envelope,
+            candidate_dir,
+            trigger="post-run",
+            explicit=False,
+        )
+        replay = learning.submit_candidate(
+            skills,
+            self.root,
+            envelope,
+            candidate_dir,
+            trigger="post-run",
+            explicit=False,
+        )
+        self.assertEqual(replay["proposal_id"], first["proposal_id"])
+        self.assertEqual(replay["submission_fingerprint"], first["submission_fingerprint"])
+
+        changed = dict(envelope)
+        changed["summary"] = "Different input under the same candidate identity."
+        with self.assertRaisesRegex(RuntimeError, "different learning input"):
+            learning.submit_candidate(
+                skills,
+                self.root,
+                changed,
+                candidate_dir,
+                trigger="post-run",
+                explicit=False,
+            )
+
+        (candidate_dir / "SKILL.md").write_text(
+            "---\nname: retry-safe\ndescription: changed bytes\nversion: 1.0.0\n---\n\nDifferent procedure.\n",
+            encoding="utf-8",
+        )
+        with self.assertRaisesRegex(RuntimeError, "different learning input"):
+            learning.submit_candidate(
+                skills,
+                self.root,
+                envelope,
+                candidate_dir,
+                trigger="post-run",
+                explicit=False,
+            )
+
     def test_off_blocks_background_but_explicit_learn_remains(self):
         learning.set_learning_mode(skills, self.root, "off")
         with self.assertRaisesRegex(RuntimeError, "learning is off"):
