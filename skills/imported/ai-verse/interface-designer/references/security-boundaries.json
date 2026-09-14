@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "capability": "interface-designer",
+  "owner": "existing-ai-verse-skills-security-model",
+  "invariants": [
+    "Every installed expert remains subject to deterministic package admission and security scanning.",
+    "Immutable generation integrity is distinct from admission and source trust.",
+    "Source trust is distinct from runtime readiness.",
+    "Skills admission never grants execution authorization.",
+    "External tool declarations inside a Skill do not bypass host/user approval or execution authority.",
+    "Unknown external sources are never implicitly trusted or redistributable.",
+    "External curated design sources have auto_mutation disabled.",
+    "Workspace/user-specific design history must not cross member boundaries.",
+    "License and redistribution decisions come from registry/trust-policy.json and cannot be overridden by Interface Designer routing."
+  ],
+  "forbidden_package_override_fields": [
+    "authorized",
+    "skip_admission",
+    "skip_integrity",
+    "trust_override",
+    "license_override",
+    "redistribution_override",
+    "workspace_bypass",
+    "tool_approval_bypass"
+  ],
+  "evidence": {
+    "admission_module": "installer/admission.py",
+    "lifecycle_module": "installer/generation_lifecycle.py",
+    "trust_policy": "registry/trust-policy.json",
+    "originality_policy": "skills/imported/ai-verse/interface-designer/references/originality-policy.json"
+  }
+}
