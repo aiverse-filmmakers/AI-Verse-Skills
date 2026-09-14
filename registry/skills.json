@@ -3,8 +3,8 @@
   "snapshot": "2026-09-14",
   "counts": {
     "foundation": 20,
-    "employee": 81,
-    "total": 101
+    "employee": 99,
+    "total": 119
   },
   "foundation": [
     {
@@ -938,6 +938,186 @@
       "path": "skills/imported/ai-verse/interface-designer",
       "implementation": "ai-verse-native",
       "state": "vendored"
+    },
+    {
+      "rank": 82,
+      "id": "frontend-design",
+      "category": "creative-design",
+      "source": "anthropic-frontend",
+      "repo": "anthropics/skills",
+      "path": "skills/frontend-design",
+      "implementation": "original-upstream",
+      "state": "catalogued"
+    },
+    {
+      "rank": 83,
+      "id": "ui-ux-pro-max",
+      "category": "creative-design",
+      "source": "nextlevelbuilder-ui",
+      "repo": "nextlevelbuilder/ui-ux-pro-max-skill",
+      "path": ".claude/skills/ui-ux-pro-max",
+      "implementation": "original-upstream",
+      "state": "catalogued"
+    },
+    {
+      "rank": 84,
+      "id": "react-best-practices",
+      "category": "creative-design",
+      "source": "vercel-design",
+      "repo": "vercel-labs/agent-skills",
+      "path": "skills/react-best-practices",
+      "implementation": "original-upstream",
+      "state": "catalogued"
+    },
+    {
+      "rank": 85,
+      "id": "composition-patterns",
+      "category": "creative-design",
+      "source": "vercel-design",
+      "repo": "vercel-labs/agent-skills",
+      "path": "skills/composition-patterns",
+      "implementation": "original-upstream",
+      "state": "catalogued"
+    },
+    {
+      "rank": 86,
+      "id": "web-design-guidelines",
+      "category": "creative-design",
+      "source": "vercel-design",
+      "repo": "vercel-labs/agent-skills",
+      "path": "skills/web-design-guidelines",
+      "implementation": "upstream-adapted",
+      "state": "vendored"
+    },
+    {
+      "rank": 87,
+      "id": "shadcn",
+      "category": "creative-design",
+      "source": "shadcn-ui",
+      "repo": "shadcn-ui/ui",
+      "path": "skills/shadcn",
+      "implementation": "original-upstream",
+      "state": "catalogued"
+    },
+    {
+      "rank": 88,
+      "id": "design-first-ui-prompting",
+      "category": "creative-design",
+      "source": "mengto-ui",
+      "repo": "MengTo/Skills",
+      "path": "agent-skills/ui/design-first-ui-prompting",
+      "implementation": "original-upstream",
+      "state": "catalogued"
+    },
+    {
+      "rank": 89,
+      "id": "video-to-superprompt",
+      "category": "creative-design",
+      "source": "mengto-ui",
+      "repo": "MengTo/Skills",
+      "path": "agent-skills/codex/video-to-superprompt",
+      "implementation": "original-upstream",
+      "state": "catalogued"
+    },
+    {
+      "rank": 90,
+      "id": "stitched-full-page-capture",
+      "category": "creative-design",
+      "source": "mengto-ui",
+      "repo": "MengTo/Skills",
+      "path": "agent-skills/codex/stitched-full-page-capture",
+      "implementation": "original-upstream",
+      "state": "catalogued"
+    },
+    {
+      "rank": 91,
+      "id": "apple-design",
+      "category": "creative-design",
+      "source": "emil-design",
+      "repo": "emilkowalski/skills",
+      "path": "skills/apple-design",
+      "implementation": "original-upstream",
+      "state": "catalogued"
+    },
+    {
+      "rank": 92,
+      "id": "animate",
+      "category": "creative-design",
+      "source": "emil-design",
+      "repo": "emilkowalski/skills",
+      "path": "skills/animate",
+      "implementation": "original-upstream",
+      "state": "catalogued"
+    },
+    {
+      "rank": 93,
+      "id": "prototype",
+      "category": "creative-design",
+      "source": "emil-design",
+      "repo": "emilkowalski/skills",
+      "path": "skills/prototype",
+      "implementation": "original-upstream",
+      "state": "catalogued"
+    },
+    {
+      "rank": 94,
+      "id": "review-animations",
+      "category": "creative-design",
+      "source": "emil-design",
+      "repo": "emilkowalski/skills",
+      "path": "skills/review-animations",
+      "implementation": "original-upstream",
+      "state": "catalogued"
+    },
+    {
+      "rank": 95,
+      "id": "pick-ui-library",
+      "category": "creative-design",
+      "source": "emil-design",
+      "repo": "emilkowalski/skills",
+      "path": "skills/pick-ui-library",
+      "implementation": "original-upstream",
+      "state": "catalogued"
+    },
+    {
+      "rank": 96,
+      "id": "improve-animations",
+      "category": "creative-design",
+      "source": "emil-design",
+      "repo": "emilkowalski/skills",
+      "path": "skills/improve-animations",
+      "implementation": "original-upstream",
+      "state": "catalogued"
+    },
+    {
+      "rank": 97,
+      "id": "find-animation-opportunities",
+      "category": "creative-design",
+      "source": "emil-design",
+      "repo": "emilkowalski/skills",
+      "path": "skills/find-animation-opportunities",
+      "implementation": "original-upstream",
+      "state": "catalogued"
+    },
+    {
+      "rank": 98,
+      "id": "animate-expo",
+      "category": "creative-design",
+      "source": "emil-design",
+      "repo": "emilkowalski/skills",
+      "path": "skills/animate-expo",
+      "implementation": "original-upstream",
+      "state": "catalogued"
+    },
+    {
+      "rank": 99,
+      "id": "scroll-craft",
+      "category": "creative-design",
+      "source": "scroll-craft",
+      "repo": "nateherkai/scroll-craft",
+      "path": "plugins/nateherk-design/skills/scroll-craft",
+      "implementation": "original-upstream",
+      "state": "catalogued"
     }
   ]
 }
