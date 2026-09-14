@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "baseline_ref": "71264af6b2b9a575812fe18858d75a54ea2ff545",
+  "canonical_member_entrypoint": "video-editor",
+  "result": "zero_destructive_removals",
+  "removed_capabilities": [],
+  "retained_capabilities": [
+    {
+      "id": "director-agent",
+      "disposition": "retained-preproduction",
+      "reason": "Directing/pre-production is distinct from post-production edit orchestration."
+    },
+    {
+      "id": "ai-storyboard-director",
+      "disposition": "retained-preproduction",
+      "reason": "Storyboard generation remains a distinct pre-production capability."
+    },
+    {
+      "id": "produce-ai-video",
+      "disposition": "retained-generation",
+      "reason": "AI video generation is distinct from editing supplied footage."
+    },
+    {
+      "id": "structure-screenplay",
+      "disposition": "retained-preproduction",
+      "reason": "Screenplay structure is not a post-production editor replacement."
+    },
+    {
+      "id": "plan-camera-shots",
+      "disposition": "retained-preproduction",
+      "reason": "Camera planning remains a production-planning capability."
+    },
+    {
+      "id": "ffmpeg-skill",
+      "disposition": "retained-specialist-backend",
+      "reason": "Deterministic media operations remain useful below/alongside Video Editor."
+    },
+    {
+      "id": "premiere-agent",
+      "disposition": "retained-optional-nle-backend",
+      "reason": "Editable NLE/Premiere/Resolve/FCP workflows remain distinct optional backends."
+    },
+    {
+      "id": "after-effects-assistant",
+      "disposition": "retained-optional-motion-backend",
+      "reason": "AE-native compositing/motion remains distinct from HyperFrames."
+    },
+    {
+      "id": "kanban-video-orchestrator",
+      "disposition": "retained-production-orchestrator",
+      "reason": "Multi-agent production coordination is not the canonical raw-footage editor."
+    },
+    {
+      "id": "whisper",
+      "disposition": "retained-transcription-option",
+      "reason": "General transcription remains an optional/fallback provider."
+    }
+  ],
+  "hyperframes_duplicate_decision": {
+    "preexisting_member_visible_hyperframes_capabilities": 0,
+    "member_visible_provider_support_capabilities": 0,
+    "provider_support_visibility": "internal-only",
+    "action": "no_duplicate_removal_required"
+  },
+  "rules": [
+    "Do not remove a public capability only because Video Editor can call an overlapping low-level operation.",
+    "Migrate unique behavior and prove compatibility before any future removal.",
+    "Keep exactly one canonical HyperFrames provider family."
+  ]
+}
