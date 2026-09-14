@@ -480,6 +480,47 @@ class InterfaceDesignerContractTests(unittest.TestCase):
         self.assertEqual(anthropic["redistribution"], "fetch-only")
         self.assertFalse(trust["sources"][anthropic["repo"]]["vendoring_allowed"])
 
+    def test_existing_design_capabilities_remain_compatible_with_zero_removals(self):
+        refs = ROOT / "skills/imported/ai-verse/interface-designer/references"
+        compatibility = json.loads((refs / "existing-design-compatibility.json").read_text(encoding="utf-8"))
+        skills = json.loads((ROOT / "registry/skills.json").read_text(encoding="utf-8"))
+        packages = json.loads((ROOT / "registry/packages.json").read_text(encoding="utf-8"))
+        registered = {item["id"] for item in skills["employee"]}
+        package_ids = {
+            pkg["id"]
+            for source in packages["sources"].values()
+            for pkg in source["packages"]
+        }
+
+        self.assertEqual(compatibility["conclusion"], "zero-destructive-removals")
+        self.assertEqual(compatibility["removed_capabilities"], [])
+        self.assertEqual(compatibility["replacement_aliases"], [])
+
+        expected_preserved = {
+            "brand-guidelines",
+            "canvas-design",
+            "theme-factory",
+            "figma-use",
+            "figma-generate-design",
+            "canva",
+            "design-and-templates",
+            "baoyu-article-illustrator",
+        }
+        recorded = {item["id"] for item in compatibility["preserved_capabilities"]}
+        self.assertEqual(recorded, expected_preserved)
+        self.assertTrue(expected_preserved.issubset(registered))
+        self.assertTrue(expected_preserved.issubset(package_ids))
+
+        graph = json.loads((refs / "orchestration.json").read_text(encoding="utf-8"))
+        self.assertEqual(
+            graph["target_experts"]["FIGMA"],
+            ["figma-use", "figma-generate-design"],
+        )
+        self.assertEqual(
+            graph["target_experts"]["CANVA_OR_STATIC_DESIGN_TOOL"],
+            ["canva"],
+        )
+
     def test_vercel_review_rules_are_generation_pinned(self):
         package = ROOT / "skills/imported/vercel/web-design-guidelines"
         skill = (package / "SKILL.md").read_text(encoding="utf-8")
