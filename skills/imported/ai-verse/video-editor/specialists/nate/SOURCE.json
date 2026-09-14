@@ -18,6 +18,14 @@
     "cut-silences",
     "cut-mistakes",
     "short-form-edit",
-    "video-storytelling"
+    "video-storytelling",
+    "hyperframes-video-beats",
+    "style-library"
+  ],
+  "excluded_assets": [
+    "AIS logo and brand materials",
+    "Nate example-project brand assets",
+    "Nate root style-library asset catalog",
+    "Nate style-templates demonstration media"
   ]
 }
