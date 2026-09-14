@@ -29,14 +29,14 @@ class VideoEditorContractTests(unittest.TestCase):
     def registry(self, name):
         return json.loads((ROOT / "registry" / name).read_text(encoding="utf-8"))
 
-    def test_package_is_registered_as_release_candidate(self):
+    def test_package_is_accepted_release(self):
         skill = (VIDEO_EDITOR / "SKILL.md").read_text(encoding="utf-8")
         manifest = (VIDEO_EDITOR / "aiverse.skill.yaml").read_text(encoding="utf-8")
         registry = self.registry("skills.json")
         employee = {x["id"]: x for x in registry["employee"]}
 
         self.assertIn("name: video-editor", skill)
-        self.assertIn("registration: registered-release-candidate", skill)
+        self.assertIn("version: 1.0.0", skill)\n        self.assertNotIn("registered-release-candidate", skill)
         self.assertIn("name: video-editor", manifest)
         self.assertIn("video-editor", employee)
         self.assertEqual(100, employee["video-editor"]["rank"])
@@ -124,7 +124,7 @@ class VideoEditorContractTests(unittest.TestCase):
         providers = self.load_json("capabilities.json")["provider_decisions"]
         self.assertEqual("0.8.40", providers["hyperframes"]["version"])
         self.assertEqual(HF_COMMIT, providers["hyperframes"]["commit"])
-        self.assertEqual("integrated-release-candidate", providers["hyperframes"]["state"])
+        self.assertEqual("accepted-canonical", providers["hyperframes"]["state"])
         self.assertEqual(NATE_COMMIT, providers["nate_editorial"]["commit"])
         self.assertEqual("integrated-package-local", providers["nate_editorial"]["state"])
 
@@ -177,9 +177,9 @@ class VideoEditorContractTests(unittest.TestCase):
         ):
             self.assertIn(forbidden_owner, ownership)
 
-    def test_release_candidate_fail_closed_rules_protect_provider_and_verification(self):
+    def test_release_fail_closed_rules_protect_provider_and_verification(self):
         data = self.load_json("orchestration.json")
-        self.assertEqual("registered-release-candidate", data["release_gate_state"])
+        self.assertEqual("accepted", data["release_gate_state"])
         joined = "\n".join(data["fail_closed"])
         self.assertIn("Nate-derived editorial provenance", joined)
         self.assertIn("HyperFrames 0.8.40", joined)
