@@ -343,8 +343,7 @@ The fastest point of both curves meets at the cut — the viewer perceives smoot
 
 ## AI-Verse Runtime Note
 
-These technique snippets preserve Nate's visual methodology, but the canonical
-HyperFrames 0.8.40 provider contract wins if a snippet conflicts with current
+These technique snippets preserve Nate's visual methodology, but the canonical HyperFrames 0.8.40 provider contract wins if a snippet conflicts with current
 lint, timing, media, asset-path, animation-adapter, or render rules. Treat snippets
 as starting patterns and verify them with `hyperframes lint`, `hyperframes check`,
 preview, and actual rendered frames.
