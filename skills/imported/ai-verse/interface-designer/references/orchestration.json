@@ -165,6 +165,14 @@
       "evidence_required": true
     },
     {
+      "id": "mobile_art_direction_qa",
+      "capabilities": [],
+      "when": "substantial_interface_has_or_requires_mobile_surface",
+      "required": false,
+      "policy": "references/mobile-art-direction-policy.json",
+      "evidence_required": true
+    },
+    {
       "id": "motion_review",
       "capabilities": [
         "review-animations"
@@ -270,6 +278,7 @@
       "motion_build",
       "render_preview",
       "visual_state_qa",
+      "mobile_art_direction_qa",
       "motion_review",
       "web_review",
       "fix_and_reverify"
@@ -292,6 +301,7 @@
       "motion_build",
       "render_preview",
       "visual_state_qa",
+      "mobile_art_direction_qa",
       "motion_review",
       "web_review",
       "fix_and_reverify"
@@ -314,6 +324,7 @@
       "motion_build",
       "render_preview",
       "visual_state_qa",
+      "mobile_art_direction_qa",
       "motion_review",
       "web_review",
       "fix_and_reverify"
@@ -335,6 +346,7 @@
       "render_preview",
       "visual_state_qa",
       "scroll_state_qa",
+      "mobile_art_direction_qa",
       "motion_review",
       "web_review",
       "fix_and_reverify"
@@ -381,6 +393,7 @@
       "render_preview",
       "visual_state_qa",
       "scroll_state_qa",
+      "mobile_art_direction_qa",
       "motion_review",
       "web_review",
       "fix_and_reverify"
@@ -397,6 +410,7 @@
       "motion_build",
       "render_preview",
       "visual_state_qa",
+      "mobile_art_direction_qa",
       "motion_review",
       "fix_and_reverify"
     ]
@@ -412,6 +426,7 @@
     "Do not run the originality gate as a novelty requirement for exact-reference recreation or established-product maintenance.",
     "Do not require a decorative signature interaction for dashboards, admin tools, settings, CRUD or other utility applications.",
     "Do not add an experience curve to ordinary CRUD, routine dashboard inspection, settings, simple search/filtering or micro changes.",
-    "Do not force scroll-specific QA infrastructure onto ordinary interfaces whose scroll is only document overflow."
+    "Do not force scroll-specific QA infrastructure onto ordinary interfaces whose scroll is only document overflow.",
+    "Do not treat a desktop layout that merely shrinks as sufficient mobile art direction for a substantial interface."
   ]
 }
