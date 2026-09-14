@@ -1,11 +1,11 @@
 {
   "schema_version": 3,
-  "snapshot": "2026-09-09",
+  "snapshot": "2026-09-14",
   "counts": {
     "foundation": 20,
-    "employee": 80,
+    "employee": 81,
     "support": 5,
-    "canonical_total": 100
+    "canonical_total": 101
   },
   "policy": {
     "original_first": true,
@@ -728,6 +728,22 @@
         }
       ],
       "redistribution": "fetch-only"
+    },
+    "ai-verse": {
+      "repo": "aiverse-filmmakers/AI-Verse-Skills",
+      "commit": "fb048e2c125b6f09f6ba4fd566a574f34c4a765a",
+      "namespace": "ai-verse",
+      "license": "MIT",
+      "packages": [
+        {
+          "rank": 81,
+          "id": "interface-designer",
+          "category": "creative-design",
+          "vendored": true,
+          "path": "skills/imported/ai-verse/interface-designer"
+        }
+      ],
+      "redistribution": "redistributable"
     }
   },
   "support": [
