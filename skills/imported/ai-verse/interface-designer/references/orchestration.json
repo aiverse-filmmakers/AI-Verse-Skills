@@ -91,6 +91,13 @@
       "policy": "references/originality-policy.json"
     },
     {
+      "id": "signature_interaction",
+      "capabilities": [],
+      "when": "experience_surface_requires_distinctive_product_specific_interaction",
+      "required": false,
+      "policy": "references/signature-interaction-policy.json"
+    },
+    {
       "id": "design_system_persistence",
       "capabilities": [],
       "when": "persistent_product_visual_grammar_needed",
@@ -238,6 +245,7 @@
       "ui_ux_intelligence",
       "visual_direction",
       "originality_gate",
+      "signature_interaction",
       "design_system_persistence",
       "library_selection",
       "target_implementation",
@@ -258,6 +266,7 @@
       "visual_direction",
       "prototype_divergence",
       "originality_gate",
+      "signature_interaction",
       "design_system_persistence",
       "library_selection",
       "target_implementation",
@@ -278,6 +287,7 @@
       "visual_direction",
       "prototype_divergence",
       "originality_gate",
+      "signature_interaction",
       "design_system_persistence",
       "library_selection",
       "target_implementation",
@@ -296,6 +306,7 @@
       "ui_ux_intelligence",
       "visual_direction",
       "originality_gate",
+      "signature_interaction",
       "design_system_persistence",
       "library_selection",
       "target_implementation",
@@ -341,6 +352,7 @@
       "visual_direction",
       "prototype_divergence",
       "originality_gate",
+      "signature_interaction",
       "design_system_persistence",
       "target_implementation",
       "motion_build",
@@ -374,6 +386,7 @@
     "Do not create or rewrite DESIGN.md for a tiny one-off fix.",
     "Do not change the implementation stack merely because a specialist is installed.",
     "Do not load all experts into one context.",
-    "Do not run the originality gate as a novelty requirement for exact-reference recreation or established-product maintenance."
+    "Do not run the originality gate as a novelty requirement for exact-reference recreation or established-product maintenance.",
+    "Do not require a decorative signature interaction for dashboards, admin tools, settings, CRUD or other utility applications."
   ]
 }
