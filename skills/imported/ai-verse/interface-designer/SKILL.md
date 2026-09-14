@@ -173,7 +173,7 @@ Do not force novelty when reference fidelity, an established DESIGN.md, accessib
 
 ## Step 8: Verify the Actual Experience
 
-For substantial interfaces, inspect the states that matter to the feature, including as applicable:
+For substantial interfaces, apply the evidence contract in [references/visual-qa.md](references/visual-qa.md) and inspect the states that matter to the feature, including as applicable:
 
 - loading, empty, populated and error;
 - disabled, hover, focus and active;
