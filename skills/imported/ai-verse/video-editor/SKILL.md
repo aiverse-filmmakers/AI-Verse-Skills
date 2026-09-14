@@ -1,14 +1,13 @@
 ---
 name: video-editor
 description: Orchestrate real video editing from footage, transcript, script, URL, or reference through transcript truth, silence and mistake passes, EDLs, short-form or long-form editorial structure, visual beats, captions/B-roll, HyperFrames assembly, media QA, and final render. Use for full edits and multi-stage video-post workflows. Route narrow requests such as silence removal directly to the relevant internal specialist. Do not use Interface Designer as the editorial authority.
-version: 0.1.0
+version: 1.0.0
 license: MIT
 metadata:
   ai-verse:
     ownership: first-party
     category: film-media
     composite: true
-    registration: registered-release-candidate
 ---
 
 # AI-Verse Video Editor
@@ -19,17 +18,15 @@ Take a video-editing request from source material to a verified deliverable whil
 
 This Skill is the member-facing editor/orchestrator. It coordinates specialist Skills and providers. It does not duplicate their bodies or invent substitute renderer behavior.
 
-## Current Registration State
+## Release State
 
-This package is a **registered release candidate** on the Video Editor implementation branch.
+This package is the **accepted AI-Verse Video Editor 1.0.0 release**.
 
 Its Nate-derived editorial specialists are package-local and provenance-locked. The
 accepted HyperFrames 0.8.40 provider family is pinned as internal support dependencies.
 
-Registration is not release acceptance. PR #14 remains draft until the remaining
-cross-skill, media-QA, regression, documentation, and final release gates pass.
-
-Do not equate registry presence with a completed public-beta release.
+Release acceptance requires the integrated regression suite plus real encoded-media
+verification. Registry presence alone is never sufficient evidence of media correctness.
 
 ## Read First
 
