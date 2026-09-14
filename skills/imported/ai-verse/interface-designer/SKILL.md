@@ -148,7 +148,9 @@ Do not create DESIGN.md ceremony for a tiny one-off fix. Update an existing DESI
 
 ## Step 7: Originality Without Randomness
 
-For a new visual direction, check whether the proposal merely repeats a familiar AI template across:
+For a new substantial visual direction, run the design fingerprint gate in [references/originality.md](references/originality.md) and use [references/originality-policy.json](references/originality-policy.json) for its canonical dimensions and bypass conditions.
+
+Check whether the proposal merely repeats a familiar AI template across:
 
 - navigation model;
 - information architecture;
@@ -163,7 +165,7 @@ For a new visual direction, check whether the proposal merely repeats a familiar
 
 Revise accidental template repetition.
 
-Do not force novelty when reference fidelity, an established DESIGN.md, accessibility, or platform convention requires consistency.
+Do not force novelty when reference fidelity, an established DESIGN.md, accessibility, platform convention, or explicit user intent requires consistency. Fingerprint comparison stays inside the current authorized workspace/product context and must not use another member's private design history.
 
 ## Step 8: Verify the Actual Experience
 
