@@ -263,6 +263,26 @@ class InterfaceDesignerContractTests(unittest.TestCase):
         self.assertIn("UNVERIFIED_BLOCKED", guide)
         self.assertIn("Source inspection alone does not prove visual appearance.", guide)
 
+    def test_scroll_qa_is_semantic_conditional_and_reduced_motion_complete(self):
+        refs = ROOT / "skills/imported/ai-verse/interface-designer/references"
+        policy = json.loads((refs / "scroll-qa-policy.json").read_text(encoding="utf-8"))
+        guide = (refs / "scroll-qa.md").read_text(encoding="utf-8")
+        graph = json.loads((refs / "orchestration.json").read_text(encoding="utf-8"))
+
+        self.assertIn("scroll_immersive", policy["run_when"])
+        self.assertIn("ordinary_dashboard", policy["skip_when"])
+        self.assertTrue(policy["fixed_percentage_samples_are_fallback_only"])
+        self.assertIn("every_semantic_transition_or_waypoint", policy["sample"])
+        self.assertIn("no_unexplained_dead_scroll", policy["checks"])
+        self.assertIn("reduced_motion_complete", policy["checks"])
+        self.assertIn("content_left_hidden", policy["reduced_motion_failures"])
+
+        self.assertIn("scroll_state_qa", graph["scope_pipelines"]["SCROLL_IMMERSIVE"])
+        self.assertNotIn("scroll_state_qa", graph["scope_pipelines"]["SCREEN"])
+        stage = next(s for s in graph["stages"] if s["id"] == "scroll_state_qa")
+        self.assertTrue(stage["evidence_required"])
+        self.assertIn("Do not install or force Scroll Craft infrastructure merely to test an ordinary site.", guide)
+
     def test_vercel_review_rules_are_generation_pinned(self):
         package = ROOT / "skills/imported/vercel/web-design-guidelines"
         skill = (package / "SKILL.md").read_text(encoding="utf-8")
