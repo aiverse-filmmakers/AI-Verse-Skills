@@ -427,6 +427,18 @@
     "Do not require a decorative signature interaction for dashboards, admin tools, settings, CRUD or other utility applications.",
     "Do not add an experience curve to ordinary CRUD, routine dashboard inspection, settings, simple search/filtering or micro changes.",
     "Do not force scroll-specific QA infrastructure onto ordinary interfaces whose scroll is only document overflow.",
-    "Do not treat a desktop layout that merely shrinks as sufficient mobile art direction for a substantial interface."
-  ]
+    "Do not treat a desktop layout that merely shrinks as sufficient mobile art direction for a substantial interface.",
+    "A target that requires an unregistered future dependency must block/report unavailable rather than pretending the dependency executed."
+  ],
+  "future_dependencies": {
+    "video-editor": {
+      "status": "planned_not_registered",
+      "required_for_targets": [
+        "CODE_DRIVEN_VIDEO_MOTION_HANDOFF"
+      ],
+      "behavior_when_unavailable": "BLOCK_AND_REPORT_UNAVAILABLE",
+      "owner_project": "AI-Verse Video Editor",
+      "note": "Do not silently substitute another video-editing runtime. Design-only handoff may still be produced when that satisfies the user request."
+    }
+  }
 }
