@@ -1,0 +1,222 @@
+{
+  "schema_version": 1,
+  "capability": "interface-designer",
+  "description": "Golden end-to-end design-routing fixtures. They define expected classification, specialist families, persistence decisions and QA gates without requiring one implementation stack for every case.",
+  "fixtures": [
+    {
+      "id": "full-dashboard-workflow",
+      "request": "Build a new production dashboard for monitoring AI agents, runs, errors and approvals as a React web app.",
+      "project_context": {
+        "existing_project": false,
+        "target_hint": "React web app",
+        "design_md": false,
+        "reference": false,
+        "mobile_required": true
+      },
+      "expected": {
+        "scope": "FULL_PRODUCT",
+        "target": "REACT_WEB_APP",
+        "design_md": "CREATE",
+        "experts": [
+          "ui-ux-pro-max",
+          "frontend-design",
+          "react-best-practices",
+          "composition-patterns",
+          "web-design-guidelines"
+        ],
+        "required_stages": [
+          "ui_ux_intelligence",
+          "visual_direction",
+          "originality_gate",
+          "design_system_persistence",
+          "target_implementation",
+          "visual_state_qa",
+          "mobile_art_direction_qa",
+          "web_review"
+        ],
+        "qa": [
+          "loading",
+          "empty",
+          "populated",
+          "error",
+          "desktop",
+          "tablet",
+          "mobile",
+          "focus_visible",
+          "reduced_motion"
+        ]
+      }
+    },
+    {
+      "id": "reference-recreation",
+      "request": "Recreate the supplied dashboard screenshot inside my existing HTML/CSS/JavaScript project without changing the stack.",
+      "project_context": {
+        "existing_project": true,
+        "target_hint": "existing HTML/CSS/JavaScript",
+        "design_md": false,
+        "reference": "screenshot",
+        "reference_mode": "exact",
+        "mobile_required": false
+      },
+      "expected": {
+        "scope": "REFERENCE_RECREATION",
+        "target": "EXISTING_WEB_STACK",
+        "design_md": "CREATE_ONLY_IF_REFERENCE_BECOMES_PERSISTENT_PRODUCT_DIRECTION",
+        "experts": [
+          "ui-ux-pro-max",
+          "frontend-design"
+        ],
+        "required_stages": [
+          "reference_analysis",
+          "ui_ux_intelligence",
+          "visual_direction",
+          "target_implementation",
+          "render_preview",
+          "visual_state_qa"
+        ],
+        "bypass_conditions": [
+          "exact_reference_recreation"
+        ],
+        "forbidden_experts": [
+          "react-best-practices",
+          "composition-patterns",
+          "scroll-craft",
+          "animate-expo"
+        ],
+        "qa": [
+          "reference_viewport",
+          "rendered_comparison"
+        ]
+      }
+    },
+    {
+      "id": "interaction-heavy-component",
+      "request": "Make the existing floating inspector draggable with momentum, snap points and interruptible motion while preserving the current visual design.",
+      "project_context": {
+        "existing_project": true,
+        "target_hint": "existing web stack",
+        "design_md": true,
+        "reference": false,
+        "mobile_required": false
+      },
+      "expected": {
+        "scope": "INTERACTION_HEAVY",
+        "target": "EXISTING_WEB_STACK",
+        "design_md": "READ_PRESERVE_UNLESS_REUSABLE_INTERACTION_GRAMMAR_CHANGES",
+        "experts": [
+          "ui-ux-pro-max",
+          "apple-design",
+          "animate",
+          "review-animations"
+        ],
+        "required_stages": [
+          "ui_ux_intelligence",
+          "interaction_physics",
+          "target_implementation",
+          "motion_build",
+          "render_preview",
+          "visual_state_qa",
+          "motion_review"
+        ],
+        "qa": [
+          "default",
+          "dragging",
+          "snapped",
+          "interrupted",
+          "keyboard_or_non_drag_alternative",
+          "reduced_motion"
+        ]
+      }
+    },
+    {
+      "id": "cinematic-scroll-experience",
+      "request": "Create a cinematic product story as a plain HTML/CSS/JavaScript page where scroll drives the experience and mobile has its own composition.",
+      "project_context": {
+        "existing_project": false,
+        "target_hint": "plain HTML/CSS/JavaScript",
+        "design_md": false,
+        "reference": false,
+        "mobile_required": true
+      },
+      "expected": {
+        "scope": "SCROLL_IMMERSIVE",
+        "target": "PLAIN_HTML_CSS_JS_ARTIFACT",
+        "design_md": "CREATE",
+        "experts": [
+          "ui-ux-pro-max",
+          "frontend-design",
+          "scroll-craft",
+          "animate",
+          "review-animations",
+          "web-design-guidelines"
+        ],
+        "required_stages": [
+          "experience_curve",
+          "visual_direction",
+          "originality_gate",
+          "signature_interaction",
+          "design_system_persistence",
+          "target_implementation",
+          "motion_build",
+          "visual_state_qa",
+          "scroll_state_qa",
+          "mobile_art_direction_qa",
+          "motion_review",
+          "web_review"
+        ],
+        "qa": [
+          "initial_scroll_state",
+          "semantic_waypoints",
+          "long_transition_midpoints",
+          "final_scroll_state",
+          "reduced_motion",
+          "mobile_scroll_progression"
+        ]
+      }
+    },
+    {
+      "id": "mobile-expo-interaction",
+      "request": "Build an Expo bottom sheet with drag, snap, dismissal and haptics that feels native and remains accessible with reduced motion.",
+      "project_context": {
+        "existing_project": true,
+        "target_hint": "React Native Expo",
+        "design_md": true,
+        "reference": false,
+        "mobile_required": true
+      },
+      "expected": {
+        "scope": "MOBILE_EXPO",
+        "target": "REACT_NATIVE_EXPO",
+        "design_md": "READ_UPDATE_ONLY_IF_DURABLE_MOBILE_GRAMMAR_CHANGES",
+        "experts": [
+          "ui-ux-pro-max",
+          "apple-design",
+          "animate",
+          "animate-expo",
+          "review-animations"
+        ],
+        "required_stages": [
+          "ui_ux_intelligence",
+          "interaction_physics",
+          "target_implementation",
+          "motion_build",
+          "render_preview",
+          "visual_state_qa",
+          "mobile_art_direction_qa",
+          "motion_review"
+        ],
+        "qa": [
+          "collapsed",
+          "expanded",
+          "dragging",
+          "snap_points",
+          "dismissal",
+          "safe_area",
+          "keyboard_if_input_exists",
+          "reduced_motion",
+          "touch_alternative"
+        ]
+      }
+    }
+  ]
+}
