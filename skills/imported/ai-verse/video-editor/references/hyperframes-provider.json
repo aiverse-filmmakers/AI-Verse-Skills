@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "provider_family": "hyperframes",
+  "public_owner": "video-editor",
+  "source": {
+    "repo": "heygen-com/hyperframes",
+    "version": "0.8.40",
+    "commit": "cfe5dcfad310ced2a5844998628daa2b8a0f53d7",
+    "license": "Apache-2.0",
+    "redistribution": "fetch-only",
+    "namespace": "hyperframes"
+  },
+  "acceptance": {
+    "workflow": "Video Editor HyperFrames 0.8.40 Acceptance",
+    "run_id": 34888930903,
+    "job_id": 104126423042,
+    "result": "pass"
+  },
+  "support_source_id": "hyperframes-v0840",
+  "support_packages": [
+    "hyperframes",
+    "hyperframes-core",
+    "hyperframes-cli",
+    "hyperframes-animation",
+    "hyperframes-keyframes",
+    "hyperframes-creative",
+    "hyperframes-audio",
+    "hyperframes-registry",
+    "media-use",
+    "general-video",
+    "embedded-captions"
+  ],
+  "member_visible_provider_capabilities": [],
+  "member_visible_editor_capability": "video-editor",
+  "ownership": [
+    "HyperFrames owns composition/runtime/CLI/media rendering correctness.",
+    "Video Editor and Nate-derived editorial specialists own edit decisions and transcript/EDL truth.",
+    "general-video and embedded-captions are internal provider support, not competing public editors."
+  ],
+  "forbidden": [
+    "Nate bundled HyperFrames 0.7.109 as a second canonical provider",
+    "member-facing HyperFrames support-package duplicates",
+    "unverified provider upgrades"
+  ]
+}
