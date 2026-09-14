@@ -286,18 +286,27 @@ opaque background. At any instant a pixel is either graphic or footage.
 
 ## 4 · Gates
 
-Run all of them, then look anyway.
+Run the canonical provider gates, then run every project-specific Nate QA helper
+that actually exists, then look anyway.
 
 ```bash
-node scripts/qa-tokens.mjs          # 0 off-system strokes / type sizes / radii
-node scripts/qa-no-crossfade.mjs    # 0 full-bleed layers animating opacity
+npx hyperframes lint
+npx hyperframes check
+
+# Additional evidence when the active project provides these helpers:
+node scripts/qa-tokens.mjs
+node scripts/qa-no-crossfade.mjs
 node scripts/qa-legibility.mjs <render>
 node scripts/qa-seamjump.mjs <render> plan/cover-seams.json --control <cut>
 node scripts/qa-deadframe.mjs <render> --control <cut>
-node scripts/qa-presence.mjs <render> --every 1      # speaker on-screen share
-node scripts/integrate.mjs --check                   # 0 gaps, 0 stale mounts
-npx hyperframes lint
+node scripts/qa-presence.mjs <render> --every 1
+node scripts/integrate.mjs --check
 ```
+
+The Nate helper scripts above are project-specific, not guaranteed package
+dependencies. Their absence must be reported rather than hidden or replaced with
+invented results. The AI-Verse structural, visual and audio QA contract remains
+mandatory even when a particular Nate helper is unavailable.
 
 **Gates do not replace looking**, and gates that have never failed are not gates.
 
