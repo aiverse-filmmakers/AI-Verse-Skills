@@ -1,0 +1,164 @@
+{
+  "schema_version": 1,
+  "capability": "video-editor",
+  "registration_state": "accepted",
+  "semantic_capabilities": [
+    {
+      "id": "video.edit.orchestrate",
+      "owner": "video-editor",
+      "kind": "orchestration",
+      "required": true
+    },
+    {
+      "id": "video.transcribe",
+      "owner": "transcription-specialist",
+      "kind": "editorial-input",
+      "required": false
+    },
+    {
+      "id": "video.cut.silence",
+      "owner": "silence-cut-specialist",
+      "kind": "editorial",
+      "required": false
+    },
+    {
+      "id": "video.cut.mistakes",
+      "owner": "mistake-retake-specialist",
+      "kind": "editorial",
+      "required": false
+    },
+    {
+      "id": "video.edl",
+      "owner": "editorial-specialists",
+      "kind": "editorial-truth",
+      "required": true
+    },
+    {
+      "id": "video.shortform.edit",
+      "owner": "short-form-editor",
+      "kind": "editorial",
+      "required": false
+    },
+    {
+      "id": "video.longform.storytelling",
+      "owner": "video-storytelling",
+      "kind": "editorial",
+      "required": false
+    },
+    {
+      "id": "video.hook_payoff",
+      "owner": "short-form-editor",
+      "kind": "editorial",
+      "required": false
+    },
+    {
+      "id": "video.reference_analysis",
+      "owner": "video-editor",
+      "kind": "analysis",
+      "required": false
+    },
+    {
+      "id": "video.caption",
+      "owner": "caption-specialist",
+      "kind": "editorial-presentation",
+      "required": false
+    },
+    {
+      "id": "video.broll.plan",
+      "owner": "editorial-specialists",
+      "kind": "editorial",
+      "required": false
+    },
+    {
+      "id": "video.motion_beats",
+      "owner": "motion-beats-specialist",
+      "kind": "presentation",
+      "required": false
+    },
+    {
+      "id": "video.style_select",
+      "owner": "style-specialist",
+      "kind": "presentation",
+      "required": false
+    },
+    {
+      "id": "video.website_to_video",
+      "owner": "website-video-specialist",
+      "kind": "workflow",
+      "required": false
+    },
+    {
+      "id": "video.hyperframes.compose",
+      "owner": "hyperframes-provider",
+      "kind": "runtime",
+      "required": false
+    },
+    {
+      "id": "video.gsap.motion",
+      "owner": "hyperframes-provider",
+      "kind": "runtime-motion",
+      "required": false
+    },
+    {
+      "id": "video.ffmpeg.media",
+      "owner": "ffmpeg-skill",
+      "kind": "media-processing",
+      "required": false
+    },
+    {
+      "id": "video.qa.structural",
+      "owner": "video-editor",
+      "kind": "verification",
+      "required": true
+    },
+    {
+      "id": "video.qa.visual",
+      "owner": "video-editor",
+      "kind": "verification",
+      "required": false
+    },
+    {
+      "id": "video.qa.audio_sync",
+      "owner": "video-editor",
+      "kind": "verification",
+      "required": false
+    },
+    {
+      "id": "video.render.final",
+      "owner": "hyperframes-provider",
+      "kind": "delivery",
+      "required": false
+    }
+  ],
+  "provider_decisions": {
+    "hyperframes": {
+      "version": "0.8.40",
+      "commit": "cfe5dcfad310ced2a5844998628daa2b8a0f53d7",
+      "state": "accepted-canonical"
+    },
+    "nate_editorial": {
+      "commit": "b1afdb1dcbcad39dd27638ea699f132fe44ce6df",
+      "state": "integrated-package-local"
+    },
+    "interface_designer": {
+      "capability": "interface-designer",
+      "state": "conditional-existing"
+    },
+    "ffmpeg": {
+      "capability": "ffmpeg-skill",
+      "state": "conditional-existing"
+    },
+    "premiere": {
+      "capability": "premiere-agent",
+      "state": "optional-existing"
+    },
+    "after_effects": {
+      "capability": "after-effects-assistant",
+      "state": "optional-existing"
+    },
+    "whisper": {
+      "capability": "whisper",
+      "state": "optional-existing"
+    }
+  }
+}

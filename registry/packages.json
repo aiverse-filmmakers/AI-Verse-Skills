@@ -3,9 +3,9 @@
   "snapshot": "2026-09-14",
   "counts": {
     "foundation": 20,
-    "employee": 99,
-    "support": 5,
-    "canonical_total": 119
+    "employee": 100,
+    "support": 16,
+    "canonical_total": 120
   },
   "policy": {
     "original_first": true,
@@ -741,6 +741,26 @@
           "category": "creative-design",
           "vendored": true,
           "path": "skills/imported/ai-verse/interface-designer"
+        },
+        {
+          "rank": 100,
+          "id": "video-editor",
+          "category": "film-media",
+          "vendored": true,
+          "path": "skills/imported/ai-verse/video-editor",
+          "deps": [
+            "hyperframes",
+            "hyperframes-core",
+            "hyperframes-cli",
+            "hyperframes-animation",
+            "hyperframes-keyframes",
+            "hyperframes-creative",
+            "hyperframes-audio",
+            "hyperframes-registry",
+            "media-use",
+            "general-video",
+            "embedded-captions"
+          ]
         }
       ],
       "redistribution": "redistributable"
@@ -916,6 +936,14 @@
         }
       ],
       "redistribution": "redistributable"
+    },
+    "hyperframes-v0840": {
+      "repo": "heygen-com/hyperframes",
+      "commit": "cfe5dcfad310ced2a5844998628daa2b8a0f53d7",
+      "namespace": "hyperframes",
+      "license": "Apache-2.0",
+      "packages": [],
+      "redistribution": "fetch-only"
     }
   },
   "support": [
@@ -943,6 +971,61 @@
       "id": "gws-sheets",
       "source": "google",
       "path": "skills/gws-sheets"
+    },
+    {
+      "id": "hyperframes",
+      "source": "hyperframes-v0840",
+      "path": "skills/hyperframes"
+    },
+    {
+      "id": "hyperframes-core",
+      "source": "hyperframes-v0840",
+      "path": "skills/hyperframes-core"
+    },
+    {
+      "id": "hyperframes-cli",
+      "source": "hyperframes-v0840",
+      "path": "skills/hyperframes-cli"
+    },
+    {
+      "id": "hyperframes-animation",
+      "source": "hyperframes-v0840",
+      "path": "skills/hyperframes-animation"
+    },
+    {
+      "id": "hyperframes-keyframes",
+      "source": "hyperframes-v0840",
+      "path": "skills/hyperframes-keyframes"
+    },
+    {
+      "id": "hyperframes-creative",
+      "source": "hyperframes-v0840",
+      "path": "skills/hyperframes-creative"
+    },
+    {
+      "id": "hyperframes-audio",
+      "source": "hyperframes-v0840",
+      "path": "skills/hyperframes-audio"
+    },
+    {
+      "id": "hyperframes-registry",
+      "source": "hyperframes-v0840",
+      "path": "skills/hyperframes-registry"
+    },
+    {
+      "id": "media-use",
+      "source": "hyperframes-v0840",
+      "path": "skills/media-use"
+    },
+    {
+      "id": "general-video",
+      "source": "hyperframes-v0840",
+      "path": "skills/general-video"
+    },
+    {
+      "id": "embedded-captions",
+      "source": "hyperframes-v0840",
+      "path": "skills/embedded-captions"
     }
   ]
 }

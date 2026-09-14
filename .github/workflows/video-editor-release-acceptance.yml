@@ -1,0 +1,59 @@
+name: Video Editor Release Acceptance
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "skills/imported/ai-verse/video-editor/**"
+      - "registry/**"
+      - "tests/test_video_editor_*.py"
+      - "tests/video-editor/**"
+      - "docs/VIDEO_EDITOR*.md"
+      - "examples/video-editor/**"
+      - ".github/workflows/video-editor-release-acceptance.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  nate-hyperframes-compat:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout System harness
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Run integrated Video Editor regression suite
+        run: python -m unittest discover -s tests -p 'test_video_editor_*.py' -v
+
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install FFmpeg
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg
+
+      - name: Install image assertion dependency
+        run: python3 -m pip install --disable-pip-version-check pillow
+
+      - name: Run isolated Nate and HyperFrames acceptance
+        run: bash tests/video-editor/hyperframes-v0840-acceptance.sh
+
+      - name: Upload acceptance evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: video-editor-release-acceptance
+          path: ${{ runner.temp }}/aiverse-video-editor-hf-acceptance/artifacts
+          if-no-files-found: warn
+          retention-days: 14

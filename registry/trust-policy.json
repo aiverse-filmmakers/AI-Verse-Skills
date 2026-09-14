@@ -190,6 +190,14 @@
       "ownership": "curated_upstream",
       "vendoring_allowed": true,
       "auto_mutation": false
+    },
+    "heygen-com/hyperframes": {
+      "license": "Apache-2.0",
+      "redistribution": "fetch-only",
+      "trust": "reviewed-upstream",
+      "ownership": "curated_upstream",
+      "vendoring_allowed": false,
+      "auto_mutation": false
     }
   }
 }

@@ -1,0 +1,43 @@
+contract: aiverse-skill-v1
+
+skill:
+  name: video-editor
+  version: 1.0.0
+  category: film-media
+  risk: medium
+
+runtime:
+  posture: scoped-mutation
+  headless_safe: false
+  idempotency: task-dependent
+  supports_dry_run: true
+  supports_resume: true
+  supports_rollback: true
+  safe_for_scheduled_execution: false
+  platforms:
+    - linux
+    - macos
+    - windows
+
+requires:
+  toolpacks: []
+  effects:
+    - workspace.read
+  optional_effects:
+    - workspace.write
+    - process.exec
+    - network.read
+    - browser.read
+    - browser.write
+  network: conditional
+  allowed_domains: []
+  secrets: []
+
+verification:
+  required: true
+  mode: explicit-postconditions
+  eval_suite: evals/
+
+ownership:
+  class: human
+  autonomous_mutation: false

@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "upstream": {
+    "repo": "nateherkai/hyperframes-student-kit",
+    "commit": "b1afdb1dcbcad39dd27638ea699f132fe44ce6df",
+    "license": "MIT",
+    "copyright": "Copyright (c) 2026 Nate Herk"
+  },
+  "brand_asset_boundary": "AIS brand materials and example-project brand assets are not reusable AI-Verse assets and are intentionally not imported.",
+  "adaptation_policy": [
+    "Preserve editorial algorithms and stage ordering.",
+    "Patch only repo-layout, unavailable-tooling, and obsolete HyperFrames-provider assumptions.",
+    "Record every bounded adaptation in the adapted specialist Skill.",
+    "Do not import Nate's bundled HyperFrames/CLI/registry Skills as canonical providers."
+  ],
+  "imported_specialists": [
+    "edit-video",
+    "cut-silences",
+    "cut-mistakes",
+    "short-form-edit",
+    "video-storytelling",
+    "hyperframes-video-beats",
+    "style-library",
+    "website-to-hyperframes"
+  ],
+  "excluded_assets": [
+    "AIS logo and brand materials",
+    "Nate example-project brand assets",
+    "Nate root style-library asset catalog",
+    "Nate style-templates demonstration media"
+  ],
+  "website_to_video_adaptations": [
+    "Preserve seven-step capture -> DESIGN.md -> script -> storyboard -> VO/timing -> build -> verify workflow.",
+    "Replace deprecated hyperframes validate with current hyperframes check.",
+    "Use project-root asset paths such as assets/... instead of ../assets/ assumptions.",
+    "Resolve transition/runtime guidance through the canonical HyperFrames 0.8.40 provider.",
+    "Use provider-aware TTS/auth instead of hard-coded Nate-environment MCP names."
+  ]
+}

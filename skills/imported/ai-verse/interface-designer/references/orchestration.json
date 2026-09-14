@@ -430,15 +430,33 @@
     "Do not treat a desktop layout that merely shrinks as sufficient mobile art direction for a substantial interface.",
     "A target that requires an unregistered future dependency must block/report unavailable rather than pretending the dependency executed."
   ],
-  "future_dependencies": {
+  "registered_integrations": {
     "video-editor": {
-      "status": "planned_not_registered",
-      "required_for_targets": [
+      "status": "registered",
+      "targets": [
         "CODE_DRIVEN_VIDEO_MOTION_HANDOFF"
       ],
-      "behavior_when_unavailable": "BLOCK_AND_REPORT_UNAVAILABLE",
-      "owner_project": "AI-Verse Video Editor",
-      "note": "Do not silently substitute another video-editing runtime. Design-only handoff may still be produced when that satisfies the user request."
+      "direction": "interface-designer -> video-editor",
+      "boundary": "presentation-handoff-only",
+      "owns": [
+        "visual direction",
+        "typography",
+        "composition",
+        "palette hierarchy",
+        "reference reconstruction",
+        "prototype visual directions",
+        "general motion taste"
+      ],
+      "does_not_own": [
+        "transcript truth",
+        "EDLs",
+        "editorial cuts",
+        "source-time mapping",
+        "hook/payoff editorial logic",
+        "audio/video sync",
+        "HyperFrames runtime correctness",
+        "final media acceptance"
+      ]
     }
   }
 }

@@ -1,0 +1,135 @@
+{
+  "schema_version": 1,
+  "cases": [
+    {
+      "id": "full-talking-head",
+      "prompt": "Edit this raw talking-head video for me from source footage through final verified delivery.",
+      "scope": "FULL_EDIT",
+      "required_stages": [
+        "source_intake",
+        "edl_truth",
+        "shortform_editorial",
+        "longform_storytelling",
+        "hyperframes_compose",
+        "structural_qa",
+        "audio_sync_qa",
+        "final_render"
+      ],
+      "forbidden_stages": []
+    },
+    {
+      "id": "silence-only",
+      "prompt": "Remove the silences only. Do not redesign the video.",
+      "scope": "SILENCE_ONLY",
+      "required_stages": [
+        "source_intake",
+        "silence_pass"
+      ],
+      "forbidden_stages": [
+        "interface_design_handoff",
+        "hyperframes_compose",
+        "final_render"
+      ]
+    },
+    {
+      "id": "retakes-only",
+      "prompt": "Clean the false starts, mistakes and retakes only.",
+      "scope": "MISTAKE_RETAKE_ONLY",
+      "required_stages": [
+        "source_intake",
+        "mistake_review",
+        "edl_truth"
+      ],
+      "forbidden_stages": [
+        "interface_design_handoff",
+        "style_direction"
+      ]
+    },
+    {
+      "id": "make-reel",
+      "prompt": "Turn this footage into a Reel with a strong hook and payoff.",
+      "scope": "SHORT_FORM_EDIT",
+      "required_stages": [
+        "source_intake",
+        "shortform_editorial",
+        "visual_plan",
+        "hyperframes_compose",
+        "final_render"
+      ],
+      "forbidden_stages": []
+    },
+    {
+      "id": "long-form-explainer",
+      "prompt": "Make this long-form talking-head into a visual explainer without changing the spoken meaning.",
+      "scope": "LONG_FORM_TALKING_HEAD",
+      "required_stages": [
+        "source_intake",
+        "longform_storytelling",
+        "visual_plan",
+        "hyperframes_compose",
+        "final_render"
+      ],
+      "forbidden_stages": []
+    },
+    {
+      "id": "website-promo",
+      "prompt": "Turn this website into a promo video.",
+      "scope": "WEBSITE_PROMO",
+      "required_stages": [
+        "source_intake",
+        "website_to_video",
+        "interface_design_handoff",
+        "hyperframes_compose",
+        "final_render"
+      ],
+      "forbidden_stages": [],
+      "handoff_mode": "VISUAL_DIRECTION"
+    },
+    {
+      "id": "motion-only",
+      "prompt": "Add motion graphics to this locked edit without changing the editorial timing.",
+      "scope": "MOTION_GRAPHICS_ONLY",
+      "required_stages": [
+        "source_intake",
+        "visual_plan",
+        "interface_design_handoff",
+        "hyperframes_compose",
+        "final_render"
+      ],
+      "forbidden_stages": [
+        "silence_pass",
+        "mistake_review"
+      ],
+      "handoff_mode": "MOTION_TASTE"
+    },
+    {
+      "id": "reference-led",
+      "prompt": "Make this edit feel like the supplied reference reel while preserving my source and edit truth.",
+      "scope": "REFERENCE_LED_EDIT",
+      "required_stages": [
+        "source_intake",
+        "reference_analysis",
+        "interface_design_handoff",
+        "hyperframes_compose",
+        "final_render"
+      ],
+      "forbidden_stages": [],
+      "handoff_mode": "REFERENCE_RECREATION"
+    },
+    {
+      "id": "three-directions",
+      "prompt": "For this existing edit, make three genuinely different visual directions before finalizing the motion graphics.",
+      "scope": "MOTION_GRAPHICS_ONLY",
+      "required_stages": [
+        "source_intake",
+        "interface_design_handoff",
+        "hyperframes_compose"
+      ],
+      "forbidden_stages": [
+        "silence_pass",
+        "mistake_review"
+      ],
+      "handoff_mode": "PROTOTYPE_VISUAL_DIRECTIONS"
+    }
+  ]
+}
