@@ -731,7 +731,7 @@
     },
     "ai-verse": {
       "repo": "aiverse-filmmakers/AI-Verse-Skills",
-      "commit": "fb048e2c125b6f09f6ba4fd566a574f34c4a765a",
+      "commit": "910cf45fae6c18b3823c163471cfe43efc8cd47b",
       "namespace": "ai-verse",
       "license": "MIT",
       "packages": [
