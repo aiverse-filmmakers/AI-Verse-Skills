@@ -283,6 +283,38 @@ class InterfaceDesignerContractTests(unittest.TestCase):
         self.assertTrue(stage["evidence_required"])
         self.assertIn("Do not install or force Scroll Craft infrastructure merely to test an ordinary site.", guide)
 
+    def test_mobile_art_direction_requires_intentional_mobile_not_shrunk_desktop(self):
+        refs = ROOT / "skills/imported/ai-verse/interface-designer/references"
+        policy = json.loads((refs / "mobile-art-direction-policy.json").read_text(encoding="utf-8"))
+        guide = (refs / "mobile-art-direction.md").read_text(encoding="utf-8")
+        graph = json.loads((refs / "orchestration.json").read_text(encoding="utf-8"))
+
+        self.assertEqual(
+            policy["result_if_desktop_only"],
+            "NOT_APPLICABLE_with_product_constraint",
+        )
+        self.assertEqual(policy["result_if_cannot_render"], "UNVERIFIED_BLOCKED")
+        for check in (
+            "information_hierarchy",
+            "navigation",
+            "touch_and_direct_manipulation",
+            "media_crop_layering",
+            "safe_areas_and_device_chrome",
+            "reduced_motion",
+        ):
+            self.assertIn(check, policy["checks"])
+        self.assertIn("target_platform_or_accessibility_minimums", policy["touch_rule"])
+        self.assertIn("hover_only_actions_require_touch_path", policy["hover_rule"])
+        self.assertEqual(policy["design_md_section"], "Responsive & Mobile Direction")
+        self.assertTrue(policy["evidence_required"])
+
+        self.assertNotIn("mobile_art_direction_qa", graph["scope_pipelines"]["MICRO_CHANGE"])
+        self.assertIn("mobile_art_direction_qa", graph["scope_pipelines"]["FULL_PRODUCT"])
+        self.assertIn("mobile_art_direction_qa", graph["scope_pipelines"]["MOBILE_EXPO"])
+        stage = next(s for s in graph["stages"] if s["id"] == "mobile_art_direction_qa")
+        self.assertTrue(stage["evidence_required"])
+        self.assertIn("not complete merely because desktop CSS fits inside a smaller viewport", guide)
+
     def test_vercel_review_rules_are_generation_pinned(self):
         package = ROOT / "skills/imported/vercel/web-design-guidelines"
         skill = (package / "SKILL.md").read_text(encoding="utf-8")
