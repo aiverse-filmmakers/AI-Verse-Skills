@@ -64,18 +64,25 @@ Foreground correction, successful-procedure review and curator work may create p
 
 Auto does not mean unrestricted self-modification.
 
-Public-beta auto promotion is restricted to eligible low-risk maintenance where all of these remain true:
+Public-beta auto promotion is restricted to eligible low-risk learned/local changes where all mandatory gates remain true.
 
-- target ownership is `agent_learned` or `workspace_local`;
-- target is not protected;
-- candidate is a repair/update or reversible archive review;
+For a new `create` candidate:
+
+- source ownership is `agent_learned`, or `workspace_local` with explicit owner configuration;
+- risk is low and confidence is at least 0.90;
+- evidence/provenance is present;
+- candidate scope is valid; `workspace_local` requires a concrete workspace id;
 - no requested capability/dependency expansion exists;
-- deterministic security admission passes;
+- no new Connection or credential is required;
+- deterministic security admission passes with no review/deny finding;
 - no duplicate gate blocks it;
-- target generation and package digest still match the evaluated target;
-- current mode and policy still allow auto.
+- the exact immutable base generation has not changed since proposal/evaluation;
+- current mode and policy still allow auto;
+- the previous immutable generation remains a rollback target.
 
-A newly created active Skill still requires approval.
+Repair/update/archive auto rules keep their existing learned-owner, target-integrity, security and permission gates.
+
+If any gate fails, the proposal remains pending approval or is quarantined. Auto mode never grants execution authorization.
 
 ## Protected Skills
 
@@ -244,6 +251,9 @@ The public-beta test suite exercises:
 - off/propose/auto behavior;
 - explicit learn while automatic learning is off;
 - immutable create/promotion;
+- bounded safe auto-create of a new agent-learned Skill;
+- explicit opt-in boundary for workspace-local auto-create;
+- negative gates for risk, confidence, permissions, dependencies, Connections/credentials, duplicates, secrets and generation drift;
 - bounded auto repair of an agent-learned Skill;
 - protected first-party mutation refusal;
 - secret candidate quarantine;
