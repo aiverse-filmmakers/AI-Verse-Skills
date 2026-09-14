@@ -430,6 +430,56 @@ class InterfaceDesignerContractTests(unittest.TestCase):
         nested_dirs = {p.name for p in orchestrator_root.iterdir() if p.is_dir()}
         self.assertEqual(nested_dirs, {"references"})
 
+    def test_expert_preservation_manifest_matches_pins_trust_and_local_adaptations(self):
+        refs = ROOT / "skills/imported/ai-verse/interface-designer/references"
+        manifest = json.loads((refs / "expert-preservation.json").read_text(encoding="utf-8"))
+        packages = json.loads((ROOT / "registry/packages.json").read_text(encoding="utf-8"))
+        trust = json.loads((ROOT / "registry/trust-policy.json").read_text(encoding="utf-8"))
+        skills = json.loads((ROOT / "registry/skills.json").read_text(encoding="utf-8"))
+        notices = (ROOT / "THIRD_PARTY_NOTICES.md").read_text(encoding="utf-8")
+        registered = {item["id"] for item in skills["employee"]}
+
+        self.assertEqual(len(manifest["sources"]), 7)
+        for source in manifest["sources"]:
+            registry_source = packages["sources"][source["source_id"]]
+            self.assertEqual(registry_source["repo"], source["repo"])
+            self.assertEqual(registry_source["commit"], source["commit"])
+            self.assertRegex(source["commit"], r"^[0-9a-f]{40}$")
+            self.assertEqual(registry_source["license"], source["license"])
+            self.assertEqual(registry_source["redistribution"], source["redistribution"])
+
+            trust_entry = trust["sources"][source["repo"]]
+            self.assertEqual(trust_entry["redistribution"], source["redistribution"])
+            self.assertFalse(trust_entry["auto_mutation"])
+            self.assertIn(source["repo"], notices)
+
+            registry_packages = {pkg["id"]: pkg for pkg in registry_source["packages"]}
+            for package in source["packages"]:
+                self.assertIn(package["id"], registered)
+                self.assertIn(package["id"], registry_packages)
+                self.assertEqual(registry_packages[package["id"]]["path"], package["path"])
+                self.assertTrue(package["expected_files"])
+                self.assertTrue(package["core_markers"])
+
+                if "local_path" in package:
+                    local_root = ROOT / package["local_path"]
+                    for relative in package["expected_files"]:
+                        self.assertTrue((local_root / relative).exists(), relative)
+                    local_skill = (local_root / "SKILL.md").read_text(encoding="utf-8")
+                    for marker in package["core_markers"]:
+                        self.assertIn(marker, local_skill)
+                    source_meta = json.loads((local_root / "SOURCE.json").read_text(encoding="utf-8"))
+                    self.assertEqual(source_meta["upstream_repo"], source["repo"])
+                    self.assertEqual(source_meta["upstream_commit"], source["commit"])
+                    self.assertEqual(
+                        source_meta["adaptation"]["guideline_commit"],
+                        package["adaptation_commit"],
+                    )
+
+        anthropic = next(s for s in manifest["sources"] if s["source_id"] == "anthropic-frontend")
+        self.assertEqual(anthropic["redistribution"], "fetch-only")
+        self.assertFalse(trust["sources"][anthropic["repo"]]["vendoring_allowed"])
+
     def test_vercel_review_rules_are_generation_pinned(self):
         package = ROOT / "skills/imported/vercel/web-design-guidelines"
         skill = (package / "SKILL.md").read_text(encoding="utf-8")
