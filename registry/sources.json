@@ -139,6 +139,14 @@
       "folder": "skills/imported/nateherk",
       "distribution": "original-upstream",
       "license_status": "MIT"
+    },
+    "hyperframes": {
+      "namespace": "hyperframes",
+      "repo": "heygen-com/hyperframes",
+      "folder": "dependencies/hyperframes",
+      "distribution": "pinned-upstream-support",
+      "license_status": "Apache-2.0",
+      "notes": "Internal Video Editor provider family; exact source/version is pinned in registry/packages.json and excluded from member capability indexing."
     }
   }
 }
