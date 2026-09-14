@@ -85,10 +85,11 @@ class InterfaceDesignerContractTests(unittest.TestCase):
             "scroll-craft",
         }
         self.assertTrue(experts.issubset(ids))
-        self.assertEqual(skills["counts"]["employee"], 99)
-        self.assertEqual(skills["counts"]["total"], 119)
-        self.assertEqual(packages["counts"]["employee"], 99)
-        self.assertEqual(packages["counts"]["canonical_total"], 119)
+        self.assertEqual(skills["counts"]["employee"], 100)
+        self.assertEqual(skills["counts"]["total"], 120)
+        self.assertEqual(packages["counts"]["employee"], 100)
+        self.assertEqual(packages["counts"]["canonical_total"], 120)
+        self.assertEqual(packages["counts"]["support"], 16)
 
         expected_pins = {
             "anthropic-frontend": "34040c9c568585f6929bedeaad110ad08f079624",
@@ -638,15 +639,18 @@ class InterfaceDesignerContractTests(unittest.TestCase):
                 self.assertEqual(spec["behavior_when_unavailable"], "BLOCK_AND_REPORT_UNAVAILABLE")
                 self.assertIn(target, spec["required_for_targets"])
 
-        self.assertNotIn("video-editor", registered)
+        self.assertIn("video-editor", registered)
         self.assertEqual(
             graph["target_experts"]["CODE_DRIVEN_VIDEO_MOTION_HANDOFF"],
             ["video-editor"],
         )
-        self.assertEqual(
-            future["video-editor"]["behavior_when_unavailable"],
-            "BLOCK_AND_REPORT_UNAVAILABLE",
-        )
+        self.assertNotIn("video-editor", future)
+        integration = graph["registered_integrations"]["video-editor"]
+        self.assertEqual(integration["status"], "registered_release_candidate")
+        self.assertEqual(integration["direction"], "interface-designer -> video-editor")
+        self.assertEqual(integration["boundary"], "presentation-handoff-only")
+        self.assertIn("transcript truth", integration["does_not_own"])
+        self.assertIn("HyperFrames runtime correctness", integration["does_not_own"])
 
     def test_vercel_review_rules_are_generation_pinned(self):
         package = ROOT / "skills/imported/vercel/web-design-guidelines"
