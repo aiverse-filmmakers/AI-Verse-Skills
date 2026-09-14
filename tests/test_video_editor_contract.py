@@ -36,7 +36,8 @@ class VideoEditorContractTests(unittest.TestCase):
         employee = {x["id"]: x for x in registry["employee"]}
 
         self.assertIn("name: video-editor", skill)
-        self.assertIn("version: 1.0.0", skill)\n        self.assertNotIn("registered-release-candidate", skill)
+        self.assertIn("version: 1.0.0", skill)
+        self.assertNotIn("registered-release-candidate", skill)
         self.assertIn("name: video-editor", manifest)
         self.assertIn("video-editor", employee)
         self.assertEqual(100, employee["video-editor"]["rank"])
