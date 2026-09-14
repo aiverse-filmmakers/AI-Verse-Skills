@@ -392,6 +392,33 @@ class PublicBetaLearningTests(unittest.TestCase):
                 skills, self.root, protected["proposal_id"], approved_by="test-user"
             )
 
+    def test_learning_candidate_ids_cannot_escape_owner_paths(self):
+        for field, value in (
+            ("skill_id", "../escape"),
+            ("skill_id", "nested/path"),
+            ("target_skill_id", "..\\escape"),
+        ):
+            envelope = {
+                "kind": "create" if field == "skill_id" else "repair",
+                "skill_id": "safe-new" if field != "skill_id" else value,
+                "target_skill_id": "verification-harness" if field != "target_skill_id" else value,
+                "evidence_refs": ["gateway:route"],
+                "risk": "low",
+                "confidence": 0.95,
+            }
+            if envelope["kind"] == "create":
+                envelope.pop("target_skill_id", None)
+            with self.subTest(field=field, value=value):
+                with self.assertRaisesRegex(RuntimeError, "safe bounded Skill id"):
+                    learning.submit_candidate(
+                        skills,
+                        self.root,
+                        envelope,
+                        self._candidate("safe-fixture"),
+                        trigger="post-run",
+                        explicit=False,
+                    )
+
     def test_off_blocks_background_but_explicit_learn_remains(self):
         learning.set_learning_mode(skills, self.root, "off")
         with self.assertRaisesRegex(RuntimeError, "learning is off"):
