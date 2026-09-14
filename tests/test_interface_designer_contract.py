@@ -126,6 +126,48 @@ class InterfaceDesignerContractTests(unittest.TestCase):
             graph["invariants"],
         )
 
+    def test_design_md_persistence_contract_is_scoped_and_non_destructive(self):
+        package = ROOT / "skills/imported/ai-verse/interface-designer/references"
+        contract = (package / "design-md-contract.md").read_text(encoding="utf-8")
+        template = (package / "DESIGN.template.md").read_text(encoding="utf-8")
+        skill = (ROOT / "skills/imported/ai-verse/interface-designer/SKILL.md").read_text(encoding="utf-8")
+
+        for marker in (
+            "## Read Rule",
+            "## Create Rule",
+            "## Update Rule",
+            "Existing `DESIGN.md`",
+            "Do not create it for:",
+            "preserve unrelated existing decisions",
+            "Do not define mobile as",
+            "## Accessibility Requirements",
+            "## Forbidden Patterns",
+        ):
+            self.assertIn(marker, contract)
+
+        self.assertIn("DESIGN.md persistence contract", skill)
+        self.assertIn("accepted reusable product grammar actually changed", skill)
+        self.assertIn("# Responsive & Mobile Direction", template)
+        self.assertIn("# Accessibility Requirements", template)
+        self.assertIn("# Forbidden Patterns / Product-Specific Anti-Patterns", template)
+
+        graph = json.loads(
+            (ROOT / "skills/imported/ai-verse/interface-designer/references/orchestration.json")
+            .read_text(encoding="utf-8")
+        )
+        self.assertNotIn(
+            "design_system_persistence",
+            graph["scope_pipelines"]["MICRO_CHANGE"],
+        )
+        self.assertIn(
+            "design_system_persistence",
+            graph["scope_pipelines"]["FULL_PRODUCT"],
+        )
+        self.assertIn(
+            "design_system_persistence",
+            graph["scope_pipelines"]["DESIGN_SYSTEM_CHANGE"],
+        )
+
     def test_vercel_review_rules_are_generation_pinned(self):
         package = ROOT / "skills/imported/vercel/web-design-guidelines"
         skill = (package / "SKILL.md").read_text(encoding="utf-8")
