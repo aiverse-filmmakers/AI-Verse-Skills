@@ -106,6 +106,14 @@ Members can use **AI-Verse Interface Designer** as one stack-neutral capability 
 
 See [docs/INTERFACE_DESIGNER.md](docs/INTERFACE_DESIGNER.md).
 
+## Video Editor
+
+Members can use **AI-Verse Video Editor** as one filmmaking capability for silence and mistake cleanup, Reels/Shorts, long-form talking-head edits, reference-led edits, motion graphics, website promos, captions/B-roll planning, HyperFrames assembly and final media QA.
+
+Members do not need to choose HyperFrames, GSAP, FFmpeg, EDL tooling or the internal editorial specialists themselves.
+
+See [docs/VIDEO_EDITOR.md](docs/VIDEO_EDITOR.md).
+
 ## 4. Use
 
 Pin one immutable generation before loading a Skill:
