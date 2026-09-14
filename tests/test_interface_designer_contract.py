@@ -220,6 +220,26 @@ class InterfaceDesignerContractTests(unittest.TestCase):
         self.assertIn("signature_interaction", graph["scope_pipelines"]["SCROLL_IMMERSIVE"])
         self.assertIn("A missing signature interaction must not fail a dashboard", guide)
 
+    def test_experience_curve_only_applies_to_meaningful_multi_stage_flows(self):
+        refs = ROOT / "skills/imported/ai-verse/interface-designer/references"
+        policy = json.loads((refs / "experience-curve-policy.json").read_text(encoding="utf-8"))
+        guide = (refs / "experience-curve.md").read_text(encoding="utf-8")
+        graph = json.loads((refs / "orchestration.json").read_text(encoding="utf-8"))
+
+        for use_case in ("onboarding", "major_agent_workflow", "launch_experience", "complex_wizard"):
+            self.assertIn(use_case, policy["use_when"])
+        for skipped in ("settings_page", "crud_form", "ordinary_table", "routine_dashboard_inspection", "micro_change"):
+            self.assertIn(skipped, policy["skip_when"])
+        for state in ("clarity", "confidence", "control", "readiness", "completion"):
+            self.assertIn(state, policy["preferred_operational_states"])
+        self.assertIn("compare_intended_vs_rendered", policy["review_rules"]["after_implementation"])
+
+        self.assertNotIn("experience_curve", graph["scope_pipelines"]["MICRO_CHANGE"])
+        self.assertNotIn("experience_curve", graph["scope_pipelines"]["SCREEN"])
+        self.assertIn("experience_curve", graph["scope_pipelines"]["MULTI_SCREEN_FLOW"])
+        self.assertIn("experience_curve", graph["scope_pipelines"]["SCROLL_IMMERSIVE"])
+        self.assertIn("Do not create an experience curve for:", guide)
+
     def test_vercel_review_rules_are_generation_pinned(self):
         package = ROOT / "skills/imported/vercel/web-design-guidelines"
         skill = (package / "SKILL.md").read_text(encoding="utf-8")
