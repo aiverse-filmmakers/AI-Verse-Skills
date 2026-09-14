@@ -1,0 +1,147 @@
+{
+  "schema_version": 1,
+  "integration": "interface-designer",
+  "direction": "video-editor -> interface-designer -> video-editor",
+  "boundary": "presentation-only",
+  "principle": "Ask Interface Designer for visual expertise only when it materially improves the video. Return a presentation decision package to Video Editor; never transfer editorial or renderer authority.",
+  "modes": {
+    "VISUAL_DIRECTION": {
+      "when": "A substantial graphic language, typography, palette, composition system, or project visual identity must be created or changed.",
+      "request": {
+        "include": [
+          "locked editorial brief and scope",
+          "project DESIGN.md/frame.md when present",
+          "brand assets and visual constraints",
+          "target aspect ratio(s)",
+          "speaker/subject safe areas",
+          "representative frames or stills when useful"
+        ],
+        "exclude": [
+          "permission to alter transcript text",
+          "permission to alter EDL/cut order",
+          "permission to shift source-time anchors"
+        ]
+      },
+      "output": [
+        "visual direction",
+        "typography roles",
+        "palette hierarchy",
+        "surface/depth/composition rules",
+        "reusable video-graphic design guidance",
+        "optional DESIGN.md-compatible presentation updates"
+      ],
+      "forbidden": [
+        "change transcript truth",
+        "change EDL or editorial cut decisions",
+        "change source-time mapping",
+        "declare render correctness",
+        "declare final media acceptance"
+      ]
+    },
+    "REFERENCE_RECREATION": {
+      "when": "A supplied screenshot, website, reel, frame sequence, design reference, or named visual target should influence the look.",
+      "request": {
+        "include": [
+          "visual reference material actually available",
+          "Video Editor's timestamped editorial/reference observations when they exist",
+          "explicit exact-match versus inspiration boundary",
+          "locked brand/legal constraints"
+        ],
+        "exclude": [
+          "claims that uninspected audio was heard",
+          "permission to copy branded assets without rights",
+          "permission to replace editorial pacing analysis"
+        ]
+      },
+      "output": [
+        "visual reconstruction analysis",
+        "typography/layout/material observations",
+        "asset and composition mapping",
+        "visual fidelity risks and unknowns"
+      ],
+      "forbidden": [
+        "infer or claim audio-reference facts from silent frames",
+        "replace Video Editor pacing/timing analysis",
+        "change transcript/EDL/source-time truth",
+        "fabricate unavailable brand assets",
+        "declare final reference match without rendered evidence"
+      ]
+    },
+    "PROTOTYPE_VISUAL_DIRECTIONS": {
+      "when": "A meaningful motion-graphic identity decision is ambiguous, the user asks for options, or choosing a direction before building the entire edit reduces rework.",
+      "request": {
+        "include": [
+          "one bounded beat or representative frame/section",
+          "locked editorial meaning",
+          "brand constraints",
+          "target format and safe areas"
+        ],
+        "exclude": [
+          "whole-edit rebuild before direction selection",
+          "authority to rewrite the editorial message"
+        ]
+      },
+      "output": [
+        "multiple genuinely divergent presentation directions",
+        "tradeoffs for each direction",
+        "recommended default when appropriate",
+        "selection-ready visual prototypes or specifications"
+      ],
+      "forbidden": [
+        "prototype every ordinary lower third",
+        "change spoken meaning or edit order",
+        "treat a prototype as final rendered acceptance",
+        "force a framework migration"
+      ]
+    },
+    "MOTION_TASTE": {
+      "when": "Rendered graphic motion needs specialist taste on pacing, easing, continuity, emphasis, gesture, or interaction-derived motion principles.",
+      "request": {
+        "include": [
+          "locked beat duration",
+          "spoken/transcript anchors",
+          "current composition intent",
+          "known HyperFrames/runtime constraints",
+          "reduced-motion or accessibility constraints when relevant"
+        ],
+        "exclude": [
+          "renderer ownership",
+          "permission to stretch beat timing beyond editorial anchors without Video Editor approval"
+        ]
+      },
+      "output": [
+        "motion-language recommendation",
+        "easing/spring/continuity guidance where applicable",
+        "emphasis hierarchy",
+        "entrance/exit/gesture critique",
+        "motion-review findings"
+      ],
+      "forbidden": [
+        "override HyperFrames timing or adapter rules",
+        "change EDL/source-time mapping",
+        "change caption or transcript timing truth",
+        "claim encoded A/V verification"
+      ]
+    }
+  },
+  "always_forbidden": [
+    "transcript truth ownership",
+    "EDL ownership",
+    "silence or mistake-cut authority",
+    "hook/open-loop/payoff editorial authority",
+    "source-time mapping ownership",
+    "audio/video synchronization authority",
+    "HyperFrames runtime correctness ownership",
+    "final media acceptance"
+  ],
+  "conflict_order": [
+    "explicit current user instruction",
+    "source/provenance truth",
+    "locked editorial decisions",
+    "Video Editor editorial specialist authority",
+    "canonical HyperFrames/runtime correctness",
+    "encoded media QA evidence",
+    "Interface Designer visual recommendation",
+    "optional polish"
+  ]
+}
