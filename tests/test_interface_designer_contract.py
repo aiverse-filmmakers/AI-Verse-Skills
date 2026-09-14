@@ -60,5 +60,63 @@ class InterfaceDesignerContractTests(unittest.TestCase):
         self.assertIn("Do not merge all expert bodies into this context.", text)
 
 
+    def test_expert_catalog_is_exactly_pinned_and_preserves_vendor_identity(self):
+        skills = json.loads((ROOT / "registry/skills.json").read_text(encoding="utf-8"))
+        packages = json.loads((ROOT / "registry/packages.json").read_text(encoding="utf-8"))
+        ids = {item["id"] for item in skills["employee"]}
+        experts = {
+            "frontend-design",
+            "ui-ux-pro-max",
+            "react-best-practices",
+            "composition-patterns",
+            "web-design-guidelines",
+            "shadcn",
+            "design-first-ui-prompting",
+            "video-to-superprompt",
+            "stitched-full-page-capture",
+            "apple-design",
+            "animate",
+            "prototype",
+            "review-animations",
+            "pick-ui-library",
+            "improve-animations",
+            "find-animation-opportunities",
+            "animate-expo",
+            "scroll-craft",
+        }
+        self.assertTrue(experts.issubset(ids))
+        self.assertEqual(skills["counts"]["employee"], 99)
+        self.assertEqual(skills["counts"]["total"], 119)
+        self.assertEqual(packages["counts"]["employee"], 99)
+        self.assertEqual(packages["counts"]["canonical_total"], 119)
+
+        expected_pins = {
+            "anthropic-frontend": "34040c9c568585f6929bedeaad110ad08f079624",
+            "nextlevelbuilder-ui": "7f69fed6a2717900085f1bc3b263721f8ba025e2",
+            "vercel-design": "063bee94c3f4df8453406c830b0a7df0f2860278",
+            "shadcn-ui": "2b3e6d4f8d9161fe5c19340dc383aade392012dd",
+            "mengto-ui": "321c769739b823de5eb94eb3a52aa1974fe783a2",
+            "emil-design": "d23d7f88a2e21c9e4b1418c7abe420f5c1052ba7",
+            "scroll-craft": "0b816225945e45380397d6a0487efa3c98916858",
+        }
+        for source_id, commit in expected_pins.items():
+            self.assertEqual(packages["sources"][source_id]["commit"], commit)
+
+    def test_vercel_review_rules_are_generation_pinned(self):
+        package = ROOT / "skills/imported/vercel/web-design-guidelines"
+        skill = (package / "SKILL.md").read_text(encoding="utf-8")
+        rules = (package / "references/command.md").read_text(encoding="utf-8")
+        source = json.loads((package / "SOURCE.json").read_text(encoding="utf-8"))
+
+        self.assertIn("references/command.md", skill)
+        self.assertNotIn("raw.githubusercontent.com/vercel-labs/web-interface-guidelines/main", skill)
+        self.assertIn("## Rules", rules)
+        self.assertTrue(source["modified"])
+        self.assertEqual(
+            source["adaptation"]["guideline_commit"],
+            "e3d624baaf29dc1fc645aff3e38f03e564d2d6b1",
+        )
+
+
 if __name__ == "__main__":
     unittest.main()
