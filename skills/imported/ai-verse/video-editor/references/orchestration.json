@@ -329,5 +329,5 @@
     "Do not use Interface Designer as an editorial fallback.",
     "Do not claim final media verification from composition source alone."
   ],
-  "release_gate_state": "registered-release-candidate"
+  "release_gate_state": "accepted"
 }
