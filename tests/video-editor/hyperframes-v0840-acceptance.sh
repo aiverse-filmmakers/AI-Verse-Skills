@@ -121,7 +121,7 @@ HTML
 cat > "$PROJECT_DIR/compositions/nested.html" <<'HTML'
 <template id="nested-template">
   <div data-composition-id="nested" data-duration="2" data-width="1280" data-height="720">
-    <video id="nested-video" src="../assets/source.mp4" data-start="0.25" data-duration="1.5"
+    <video id="nested-video" src="assets/source.mp4" data-start="0.25" data-duration="1.5"
            data-media-start="2.5" data-track-index="0" muted playsinline
            style="position:absolute;right:70px;top:70px;width:360px;height:203px;object-fit:cover;border:10px solid white"></video>
   </div>
