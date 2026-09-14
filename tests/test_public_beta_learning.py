@@ -419,6 +419,63 @@ class PublicBetaLearningTests(unittest.TestCase):
                         explicit=False,
                     )
 
+    def test_routed_candidate_submission_is_idempotent_but_identity_bound(self):
+        candidate_dir = self._candidate("retry-safe", "A retry-safe reusable procedure.")
+        envelope = {
+            "candidate_id": "learn-retry-safe",
+            "kind": "create",
+            "skill_id": "retry-safe",
+            "scope": {"aiverse_scope": "workspace:alpha"},
+            "evidence_refs": ["run:retry-safe", "session:retry-safe"],
+            "risk": "low",
+            "confidence": 0.95,
+            "source_ownership": "agent_learned",
+        }
+        first = learning.submit_candidate(
+            skills,
+            self.root,
+            envelope,
+            candidate_dir,
+            trigger="post-run",
+            explicit=False,
+        )
+        replay = learning.submit_candidate(
+            skills,
+            self.root,
+            envelope,
+            candidate_dir,
+            trigger="post-run",
+            explicit=False,
+        )
+        self.assertEqual(replay["proposal_id"], first["proposal_id"])
+        self.assertEqual(replay["submission_fingerprint"], first["submission_fingerprint"])
+
+        changed = dict(envelope)
+        changed["summary"] = "Different input under the same candidate identity."
+        with self.assertRaisesRegex(RuntimeError, "different learning input"):
+            learning.submit_candidate(
+                skills,
+                self.root,
+                changed,
+                candidate_dir,
+                trigger="post-run",
+                explicit=False,
+            )
+
+        (candidate_dir / "SKILL.md").write_text(
+            "---\nname: retry-safe\ndescription: changed bytes\nversion: 1.0.0\n---\n\nDifferent procedure.\n",
+            encoding="utf-8",
+        )
+        with self.assertRaisesRegex(RuntimeError, "different learning input"):
+            learning.submit_candidate(
+                skills,
+                self.root,
+                envelope,
+                candidate_dir,
+                trigger="post-run",
+                explicit=False,
+            )
+
     def test_off_blocks_background_but_explicit_learn_remains(self):
         learning.set_learning_mode(skills, self.root, "off")
         with self.assertRaisesRegex(RuntimeError, "learning is off"):
