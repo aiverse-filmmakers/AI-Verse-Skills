@@ -78,6 +78,14 @@
       "required": false
     },
     {
+      "id": "website_to_video",
+      "capabilities": [
+        "video.website_to_video"
+      ],
+      "when": "scope_is_website_promo",
+      "required": false
+    },
+    {
       "id": "visual_plan",
       "capabilities": [
         "video.caption",
@@ -262,6 +270,7 @@
     "WEBSITE_PROMO": [
       "source_intake",
       "reference_analysis",
+      "website_to_video",
       "visual_plan",
       "style_direction",
       "interface_design_handoff",
