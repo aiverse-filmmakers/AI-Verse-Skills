@@ -152,7 +152,9 @@
       "id": "visual_state_qa",
       "capabilities": [],
       "when": "substantial_ui_or_changed_state_exists",
-      "required": false
+      "required": false,
+      "policy": "references/visual-qa-policy.json",
+      "evidence_required": true
     },
     {
       "id": "motion_review",
