@@ -856,8 +856,14 @@ def cmd_e2e(a):
     errors = verify_root(root)
     manifest = load_manifest(root)
     canonical = [p for p in manifest["packages"] if p["kind"] != "support"]
-    if manifest.get("profile") == "full" and len(canonical) != 100:
-        errors.append(f"full profile materialized {len(canonical)} canonical packages, expected 100")
+    if manifest.get("profile") == "full":
+        expected = load("registry/skills.json").get("counts", {}).get("total")
+        if not isinstance(expected, int) or expected < 1:
+            errors.append("registry canonical capability count is missing or invalid")
+        elif len(canonical) != expected:
+            errors.append(
+                f"full profile materialized {len(canonical)} canonical packages, expected {expected}"
+            )
     if errors:
         for e in errors:
             print("ERROR", e)
