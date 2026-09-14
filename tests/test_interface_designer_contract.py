@@ -145,7 +145,7 @@ class InterfaceDesignerContractTests(unittest.TestCase):
         ):
             self.assertIn(marker, contract)
 
-        self.assertIn("DESIGN.md persistence contract", skill)
+        self.assertIn("`DESIGN.md` contract", skill)
         self.assertIn("accepted reusable product grammar actually changed", skill)
         self.assertIn("# Responsive & Mobile Direction", template)
         self.assertIn("# Accessibility Requirements", template)
