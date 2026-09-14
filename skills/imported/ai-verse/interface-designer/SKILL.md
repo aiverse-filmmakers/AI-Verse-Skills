@@ -179,6 +179,7 @@ For substantial interfaces, apply the evidence contract in [references/visual-qa
 - disabled, hover, focus and active;
 - expanded/collapsed and overlays;
 - desktop, tablet and intentionally authored mobile;
+- for substantial mobile surfaces, the separate [mobile art-direction gate](references/mobile-art-direction.md);
 - light/dark when supported;
 - reduced motion.
 
