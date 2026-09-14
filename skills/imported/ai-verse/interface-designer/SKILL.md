@@ -165,6 +165,8 @@ Check whether the proposal merely repeats a familiar AI template across:
 
 Revise accidental template repetition.
 
+For experience-led marketing, launch, portfolio, or immersive work, apply [references/signature-interaction.md](references/signature-interaction.md). A signature interaction is optional and must be functional for dashboards, admin tools, CRUD, settings and other utility applications.
+
 Do not force novelty when reference fidelity, an established DESIGN.md, accessibility, platform convention, or explicit user intent requires consistency. Fingerprint comparison stays inside the current authorized workspace/product context and must not use another member's private design history.
 
 ## Step 8: Verify the Actual Experience
