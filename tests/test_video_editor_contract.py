@@ -5,20 +5,92 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 VIDEO_EDITOR = ROOT / "skills" / "imported" / "ai-verse" / "video-editor"
 
+HF_COMMIT = "cfe5dcfad310ced2a5844998628daa2b8a0f53d7"
+NATE_COMMIT = "b1afdb1dcbcad39dd27638ea699f132fe44ce6df"
+HF_SUPPORT = {
+    "hyperframes",
+    "hyperframes-core",
+    "hyperframes-cli",
+    "hyperframes-animation",
+    "hyperframes-keyframes",
+    "hyperframes-creative",
+    "hyperframes-audio",
+    "hyperframes-registry",
+    "media-use",
+    "general-video",
+    "embedded-captions",
+}
+
 
 class VideoEditorContractTests(unittest.TestCase):
     def load_json(self, name):
         return json.loads((VIDEO_EDITOR / "references" / name).read_text(encoding="utf-8"))
 
-    def test_package_is_present_but_fail_closed_before_registration(self):
+    def registry(self, name):
+        return json.loads((ROOT / "registry" / name).read_text(encoding="utf-8"))
+
+    def test_package_is_registered_as_release_candidate(self):
         skill = (VIDEO_EDITOR / "SKILL.md").read_text(encoding="utf-8")
         manifest = (VIDEO_EDITOR / "aiverse.skill.yaml").read_text(encoding="utf-8")
-        registry = json.loads((ROOT / "registry" / "skills.json").read_text(encoding="utf-8"))
+        registry = self.registry("skills.json")
+        employee = {x["id"]: x for x in registry["employee"]}
 
         self.assertIn("name: video-editor", skill)
-        self.assertIn("registration: fail-closed-until-provider-integration", skill)
+        self.assertIn("registration: registered-release-candidate", skill)
         self.assertIn("name: video-editor", manifest)
-        self.assertNotIn("video-editor", {x["id"] for x in registry["employee"]})
+        self.assertIn("video-editor", employee)
+        self.assertEqual(100, employee["video-editor"]["rank"])
+        self.assertEqual("ai-verse-native", employee["video-editor"]["implementation"])
+        self.assertEqual("vendored", employee["video-editor"]["state"])
+
+    def test_video_editor_package_resolves_exact_internal_hyperframes_dependencies(self):
+        packages = self.registry("packages.json")
+        source = packages["sources"]["hyperframes-v0840"]
+        self.assertEqual("heygen-com/hyperframes", source["repo"])
+        self.assertEqual(HF_COMMIT, source["commit"])
+        self.assertEqual("Apache-2.0", source["license"])
+        self.assertEqual("fetch-only", source["redistribution"])
+        self.assertEqual("hyperframes", source["namespace"])
+
+        ai_package = next(
+            p for p in packages["sources"]["ai-verse"]["packages"] if p["id"] == "video-editor"
+        )
+        self.assertEqual(HF_SUPPORT, set(ai_package["deps"]))
+
+        support = {p["id"]: p for p in packages["support"]}
+        self.assertTrue(HF_SUPPORT.issubset(support))
+        for sid in HF_SUPPORT:
+            with self.subTest(support=sid):
+                self.assertEqual("hyperframes-v0840", support[sid]["source"])
+                self.assertEqual(f"skills/{sid}", support[sid]["path"])
+
+    def test_hyperframes_support_packages_are_not_member_capabilities(self):
+        skills = self.registry("skills.json")
+        public_ids = {x["id"] for x in skills["foundation"] + skills["employee"]}
+        self.assertTrue(HF_SUPPORT.isdisjoint(public_ids))
+        self.assertIn("video-editor", public_ids)
+
+        provider = self.load_json("hyperframes-provider.json")
+        self.assertEqual([], provider["member_visible_provider_capabilities"])
+        self.assertEqual("video-editor", provider["member_visible_editor_capability"])
+        self.assertEqual(HF_SUPPORT, set(provider["support_packages"]))
+
+    def test_hyperframes_trust_is_pinned_fetch_only(self):
+        trust = self.registry("trust-policy.json")["sources"]["heygen-com/hyperframes"]
+        self.assertEqual("Apache-2.0", trust["license"])
+        self.assertEqual("fetch-only", trust["redistribution"])
+        self.assertEqual("reviewed-upstream", trust["trust"])
+        self.assertFalse(trust["vendoring_allowed"])
+        self.assertFalse(trust["auto_mutation"])
+
+    def test_video_editor_is_in_full_creator_and_filmmaker_profiles(self):
+        profiles = self.registry("profiles.json")["profiles"]
+        for name in ("full", "creator", "filmmaker"):
+            with self.subTest(profile=name):
+                self.assertIn("video-editor", profiles[name]["employee_skills"])
+        for name in ("universal", "business", "sales", "finance"):
+            with self.subTest(profile=name):
+                self.assertNotIn("video-editor", profiles[name]["employee_skills"])
 
     def test_semantic_capability_map_contains_required_editorial_runtime_and_qa_surfaces(self):
         data = self.load_json("capabilities.json")
@@ -51,14 +123,16 @@ class VideoEditorContractTests(unittest.TestCase):
     def test_exact_accepted_provider_pins_are_frozen(self):
         providers = self.load_json("capabilities.json")["provider_decisions"]
         self.assertEqual("0.8.40", providers["hyperframes"]["version"])
-        self.assertEqual(
-            "cfe5dcfad310ced2a5844998628daa2b8a0f53d7",
-            providers["hyperframes"]["commit"],
-        )
-        self.assertEqual(
-            "b1afdb1dcbcad39dd27638ea699f132fe44ce6df",
-            providers["nate_editorial"]["commit"],
-        )
+        self.assertEqual(HF_COMMIT, providers["hyperframes"]["commit"])
+        self.assertEqual("integrated-release-candidate", providers["hyperframes"]["state"])
+        self.assertEqual(NATE_COMMIT, providers["nate_editorial"]["commit"])
+        self.assertEqual("integrated-package-local", providers["nate_editorial"]["state"])
+
+        provider = self.load_json("hyperframes-provider.json")
+        self.assertEqual("0.8.40", provider["source"]["version"])
+        self.assertEqual(HF_COMMIT, provider["source"]["commit"])
+        self.assertEqual(34888930903, provider["acceptance"]["run_id"])
+        self.assertEqual("pass", provider["acceptance"]["result"])
 
     def test_every_scope_pipeline_starts_with_source_intake(self):
         data = self.load_json("orchestration.json")
@@ -103,11 +177,14 @@ class VideoEditorContractTests(unittest.TestCase):
         ):
             self.assertIn(forbidden_owner, ownership)
 
-    def test_fail_closed_rules_block_premature_selectability_and_fake_verification(self):
-        rules = self.load_json("orchestration.json")["fail_closed"]
-        joined = "\n".join(rules)
-        self.assertIn("Do not mark the Video Editor selectable", joined)
-        self.assertIn("HyperFrames 0.8.40 provider", joined)
+    def test_release_candidate_fail_closed_rules_protect_provider_and_verification(self):
+        data = self.load_json("orchestration.json")
+        self.assertEqual("registered-release-candidate", data["release_gate_state"])
+        joined = "\n".join(data["fail_closed"])
+        self.assertIn("Nate-derived editorial provenance", joined)
+        self.assertIn("HyperFrames 0.8.40", joined)
+        self.assertIn("support dependencies install", joined)
+        self.assertIn("Do not expose HyperFrames provider support packages", joined)
         self.assertIn("Do not use Interface Designer as an editorial fallback", joined)
         self.assertIn("Do not claim final media verification from composition source alone", joined)
 
