@@ -55,7 +55,7 @@ class VideoEditorInterfaceHandoffTests(unittest.TestCase):
         self.assertIn("interface-designer", registered)
 
         integration = self.interface_graph["registered_integrations"]["video-editor"]
-        self.assertEqual("registered_release_candidate", integration["status"])
+        self.assertEqual("registered", integration["status"])
         self.assertEqual("interface-designer -> video-editor", integration["direction"])
         self.assertEqual("presentation-handoff-only", integration["boundary"])
 
