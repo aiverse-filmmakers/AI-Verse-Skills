@@ -404,7 +404,7 @@ def submit_candidate(
             "target_ownership": target_ownership,
             "protected_target": bool(target_ownership in PROTECTED_OWNERS) if target_ownership else False,
             "base_generation_id": pin.generation_id,
-            "base_generation_digest": pin.generation_digest,
+            "base_generation_digest": pin.generation_digest_sha256,
             "target_generation_id": pin.generation_id if target_package else None,
             "target_package_digest": target_package.get("digest_sha256") if target_package else None,
             "source_skill_ids": list(env.get("source_skill_ids", [])),
@@ -535,7 +535,7 @@ def evaluate_proposal(impl: Any, root: Path, proposal_id: str, *, auto_apply: bo
             "provenance_complete": bool(proposal.get("evidence_refs") or proposal.get("explicit")),
             "scope_valid": isinstance(proposal.get("scope"), dict),
             "evaluated_generation_id": pin.generation_id,
-            "evaluated_generation_digest": pin.generation_digest,
+            "evaluated_generation_digest": pin.generation_digest_sha256,
             "evaluated_at": _utc_now(),
         }
         proposal["evaluation"] = evaluation
@@ -701,7 +701,7 @@ def apply_proposal(
         evaluation = proposal.get("evaluation") if isinstance(proposal.get("evaluation"), dict) else {}
         if state == "auto_eligible" and (
             pin.generation_id != evaluation.get("evaluated_generation_id")
-            or pin.generation_digest != evaluation.get("evaluated_generation_digest")
+            or pin.generation_digest_sha256 != evaluation.get("evaluated_generation_digest")
         ):
             raise RuntimeError("Active generation changed after evaluation; re-evaluate before auto promotion")
         if proposal.get("target_skill_id"):
