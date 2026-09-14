@@ -68,6 +68,13 @@
       "required": false
     },
     {
+      "id": "experience_curve",
+      "capabilities": [],
+      "when": "meaningful_multi_stage_experience",
+      "required": false,
+      "policy": "references/experience-curve-policy.json"
+    },
+    {
       "id": "visual_direction",
       "capabilities": [
         "frontend-design"
@@ -263,6 +270,7 @@
       "reference_analysis",
       "design_specification",
       "ui_ux_intelligence",
+      "experience_curve",
       "visual_direction",
       "prototype_divergence",
       "originality_gate",
@@ -284,6 +292,7 @@
       "reference_analysis",
       "design_specification",
       "ui_ux_intelligence",
+      "experience_curve",
       "visual_direction",
       "prototype_divergence",
       "originality_gate",
@@ -304,6 +313,7 @@
       "target_detection",
       "reference_analysis",
       "ui_ux_intelligence",
+      "experience_curve",
       "visual_direction",
       "originality_gate",
       "signature_interaction",
@@ -349,6 +359,7 @@
       "target_detection",
       "reference_analysis",
       "ui_ux_intelligence",
+      "experience_curve",
       "visual_direction",
       "prototype_divergence",
       "originality_gate",
@@ -387,6 +398,7 @@
     "Do not change the implementation stack merely because a specialist is installed.",
     "Do not load all experts into one context.",
     "Do not run the originality gate as a novelty requirement for exact-reference recreation or established-product maintenance.",
-    "Do not require a decorative signature interaction for dashboards, admin tools, settings, CRUD or other utility applications."
+    "Do not require a decorative signature interaction for dashboards, admin tools, settings, CRUD or other utility applications.",
+    "Do not add an experience curve to ordinary CRUD, routine dashboard inspection, settings, simple search/filtering or micro changes."
   ]
 }
