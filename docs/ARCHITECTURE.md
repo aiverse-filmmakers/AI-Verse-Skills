@@ -29,6 +29,8 @@ The boundary is intentional. A skill can consume core-granted context, but canno
 
 For the first-party composite interface-design capability, see [INTERFACE_DESIGNER_ARCHITECTURE.md](INTERFACE_DESIGNER_ARCHITECTURE.md).
 
+For the first-party composite filmmaking/editing capability, see [VIDEO_EDITOR_ARCHITECTURE.md](VIDEO_EDITOR_ARCHITECTURE.md).
+
 ## Architecture at a glance
 
 ```text
