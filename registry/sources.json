@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "snapshot": "2026-09-09",
+  "snapshot": "2026-09-14",
   "policy": "original-upstream-first",
   "sources": {
     "ai-verse": {
@@ -94,6 +94,51 @@
       "distribution": "original-upstream",
       "license_status": "per-package-verify",
       "notes": "Curated sources that do not yet warrant a dedicated namespace."
+    },
+    "nextlevelbuilder": {
+      "namespace": "nextlevelbuilder",
+      "repo": "nextlevelbuilder/ui-ux-pro-max-skill",
+      "folder": "skills/imported/nextlevelbuilder",
+      "distribution": "original-upstream",
+      "license_status": "MIT"
+    },
+    "vercel": {
+      "namespace": "vercel",
+      "repo": [
+        "vercel-labs/agent-skills",
+        "vercel-labs/web-interface-guidelines"
+      ],
+      "folder": "skills/imported/vercel",
+      "distribution": "original-upstream+bounded-adaptation",
+      "license_status": "MIT"
+    },
+    "shadcn": {
+      "namespace": "shadcn",
+      "repo": "shadcn-ui/ui",
+      "folder": "skills/imported/shadcn",
+      "distribution": "original-upstream",
+      "license_status": "MIT"
+    },
+    "mengto": {
+      "namespace": "mengto",
+      "repo": "MengTo/Skills",
+      "folder": "skills/imported/mengto",
+      "distribution": "original-upstream",
+      "license_status": "MIT"
+    },
+    "emil": {
+      "namespace": "emil",
+      "repo": "emilkowalski/skills",
+      "folder": "skills/imported/emil",
+      "distribution": "original-upstream",
+      "license_status": "MIT"
+    },
+    "nateherk": {
+      "namespace": "nateherk",
+      "repo": "nateherkai/scroll-craft",
+      "folder": "skills/imported/nateherk",
+      "distribution": "original-upstream",
+      "license_status": "MIT"
     }
   }
 }
