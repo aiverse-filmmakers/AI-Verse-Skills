@@ -33,6 +33,8 @@ The authoritative package pins are in `registry/packages.json`. The public-beta 
 | Meng To Skills | `MengTo/Skills` | MIT | Exact pinned upstream fetch |
 | Emil Kowalski Skills | `emilkowalski/skills` | MIT | Exact pinned upstream fetch |
 | Scroll Craft | `nateherkai/scroll-craft` | MIT | Exact pinned upstream fetch |
+| Nate Herk HyperFrames Student Kit | `nateherkai/hyperframes-student-kit` | MIT | Bounded vendored editorial adaptations from the exact pinned source; package-local provenance and license retained; demonstration/AIS brand assets excluded |
+| HyperFrames | `heygen-com/hyperframes` | Apache-2.0 | Exact pinned fetch-only provider support for Video Editor; provider packages are internal dependencies, not member-facing duplicate Skills |
 
 "Upstream-controlled" means AI-Verse is not making a broader redistribution claim for public beta. The installer fetches the exact pinned upstream package rather than vendoring it into the distribution.
 
