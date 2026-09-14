@@ -256,6 +256,14 @@ def _consume_background_budget(impl: Any, root: Path, config: Mapping[str, Any])
     impl._atomic_json_write(path, budget)
 
 
+def _safe_skill_id(value: Any, label: str) -> Optional[str]:
+    if value in {None, ""}:
+        return None
+    if not isinstance(value, str) or not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]{0,127}", value):
+        raise RuntimeError(f"{label} must be a safe bounded Skill id")
+    return value
+
+
 def _validate_envelope(envelope: Mapping[str, Any]) -> Dict[str, Any]:
     data = dict(envelope)
     kind = str(data.get("kind", "create"))
@@ -300,6 +308,10 @@ def _validate_envelope(envelope: Mapping[str, Any]) -> Dict[str, Any]:
     data["scope"] = scope
     data["requires_connection"] = bool(data.get("requires_connection", False))
     data["requires_credential"] = bool(data.get("requires_credential", False))
+    data["skill_id"] = _safe_skill_id(data.get("skill_id"), "skill_id")
+    data["target_skill_id"] = _safe_skill_id(data.get("target_skill_id"), "target_skill_id")
+    for source_id in data.get("source_skill_ids", []):
+        _safe_skill_id(source_id, "source_skill_ids entry")
     return data
 
 
