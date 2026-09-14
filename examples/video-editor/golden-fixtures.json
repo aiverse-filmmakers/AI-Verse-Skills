@@ -1,0 +1,140 @@
+{
+  "schema_version": 1,
+  "fixtures": [
+    {
+      "id": "full-talking-head",
+      "request": "Edit this raw talking-head video for me from source footage through final verified delivery.",
+      "expected_scope": "FULL_EDIT",
+      "must_include_stages": [
+        "source_intake",
+        "edl_truth",
+        "shortform_editorial",
+        "longform_storytelling",
+        "hyperframes_compose",
+        "structural_qa",
+        "audio_sync_qa",
+        "final_render"
+      ],
+      "must_exclude_stages": [],
+      "interface_handoff_mode": null
+    },
+    {
+      "id": "silence-only",
+      "request": "Remove the silences only. Do not redesign the video.",
+      "expected_scope": "SILENCE_ONLY",
+      "must_include_stages": [
+        "source_intake",
+        "silence_pass"
+      ],
+      "must_exclude_stages": [
+        "interface_design_handoff",
+        "hyperframes_compose",
+        "final_render"
+      ],
+      "interface_handoff_mode": null
+    },
+    {
+      "id": "retakes-only",
+      "request": "Clean the false starts, mistakes and retakes only.",
+      "expected_scope": "MISTAKE_RETAKE_ONLY",
+      "must_include_stages": [
+        "source_intake",
+        "mistake_review",
+        "edl_truth"
+      ],
+      "must_exclude_stages": [
+        "interface_design_handoff",
+        "style_direction"
+      ],
+      "interface_handoff_mode": null
+    },
+    {
+      "id": "make-reel",
+      "request": "Turn this footage into a Reel with a strong hook and payoff.",
+      "expected_scope": "SHORT_FORM_EDIT",
+      "must_include_stages": [
+        "source_intake",
+        "shortform_editorial",
+        "visual_plan",
+        "hyperframes_compose",
+        "final_render"
+      ],
+      "must_exclude_stages": [],
+      "interface_handoff_mode": null
+    },
+    {
+      "id": "long-form-explainer",
+      "request": "Make this long-form talking-head into a visual explainer without changing the spoken meaning.",
+      "expected_scope": "LONG_FORM_TALKING_HEAD",
+      "must_include_stages": [
+        "source_intake",
+        "longform_storytelling",
+        "visual_plan",
+        "hyperframes_compose",
+        "final_render"
+      ],
+      "must_exclude_stages": [],
+      "interface_handoff_mode": null
+    },
+    {
+      "id": "website-promo",
+      "request": "Turn this website into a promo video.",
+      "expected_scope": "WEBSITE_PROMO",
+      "must_include_stages": [
+        "source_intake",
+        "website_to_video",
+        "interface_design_handoff",
+        "hyperframes_compose",
+        "final_render"
+      ],
+      "must_exclude_stages": [],
+      "interface_handoff_mode": "VISUAL_DIRECTION"
+    },
+    {
+      "id": "motion-only",
+      "request": "Add motion graphics to this locked edit without changing the editorial timing.",
+      "expected_scope": "MOTION_GRAPHICS_ONLY",
+      "must_include_stages": [
+        "source_intake",
+        "visual_plan",
+        "interface_design_handoff",
+        "hyperframes_compose",
+        "final_render"
+      ],
+      "must_exclude_stages": [
+        "silence_pass",
+        "mistake_review"
+      ],
+      "interface_handoff_mode": "MOTION_TASTE"
+    },
+    {
+      "id": "reference-led",
+      "request": "Make this edit feel like the supplied reference reel while preserving my source and edit truth.",
+      "expected_scope": "REFERENCE_LED_EDIT",
+      "must_include_stages": [
+        "source_intake",
+        "reference_analysis",
+        "interface_design_handoff",
+        "hyperframes_compose",
+        "final_render"
+      ],
+      "must_exclude_stages": [],
+      "interface_handoff_mode": "REFERENCE_RECREATION"
+    },
+    {
+      "id": "three-directions",
+      "request": "For this existing edit, make three genuinely different visual directions before finalizing the motion graphics.",
+      "expected_scope": "MOTION_GRAPHICS_ONLY",
+      "must_include_stages": [
+        "source_intake",
+        "interface_design_handoff",
+        "hyperframes_compose"
+      ],
+      "must_exclude_stages": [
+        "silence_pass",
+        "mistake_review"
+      ],
+      "interface_handoff_mode": "PROTOTYPE_VISUAL_DIRECTIONS"
+    }
+  ]
+}
