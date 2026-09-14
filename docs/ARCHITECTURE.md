@@ -27,6 +27,8 @@ AI-Verse-Skills owns:
 
 The boundary is intentional. A skill can consume core-granted context, but cannot redefine core authority.
 
+For the first-party composite interface-design capability, see [INTERFACE_DESIGNER_ARCHITECTURE.md](INTERFACE_DESIGNER_ARCHITECTURE.md).
+
 ## Architecture at a glance
 
 ```text
