@@ -315,26 +315,34 @@ def _validate_envelope(envelope: Mapping[str, Any]) -> Dict[str, Any]:
     return data
 
 
-def _copy_candidate(src: Path, dst: Path, max_bytes: int) -> Tuple[int, str]:
+def _candidate_package_info(src: Path, max_bytes: int) -> Tuple[int, str]:
     src = Path(src).expanduser().resolve(strict=True)
     if not (src / "SKILL.md").is_file():
         raise RuntimeError("Candidate package must contain SKILL.md")
     total = 0
-    for path in src.rglob("*"):
+    digest = hashlib.sha256()
+    for path in sorted(src.rglob("*")):
         if path.is_symlink():
             raise RuntimeError("Learned candidate packages may not contain symlinks")
         if path.is_file():
             total += path.stat().st_size
             if total > max_bytes:
                 raise RuntimeError("Candidate package exceeds configured proposal size limit")
+            rel = path.relative_to(src).as_posix()
+            digest.update(rel.encode("utf-8") + b"\0" + path.read_bytes() + b"\0")
+    return total, digest.hexdigest()
+
+
+def _copy_candidate(src: Path, dst: Path, max_bytes: int) -> Tuple[int, str]:
+    src = Path(src).expanduser().resolve(strict=True)
+    total, source_digest = _candidate_package_info(src, max_bytes)
     if dst.exists():
         shutil.rmtree(dst)
     shutil.copytree(src, dst)
-    digest = hashlib.sha256()
-    for path in sorted(p for p in dst.rglob("*") if p.is_file()):
-        rel = path.relative_to(dst).as_posix()
-        digest.update(rel.encode("utf-8") + b"\0" + path.read_bytes() + b"\0")
-    return total, digest.hexdigest()
+    copied_total, copied_digest = _candidate_package_info(dst, max_bytes)
+    if copied_total != total or copied_digest != source_digest:
+        raise RuntimeError("Candidate package changed while being copied into the proposal store")
+    return total, source_digest
 
 
 def _find_package(manifest: Mapping[str, Any], package_id: str) -> Optional[Dict[str, Any]]:
@@ -375,8 +383,26 @@ def submit_candidate(
         pin = impl.pin_active_generation(root, impl.digest)
         proposal_id = str(env.get("candidate_id") or ("learn-" + uuid.uuid4().hex))
         proposal_dir = _proposal_path(root, proposal_id)
+        candidate_digest = None
+        candidate_bytes = None
+        if candidate_dir is not None:
+            candidate_bytes, candidate_digest = _candidate_package_info(
+                Path(candidate_dir), int(config["max_proposal_bytes"])
+            )
+        submission_material = {
+            "envelope": env,
+            "candidate_digest_sha256": candidate_digest,
+            "trigger": trigger,
+            "explicit": bool(explicit),
+        }
+        submission_fingerprint = hashlib.sha256(
+            json.dumps(submission_material, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
+        ).hexdigest()
         if proposal_dir.exists():
-            raise RuntimeError(f"Proposal already exists: {proposal_id}")
+            existing = _load_proposal(root, proposal_id)
+            if existing.get("submission_fingerprint") == submission_fingerprint:
+                return existing
+            raise RuntimeError(f"Proposal id {proposal_id} was already used for different learning input")
 
         target_skill_id = env.get("target_skill_id")
         target_package = None
@@ -425,14 +451,17 @@ def submit_candidate(
             "created_at": _utc_now(),
             "updated_at": _utc_now(),
             "history": [{"state": "candidate", "at": _utc_now(), "by": trigger}],
+            "submission_fingerprint": submission_fingerprint,
         }
         proposal_dir.mkdir(parents=True, exist_ok=False)
         if candidate_dir is not None:
-            size, candidate_digest = _copy_candidate(
+            size, stored_candidate_digest = _copy_candidate(
                 Path(candidate_dir), proposal_dir / "candidate", int(config["max_proposal_bytes"])
             )
+            if candidate_bytes != size or candidate_digest != stored_candidate_digest:
+                raise RuntimeError("Candidate package digest changed before proposal persistence")
             proposal["candidate_bytes"] = size
-            proposal["candidate_digest_sha256"] = candidate_digest
+            proposal["candidate_digest_sha256"] = stored_candidate_digest
             proposal["state"] = "proposal"
             proposal["history"].append({"state": "proposal", "at": _utc_now(), "by": "candidate-attached"})
         elif env["kind"] == "archive-review":
