@@ -168,6 +168,37 @@ class InterfaceDesignerContractTests(unittest.TestCase):
             graph["scope_pipelines"]["DESIGN_SYSTEM_CHANGE"],
         )
 
+    def test_originality_gate_is_structural_scoped_and_private(self):
+        package = ROOT / "skills/imported/ai-verse/interface-designer/references"
+        policy = json.loads((package / "originality-policy.json").read_text(encoding="utf-8"))
+        guide = (package / "originality.md").read_text(encoding="utf-8")
+        graph = json.loads((package / "orchestration.json").read_text(encoding="utf-8"))
+
+        self.assertEqual(len(policy["dimensions"]), 10)
+        self.assertEqual(len(policy["structural_dimensions"]), 6)
+        for dimension in (
+            "information_architecture",
+            "navigation_model",
+            "layout_grammar",
+            "interaction_model",
+            "primary_composition",
+            "signature_element",
+        ):
+            self.assertIn(dimension, policy["structural_dimensions"])
+
+        self.assertIn("micro_change", policy["bypass_when"])
+        self.assertIn("exact_reference_recreation", policy["bypass_when"])
+        self.assertIn("established_design_md_consistency", policy["bypass_when"])
+        self.assertIn("other_member_private_design_history", policy["forbidden_comparison_scope"])
+        self.assertIn("cross_member_private_fingerprint_registry", policy["forbidden_comparison_scope"])
+        self.assertEqual(policy["reskin_review"]["structural_matches_threshold"], 5)
+        self.assertEqual(policy["high_similarity_review"]["total_matches_threshold"], 8)
+
+        self.assertNotIn("originality_gate", graph["scope_pipelines"]["MICRO_CHANGE"])
+        self.assertIn("originality_gate", graph["scope_pipelines"]["FULL_PRODUCT"])
+        self.assertIn("originality_gate", graph["scope_pipelines"]["DESIGN_SYSTEM_CHANGE"])
+        self.assertIn("Do not create a shared cross-member fingerprint registry.", guide)
+
     def test_vercel_review_rules_are_generation_pinned(self):
         package = ROOT / "skills/imported/vercel/web-design-guidelines"
         skill = (package / "SKILL.md").read_text(encoding="utf-8")
