@@ -368,6 +368,68 @@ class InterfaceDesignerContractTests(unittest.TestCase):
         self.assertEqual(graph["target_experts"][expo["target"]], ["animate-expo"])
         self.assertIn("apple-design", expo["expected_experts"])
 
+    def test_context_loading_is_progressive_and_vendor_bodies_remain_separate(self):
+        refs = ROOT / "skills/imported/ai-verse/interface-designer/references"
+        graph = json.loads((refs / "orchestration.json").read_text(encoding="utf-8"))
+        fixtures = json.loads((refs / "routing-fixtures.json").read_text(encoding="utf-8"))["fixtures"]
+        packages = json.loads((ROOT / "registry/packages.json").read_text(encoding="utf-8"))
+        skills = json.loads((ROOT / "registry/skills.json").read_text(encoding="utf-8"))
+        registered = {item["id"] for item in skills["employee"]}
+
+        by_id = {item["id"]: item for item in fixtures}
+        micro = by_id["tiny-padding-change"]
+        self.assertEqual(micro["expected_experts"], [])
+        self.assertLessEqual(len(graph["scope_pipelines"]["MICRO_CHANGE"]), 5)
+        for forbidden in (
+            "frontend-design",
+            "ui-ux-pro-max",
+            "prototype",
+            "scroll-craft",
+            "react-best-practices",
+            "composition-patterns",
+        ):
+            self.assertIn(forbidden, micro["forbidden_experts"])
+
+        # A full-product route can resolve every stage-owned and target-owned expert
+        # without embedding those expert bodies into the orchestrator.
+        stage_by_id = {stage["id"]: stage for stage in graph["stages"]}
+        full_required = set(graph["target_experts"]["REACT_WEB_APP"])
+        for stage_id in graph["scope_pipelines"]["FULL_PRODUCT"]:
+            full_required.update(stage_by_id[stage_id].get("capabilities", []))
+        self.assertTrue(full_required)
+        self.assertTrue(full_required.issubset(registered))
+
+        conditional = {
+            spec["capability"] for spec in graph["conditional_experts"].values()
+        }
+        pipeline_stage_capabilities = set()
+        for stage in graph["stages"]:
+            pipeline_stage_capabilities.update(stage.get("capabilities", []))
+        self.assertTrue(conditional.isdisjoint(pipeline_stage_capabilities))
+        self.assertNotIn("scroll-craft", graph["scope_pipelines"]["FULL_PRODUCT"])
+        self.assertNotIn("shadcn", graph["scope_pipelines"]["FULL_PRODUCT"])
+
+        ai_source = packages["sources"]["ai-verse"]
+        interface_pkg = next(pkg for pkg in ai_source["packages"] if pkg["id"] == "interface-designer")
+        self.assertEqual(interface_pkg["path"], "skills/imported/ai-verse/interface-designer")
+
+        expert_sources = {
+            "anthropic-frontend",
+            "nextlevelbuilder-ui",
+            "vercel-design",
+            "shadcn-ui",
+            "mengto-ui",
+            "emil-design",
+            "scroll-craft",
+        }
+        self.assertTrue(expert_sources.issubset(packages["sources"]))
+        for source_id in expert_sources:
+            self.assertNotEqual(packages["sources"][source_id]["namespace"], "ai-verse")
+
+        orchestrator_root = ROOT / interface_pkg["path"]
+        nested_dirs = {p.name for p in orchestrator_root.iterdir() if p.is_dir()}
+        self.assertEqual(nested_dirs, {"references"})
+
     def test_vercel_review_rules_are_generation_pinned(self):
         package = ROOT / "skills/imported/vercel/web-design-guidelines"
         skill = (package / "SKILL.md").read_text(encoding="utf-8")
