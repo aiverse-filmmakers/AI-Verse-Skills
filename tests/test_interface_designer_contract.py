@@ -567,6 +567,60 @@ class InterfaceDesignerContractTests(unittest.TestCase):
         )
         self.assertTrue(forbidden_fields.isdisjoint(orchestrator.keys()))
 
+    def test_golden_interface_workflows_resolve_against_current_graph_and_registry(self):
+        refs = ROOT / "skills/imported/ai-verse/interface-designer/references"
+        graph = json.loads((refs / "orchestration.json").read_text(encoding="utf-8"))
+        golden = json.loads(
+            (ROOT / "examples/interface-designer/golden-fixtures.json").read_text(encoding="utf-8")
+        )
+        skills = json.loads((ROOT / "registry/skills.json").read_text(encoding="utf-8"))
+        registered = {item["id"] for item in skills["employee"]}
+        stage_ids = {stage["id"] for stage in graph["stages"]}
+
+        expected_ids = {
+            "full-dashboard-workflow",
+            "reference-recreation",
+            "interaction-heavy-component",
+            "cinematic-scroll-experience",
+            "mobile-expo-interaction",
+        }
+        fixtures = {item["id"]: item for item in golden["fixtures"]}
+        self.assertEqual(set(fixtures), expected_ids)
+
+        for fixture in fixtures.values():
+            expected = fixture["expected"]
+            self.assertIn(expected["scope"], graph["scopes"])
+            self.assertIn(expected["target"], graph["targets"])
+            pipeline = graph["scope_pipelines"][expected["scope"]]
+            for stage in expected["required_stages"]:
+                self.assertIn(stage, stage_ids)
+                self.assertIn(stage, pipeline)
+            for expert in expected["experts"]:
+                self.assertIn(expert, registered)
+            for expert in expected.get("forbidden_experts", []):
+                self.assertNotIn(expert, expected["experts"])
+            self.assertTrue(expected["qa"])
+
+        dashboard = fixtures["full-dashboard-workflow"]["expected"]
+        self.assertEqual(dashboard["design_md"], "CREATE")
+        self.assertIn("mobile_art_direction_qa", dashboard["required_stages"])
+
+        reference = fixtures["reference-recreation"]["expected"]
+        self.assertIn("exact_reference_recreation", reference["bypass_conditions"])
+        self.assertNotIn("react-best-practices", reference["experts"])
+
+        interaction = fixtures["interaction-heavy-component"]["expected"]
+        self.assertIn("apple-design", interaction["experts"])
+        self.assertIn("reduced_motion", interaction["qa"])
+
+        scroll = fixtures["cinematic-scroll-experience"]["expected"]
+        self.assertIn("scroll-craft", scroll["experts"])
+        self.assertIn("scroll_state_qa", scroll["required_stages"])
+
+        mobile = fixtures["mobile-expo-interaction"]["expected"]
+        self.assertIn("animate-expo", mobile["experts"])
+        self.assertIn("safe_area", mobile["qa"])
+
     def test_vercel_review_rules_are_generation_pinned(self):
         package = ROOT / "skills/imported/vercel/web-design-guidelines"
         skill = (package / "SKILL.md").read_text(encoding="utf-8")
