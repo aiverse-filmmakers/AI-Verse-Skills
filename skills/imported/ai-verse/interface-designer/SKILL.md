@@ -182,7 +182,7 @@ For substantial interfaces, apply the evidence contract in [references/visual-qa
 - light/dark when supported;
 - reduced motion.
 
-For scroll experiences, inspect multiple real scroll positions rather than only the top of the page.
+For scroll experiences, apply [references/scroll-qa.md](references/scroll-qa.md) and inspect semantic transitions plus multiple real scroll positions rather than only the top of the page.
 
 Do not claim visual verification when the runtime did not actually render or inspect the result.
 
