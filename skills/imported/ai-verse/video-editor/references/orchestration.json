@@ -100,9 +100,17 @@
       "capabilities": [
         "interface-designer"
       ],
-      "when": "specialist_visual_art_direction_would_materially_help",
+      "when": "visual_direction_reference_recreation_prototype_or_motion_taste_would_materially_help",
       "required": false,
-      "boundary": "presentation-only"
+      "boundary": "presentation-only",
+      "contract": "references/interface-designer-handoff.json",
+      "handoff_modes": [
+        "VISUAL_DIRECTION",
+        "REFERENCE_RECREATION",
+        "PROTOTYPE_VISUAL_DIRECTIONS",
+        "MOTION_TASTE"
+      ],
+      "return_authority": "video-editor"
     },
     {
       "id": "hyperframes_compose",
