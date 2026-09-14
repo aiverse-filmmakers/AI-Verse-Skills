@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "capability": "interface-designer",
+  "rule": "experience-curve",
+  "source_inspiration": {
+    "repo": "nateherkai/scroll-craft",
+    "commit": "0b816225945e45380397d6a0487efa3c98916858",
+    "reference": "plugins/nateherk-design/skills/scroll-craft/references/feel.md"
+  },
+  "use_when": [
+    "onboarding",
+    "first_run_setup",
+    "major_agent_workflow",
+    "launch_experience",
+    "narrative_marketing_experience",
+    "immersive_product_story",
+    "high_stakes_multi_step_creation",
+    "guided_migration_or_import",
+    "complex_wizard"
+  ],
+  "skip_when": [
+    "settings_page",
+    "crud_form",
+    "ordinary_table",
+    "standard_modal",
+    "simple_search_or_filter",
+    "small_component",
+    "routine_dashboard_inspection",
+    "micro_change"
+  ],
+  "stage_record_fields": [
+    "stage",
+    "intended_state",
+    "interface_cause"
+  ],
+  "preferred_operational_states": [
+    "orientation",
+    "recognition",
+    "clarity",
+    "confidence",
+    "control",
+    "trust",
+    "relief",
+    "readiness",
+    "completion"
+  ],
+  "review_rules": {
+    "adjacent_same_state": "review_for_filler_or_document_why_repetition_is_needed",
+    "critical_moment": "identify_only_when_flow_meaningfully_has_one",
+    "resolution": [
+      "outcome_is_clear",
+      "success_or_failure_is_clear",
+      "next_action_is_clear",
+      "partial_failures_remain_visible",
+      "no_dead_end"
+    ],
+    "after_implementation": "compare_intended_vs_rendered_do_not_rewrite_intent_to_hide_mismatch"
+  },
+  "accessibility": "curve_must_survive_keyboard_screen_reader_reduced_motion_slow_network_error_paths_and_mobile"
+}
