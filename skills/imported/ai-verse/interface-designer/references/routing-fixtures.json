@@ -1,0 +1,279 @@
+{
+  "schema_version": 1,
+  "capability": "interface-designer",
+  "purpose": "Deterministic representative routing fixtures for regression testing. These fixtures define expected classification and expert activation without forcing optional stages whose conditions are absent.",
+  "fixtures": [
+    {
+      "id": "tiny-padding-change",
+      "request": "Make the padding on this existing card 4px smaller.",
+      "scope": "MICRO_CHANGE",
+      "target": "EXISTING_WEB_STACK",
+      "conditions": [],
+      "expected_stages": [
+        "local_authority",
+        "target_detection",
+        "target_implementation",
+        "render_preview",
+        "fix_and_reverify"
+      ],
+      "expected_experts": [],
+      "forbidden_stages": [
+        "ui_ux_intelligence",
+        "visual_direction",
+        "prototype_divergence",
+        "originality_gate",
+        "signature_interaction",
+        "design_system_persistence",
+        "scroll_state_qa",
+        "mobile_art_direction_qa"
+      ],
+      "forbidden_experts": [
+        "frontend-design",
+        "ui-ux-pro-max",
+        "prototype",
+        "scroll-craft",
+        "react-best-practices",
+        "composition-patterns"
+      ]
+    },
+    {
+      "id": "dashboard-from-scratch",
+      "request": "Build me a new production dashboard from scratch as a React web app.",
+      "scope": "FULL_PRODUCT",
+      "target": "REACT_WEB_APP",
+      "conditions": [
+        "new_substantial_visual_direction",
+        "implementation_requested",
+        "substantial_web_ui_delivery"
+      ],
+      "expected_stages": [
+        "ui_ux_intelligence",
+        "visual_direction",
+        "originality_gate",
+        "design_system_persistence",
+        "target_implementation",
+        "visual_state_qa",
+        "web_review"
+      ],
+      "expected_experts": [
+        "ui-ux-pro-max",
+        "frontend-design",
+        "react-best-practices",
+        "composition-patterns",
+        "web-design-guidelines"
+      ],
+      "forbidden_experts": [
+        "scroll-craft",
+        "animate-expo",
+        "figma-use",
+        "canva"
+      ]
+    },
+    {
+      "id": "recreate-screenshot",
+      "request": "Recreate this supplied interface screenshot in my existing web project and keep the layout as close as possible.",
+      "scope": "REFERENCE_RECREATION",
+      "target": "EXISTING_WEB_STACK",
+      "conditions": [
+        "reference_present",
+        "exact_reference_recreation",
+        "implementation_requested"
+      ],
+      "expected_stages": [
+        "reference_analysis",
+        "ui_ux_intelligence",
+        "visual_direction",
+        "target_implementation",
+        "render_preview",
+        "visual_state_qa"
+      ],
+      "expected_experts": [
+        "ui-ux-pro-max",
+        "frontend-design"
+      ],
+      "forbidden_stages": [
+        "prototype_divergence"
+      ],
+      "forbidden_experts": [
+        "react-best-practices",
+        "composition-patterns",
+        "scroll-craft",
+        "animate-expo"
+      ],
+      "notes": "Exact reference fidelity bypasses originality novelty requirements even though the maximum scope pipeline contains the conditional stage."
+    },
+    {
+      "id": "draggable-floating-panel",
+      "request": "Make this floating inspector panel draggable with native-feeling momentum and snap behavior.",
+      "scope": "INTERACTION_HEAVY",
+      "target": "EXISTING_WEB_STACK",
+      "conditions": [
+        "direct_manipulation_gesture_or_spatial_physics",
+        "meaningful_ui_motion_required",
+        "implementation_requested"
+      ],
+      "expected_stages": [
+        "ui_ux_intelligence",
+        "interaction_physics",
+        "target_implementation",
+        "motion_build",
+        "render_preview",
+        "visual_state_qa",
+        "motion_review"
+      ],
+      "expected_experts": [
+        "ui-ux-pro-max",
+        "apple-design",
+        "animate",
+        "review-animations"
+      ],
+      "forbidden_experts": [
+        "scroll-craft",
+        "react-best-practices",
+        "composition-patterns",
+        "animate-expo"
+      ]
+    },
+    {
+      "id": "react-refactor",
+      "request": "Refactor this existing React component tree for cleaner composition and performance without redesigning it.",
+      "scope": "COMPONENT",
+      "target": "REACT_WEB_APP",
+      "conditions": [
+        "implementation_requested",
+        "existing_visual_direction_preserved"
+      ],
+      "expected_stages": [
+        "target_detection",
+        "target_implementation",
+        "render_preview"
+      ],
+      "expected_experts": [
+        "react-best-practices",
+        "composition-patterns"
+      ],
+      "forbidden_stages": [
+        "visual_direction",
+        "prototype_divergence",
+        "originality_gate",
+        "signature_interaction",
+        "design_system_persistence"
+      ],
+      "forbidden_experts": [
+        "frontend-design",
+        "prototype",
+        "scroll-craft",
+        "animate-expo"
+      ]
+    },
+    {
+      "id": "cinematic-scroll-landing",
+      "request": "Create a cinematic immersive landing page where scrolling drives the story and motion.",
+      "scope": "SCROLL_IMMERSIVE",
+      "target": "PLAIN_HTML_CSS_JS_ARTIFACT",
+      "conditions": [
+        "scroll_is_primary_storytelling_or_interaction_mechanism",
+        "meaningful_ui_motion_required",
+        "new_substantial_visual_direction",
+        "substantial_web_ui_delivery"
+      ],
+      "expected_stages": [
+        "ui_ux_intelligence",
+        "experience_curve",
+        "visual_direction",
+        "originality_gate",
+        "signature_interaction",
+        "target_implementation",
+        "motion_build",
+        "render_preview",
+        "visual_state_qa",
+        "scroll_state_qa",
+        "mobile_art_direction_qa",
+        "motion_review",
+        "web_review"
+      ],
+      "expected_experts": [
+        "ui-ux-pro-max",
+        "frontend-design",
+        "scroll-craft",
+        "animate",
+        "review-animations",
+        "web-design-guidelines"
+      ],
+      "forbidden_experts": [
+        "react-best-practices",
+        "composition-patterns",
+        "animate-expo",
+        "figma-use"
+      ]
+    },
+    {
+      "id": "expo-sheet-interaction",
+      "request": "Design and implement this Expo bottom sheet so the drag, snap and dismissal feel native on mobile.",
+      "scope": "MOBILE_EXPO",
+      "target": "REACT_NATIVE_EXPO",
+      "conditions": [
+        "direct_manipulation_gesture_or_spatial_physics",
+        "meaningful_ui_motion_required",
+        "implementation_requested"
+      ],
+      "expected_stages": [
+        "ui_ux_intelligence",
+        "interaction_physics",
+        "target_implementation",
+        "motion_build",
+        "render_preview",
+        "visual_state_qa",
+        "mobile_art_direction_qa",
+        "motion_review"
+      ],
+      "expected_experts": [
+        "ui-ux-pro-max",
+        "apple-design",
+        "animate",
+        "animate-expo",
+        "review-animations"
+      ],
+      "forbidden_experts": [
+        "react-best-practices",
+        "composition-patterns",
+        "scroll-craft",
+        "web-design-guidelines"
+      ]
+    },
+    {
+      "id": "finished-ui-review",
+      "request": "The UI is finished. Review the final web interface for visual quality, animation quality and accessibility issues without redesigning it.",
+      "scope": "SCREEN",
+      "target": "EXISTING_WEB_STACK",
+      "conditions": [
+        "substantial_web_ui_delivery",
+        "significant_motion_exists",
+        "existing_visual_direction_preserved"
+      ],
+      "expected_stages": [
+        "render_preview",
+        "visual_state_qa",
+        "motion_review",
+        "web_review",
+        "fix_and_reverify"
+      ],
+      "expected_experts": [
+        "review-animations",
+        "web-design-guidelines"
+      ],
+      "forbidden_stages": [
+        "prototype_divergence",
+        "originality_gate",
+        "signature_interaction",
+        "design_system_persistence"
+      ],
+      "forbidden_experts": [
+        "frontend-design",
+        "prototype",
+        "scroll-craft",
+        "animate-expo"
+      ]
+    }
+  ]
+}
