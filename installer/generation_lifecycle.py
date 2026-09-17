@@ -26,6 +26,7 @@ ACTIVE_SCHEMA_VERSION = 1
 GENERATION_SCHEMA_VERSION = 1
 LOCK_STALE_SECONDS = 300
 LOCK_TIMEOUT_SECONDS = 30.0
+WINDOWS_REPARSE_POINT = 0x0400
 
 
 @dataclass(frozen=True)
@@ -42,16 +43,80 @@ class GenerationPin:
         raise RuntimeError(f"Package not installed in pinned generation: {package_id}")
 
 
+def _absolute_path(path: Path) -> Path:
+    return Path(os.path.abspath(os.fspath(Path(path).expanduser())))
+
+
+def _is_symlink_or_reparse(path: Path) -> bool:
+    try:
+        info = os.lstat(path)
+    except FileNotFoundError:
+        return False
+    if os.path.islink(path):
+        return True
+    return bool(getattr(info, "st_file_attributes", 0) & WINDOWS_REPARSE_POINT)
+
+
+def controller_path(root: Path, *parts: str) -> Path:
+    """Return a controller path only when its existing chain is confined to root.
+
+    The selected Skills root may not delegate `.aiverse` or any descendant
+    controller path through a symlink, Windows junction, or other reparse point.
+    Missing controller children are allowed so first install can create them, but
+    every existing component is resolved and proven to remain under the selected
+    root before the path is returned.
+    """
+
+    root_input = _absolute_path(root)
+    candidate = root_input / ".aiverse"
+    for part in parts:
+        if not isinstance(part, str) or not part or part in {".", ".."} or "/" in part or "\\" in part:
+            raise RuntimeError(f"Invalid Skills controller path component: {part!r}")
+        candidate = candidate / part
+
+    if not root_input.exists():
+        return candidate
+    if _is_symlink_or_reparse(root_input):
+        raise RuntimeError(f"Skills lifecycle root may not be a symlink/junction/reparse point: {root_input}")
+    if not root_input.is_dir():
+        raise RuntimeError(f"Skills lifecycle root is not a directory: {root_input}")
+
+    root_real = root_input.resolve(strict=True)
+    current = root_input
+    for part in (".aiverse", *parts):
+        current = current / part
+        if _is_symlink_or_reparse(current):
+            raise RuntimeError(f"Unsafe symlink/junction/reparse point in Skills controller path: {current}")
+        if current.exists():
+            resolved = current.resolve(strict=True)
+            try:
+                resolved.relative_to(root_real)
+            except ValueError as exc:
+                raise RuntimeError(f"Skills controller path resolves outside selected root: {current}") from exc
+
+    parent = candidate.parent
+    while parent != root_input and not parent.exists():
+        parent = parent.parent
+    if _is_symlink_or_reparse(parent):
+        raise RuntimeError(f"Unsafe symlink/junction/reparse parent in Skills controller path: {parent}")
+    parent_real = parent.resolve(strict=True)
+    try:
+        parent_real.relative_to(root_real)
+    except ValueError as exc:
+        raise RuntimeError(f"Skills controller parent resolves outside selected root: {parent}") from exc
+    return candidate
+
+
 def metadata_dir(root: Path) -> Path:
-    return Path(root).resolve() / ".aiverse"
+    return controller_path(root)
 
 
 def generations_dir(root: Path) -> Path:
-    return metadata_dir(root) / "generations"
+    return controller_path(root, "generations")
 
 
 def active_pointer_path(root: Path) -> Path:
-    return metadata_dir(root) / "active.json"
+    return controller_path(root, "active.json")
 
 
 def lifecycle_lock_path(root: Path) -> Path:
@@ -189,13 +254,7 @@ def read_active_pointer(root: Path, *, allow_uninstalled: bool = False) -> Dict[
 def generation_path(root: Path, generation_id: str) -> Path:
     if not generation_id or "/" in generation_id or "\\" in generation_id or generation_id in {".", ".."}:
         raise RuntimeError("Invalid generation id")
-    base = generations_dir(root).resolve()
-    path = (base / generation_id).resolve()
-    try:
-        path.relative_to(base)
-    except ValueError as exc:
-        raise RuntimeError("Generation path escapes lifecycle root") from exc
-    return path
+    return controller_path(root, "generations", generation_id)
 
 
 def read_generation_manifest(root: Path, generation_id: str) -> Dict[str, object]:
@@ -247,8 +306,9 @@ def commit_stage(root: Path, stage: Path, generation_id: str) -> Path:
 
     root = Path(root).resolve()
     stage = Path(stage).resolve()
+    parent = generations_dir(root)
+    parent.mkdir(parents=True, exist_ok=True)
     target = generation_path(root, generation_id)
-    target.parent.mkdir(parents=True, exist_ok=True)
     if target.exists():
         raise RuntimeError(f"Generation already exists: {generation_id}")
     os.replace(stage, target)
@@ -277,6 +337,8 @@ def activate_generation(root: Path, generation_id: str) -> Dict[str, object]:
     if not path.is_dir():
         raise RuntimeError(f"Cannot activate missing generation: {generation_id}")
     manifest = read_generation_manifest(root, generation_id)
+    controller = metadata_dir(root)
+    controller.mkdir(parents=True, exist_ok=True)
     pointer_path = active_pointer_path(root)
     if pointer_path.exists():
         current = read_active_pointer(root, allow_uninstalled=True)
