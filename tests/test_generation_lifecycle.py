@@ -138,10 +138,10 @@ class ImmutableGenerationLifecycleTests(unittest.TestCase):
             GenerationFixture.commit(root, base, "gen-v2", "v2", activate=False)
 
             real_replace = __import__("os").replace
-            pointer = active_pointer_path(root)
+            pointer = active_pointer_path(root).resolve()
 
             def fail_pointer_swap(src, dst):
-                if Path(dst) == pointer:
+                if Path(dst).resolve() == pointer:
                     raise OSError("simulated activation interruption")
                 return real_replace(src, dst)
 
