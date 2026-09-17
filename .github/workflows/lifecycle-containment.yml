@@ -1,0 +1,43 @@
+name: Lifecycle Controller Containment
+
+on:
+  pull_request:
+    paths:
+      - "installer/generation_lifecycle.py"
+      - "installer/controller_containment.py"
+      - "installer/aiverse_skills.py"
+      - "tests/test_generation_lifecycle.py"
+      - ".github/workflows/lifecycle-containment.yml"
+  push:
+    branches: [main]
+    paths:
+      - "installer/generation_lifecycle.py"
+      - "installer/controller_containment.py"
+      - "installer/aiverse_skills.py"
+      - "tests/test_generation_lifecycle.py"
+      - ".github/workflows/lifecycle-containment.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  controller-containment:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python: ["3.9", "3.12"]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Compile lifecycle compatibility modules
+        run: |
+          python -m py_compile installer/generation_lifecycle.py
+          python -m py_compile installer/controller_containment.py
+          python -m py_compile installer/aiverse_skills.py
+      - name: Run immutable lifecycle and controller containment regressions
+        run: python -m unittest tests.test_generation_lifecycle -v
