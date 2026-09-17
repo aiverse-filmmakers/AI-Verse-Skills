@@ -1,17 +1,25 @@
 import json
+import os
+import shutil
+import subprocess
 import tempfile
 import threading
 import unittest
 from pathlib import Path
 from unittest import mock
 
+from installer import aiverse_skills as skills
+from installer import learning
 from installer.aiverse_skills_v3 import digest, materialize_adapter, verify_adapter_target
 from installer.generation_lifecycle import (
     GENERATION_SCHEMA_VERSION,
     active_pointer_path,
     activate_generation,
     commit_stage,
+    controller_path,
     generation_content_digest,
+    generation_path,
+    generations_dir,
     lifecycle_lock,
     mark_uninstalled,
     pin_active_generation,
@@ -71,6 +79,26 @@ class GenerationFixture:
 
 
 class ImmutableGenerationLifecycleTests(unittest.TestCase):
+    def _make_dir_link(self, link: Path, destination: Path) -> None:
+        if os.name == "nt":
+            subprocess.run(
+                ["cmd", "/c", "mklink", "/J", str(link), str(destination)],
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+        else:
+            link.symlink_to(destination, target_is_directory=True)
+
+    def _replace_with_dir_link(self, path: Path, destination: Path) -> None:
+        if path.exists() or os.path.lexists(path):
+            if path.is_dir() and not path.is_symlink():
+                shutil.rmtree(path)
+            else:
+                path.unlink()
+        path.parent.mkdir(parents=True, exist_ok=True)
+        self._make_dir_link(path, destination)
+
     def test_pinned_execution_survives_update_rollback_and_uninstall(self):
         with tempfile.TemporaryDirectory() as temp:
             base = Path(temp)
@@ -110,10 +138,10 @@ class ImmutableGenerationLifecycleTests(unittest.TestCase):
             GenerationFixture.commit(root, base, "gen-v2", "v2", activate=False)
 
             real_replace = __import__("os").replace
-            pointer = active_pointer_path(root)
+            pointer = active_pointer_path(root).resolve()
 
             def fail_pointer_swap(src, dst):
-                if Path(dst) == pointer:
+                if Path(dst).resolve() == pointer:
                     raise OSError("simulated activation interruption")
                 return real_replace(src, dst)
 
@@ -185,6 +213,114 @@ class ImmutableGenerationLifecycleTests(unittest.TestCase):
             copied = target / "sample"
             self.assertIn("instructions-v1", (copied / "SKILL.md").read_text(encoding="utf-8"))
             self.assertIn("script-v1", (copied / "scripts" / "run.py").read_text(encoding="utf-8"))
+
+    def test_controller_rejects_metadata_and_generation_indirection(self):
+        cases = (".aiverse", ".aiverse/generations")
+        for relative in cases:
+            with self.subTest(relative=relative):
+                with tempfile.TemporaryDirectory() as temp:
+                    base = Path(temp)
+                    root = base / "skills"
+                    root.mkdir()
+                    outside = base / "outside"
+                    outside.mkdir()
+                    sentinel = outside / "sentinel.txt"
+                    sentinel.write_text("must remain outside", encoding="utf-8")
+
+                    if relative != ".aiverse":
+                        (root / ".aiverse").mkdir()
+                    self._make_dir_link(root / relative, outside)
+
+                    with self.assertRaises(RuntimeError):
+                        if relative == ".aiverse":
+                            controller_path(root, "active.json")
+                        else:
+                            generation_path(root, "gen-outside")
+
+                    self.assertEqual(sentinel.read_text(encoding="utf-8"), "must remain outside")
+
+    def test_commit_stage_cannot_write_through_redirected_controller(self):
+        with tempfile.TemporaryDirectory() as temp:
+            base = Path(temp)
+            root = base / "skills"
+            root.mkdir()
+            outside = base / "outside"
+            outside.mkdir()
+            sentinel = outside / "sentinel.txt"
+            sentinel.write_text("external controller data", encoding="utf-8")
+            self._make_dir_link(root / ".aiverse", outside)
+            stage = GenerationFixture.stage(base, "gen-escape", "escape")
+
+            with self.assertRaises(RuntimeError):
+                commit_stage(root, stage, "gen-escape")
+
+            self.assertTrue(stage.exists())
+            self.assertFalse((outside / "generations" / "gen-escape").exists())
+            self.assertEqual(sentinel.read_text(encoding="utf-8"), "external controller data")
+
+    def test_public_purge_refuses_redirected_generation_store_without_external_deletion(self):
+        with tempfile.TemporaryDirectory() as temp:
+            base = Path(temp)
+            root = base / "skills"
+            root.mkdir()
+            GenerationFixture.commit(root, base, "gen-v1", "v1")
+
+            generation_root = generations_dir(root)
+            shutil.rmtree(generation_root)
+            outside = base / "outside-generations"
+            orphan = outside / "gen-orphan"
+            orphan.mkdir(parents=True)
+            sentinel = orphan / "sentinel.txt"
+            sentinel.write_text("do not delete", encoding="utf-8")
+            self._make_dir_link(generation_root, outside)
+
+            pointer_before = active_pointer_path(root).read_bytes()
+            with self.assertRaises(RuntimeError):
+                skills.purge_generations(root, keep=0, confirmed=True)
+
+            self.assertEqual(sentinel.read_text(encoding="utf-8"), "do not delete")
+            self.assertEqual(active_pointer_path(root).read_bytes(), pointer_before)
+
+    def test_learning_state_refuses_redirected_controller_storage(self):
+        with tempfile.TemporaryDirectory() as temp:
+            base = Path(temp)
+            root = base / "skills"
+            root.mkdir()
+            GenerationFixture.commit(root, base, "gen-v1", "v1")
+
+            outside = base / "outside-learning"
+            outside.mkdir()
+            sentinel = outside / "sentinel.txt"
+            sentinel.write_text("no learning writes", encoding="utf-8")
+            self._make_dir_link(controller_path(root) / "learning", outside)
+
+            with self.assertRaises(RuntimeError):
+                learning.ensure_learning_state(skills, root)
+
+            self.assertEqual(sentinel.read_text(encoding="utf-8"), "no learning writes")
+            self.assertEqual(list(outside.iterdir()), [sentinel])
+
+    def test_status_refuses_external_controller_state(self):
+        with tempfile.TemporaryDirectory() as temp:
+            base = Path(temp)
+            root = base / "skills"
+            root.mkdir()
+            outside = base / "outside-state"
+            outside.mkdir()
+            (outside / "active.json").write_text(
+                json.dumps({
+                    "schema_version": 1,
+                    "state": "uninstalled",
+                    "generation_id": None,
+                    "generation_digest_sha256": None,
+                    "history": ["gen-outside"],
+                }) + "\n",
+                encoding="utf-8",
+            )
+            self._make_dir_link(root / ".aiverse", outside)
+
+            with self.assertRaises(RuntimeError):
+                skills.status_report(root)
 
 
 if __name__ == "__main__":
