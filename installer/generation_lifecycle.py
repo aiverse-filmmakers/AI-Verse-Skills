@@ -12,10 +12,12 @@ from __future__ import annotations
 from contextlib import contextmanager
 from dataclasses import dataclass
 import datetime as dt
+import errno
 import hashlib
 import json
 import os
 from pathlib import Path
+import socket
 import shutil
 import tempfile
 import time
@@ -144,6 +146,83 @@ def _atomic_json_write(path: Path, data: Dict[str, object]) -> None:
             os.unlink(temp_name)
 
 
+def _process_is_alive(pid: int) -> Optional[bool]:
+    """Return True/False when local process liveness is knowable, else None."""
+
+    if not isinstance(pid, int) or isinstance(pid, bool) or pid <= 0:
+        return None
+    if pid == os.getpid():
+        return True
+
+    if os.name == "nt":
+        try:
+            import ctypes
+            from ctypes import wintypes
+
+            process_query_limited_information = 0x1000
+            still_active = 259
+            error_invalid_parameter = 87
+
+            kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+            open_process = kernel32.OpenProcess
+            open_process.argtypes = [wintypes.DWORD, wintypes.BOOL, wintypes.DWORD]
+            open_process.restype = wintypes.HANDLE
+            get_exit_code_process = kernel32.GetExitCodeProcess
+            get_exit_code_process.argtypes = [wintypes.HANDLE, ctypes.POINTER(wintypes.DWORD)]
+            get_exit_code_process.restype = wintypes.BOOL
+            close_handle = kernel32.CloseHandle
+            close_handle.argtypes = [wintypes.HANDLE]
+            close_handle.restype = wintypes.BOOL
+
+            handle = open_process(process_query_limited_information, False, pid)
+            if not handle:
+                error = ctypes.get_last_error()
+                if error == error_invalid_parameter:
+                    return False
+                return None
+            try:
+                exit_code = wintypes.DWORD()
+                if not get_exit_code_process(handle, ctypes.byref(exit_code)):
+                    return None
+                return exit_code.value == still_active
+            finally:
+                close_handle(handle)
+        except Exception:
+            return None
+
+    try:
+        os.kill(pid, 0)
+    except ProcessLookupError:
+        return False
+    except PermissionError:
+        return True
+    except OSError as exc:
+        if exc.errno == errno.ESRCH:
+            return False
+        if exc.errno == errno.EPERM:
+            return True
+        return None
+    return True
+
+
+def _read_lock_holder(path: Path) -> Optional[Dict[str, object]]:
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (FileNotFoundError, json.JSONDecodeError, OSError, UnicodeError):
+        return None
+    return data if isinstance(data, dict) else None
+
+
+def _holder_is_alive(path: Path) -> Optional[bool]:
+    holder = _read_lock_holder(path)
+    if holder is None:
+        return None
+    holder_host = holder.get("hostname")
+    if holder_host not in {None, "", socket.gethostname()}:
+        return None
+    return _process_is_alive(holder.get("pid"))
+
+
 def _release_lock_if_owned(path: Path, token: str) -> None:
     try:
         data = json.loads(path.read_text(encoding="utf-8"))
@@ -166,6 +245,7 @@ def lifecycle_lock(root: Path, *, timeout_seconds: float = LOCK_TIMEOUT_SECONDS)
     payload = json.dumps({
         "token": token,
         "pid": os.getpid(),
+        "hostname": socket.gethostname(),
         "acquired_at": dt.datetime.now(dt.timezone.utc).isoformat(),
     }) + "\n"
 
@@ -178,11 +258,17 @@ def lifecycle_lock(root: Path, *, timeout_seconds: float = LOCK_TIMEOUT_SECONDS)
             except FileNotFoundError:
                 continue
             if age > LOCK_STALE_SECONDS:
-                try:
-                    path.unlink()
-                except FileNotFoundError:
-                    pass
-                continue
+                holder = _read_lock_holder(path)
+                holder_live = _holder_is_alive(path)
+                if holder is not None and holder_live is False:
+                    observed_token = holder.get("token")
+                    current = _read_lock_holder(path)
+                    if current is not None and current.get("token") == observed_token:
+                        try:
+                            path.unlink()
+                        except FileNotFoundError:
+                            pass
+                    continue
             if time.monotonic() >= deadline:
                 raise RuntimeError(f"Skills lifecycle is busy for {root}; another mutation holds {path}")
             time.sleep(0.05)
