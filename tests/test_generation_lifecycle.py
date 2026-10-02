@@ -2,8 +2,10 @@ import json
 import os
 import shutil
 import subprocess
+import sys
 import tempfile
 import threading
+import time
 import unittest
 from pathlib import Path
 from unittest import mock
@@ -13,6 +15,7 @@ from installer import learning
 from installer.aiverse_skills_v3 import digest, materialize_adapter, verify_adapter_target
 from installer.generation_lifecycle import (
     GENERATION_SCHEMA_VERSION,
+    LOCK_STALE_SECONDS,
     active_pointer_path,
     activate_generation,
     commit_stage,
@@ -21,6 +24,7 @@ from installer.generation_lifecycle import (
     generation_path,
     generations_dir,
     lifecycle_lock,
+    lifecycle_lock_path,
     mark_uninstalled,
     pin_active_generation,
     read_active_pointer,
@@ -174,6 +178,63 @@ class ImmutableGenerationLifecycleTests(unittest.TestCase):
 
             self.assertEqual(len(errors), 1)
             self.assertIn("lifecycle is busy", errors[0])
+
+    def test_stale_lifecycle_lock_is_not_reclaimed_while_holder_is_live(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp) / "skills"
+            errors = []
+
+            def contender():
+                try:
+                    with lifecycle_lock(root, timeout_seconds=0.10):
+                        pass
+                except RuntimeError as exc:
+                    errors.append(str(exc))
+
+            with lifecycle_lock(root):
+                path = lifecycle_lock_path(root)
+                stale_time = time.time() - LOCK_STALE_SECONDS - 10
+                os.utime(path, (stale_time, stale_time))
+                thread = threading.Thread(target=contender)
+                thread.start()
+                thread.join(timeout=2)
+                self.assertFalse(thread.is_alive())
+                self.assertTrue(path.exists())
+
+            self.assertEqual(len(errors), 1)
+            self.assertIn("lifecycle is busy", errors[0])
+            self.assertFalse(lifecycle_lock_path(root).exists())
+
+    def test_stale_lifecycle_lock_is_recovered_after_holder_crash(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp) / "skills"
+            code = (
+                "import os, sys\n"
+                "from pathlib import Path\n"
+                "from installer.generation_lifecycle import lifecycle_lock\n"
+                "with lifecycle_lock(Path(sys.argv[1])):\n"
+                "    os._exit(0)\n"
+            )
+            completed = subprocess.run(
+                [sys.executable, "-c", code, str(root)],
+                cwd=Path(__file__).resolve().parents[1],
+                check=False,
+            )
+            self.assertEqual(completed.returncode, 0)
+
+            path = lifecycle_lock_path(root)
+            self.assertTrue(path.exists())
+            crashed_holder = json.loads(path.read_text(encoding="utf-8"))
+            self.assertNotEqual(crashed_holder["pid"], os.getpid())
+            stale_time = time.time() - LOCK_STALE_SECONDS - 10
+            os.utime(path, (stale_time, stale_time))
+
+            with lifecycle_lock(root, timeout_seconds=1.0):
+                recovered = json.loads(path.read_text(encoding="utf-8"))
+                self.assertEqual(recovered["pid"], os.getpid())
+                self.assertNotEqual(recovered["token"], crashed_holder["token"])
+
+            self.assertFalse(path.exists())
 
     def test_generation_tampering_is_detected_before_pin(self):
         with tempfile.TemporaryDirectory() as temp:
