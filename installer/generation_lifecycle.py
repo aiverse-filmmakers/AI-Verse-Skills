@@ -263,7 +263,12 @@ def lifecycle_lock(root: Path, *, timeout_seconds: float = LOCK_TIMEOUT_SECONDS)
                 if holder is not None and holder_live is False:
                     observed_token = holder.get("token")
                     current = _read_lock_holder(path)
-                    if current is not None and current.get("token") == observed_token:
+                    if (
+                        isinstance(observed_token, str)
+                        and observed_token
+                        and current is not None
+                        and current.get("token") == observed_token
+                    ):
                         try:
                             path.unlink()
                         except FileNotFoundError:
