@@ -1,0 +1,133 @@
+{
+  "schema_version": "1.0.0",
+  "skill": "cinematic-realism-director",
+  "task": "9.5-reference-match-evals",
+  "purpose": "Verify that reference analysis transfers observable visual DNA while separating observation from uncertain hardware inference, preserving reference roles, and allowing target locks to override reference tendencies.",
+  "scoring": {
+    "pass_condition": "The result must state or encode what was observed, what is transferable, what remains reference-specific, what is uncertain, and which target locks override the reference. Exact hardware may be factual only when supported by user-supplied metadata or another authoritative source.",
+    "critical_failures": [
+      "claiming an exact camera, lens, aperture, stock or LUT solely from image appearance",
+      "copying incidental subject matter or production details that were not assigned as transferable reference DNA",
+      "letting a style/light reference overwrite identity or product-geometry locks",
+      "averaging multiple references without explicit roles or priorities",
+      "changing frozen-moment pose/action when only camera viewpoint should change",
+      "treating uncertain hardware hypotheses as confirmed metadata"
+    ]
+  },
+  "cases": [
+    {
+      "id": "ref-observation-001",
+      "scenario": "single_reference_no_metadata",
+      "user_request": "Match the look of this reference for my own subject and location.",
+      "reference_observations": ["wide-normal field of view", "camera near eye level", "moderate depth", "soft camera-left key", "dense neutral shadows", "restrained saturation", "fine organic texture"],
+      "expected_transfer": ["field-of-view character", "camera relationship", "depth behavior", "lighting direction/softness", "tone", "texture strength"],
+      "expected_uncertain": ["exact camera body", "exact lens model", "exact focal length", "exact aperture", "exact film stock"],
+      "must_not": ["state ARRI ALEXA 35 as fact", "state 35mm Cooke S4 as fact", "state f/2.8 as fact"],
+      "reason": "Observable appearance supports visual-DNA transfer but not exact hardware certainty."
+    },
+    {
+      "id": "ref-metadata-001",
+      "scenario": "reference_with_authoritative_metadata",
+      "user_request": "The reference metadata says Sony VENICE 2, 50mm, T2.8. Use that as known metadata and match the visible look.",
+      "supplied_metadata": {
+        "camera": "Sony VENICE 2",
+        "focal_length": "50mm",
+        "aperture": "T2.8"
+      },
+      "expected_known_metadata": ["Sony VENICE 2", "50mm", "T2.8"],
+      "expected_observation": ["lighting", "depth behavior", "tone", "materials", "composition"],
+      "must_not": ["downgrade supplied metadata to a visual guess", "invent an exact lens model or stock not supplied"],
+      "reason": "Authoritative metadata and direct observation have different provenance and should coexist."
+    },
+    {
+      "id": "ref-hypothesis-001",
+      "scenario": "hardware_hypothesis",
+      "user_request": "What lens does this feel like, and recreate that behavior?",
+      "reference_observations": ["soft contrast", "gentle focus falloff", "mild warm flare", "rounded out-of-focus highlights"],
+      "expected_output": {
+        "hardware_hypothesis_allowed": true,
+        "hardware_fact_allowed": false,
+        "observable_traits_authoritative": true
+      },
+      "must_not": ["present Cooke Panchro or Canon K35 as confirmed", "make the recreation depend on one unverified lens name"],
+      "reason": "Lens-family guesses may be useful hypotheses, but observable optical traits are the reliable transferable layer."
+    },
+    {
+      "id": "ref-multi-001",
+      "scenario": "multiple_references_roles",
+      "user_request": "Use reference A for the person, B for composition and lens feel, and C for lighting and color.",
+      "reference_roles": {
+        "A": "identity_only",
+        "B": "composition_perspective_optical_behavior",
+        "C": "lighting_color_only"
+      },
+      "expected_behavior": ["preserve roles independently", "identity from A must outrank style tendencies in B/C", "composition should not copy person from B", "lighting/color should not copy incidental scene content from C"],
+      "must_not": ["average all three into one undefined style", "borrow identity from B or C", "let C change composition without instruction"],
+      "reason": "Multi-reference conditioning requires an explicit authority map."
+    },
+    {
+      "id": "ref-conflict-001",
+      "scenario": "reference_vs_target_lock",
+      "user_request": "Match this reference's color, lighting and texture, but my target must stay a true 90-degree top-down shot with deep focus.",
+      "target_locks": {
+        "camera_angle": "true_90_degree_top_down",
+        "depth_behavior": "deep_focus"
+      },
+      "reference_tendencies": ["low three-quarter camera", "shallow depth", "warm soft light", "muted color", "fine grain"],
+      "expected_transfer": ["warm soft light if physically compatible", "muted color", "fine grain if justified"],
+      "expected_rejection": ["reference camera angle", "reference shallow depth"],
+      "must_not": ["tilt away from top-down", "make target shallow focus just to imitate reference"],
+      "reason": "Target locks outrank reference tendencies."
+    },
+    {
+      "id": "ref-content-001",
+      "scenario": "content_specific_not_transferable",
+      "user_request": "Give my desert fashion image the lighting and texture of this motel-room reference.",
+      "reference_content_specific": ["motel bed", "wallpaper", "lamp", "room layout"],
+      "reference_transferable": ["soft tungsten practical motivation", "low saturation", "dense blacks", "restrained grain"],
+      "must_transfer": ["lighting/color/texture language where physically compatible"],
+      "must_not": ["add motel furniture", "copy wallpaper", "move target into an interior"],
+      "reason": "Visual DNA and incidental subject matter must remain separate."
+    },
+    {
+      "id": "ref-frozen-001",
+      "scenario": "same_moment_camera_change",
+      "user_request": "Keep the exact same frozen instant, but place the camera over the father's shoulder looking down at the child playing in the sand.",
+      "preserve": ["timecode", "all body poses", "gaze", "expressions", "hands", "props", "clothes", "environment state", "lighting", "shadows"],
+      "allowed_change": ["camera position", "camera orientation", "focal/framing if needed", "visibility and parallax resulting from camera move"],
+      "must_not": ["change the child's action", "turn the father toward camera", "introduce a new pose", "change lighting to fit the new view"],
+      "reason": "Reference Match must support camera redesign while keeping scene state frozen."
+    },
+    {
+      "id": "ref-topdown-001",
+      "scenario": "formation_preservation",
+      "user_request": "Turn this convoy reference into a perfect face-down aerial view. Keep the three buggies in the middle and one ATV front and back, all facing the same direction.",
+      "preserve": ["vehicle count", "vehicle type", "formation", "relative ordering", "direction", "desert environment"],
+      "target_lock": ["optical axis perpendicular to ground plane"],
+      "allowed_change": ["camera viewpoint", "resulting occlusion", "framing"],
+      "must_not": ["use high three-quarter angle", "reorder convoy", "rotate vehicles inconsistently"],
+      "reason": "True top-down geometry and formation preservation are testable independently."
+    },
+    {
+      "id": "ref-product-001",
+      "scenario": "product_identity_priority",
+      "user_request": "Use reference A for this exact bottle geometry and label, and reference B for the dramatic lighting only.",
+      "reference_roles": {
+        "A": "product_geometry_label_identity",
+        "B": "lighting_only"
+      },
+      "expected_behavior": ["A is preservation-critical", "B may alter light/reflection behavior only where it does not alter product design", "label text remains locked"],
+      "must_not": ["reshape bottle to resemble B", "alter label typography", "borrow product from B"],
+      "reason": "Product identity/geometry must outrank lighting/style references."
+    },
+    {
+      "id": "ref-provider-001",
+      "scenario": "provider_cannot_accept_all_references",
+      "user_request": "Use four references: identity, product, location, and lighting. The target provider can accept only two references.",
+      "reference_priority": ["identity", "product", "location", "lighting"],
+      "expected_behavior": ["keep full role map internally", "prioritize identity and product references", "translate location/lighting DNA into text where possible", "disclose meaningful conditioning loss"],
+      "must_not": ["silently discard identity", "pretend all four references were supplied", "change universal shot because provider limit is lower"],
+      "reason": "Reference fallback must preserve authority even when provider conditioning capacity is smaller."
+    }
+  ]
+}
