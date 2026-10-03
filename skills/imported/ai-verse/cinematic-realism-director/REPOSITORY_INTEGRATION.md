@@ -34,7 +34,7 @@ Reason:
 
 Therefore Phase 10 preserves the existing canonical accounting instead of casually turning the ranked catalog into 101 employees or displacing another capability.
 
-This is a deliberate compatibility choice, not an omission.
+This is a deliberate compatibility choice, not an omission. Ranked-catalog promotion remains a separate explicit product decision.
 
 ## Metadata Already Applicable
 
