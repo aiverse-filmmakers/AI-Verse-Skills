@@ -6,19 +6,30 @@ Canonical plan: `IMPLEMENTATION_PLAN.md`
 
 ## Current State
 
-- Phase 0: COMPLETE
-- Task 0.1: COMPLETE
-- Task 0.2: COMPLETE
-- Task 0.3: COMPLETE
-- Task 0.4: COMPLETE
-- Task 0.5: COMPLETE
-- Next task: 1.1 - Build source ledger framework
+- Phase 0: COMPLETE, POST-RESEARCH RE-AUDIT PASSED
+- Phase 1: IN PROGRESS
+- Task 1.1: COMPLETE
+- Task 1.2: COMPLETE
+- Task 1.3: COMPLETE
+- Task 1.4: COMPLETE
+- Task 1.5: COMPLETE
+- Task 1.6: COMPLETE
+- Task 1.7: COMPLETE
+- Task 1.8: NEXT
+
+`IMPLEMENTATION_PLAN.md` contains the authoritative task definitions. This file contains the authoritative current completion state.
+
+# Phase 0 - Architecture, Scope, and Governance
+
+Status: COMPLETE
 
 ## Task 0.1 - Freeze package identity and routing scope
 
 Status: COMPLETE
 
-### Frozen identity
+Evidence: `references/routing.md`
+
+Frozen identity:
 
 ```text
 name: cinematic-realism-director
@@ -29,139 +40,71 @@ primary_medium: still images
 primary_role: cinematic still-image direction and photorealism intelligence
 ```
 
-### Evidence
+Acceptance:
 
-Created `references/routing.md` with:
-
-- stable package identity;
-- primary still-image scope;
-- positive activation boundaries;
-- negative activation boundaries;
-- Video Editor ownership boundary;
-- Interface Designer ownership boundary;
-- video/temporal boundary;
-- borderline routing rules;
-- routing authority order;
-- positive and negative activation fixtures;
-- explicit scope-change rule.
-
-### Acceptance check
-
-- [x] name is stable
-- [x] scope does not overlap unnecessarily with Video Editor
-- [x] scope does not overlap unnecessarily with Interface Designer
+- [x] stable name
 - [x] still-image creation/editing is primary
-- [x] video is discussed only where it changes a still-frame decision or belongs to future/adjacent workflow ownership
+- [x] no unnecessary Video Editor overlap
+- [x] no unnecessary Interface Designer overlap
+- [x] video only where it affects a frozen frame or future handoff
 
 ## Task 0.2 - Define standalone portability contract
 
 Status: COMPLETE
 
-### Evidence
+Evidence: `references/portability.md`
 
-Created `references/portability.md` with:
-
-- package folder as the canonical portable runtime unit;
-- package-local required references only;
-- no required repository-root files/scripts;
-- no required sibling skills;
-- no AI-Verse OS requirement for prompt-only/reasoning operation;
-- no MCP requirement for V1 core operation;
-- no API-key requirement for prompt-only operation;
-- host-independent/provider-neutral core logic;
-- local adapter and schema requirements;
-- generic adapter fallback;
-- isolated-folder V1 acceptance requirements.
-
-### Acceptance check
+Acceptance:
 
 - [x] no required parent-directory references
 - [x] no required sibling skills
 - [x] no required AI-Verse OS
 - [x] no required MCP
-- [x] no required API key for prompt-only operation
+- [x] no API key required for prompt-only operation
+- [x] local adapters/schemas/references remain package-owned
+- [x] isolated-folder release test required before V1
 
 ## Task 0.3 - Define host capability degradation rules
 
 Status: COMPLETE
 
-### Evidence
+Evidence: `references/host-capabilities.md`
 
-Created `references/host-capabilities.md`.
+Defined H1-H6 capability classes spanning native generation/editing through text-only hosts.
 
-Defined six capability classes:
+Acceptance:
 
-- H1 native generation + editing;
-- H2 generation without true editing;
-- H3 editing without general text-to-image generation;
-- H4 vision + external/granted image tools;
-- H5 vision without image execution;
-- H6 text-only.
-
-The contract also defines:
-
-- operation matrix by host class;
-- action-priority hierarchy;
-- explicit prompt-only override;
-- image-target availability rule;
-- execution-confirmed versus visual-quality-verified distinction;
-- unknown-provider generic fallback;
-- degradation without reduction of cinematic reasoning quality;
-- failure conditions for false capability claims.
-
-### Acceptance check
-
-- [x] native image-generation hosts produce a direct execution path
-- [x] image-editing hosts produce a direct repair/edit path
-- [x] external image-tool hosts route through granted capabilities only
-- [x] vision-only hosts produce diagnosis + prompt/spec outputs
-- [x] text-only hosts produce useful AUTO/manual/prompt outputs
-- [x] every host class produces a useful result
-- [x] no host class requires false claims of generation/editing/inspection
+- [x] every host class has a useful result path
+- [x] capable image hosts execute when requested
+- [x] weaker hosts degrade to prompt/spec/diagnosis
+- [x] no false claim of generation, editing, or inspection
+- [x] prompt-only user intent overrides automatic execution
+- [x] execution confirmation is distinct from visual-quality verification
 
 ## Task 0.4 - Define explicit-lock semantics
 
 Status: COMPLETE
 
-### Evidence
+Evidence: `references/locks.md`
 
-Created `references/locks.md`.
+Acceptance:
 
-The lock contract defines:
-
-- hard locks;
-- preservation locks;
-- soft preferences;
-- AUTO fields;
-- lock precedence;
-- partial specification behavior;
-- contradiction classes C0-C3;
-- reconciliation through AUTO fields before touching locks;
-- semantic translation when providers do not expose literal hardware controls;
-- preservation-first Reality Repair behavior;
-- lock persistence and revision rules;
-- uncertainty rules for reference-derived values;
-- mandatory lock verification before full success.
-
-### Acceptance check
-
-- [x] explicit values become locks by default
-- [x] locks cannot be silently changed
-- [x] contradictions are handled predictably
-- [x] reconcilable tension is solved through AUTO fields first
-- [x] unspecified parameters remain inferable
-- [x] provider limitations do not silently erase user intent
-- [x] preservation locks are enforced in image-editing workflows
+- [x] explicit values become locks
+- [x] preservation requirements become locks
+- [x] unspecified values remain AUTO
+- [x] provider defaults cannot silently override locks
+- [x] contradictions use deterministic C0-C3 classification
+- [x] reconcilable conflicts use AUTO fields first
+- [x] reference analysis cannot invent exact hardware locks
+- [x] lock verification required before full success
 
 ## Task 0.5 - Define success contract and failure vocabulary
 
 Status: COMPLETE
 
-### Evidence
+Evidence: `references/success-contract.md`
 
-Created `references/success-contract.md`.
-
-Defined top-level states:
+Top-level states:
 
 ```text
 success
@@ -170,7 +113,7 @@ blocked
 failed
 ```
 
-Defined verification levels:
+Verification levels:
 
 ```text
 V0 reasoning only
@@ -179,45 +122,195 @@ V2 visual inspection completed
 V3 comparative/iterative acceptance
 ```
 
-Defined task-specific postconditions for:
+Acceptance:
 
-- AUTO DIRECT / new generation;
-- CINEMATIZE;
-- REALITY REPAIR;
-- REFERENCE MATCH;
-- MANUAL CAMERA;
-- PROMPT ONLY;
-- SHOT RECIPE / EXPLAIN.
-
-Also froze:
-
-- Reality Gate participation in success;
-- execution confirmation versus visual verification;
-- uncertainty handling;
-- retry/iteration principle;
-- lightweight beginner reporting versus structured agent/test reporting.
-
-### Acceptance check
-
-- [x] success has explicit postconditions
-- [x] partial is distinct from success and blocked
-- [x] blocked represents missing prerequisites/capabilities rather than internal failure
-- [x] failed represents execution/logic/postcondition failure
-- [x] generation/edit/analysis/prompt-only workflows have distinct success semantics
-- [x] tool-call success is not treated as visual-quality proof
+- [x] generation/edit/analysis/prompt-only success postconditions defined
+- [x] missing prerequisite is not confused with internal failure
+- [x] API/tool success is not visual-quality proof
 - [x] Reality Gate participates in final acceptance
-- [x] user-facing status remains concise by default
+- [x] normal beginner output remains concise
 
-# Phase 0 Gate
+## Phase 0 Post-Research Re-Audit
 
 Status: PASSED
 
-Architecture, scope, portability, host degradation, user-lock semantics, and truthful success/failure reporting are frozen before adding the cinematic research corpus.
+Evidence: `PHASE_0_AUDIT.md`
 
-Phase 1 may now begin.
+After Tasks 1.1-1.7 began landing, all Phase 0 contracts were rechecked against the new research files.
 
-## Change Discipline
+Result:
 
-Implement numbered tasks from `IMPLEMENTATION_PLAN.md` deliberately and record acceptance evidence here.
+```text
+Architecture violations: 0
+Standalone violations: 0
+Scope violations: 0
+Lock violations: 0
+Host-capability violations: 0
+Success-contract violations: 0
+Research-isolation violations: 0
+```
 
-For research tasks, preserve provenance and do not allow weaker internal skills to become authoritative cinematic sources without independent verification.
+Phase 1 research remains package-local evidence and does not silently become provider-specific core behavior.
+
+# Phase 1 - Research Corpus and Provenance
+
+Status: IN PROGRESS
+
+## Task 1.1 - Build source ledger framework
+
+Status: COMPLETE
+
+Evidence: `references/source-ledger.md`
+
+Implemented:
+
+- CONFIRMED / CORROBORATED / MODEL-BEHAVIOR / PROVIDER-SPECIFIC / INFERRED classes;
+- source-authority hierarchy;
+- time-sensitivity rules;
+- copyright/licensing boundary;
+- public/private evidence boundary;
+- source-by-source ledger;
+- initial known-gaps register.
+
+## Task 1.2 - Capture Magnific public evidence
+
+Status: COMPLETE
+
+Evidence: `references/research/magnific.md`
+
+Captured:
+
+- current live Cinematic model surface;
+- exposed camera/lens/focal/aperture/shot ontology;
+- film stocks/movie looks;
+- lighting/motion blur/grain/halation/tonal controls;
+- reimagine/structure-preservation/repair concepts;
+- relighting and enhancement implications;
+- explicit limits on what is not publicly knowable.
+
+## Task 1.3 - Capture Higgsfield public evidence
+
+Status: COMPLETE
+
+Evidence: `references/research/higgsfield.md`
+
+Captured:
+
+- Soul Cinema role;
+- Cinema Studio engineering philosophy;
+- technical cinematography vocabulary as learned visual priors;
+- DP/operator testing concept;
+- lens-character amplification concept;
+- prompt-enhancement/AUTO principle;
+- Soul ID / color continuity separation;
+- hero-frame-first workflow;
+- official public Agent Skill routing evidence;
+- version-drift caution.
+
+## Task 1.4 - Capture camera manufacturer knowledge
+
+Status: COMPLETE
+
+Evidence: `references/research/cameras.md`
+
+Captured first-party evidence for:
+
+- ARRI ALEXA 35 / REVEAL;
+- Sony VENICE 2;
+- RED V-RAPTOR / [X];
+- Canon C500 Mark II;
+- Blackmagic URSA Mini Pro / BRAW color pipeline;
+- format/camera/color-science translation rules;
+- explicit IMAX/65-70mm evidence gap.
+
+## Task 1.5 - Capture lens manufacturer knowledge
+
+Status: COMPLETE
+
+Evidence: `references/research/lenses.md`
+
+Captured first-party/corroborated evidence for:
+
+- ARRI Signature;
+- Panavision G-Series;
+- Cooke Panchro Classic;
+- Cooke S4-type practitioner descriptions;
+- ZEISS Supreme / Radiance;
+- Hawk V-Lite;
+- Angenieux Optimo;
+- Canon K35 historical evidence and current character gap;
+- Summilux-C / Master Prime evidence gaps;
+- focal-length/perspective separation;
+- anamorphic anti-caricature rule.
+
+## Task 1.6 - Capture film stock and photochemical knowledge
+
+Status: COMPLETE
+
+Evidence: `references/research/film-stocks.md`
+
+Captured:
+
+- Kodak VISION3 500T;
+- Kodak VISION3 250D;
+- EASTMAN DOUBLE-X;
+- EKTACHROME 100D;
+- stable Portra/Ektar/T-MAX family traits;
+- negative vs reversal distinction;
+- tungsten/daylight balance rules;
+- grain/halation/bloom separation;
+- unresolved provider-preset stock gaps.
+
+## Task 1.7 - Capture lighting and cinematography fundamentals
+
+Status: COMPLETE
+
+Evidence: `references/research/lighting.md`
+
+Captured:
+
+- motivated lighting;
+- source-size/softness relationship;
+- inverse-square qualitative implications;
+- negative fill;
+- bounce;
+- practicals;
+- window light;
+- sun/sky behavior;
+- backlight/rim restraint;
+- high-key/low-key/chiaroscuro distinction;
+- exposure hierarchy;
+- specular/diffuse material response;
+- atmosphere/scattering;
+- mixed-source/white-balance logic.
+
+## Task 1.8 - Capture color and display-independent visual principles
+
+Status: NEXT
+
+No completion claim yet.
+
+## Tasks 1.9-1.11
+
+Status: NOT YET COMPLETE
+
+These remain:
+
+- current model-provider prompting guidance;
+- secondary public skill/workflow review;
+- formal research-gap audit and Phase 1 gate.
+
+# Change Discipline
+
+Phase 0 remains the governing architecture contract.
+
+Research may inform later runtime rules, but it cannot silently:
+
+- expand the skill into temporal video authority;
+- introduce external runtime dependencies;
+- turn one provider into the core brain;
+- override explicit user locks;
+- convert marketing claims into physical truth;
+- turn secondary public skills into authoritative sources.
+
+Any later change that threatens one of those invariants triggers another architecture audit.
