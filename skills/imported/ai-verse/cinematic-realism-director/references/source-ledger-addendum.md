@@ -20,6 +20,7 @@ Future consolidation may merge these entries into the primary ledger without cha
 | MODEL-SEED-004 | https://docs.byteplus.com/en/docs/modelark/seedream-5-0-pro-editing-guide | BytePlus/ModelArk first-party Seedream documentation | MODEL-BEHAVIOR / PROVIDER-SPECIFIC | Seedream 5.0 Pro/Flash point/bounding-box spatial editing and explicit unchanged regions | Version/API specific |
 | MODEL-BFL-004 | https://github.com/black-forest-labs/skills/blob/master/skills/flux-image-best-practices/SKILL.md | Black Forest Labs official GitHub | MODEL-BEHAVIOR / PROVIDER-SPECIFIC | Official FLUX prompt structure, positive-description rule, model-specific editing/prompting practices | Recheck before adapter release |
 | MODEL-BFL-005 | https://docs.bfl.ml/ | Black Forest Labs official docs | MODEL-BEHAVIOR / PROVIDER-SPECIFIC | Current FLUX family overview and prompting documentation index | Model surface changes over time |
+| MODEL-OAI-003 | https://developers.openai.com/api/docs/guides/image-generation | OpenAI first-party docs | MODEL-BEHAVIOR / PROVIDER-SPECIFIC | Current GPT Image generation/editing surface, Sunburst/Flare model variants, Responses/Image API routing, output controls | Rechecked on 2026-10-03; model names and parameters are version-sensitive |
 
 ## Addendum Rule
 
