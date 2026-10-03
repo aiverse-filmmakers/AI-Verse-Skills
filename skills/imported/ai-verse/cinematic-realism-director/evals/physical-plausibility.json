@@ -1,0 +1,101 @@
+{
+  "schema_version": "1.0.0",
+  "skill": "cinematic-realism-director",
+  "task": "9.8-physical-plausibility-evals",
+  "purpose": "Catch optics, perspective, focus, light, shadow, reflection, material, contact, gravity and motion contradictions before a shot is considered physically coherent.",
+  "pass_condition": "The resolved shot or repair plan must explain a physically plausible camera/light/material model, preserve deliberate locks, and surface genuine conflicts instead of masking them with aesthetic effects.",
+  "critical_failures": [
+    "using fisheye curvature to satisfy a rectilinear wide-angle request",
+    "claiming telephoto compression without accounting for camera position",
+    "inventing impossible simultaneous depth behavior without flagging a lock conflict",
+    "adding reflections or shadows inconsistent with source geometry",
+    "allowing floating objects or missing contact response",
+    "repairing geometry failures with texture, grain, blur or sharpening"
+  ],
+  "cases": [
+    {
+      "id": "physics-001",
+      "prompt": "24mm rectilinear lens, camera very close to a shoe in the foreground so it looks huge, but keep the building lines straight in the background.",
+      "must_hold": ["strong near/far scale from camera proximity", "rectilinear projection", "no fisheye curvature"],
+      "reason": "Perspective exaggeration and lens projection are separate."
+    },
+    {
+      "id": "physics-002",
+      "prompt": "Keep the camera in exactly the same position, but change from 35mm to 85mm and crop to the same subject area.",
+      "must_hold": ["perspective geometry remains the same from the unchanged camera position", "field of view changes before crop", "no magical perspective compression claim"],
+      "reason": "Camera position is the primary perspective driver."
+    },
+    {
+      "id": "physics-003",
+      "prompt": "Lock f/1.2 and keep both a close face and a distant city skyline critically sharp.",
+      "must_hold": ["aperture lock preserved", "depth conflict classified rather than silently changing aperture", "geometry/focus alternatives attempted first"],
+      "reason": "Conflicting locks must be surfaced rather than ignored."
+    },
+    {
+      "id": "physics-004",
+      "prompt": "A glossy black car at night on wet pavement, lit by one large storefront from camera-left.",
+      "must_hold": ["body reflections correspond to environment and vehicle curvature", "wet-road highlights follow source geometry", "shadow direction agrees with source"],
+      "reason": "Reflective surfaces must belong to the same light field."
+    },
+    {
+      "id": "physics-005",
+      "prompt": "A ceramic mug resting on a wooden table in soft window light.",
+      "must_hold": ["visible contact or occlusion at mug base", "shadow softness consistent with source size", "material roughness differs between ceramic and wood"],
+      "reason": "Contact and material response are core realism evidence."
+    },
+    {
+      "id": "physics-006",
+      "prompt": "Portrait lit only by a candle held below the subject's face in a dark room.",
+      "must_hold": ["light direction rises from below", "rapid local falloff is plausible", "catchlights and facial highlights agree with candle position"],
+      "reason": "Motivated source geometry must propagate through all visible light evidence."
+    },
+    {
+      "id": "physics-007",
+      "prompt": "Moonlit exterior with a warm porch practical visible behind the subject.",
+      "must_hold": ["mixed sources remain distinguishable", "skin and shadows respond coherently to source directions", "white balance does not erase the source relationship"],
+      "reason": "Mixed-light scenes require coherent source separation."
+    },
+    {
+      "id": "physics-008",
+      "prompt": "Clear drinking glass on a table, realistic studio photograph.",
+      "must_hold": ["glass transmission/refraction/reflection behavior is environment-dependent", "edges and highlights reveal geometry without becoming metallic", "contact remains visible"],
+      "reason": "Transparent materials cannot be rendered as generic glossy solids."
+    },
+    {
+      "id": "physics-009",
+      "prompt": "Heavy wool coat hanging from one shoulder while the person leans forward.",
+      "must_hold": ["fabric folds reflect weight and support points", "gravity direction remains coherent", "cloth does not float or form texture-only wrinkles"],
+      "reason": "Fabric realism requires force and contact logic."
+    },
+    {
+      "id": "physics-010",
+      "prompt": "Natural close beauty portrait, shallow but believable focus.",
+      "must_hold": ["focus plane is continuous", "skin detail respects focus and image scale", "eyes/catchlights remain physically coherent", "background blur does not create cutout edges"],
+      "reason": "Depth, skin and optical falloff must agree."
+    },
+    {
+      "id": "physics-011",
+      "prompt": "A runner moving left to right, subject has slight motion blur but the camera is static.",
+      "must_hold": ["blur direction follows subject motion", "static structures remain comparatively stable", "shadows/reflections do not imply an incompatible motion state"],
+      "reason": "Subject motion and camera motion are distinct."
+    },
+    {
+      "id": "physics-012",
+      "prompt": "Perfect 90-degree top-down view of five vehicles in formation on flat desert ground.",
+      "must_hold": ["optical axis perpendicular to ground plane", "formation and headings remain consistent", "not a high three-quarter approximation"],
+      "reason": "True top-down geometry has a specific camera relationship."
+    },
+    {
+      "id": "physics-013",
+      "prompt": "Over-the-shoulder view from directly behind the father looking down toward his hands and child playing in sand.",
+      "must_hold": ["foreground father establishes camera ownership", "camera is physically near/behind father", "target action remains visible below", "unrequested third person is not invented"],
+      "reason": "OTS is a spatial camera relationship, not merely a label."
+    },
+    {
+      "id": "physics-014",
+      "prompt": "This hand is anatomically malformed and the skin is too smooth. Make it realistic.",
+      "must_hold": ["anatomy/geometry repair precedes skin texture", "pores or grain cannot substitute for structural correction"],
+      "reason": "Reality Gate dependency order prevents cosmetic masking of structural errors."
+    }
+  ]
+}
