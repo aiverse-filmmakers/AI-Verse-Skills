@@ -299,8 +299,8 @@ First resolve the shot. Then adapt it.
 Available adapters:
 
 - `adapters/generic.md`
-- `adapters/openai-image.md`
-- `adapters/gemini-image.md`
+- `adapters/openai.md`
+- `adapters/gemini.md`
 - `adapters/seedream.md`
 - `adapters/flux.md`
 - `adapters/magnific.md`
