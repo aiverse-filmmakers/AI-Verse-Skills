@@ -13,32 +13,28 @@ This file is the authoritative completion state and restart point for future cha
 - Phase 1: COMPLETE, gate PASSED
 - Phase 2: COMPLETE, gate PASSED
 - Phase 3: COMPLETE, gate PASSED
-- Phase 4: IN PROGRESS
-- Task 4.1: COMPLETE
-- Task 4.2: COMPLETE
-- Task 4.3: COMPLETE
-- Task 4.4: COMPLETE
-- Task 4.5: COMPLETE
-- Task 4.6: NEXT
-- Task 4.7: NOT STARTED
-- V1 task progress: **33 / 93 tasks complete**
+- Phase 4: COMPLETE, gate PASSED
+- Phase 5: IN PROGRESS
+- Task 5.1: COMPLETE
+- Task 5.2: COMPLETE
+- Task 5.3: COMPLETE
+- Task 5.4: NEXT
+- V1 task progress: **38 / 93 tasks complete**
 
-Agreed execution rule from this point forward:
+Agreed execution rule:
 
 > Complete a minimum of five numbered tasks per batch. If the current phase ends before five tasks are available, finish the phase, run its gate, and continue into the next phase until at least five numbered tasks have been completed.
 
-Next batch:
+Next batch can complete all five remaining Phase 5 tasks:
 
 ```text
-4.6 Color science and grading strategy
-4.7 Grain, halation, bloom, flare, and texture restraint
-Phase 4 gate
-5.1 Build anti-AI artifact taxonomy
-5.2 Skin realism system
-5.3 Hair and eye realism system
+5.4 Fabric and material realism system
+5.5 Contact, gravity, and environmental interaction
+5.6 Reflection and shadow coherence
+5.7 Optical imperfection without fake vintage spam
+5.8 Build Reality Gate
+Phase 5 gate
 ```
-
-This produces five numbered tasks while also completing and gating Phase 4 before continuing into Phase 5.
 
 ---
 
@@ -60,7 +56,6 @@ Evidence:
 Frozen invariants:
 
 ```text
-first-party package identity
 still-image direction/realism is primary scope
 standalone-folder operation mandatory
 no required AI-Verse OS / MCP / sibling skill / API key for prompt-only reasoning
@@ -76,7 +71,7 @@ success != tool execution alone
 Status: COMPLETE
 Gate: PASSED
 
-Evidence:
+Evidence includes:
 
 - `references/source-ledger.md`
 - `references/source-ledger-addendum.md`
@@ -92,23 +87,7 @@ Evidence:
 - `references/research/secondary-public-workflows.md`
 - `references/research/research-gap-audit.md`
 
-Completed tasks:
-
-```text
-1.1 source ledger framework                         COMPLETE
-1.2 Magnific public evidence                       COMPLETE
-1.3 Higgsfield public evidence                     COMPLETE
-1.4 camera manufacturer knowledge                  COMPLETE
-1.5 lens manufacturer knowledge                    COMPLETE
-1.6 film stock / photochemical knowledge           COMPLETE
-1.7 lighting / cinematography fundamentals         COMPLETE
-1.8 color / display-independent principles         COMPLETE
-1.9 provider prompting guidance                    COMPLETE
-1.10 secondary public workflow review              COMPLETE
-1.11 research gap audit                            COMPLETE
-```
-
-Research debt remains registered rather than guessed.
+Completed: Tasks 1.1-1.11.
 
 ---
 
@@ -127,16 +106,6 @@ Evidence:
 - `references/parameter-conflicts.md`
 - `PHASE_2_AUDIT.md`
 
-Completed tasks:
-
-```text
-2.1 cinematic shot spec                            COMPLETE
-2.2 realism diagnosis schema                       COMPLETE
-2.3 reference DNA schema                           COMPLETE
-2.4 confidence / uncertainty semantics             COMPLETE
-2.5 parameter conflict resolution                  COMPLETE
-```
-
 Core distinctions:
 
 ```text
@@ -147,6 +116,8 @@ AUTO != unknown
 user lock != inference
 preservation lock != creative preference
 ```
+
+Completed: Tasks 2.1-2.5.
 
 ---
 
@@ -166,232 +137,304 @@ Evidence:
 - `references/motion-and-shutter.md`
 - `PHASE_3_AUDIT.md`
 
-Completed tasks:
+Completed: Tasks 3.1-3.7.
+
+Core hard rules include:
 
 ```text
-3.1 visual intent / story-to-shot                   COMPLETE
-3.2 composition and blocking                       COMPLETE
-3.3 capture formats / camera character             COMPLETE
-3.4 lens character                                 COMPLETE
-3.5 focal length / distance / perspective          COMPLETE
-3.6 aperture / focus / depth                       COMPLETE
-3.7 motion / shutter for stills                    COMPLETE
+story before prestige camera/lens tokens
+perspective != focal length alone
+wide lens != fisheye
+large format != automatically shallow DOF
+cinematic != shallow depth
+motion blur != defocus
 ```
-
-Phase 3 established one coherent camera foundation covering visual intent, composition, capture format, lens behavior, geometry, depth, and still-frame motion without generic cinematic filler.
 
 ---
 
 # Phase 4 - Lighting, Exposure, Film Response, and Color
 
-Status: IN PROGRESS
-Goal: build physically motivated lighting, exposure, capture-response, color, and texture systems.
+Status: COMPLETE
+Gate: PASSED
 
-## 4.1 Motivated-lighting engine
+Evidence:
+
+- `references/motivated-lighting.md`
+- `references/lighting-roles.md`
+- `references/environment-lighting-recipes.md`
+- `references/exposure-and-dynamic-range.md`
+- `references/film-and-sensor-response.md`
+- `references/color-science-and-grading.md`
+- `references/texture-effects-restraint.md`
+- `PHASE_4_AUDIT.md`
+
+Completed tasks:
+
+```text
+4.1 motivated-lighting engine                       COMPLETE
+4.2 key/fill/negative-fill/edge/bounce/practicals COMPLETE
+4.3 environment-specific lighting recipes          COMPLETE
+4.4 exposure and dynamic-range behavior             COMPLETE
+4.5 film stock and sensor response mapping          COMPLETE
+4.6 color science and grading strategy              COMPLETE
+4.7 grain/halation/bloom/flare/texture restraint    COMPLETE
+```
+
+## 4.6 Color science and grading strategy
 
 Status: COMPLETE
-Evidence: `references/motivated-lighting.md`
+Evidence: `references/color-science-and-grading.md`
 
-Implemented:
+Implemented provider-neutral runtime rules for:
 
-- source-first lighting design;
-- M0 available-light, M1 enhanced-naturalism, M2 stylized-motivation, M3 expressionistic motivation levels;
-- dominant source selection;
-- direction, apparent source size, falloff and ambient logic;
-- light/material interaction;
-- atmosphere/light-path logic;
-- lighting/exposure coupling;
-- geometric portrait-pattern handling;
-- AUTO behavior by purpose;
-- user lighting locks;
-- reference-match observation without fixture/wattage hallucination;
-- motivated-lighting Reality Gate.
+- capture color vs final grade;
+- white-balance strategy;
+- mixed-source preservation;
+- color separation;
+- contextual saturation;
+- density;
+- skin handling;
+- highlight and shadow color;
+- black levels;
+- highlight rolloff;
+- neutral vs stylized grades;
+- monochrome;
+- brand/product color preservation;
+- reference-match grade observation;
+- Color Reality Gate.
+
+Hard rules:
+
+```text
+log != final grade
+cinematic != teal-orange
+cinematic != desaturated
+film != warm faded LUT
+skin != one orange hue
+density != simply darker
+```
+
+## 4.7 Grain, halation, bloom, flare, and texture restraint
+
+Status: COMPLETE
+Evidence: `references/texture-effects-restraint.md`
+
+Implemented separate systems for:
+
+- film grain;
+- sensor noise;
+- halation;
+- bloom;
+- lens flare;
+- veiling glare;
+- optical diffusion;
+- sharpness;
+- microcontrast;
+- compression/low-fi artifacts;
+- film dirt/dust/scratches/gate weave;
+- material-specific texture hierarchy.
+
+Hard rules:
+
+```text
+film != grain + warmth
+halation != universal red glow
+bloom != global blur
+flare != mandatory cinema token
+realism != dirtiness
+vintage != stack every old-media artifact
+```
+
+# Phase 4 Gate
+
+Status: PASSED
+Evidence: `PHASE_4_AUDIT.md`
+
+Gate cases included:
+
+- natural window portrait;
+- hard-noon travel exterior;
+- tungsten/daylight mixed interior;
+- bright product commercial;
+- neon night street;
+- locked VISION3 500T;
+- locked ALEXA 35 clean digital beauty.
+
+Audit result:
+
+```text
+scope violations: 0
+standalone dependency violations: 0
+provider-core contamination: 0
+explicit-lock violations: 0
+reference-certainty violations: 0
+hidden conflict resolution: 0
+capture-vs-grade conflation: 0
+film-vs-effect conflation: 0
+```
+
+---
+
+# Phase 5 - Physical Realism and Anti-AI Intelligence
+
+Status: IN PROGRESS
+Goal: make realism diagnosis and preservation-aware repair a first-class capability.
+
+## 5.1 Build anti-AI artifact taxonomy
+
+Status: COMPLETE
+Evidence: `references/anti-ai-artifact-taxonomy.md`
+
+Implemented structured diagnostic domains for:
+
+- skin;
+- symmetry/beautification;
+- hair;
+- eyes;
+- anatomy/geometry;
+- fabric;
+- materials/roughness;
+- reflections/refractions;
+- shadows;
+- lighting;
+- exposure/tone;
+- color;
+- perspective;
+- focus/depth;
+- motion;
+- contact/gravity;
+- environment;
+- atmosphere;
+- grain/texture;
+- optical effects;
+- repetition/patterns;
+- text/logos/symbols;
+- overdone cinematic effects.
+
+Also implemented S0-S4 severity, evidence requirements, minimal-repair ordering, and preserve/repair/allow-change boundaries.
 
 Hard rule:
 
 ```text
-cinematic lighting starts from why/where/how the light exists
-not from a list of fashionable lighting labels
+AI-looking != regenerate everything
 ```
 
-Acceptance: PASSED
-
-## 4.2 Key, fill, negative fill, edge, bounce, and practical logic
+## 5.2 Skin realism system
 
 Status: COMPLETE
-Evidence: `references/lighting-roles.md`
-
-Implemented distinct roles and omission rules for:
-
-- key;
-- fill;
-- negative fill;
-- edge/back light;
-- bounce;
-- practicals;
-- ambient light.
-
-Also implemented portrait, product, automotive, exterior, night and mixed-source examples plus role-specific failure checks.
-
-Hard rules:
-
-```text
-not every shot needs every lighting role
-negative fill removes light; it does not add black
-rim light is optional and must be source-motivated
-practicals have local influence, not magical room-wide reach
-bounce must have a plausible surface and color
-```
-
-Acceptance: PASSED
-
-## 4.3 Environment-specific lighting recipes
-
-Status: COMPLETE
-Evidence: `references/environment-lighting-recipes.md`
-
-Implemented adaptive decision recipes for:
-
-- overcast exterior;
-- hard noon sun;
-- golden hour;
-- blue hour;
-- window daylight interior;
-- tungsten practical interior;
-- fluorescent/office;
-- neon city night;
-- moonlit exterior;
-- candle/firelight;
-- commercial soft source;
-- documentary available light;
-- glossy and matte product studio;
-- automotive day/night;
-- food/tabletop;
-- architecture interior/exterior;
-- forest/dappled light;
-- snow;
-- desert;
-- rain/wet night.
-
-Recipes are decision patterns, not fixed prompt templates.
-
-Acceptance: PASSED
-
-## 4.4 Exposure and dynamic-range behavior
-
-Status: COMPLETE
-Evidence: `references/exposure-and-dynamic-range.md`
+Evidence: `references/skin-realism.md`
 
 Implemented:
 
-- exposure hierarchy;
-- subject-priority logic by purpose;
-- highlight protection without universal recovery;
-- intentional clipping rules;
-- shadow-density classes;
-- midtone placement;
-- scene vs local contrast distinction;
-- dynamic-range translation without fake stop-count simulation;
-- camera/film exposure-response integration;
-- interior/window strategies;
-- night exposure hierarchy;
-- bright- and dark-environment behavior;
-- intentional under/overexposure;
-- HDR and clipping failure taxonomy;
-- exposure-lock and reference-match rules;
-- Exposure Reality Gate.
+- region-specific skin texture;
+- pores and fine texture;
+- subtle color variation;
+- source-consistent specular response;
+- restrained subsurface/translucency cues;
+- peach fuzz only when framing/light supports it;
+- age-appropriate texture;
+- makeup vs skin distinction;
+- beauty/commercial vs documentary skin handling;
+- sweat/moisture;
+- anatomy-before-texture rule;
+- focus/resolution coherence;
+- identity-preserving repair sequence;
+- Skin Reality Gate.
 
 Hard rules:
 
 ```text
-dynamic range != everything visible
-good highlights != no clipping anywhere
-dense shadows != crushed blacks
-cinematic exposure != HDR recovery
-manufacturer stop count != literal generated-image capability
+real skin != pore overlay
+beauty != plastic
+realism != aging the subject
+skin != uniform orange
+identity preservation outranks cosmetic AUTO changes
 ```
 
-Acceptance: PASSED
-
-## 4.5 Film stock and sensor response mapping
+## 5.3 Hair and eye realism system
 
 Status: COMPLETE
-Evidence: `references/film-and-sensor-response.md`
+Evidence: `references/hair-and-eye-realism.md`
 
-Implemented runtime mappings for:
+Hair system covers:
 
-- high-end digital cinema response;
-- ARRI ALEXA 35;
-- Sony VENICE 2;
-- RED V-RAPTOR;
-- Canon C500 Mark II;
-- Blackmagic URSA Mini Pro;
-- generic 35mm motion negative;
-- Kodak VISION3 500T;
-- Kodak VISION3 250D;
-- EASTMAN DOUBLE-X;
-- EKTACHROME 100D;
-- Portra;
-- Ektar 100;
-- T-MAX;
-- 16mm;
-- 8mm/Super-8-like intent;
-- cautious 65/70mm intent;
-- analog video/VHS;
-- low-fi digital.
+- mass/silhouette before strands;
+- root direction;
+- gravity/weight;
+- clump hierarchy;
+- restrained flyaways;
+- curl/wave variation;
+- directional specular behavior;
+- color variation;
+- backlight;
+- focus/motion/contact;
+- facial hair.
 
-Also separated:
+Eye system covers:
 
-```text
-stock/camera response
-grain or sensor noise
-halation
-bloom
-flare
-white-balance relationship
-final grade
-```
+- binocular gaze coherence;
+- eyelid/globe geometry;
+- non-white sclera behavior;
+- iris/pupil realism;
+- corneal reflection and source-consistent catchlights;
+- moisture/tear line;
+- lashes/brows;
+- focus/depth;
+- expression integration.
 
 Hard rules:
 
 ```text
-film != warm + grain + faded
-500T != orange
-250D != blue
-camera reference != literal sensor simulation
-provider stock preset != universal stock truth
-halation / bloom / flare are separate systems
+real hair != thousands of perfect strands
+flyaways != mandatory realism
+real eyes != glass marbles
+sclera != pure white
+catchlights != decorative dots
+hair/eye repair must preserve identity and expression
 ```
 
-Acceptance: PASSED
-
-## 4.6 Color science and grading strategy
+## 5.4 Fabric and material realism system
 
 Status: NEXT
 
-Must convert the Phase 1 color research into runtime rules for white balance, color separation, saturation, density, skin, black levels, highlight/shadow color and neutral vs stylized grades.
-
-## 4.7 Grain, halation, bloom, flare, and texture restraint
+## 5.5 Contact, gravity, and environmental interaction
 
 Status: NOT STARTED
 
-Must define these as optional, physically contextual effects rather than mandatory cinema tokens.
+## 5.6 Reflection and shadow coherence
 
-# Phase 4 Gate
+Status: NOT STARTED
+
+## 5.7 Optical imperfection without fake vintage spam
+
+Status: NOT STARTED
+
+## 5.8 Build Reality Gate
+
+Status: NOT STARTED
+
+# Phase 5 Gate
 
 Status: NOT YET RUN
 
-Run after 4.6 and 4.7.
-
 Gate requirement:
 
-> The skill can construct lighting, exposure, film/sensor response, color and texture logic that feels physically motivated rather than procedurally decorated.
+> The skill can explain exactly why an image feels AI-generated and produce a preservation-aware repair plan.
 
 ---
 
 # Next
 
-Complete 4.6 and 4.7, run the Phase 4 gate, then continue directly into Phase 5 Tasks 5.1-5.3 to satisfy the five-task minimum batch rule.
+Complete Phase 5 in one five-task batch:
+
+```text
+5.4 Fabric and material realism system
+5.5 Contact, gravity, and environmental interaction
+5.6 Reflection and shadow coherence
+5.7 Optical imperfection without fake vintage spam
+5.8 Build Reality Gate
+Phase 5 gate
+```
 
 ---
 
@@ -409,8 +452,5 @@ Later phases may not silently:
 - convert marketing language into physical truth;
 - turn secondary public skills into authoritative cinematography sources;
 - use focal length as a false substitute for camera position;
-- use lens/camera/stock names as decorative prestige tokens;
-- default cinematic images to shallow depth, grain, flare, halation, haze, rim light, teal/orange, or motion blur;
-- force every tonal region into HDR-style equal visibility.
-
-Any later change that threatens these invariants triggers another architecture audit.
+- use cinematic artifacts as mandatory realism tokens;
+- beautify or redesign preserved human identity during Reality Repair.
