@@ -1,8 +1,56 @@
 # AI-Verse Cinematic Realism Director
 
+**Version 1.0.0**
+
 A portable Agent Skill for designing, generating, editing, diagnosing, and adapting cinematic still images with grounded cinematography and physical-realism logic.
 
 It works from either a one-sentence beginner request or a detailed expert camera setup. The core skill is provider-independent; provider adapters translate the same resolved shot into OpenAI Images, Gemini, Seedream, FLUX, Magnific Cinematic, Higgsfield Soul Cinema, or a generic natural-language prompt.
+
+## Start Here
+
+### Beginner: one sentence is enough
+
+```text
+woman waiting for a taxi in London at night
+```
+
+The skill should infer the missing composition, camera position, optics, depth, motivated lighting, exposure, color, materials, atmosphere, and realism treatment without asking unnecessary technical questions.
+
+Default beginner behavior is **AUTO DIRECT**.
+
+### Expert: lock what matters
+
+```text
+Low-angle medium-wide frame. 35mm capture character, 24mm rectilinear lens, f/4, deep enough focus to keep the environment readable, hard side sunlight, no flare, no haze.
+```
+
+Every explicit technical value becomes a lock. AUTO fills only unspecified compatible values.
+
+The skill never silently changes a locked value merely because another choice would be easier for a provider.
+
+### Existing image: repair without redesigning it
+
+```text
+Make this image feel less AI-generated. Preserve the identity, pose, wardrobe, framing, background geometry, and lighting direction. Repair only the realism problems.
+```
+
+Reality Repair follows:
+
+```text
+PRESERVE
+-> DIAGNOSE
+-> REPAIR
+-> ALLOW CHANGE
+-> VERIFY
+```
+
+### Prompt only
+
+```text
+Give me the final Seedream prompt only. Do not generate anything.
+```
+
+`PROMPT ONLY` is absolute even when the host has image-generation tools.
 
 ## What It Does
 
@@ -18,30 +66,6 @@ The skill can:
 - generate or edit directly when the current host actually exposes a suitable image capability.
 
 It does **not** depend on one provider, one camera aesthetic, or a fixed `cinematic` preset.
-
-## Beginner Use
-
-A beginner can simply say:
-
-```text
-woman waiting for a taxi in London at night
-```
-
-The skill should infer the missing composition, camera position, optics, depth, motivated lighting, exposure, color, materials, atmosphere, and realism treatment without asking unnecessary technical questions.
-
-Default beginner behavior is **AUTO DIRECT**.
-
-## Expert Use
-
-An expert can lock any values explicitly:
-
-```text
-Low-angle medium-wide frame. 35mm capture character, 24mm rectilinear lens, f/4, deep enough focus to keep the environment readable, hard side sunlight, no flare, no haze.
-```
-
-Every explicit technical value becomes a lock. AUTO fills only unspecified compatible values.
-
-The skill never silently changes a locked value merely because another choice would be easier for a provider.
 
 ## Main Workflows
 
@@ -128,6 +152,8 @@ skills/imported/ai-verse/cinematic-realism-director/
 
 The portable `SKILL.md` remains the behavioral contract.
 
+V1 intentionally does not alter the repository's fixed ranked 20-foundation + 100-employee catalog. See `REPOSITORY_INTEGRATION.md` for that distribution decision.
+
 ## Package Layout
 
 ```text
@@ -138,6 +164,7 @@ adapters/                provider translation only
 schemas/                 structured shot, diagnosis, and reference-DNA contracts
 examples/                illustrative usage, never hidden mandatory rules
 evals/                   behavioral and regression evaluation corpus
+CHANGELOG.md              release notes
 PHASE_*_AUDIT.md          implementation verification records
 STATUS.md                 authoritative build/restart state
 ```
@@ -164,6 +191,12 @@ See:
 - `examples/reality-repair.md`
 - `examples/reference-match.md`
 - `examples/prompt-only.md`
+
+## Evaluation
+
+V1 includes routing, beginner AUTO, expert-lock, repair, reference-match, provider-consistency, anti-cliche, physical-plausibility, adversarial, and regression evals.
+
+`evals/benchmark-matrix.md` defines the matched benchmark required before making any claim that this skill outperforms Magnific or Higgsfield.
 
 ## Current Scope
 
