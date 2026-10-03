@@ -1,34 +1,30 @@
 # AI-Verse Cinematic Realism Director
 
-**Version 1.0.0**
+A portable Agent Skill for directing, generating, editing, diagnosing, and adapting cinematic still images with grounded cinematography and physical-realism logic.
 
-A portable Agent Skill for designing, generating, editing, diagnosing, and adapting cinematic still images with grounded cinematography and physical-realism logic.
-
-It works from either a one-sentence beginner request or a detailed expert camera setup. The core skill is provider-independent; provider adapters translate the same resolved shot into OpenAI Images, Gemini, Seedream, FLUX, Magnific Cinematic, Higgsfield Soul Cinema, or a generic natural-language prompt.
+It works from either a one-sentence beginner request or a detailed expert camera setup. The core direction system is provider-independent; adapters translate the same resolved shot for OpenAI Images, Gemini, Seedream, FLUX, Magnific Cinematic, Higgsfield Soul Cinema, or a generic image model.
 
 ## Start Here
 
-### Beginner: one sentence is enough
+### One sentence is enough
 
 ```text
 woman waiting for a taxi in London at night
 ```
 
-The skill should infer the missing composition, camera position, optics, depth, motivated lighting, exposure, color, materials, atmosphere, and realism treatment without asking unnecessary technical questions.
+The skill can infer composition, camera position, optics, depth, motivated lighting, exposure, color, materials, atmosphere, and realism treatment without requiring technical camera knowledge.
 
-Default beginner behavior is **AUTO DIRECT**.
+Default behavior is **AUTO DIRECT**.
 
-### Expert: lock what matters
+### Lock technical choices when they matter
 
 ```text
 Low-angle medium-wide frame. 35mm capture character, 24mm rectilinear lens, f/4, deep enough focus to keep the environment readable, hard side sunlight, no flare, no haze.
 ```
 
-Every explicit technical value becomes a lock. AUTO fills only unspecified compatible values.
+Explicit technical values become locks. AUTO fills only the unspecified compatible decisions.
 
-The skill never silently changes a locked value merely because another choice would be easier for a provider.
-
-### Existing image: repair without redesigning it
+### Repair an existing image without redesigning it
 
 ```text
 Make this image feel less AI-generated. Preserve the identity, pose, wardrobe, framing, background geometry, and lighting direction. Repair only the realism problems.
@@ -50,7 +46,7 @@ PRESERVE
 Give me the final Seedream prompt only. Do not generate anything.
 ```
 
-`PROMPT ONLY` is absolute even when the host has image-generation tools.
+`PROMPT ONLY` prevents generation even when the host has image tools available.
 
 ## What It Does
 
@@ -60,14 +56,14 @@ The skill can:
 - cinematize an ordinary prompt without changing its concept;
 - diagnose and repair AI-looking images while preserving important content;
 - reverse-engineer observable visual DNA from references;
-- obey locked camera, lens, focal, aperture, shot, lighting, stock, color, or texture choices;
+- obey locked camera, lens, focal, aperture, shot, lighting, stock, color, and texture choices;
 - explain a professional shot recipe;
 - output provider-specific prompts without generating;
-- generate or edit directly when the current host actually exposes a suitable image capability.
+- generate or edit directly when the current host exposes a suitable image capability.
 
-It does **not** depend on one provider, one camera aesthetic, or a fixed `cinematic` preset.
+It does not depend on one provider, one camera aesthetic, or a fixed `cinematic` preset.
 
-## Main Workflows
+## Workflows
 
 - **AUTO DIRECT** — minimal idea to complete shot.
 - **CINEMATIZE** — strengthen an existing concept without concept drift.
@@ -78,23 +74,17 @@ It does **not** depend on one provider, one camera aesthetic, or a fixed `cinema
 
 See `references/INDEX.md` for the progressive-loading map.
 
-## Direct Generation vs Prompt-Only
-
-The package separates cinematic reasoning from host execution.
+## Core Architecture
 
 ```text
-WHAT THE SHOT SHOULD BE
-!=
-WHAT THE CURRENT HOST CAN EXECUTE
+USER INTENT
+-> CINEMATIC SHOT SPEC
+-> REALITY GATE
+-> PROVIDER / HOST ADAPTER
+-> IMAGE OR PRODUCTION-READY PROMPT
 ```
 
-If the user requests an image and the host has a suitable permitted image tool, the skill should generate or edit directly.
-
-If no suitable image tool exists, it returns the strongest executable prompt/specification instead.
-
-If the user explicitly asks for prompt-only, JSON-only, settings-only, or no generation, that instruction is absolute even when image tools are available.
-
-An adapter file does not grant access to that provider.
+The universal shot remains authoritative. Provider syntax never becomes the creative brain.
 
 ## Reality Gate
 
@@ -118,13 +108,29 @@ locks / preservation
 -> provider integrity
 ```
 
-Realism does not mean adding grain, pores, dirt, haze, flare, asymmetry, or vintage artifacts.
+Realism does not mean automatically adding grain, pores, dirt, haze, flare, asymmetry, or vintage artifacts.
+
+## Provider Adapters
+
+Included adapters:
+
+- Generic
+- OpenAI Images
+- Gemini
+- Seedream
+- FLUX
+- Magnific Cinematic
+- Higgsfield Soul Cinema
+
+Provider adapters translate the resolved shot into current provider behavior. They do not override user locks or grant access to a provider by themselves.
+
+If a provider changes or an exact control is unavailable, the skill falls back to observable natural-language intent rather than inventing unsupported settings.
 
 ## Standalone Installation
 
 The **entire `cinematic-realism-director/` folder is the portable unit**.
 
-Copy that folder into any Agent Skills-compatible environment that can load a `SKILL.md` package.
+Copy that folder into an Agent Skills-compatible environment that can load a `SKILL.md` package.
 
 Core prompt/spec operation requires only files inside this directory. It does not require:
 
@@ -133,58 +139,40 @@ Core prompt/spec operation requires only files inside this directory. It does no
 - repository-root documents;
 - MCP;
 - an API key;
-- a private machine path;
+- a private filesystem path;
 - any particular image provider.
 
-Image generation/editing remains optional host capability.
+Image generation and editing remain optional host capabilities.
 
-Start with `SKILL.md`. A capable loader should then use `references/INDEX.md` to load only the knowledge relevant to the active task.
-
-## Using It Inside AI-Verse-Skills
-
-Within the full repository, the canonical package lives at:
-
-```text
-skills/imported/ai-verse/cinematic-realism-director/
-```
-
-`aiverse.skill.yaml` declares AI-Verse runtime expectations. The manifest describes possible capabilities; it does not authorize them.
-
-The portable `SKILL.md` remains the behavioral contract.
-
-V1 intentionally does not alter the repository's fixed ranked 20-foundation + 100-employee catalog. See `REPOSITORY_INTEGRATION.md` for that distribution decision.
+Start with `SKILL.md`. A capable loader can then use `references/INDEX.md` to load only the knowledge relevant to the active task.
 
 ## Package Layout
 
 ```text
-SKILL.md                 portable behavior contract
-aiverse.skill.yaml       AI-Verse runtime sidecar
-references/              progressively loaded cinematography/realism knowledge
-adapters/                provider translation only
-schemas/                 structured shot, diagnosis, and reference-DNA contracts
-examples/                illustrative usage, never hidden mandatory rules
-evals/                   behavioral and regression evaluation corpus
-CHANGELOG.md              release notes
-PHASE_*_AUDIT.md          implementation verification records
-STATUS.md                 authoritative build/restart state
+SKILL.md             portable behavior contract
+aiverse.skill.yaml   AI-Verse runtime sidecar
+references/          cinematography, realism, workflow, and provenance knowledge
+adapters/            provider translation only
+schemas/             structured shot, diagnosis, and reference-DNA contracts
+examples/            usage examples
+evals/               behavioral and regression evaluation corpus
+CHANGELOG.md          release history
 ```
 
-## Important Principles
+## Design Principles
 
 - story before prestige camera/lens tokens;
 - explicit user value = lock;
 - AUTO fills only missing decisions;
 - perspective comes primarily from camera position, not focal length alone;
 - wide rectilinear is not fisheye;
-- cinematic does not mean shallow depth, grain, flare, haze, rim light, or teal/orange;
+- cinematic does not automatically mean shallow depth, grain, flare, haze, rim light, or teal/orange;
 - observable reference traits are not exact hardware facts;
 - preserve before transforming;
 - provider syntax stays downstream of the universal shot design;
 - successful tool execution is not proof of visual-quality success.
 
 ## Examples
-
-See:
 
 - `examples/beginner-auto.md`
 - `examples/expert-locks.md`
@@ -194,10 +182,14 @@ See:
 
 ## Evaluation
 
-V1 includes routing, beginner AUTO, expert-lock, repair, reference-match, provider-consistency, anti-cliche, physical-plausibility, adversarial, and regression evals.
+The package includes routing, beginner AUTO, expert-lock, repair, reference-match, provider-consistency, anti-cliche, physical-plausibility, adversarial, and regression evals.
 
-`evals/benchmark-matrix.md` defines the matched benchmark required before making any claim that this skill outperforms Magnific or Higgsfield.
+`evals/benchmark-matrix.md` defines the matched benchmark required before making any claim that this skill outperforms another cinematic image system.
 
-## Current Scope
+## Scope
 
-V1 is a **still-image** cinematic direction and realism skill. Video timelines, cuts, temporal continuity, lip-sync, and motion choreography are outside its primary authority.
+This is a **still-image** cinematic direction and realism skill. Video timelines, cuts, temporal continuity, lip-sync, and motion choreography remain outside its primary authority.
+
+## License
+
+MIT. See the repository license for details.
