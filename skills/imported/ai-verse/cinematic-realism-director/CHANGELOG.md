@@ -2,7 +2,7 @@
 
 ## 1.0.0 — 2026-10-03
 
-Initial V1 release of **AI-Verse Cinematic Realism Director**.
+Initial public release of **AI-Verse Cinematic Realism Director**.
 
 ### Added
 
@@ -34,4 +34,4 @@ Initial V1 release of **AI-Verse Cinematic Realism Director**.
 
 ### Scope
 
-V1 is a still-image cinematic direction and realism skill. Temporal video editing, timeline operations, lip-sync, and motion choreography remain outside its primary authority.
+Cinematic Realism Director is a still-image cinematic direction and realism skill. Temporal video editing, timeline operations, lip-sync, and motion choreography remain outside its primary authority.
