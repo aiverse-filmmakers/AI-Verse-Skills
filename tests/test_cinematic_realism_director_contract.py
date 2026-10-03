@@ -27,7 +27,6 @@ class CinematicRealismDirectorContractTests(unittest.TestCase):
             "SKILL.md",
             "README.md",
             "aiverse.skill.yaml",
-            "REPOSITORY_INTEGRATION.md",
             "references/INDEX.md",
             "references/reality-gate.md",
             "references/routing.md",
@@ -104,7 +103,7 @@ class CinematicRealismDirectorContractTests(unittest.TestCase):
                 parsed = json.loads(eval_file.read_text(encoding="utf-8"))
                 self.assertIsInstance(parsed, dict)
 
-    def test_ranked_registry_is_deliberately_not_mutated_by_v1_package_integration(self):
+    def test_ranked_registry_remains_explicit_and_unchanged(self):
         skills = json.loads((ROOT / "registry" / "skills.json").read_text(encoding="utf-8"))
         packages = json.loads((ROOT / "registry" / "packages.json").read_text(encoding="utf-8"))
         profiles = json.loads((ROOT / "registry" / "profiles.json").read_text(encoding="utf-8"))
@@ -124,10 +123,12 @@ class CinematicRealismDirectorContractTests(unittest.TestCase):
         self.assertNotIn("cinematic-realism-director", package_ids)
         self.assertNotIn("cinematic-realism-director", profiles["profiles"]["full"]["employee_skills"])
 
-        integration = (PACKAGE / "REPOSITORY_INTEGRATION.md").read_text(encoding="utf-8")
-        self.assertIn("first-party-native", integration)
-        self.assertIn("Ranked-catalog promotion", integration)
-        self.assertIn("full-profile automatic installation  NO", integration)
+        namespace_readme = (
+            ROOT / "skills" / "imported" / "ai-verse" / "README.md"
+        ).read_text(encoding="utf-8")
+        self.assertIn("cinematic-realism-director", namespace_readme)
+        self.assertIn("first-party ownership", namespace_readme)
+        self.assertIn("Ranked-catalog promotion", namespace_readme)
 
         trust = json.loads((ROOT / "registry" / "trust-policy.json").read_text(encoding="utf-8"))
         first_party = trust["sources"]["aiverse-filmmakers/AI-Verse-Skills"]
@@ -188,7 +189,7 @@ class CinematicRealismDirectorContractTests(unittest.TestCase):
             base = Path(temp)
             root = base / "skills-install"
             root.mkdir()
-            generation_id = "cinematic-v1-test"
+            generation_id = "cinematic-release-test"
             stage = base / "stage"
             staged_package = stage / "imported" / "ai-verse" / "cinematic-realism-director"
             staged_package.parent.mkdir(parents=True)
