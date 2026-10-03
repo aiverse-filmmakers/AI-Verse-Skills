@@ -13,14 +13,32 @@ This file is the authoritative completion state and restart point for future cha
 - Phase 1: COMPLETE, gate PASSED
 - Phase 2: COMPLETE, gate PASSED
 - Phase 3: COMPLETE, gate PASSED
-- V1 task progress: **28 / 93 tasks complete**
-- Next phase: **Phase 4 - Lighting, Exposure, Film Response, and Color**
-- Phase 4 contains 7 tasks and follows the agreed thirds split:
-  - Chunk 1: **4.1 - 4.3**
-  - Chunk 2: **4.4 - 4.5**
-  - Chunk 3: **4.6 - 4.7 + Phase 4 gate**
+- Phase 4: IN PROGRESS
+- Task 4.1: COMPLETE
+- Task 4.2: COMPLETE
+- Task 4.3: COMPLETE
+- Task 4.4: COMPLETE
+- Task 4.5: COMPLETE
+- Task 4.6: NEXT
+- Task 4.7: NOT STARTED
+- V1 task progress: **33 / 93 tasks complete**
 
-Next task: **4.1 - Motivated-lighting engine**
+Agreed execution rule from this point forward:
+
+> Complete a minimum of five numbered tasks per batch. If the current phase ends before five tasks are available, finish the phase, run its gate, and continue into the next phase until at least five numbered tasks have been completed.
+
+Next batch:
+
+```text
+4.6 Color science and grading strategy
+4.7 Grain, halation, bloom, flare, and texture restraint
+Phase 4 gate
+5.1 Build anti-AI artifact taxonomy
+5.2 Skin realism system
+5.3 Hair and eye realism system
+```
+
+This produces five numbered tasks while also completing and gating Phase 4 before continuing into Phase 5.
 
 ---
 
@@ -148,199 +166,232 @@ Evidence:
 - `references/motion-and-shutter.md`
 - `PHASE_3_AUDIT.md`
 
-Execution split:
+Completed tasks:
 
 ```text
-Chunk 1: 3.1 - 3.3                         COMPLETE
-Chunk 2: 3.4 - 3.5                         COMPLETE
-Chunk 3: 3.6 - 3.7 + Phase 3 gate          COMPLETE
+3.1 visual intent / story-to-shot                   COMPLETE
+3.2 composition and blocking                       COMPLETE
+3.3 capture formats / camera character             COMPLETE
+3.4 lens character                                 COMPLETE
+3.5 focal length / distance / perspective          COMPLETE
+3.6 aperture / focus / depth                       COMPLETE
+3.7 motion / shutter for stills                    COMPLETE
 ```
 
-## 3.1 Visual intent and story-to-shot reasoning
-
-Status: COMPLETE
-
-Key decision order:
-
-```text
-story -> viewer relationship -> hierarchy -> composition -> camera -> lens -> light -> grade
-```
-
-The system does not begin from prestige camera/lens tokens.
-
-## 3.2 Composition and blocking
-
-Status: COMPLETE
-
-Covers shot size, subject placement, headroom, gaze room, hierarchy, negative space, layers, symmetry/asymmetry, camera height, POV/OTS/profile/rear/top-down logic, 3D blocking, multi-subject relationships, crop discipline, frozen-moment camera changes and rectilinear wide-angle foreground exaggeration.
-
-## 3.3 Capture formats and camera character
-
-Status: COMPLETE
-
-Hard rules:
-
-```text
-camera name != complete look
-log/gamut != final grade
-format != perspective
-large format != automatically shallow DOF
-manufacturer stop count != literal AI-image dynamic range
-```
-
-## 3.4 Lens character
-
-Status: COMPLETE
-
-Covers optical contrast, microcontrast, edge behavior, focus falloff, bokeh, flare, chromatic behavior, distortion, anamorphic behavior and evidence-based named lens mappings.
-
-Hard rules:
-
-```text
-anamorphic != blue horizontal flare preset
-vintage lens != blurry everything
-modern lens != oversharpened everything
-fast lens != always wide open
-lens family != focal length
-```
-
-## 3.5 Focal length, distance, and perspective
-
-Status: COMPLETE
-
-Hard rules:
-
-```text
-perspective != focal length alone
-wide lens != fisheye
-telephoto != compression by itself
-large format != epic perspective
-macro != high detail token
-```
-
-## 3.6 Aperture, focus, and depth behavior
-
-Status: COMPLETE
-Evidence: `references/aperture-focus-and-depth.md`
-
-Implemented:
-
-- depth strategy classes: deep contextual, moderate separation, shallow selective, specialty razor-thin;
-- AUTO decision order based on story information before aperture;
-- aperture selection by purpose rather than prestige;
-- explicit focus target and focus-plane coherence;
-- subject/background/foreground distance logic;
-- OTS, portrait, product, food, architecture, automotive and macro depth behavior;
-- deep focus as a valid cinematic strategy;
-- f/1.2 + deep-focus conflict handling through unlocked geometry first;
-- reference-match depth inference without exact aperture hallucination;
-- provider translation without invented native controls;
-- anti-AI depth failures and Depth Reality Gate.
-
-Hard rules:
-
-```text
-cinematic != shallow depth
-fast lens != always wide open
-f/1.2 != automatically better
-bokeh != depth of field
-large format != automatically shallow DOF
-deep focus != video-looking
-reference blur != exact aperture metadata
-```
-
-## 3.7 Motion and shutter language for still frames
-
-Status: COMPLETE
-Evidence: `references/motion-and-shutter.md`
-
-Implemented:
-
-- frozen, subtle-natural, subject-blur, camera-blur and long-exposure motion states;
-- subject motion vs camera motion vs tracking/panning distinctions;
-- qualitative shutter-language translation without false measured simulation;
-- directional and differential motion across body/object regions;
-- wind, water, particles, hair and fabric behavior;
-- face/identity preservation in action imagery;
-- camera-shake restraint;
-- panning, zoom-blur and light-trail specialty behavior;
-- motion vs focus separation;
-- shadow/reflection coherence during motion;
-- purpose-specific motion logic;
-- reference-match motion inference without exact shutter hallucination;
-- anti-AI motion failures and Motion Reality Gate.
-
-Hard rules:
-
-```text
-cinematic != motion blur
-handheld != blurry
-motion blur != defocus
-slow shutter != random smear
-fast action != mandatory blur
-pan != whole-frame uniform blur
-still shutter language != temporal video direction
-```
-
-# Phase 3 Gate
-
-Status: PASSED
-Evidence: `PHASE_3_AUDIT.md`
-
-Gate cases tested:
-
-1. beginner narrative AUTO;
-2. commercial/product AUTO;
-3. architecture/interior AUTO;
-4. action still with motion;
-5. expert locked camera setup with a deliberate geometry conflict.
-
-Results:
-
-```text
-scope violations: 0
-standalone dependency violations: 0
-provider-core contamination: 0
-explicit-lock violations: 0
-reference-certainty violations: 0
-confidence/authority violations: 0
-hidden conflict resolution: 0
-still-vs-video scope violations: 0
-```
-
-Phase 3 now provides one coherent camera foundation covering:
-
-```text
-visual intent
-composition / blocking
-capture format / camera character
-lens character
-focal length / distance / perspective
-aperture / focus / depth
-motion / shutter appearance in stills
-```
+Phase 3 established one coherent camera foundation covering visual intent, composition, capture format, lens behavior, geometry, depth, and still-frame motion without generic cinematic filler.
 
 ---
 
 # Phase 4 - Lighting, Exposure, Film Response, and Color
 
+Status: IN PROGRESS
+Goal: build physically motivated lighting, exposure, capture-response, color, and texture systems.
+
+## 4.1 Motivated-lighting engine
+
+Status: COMPLETE
+Evidence: `references/motivated-lighting.md`
+
+Implemented:
+
+- source-first lighting design;
+- M0 available-light, M1 enhanced-naturalism, M2 stylized-motivation, M3 expressionistic motivation levels;
+- dominant source selection;
+- direction, apparent source size, falloff and ambient logic;
+- light/material interaction;
+- atmosphere/light-path logic;
+- lighting/exposure coupling;
+- geometric portrait-pattern handling;
+- AUTO behavior by purpose;
+- user lighting locks;
+- reference-match observation without fixture/wattage hallucination;
+- motivated-lighting Reality Gate.
+
+Hard rule:
+
+```text
+cinematic lighting starts from why/where/how the light exists
+not from a list of fashionable lighting labels
+```
+
+Acceptance: PASSED
+
+## 4.2 Key, fill, negative fill, edge, bounce, and practical logic
+
+Status: COMPLETE
+Evidence: `references/lighting-roles.md`
+
+Implemented distinct roles and omission rules for:
+
+- key;
+- fill;
+- negative fill;
+- edge/back light;
+- bounce;
+- practicals;
+- ambient light.
+
+Also implemented portrait, product, automotive, exterior, night and mixed-source examples plus role-specific failure checks.
+
+Hard rules:
+
+```text
+not every shot needs every lighting role
+negative fill removes light; it does not add black
+rim light is optional and must be source-motivated
+practicals have local influence, not magical room-wide reach
+bounce must have a plausible surface and color
+```
+
+Acceptance: PASSED
+
+## 4.3 Environment-specific lighting recipes
+
+Status: COMPLETE
+Evidence: `references/environment-lighting-recipes.md`
+
+Implemented adaptive decision recipes for:
+
+- overcast exterior;
+- hard noon sun;
+- golden hour;
+- blue hour;
+- window daylight interior;
+- tungsten practical interior;
+- fluorescent/office;
+- neon city night;
+- moonlit exterior;
+- candle/firelight;
+- commercial soft source;
+- documentary available light;
+- glossy and matte product studio;
+- automotive day/night;
+- food/tabletop;
+- architecture interior/exterior;
+- forest/dappled light;
+- snow;
+- desert;
+- rain/wet night.
+
+Recipes are decision patterns, not fixed prompt templates.
+
+Acceptance: PASSED
+
+## 4.4 Exposure and dynamic-range behavior
+
+Status: COMPLETE
+Evidence: `references/exposure-and-dynamic-range.md`
+
+Implemented:
+
+- exposure hierarchy;
+- subject-priority logic by purpose;
+- highlight protection without universal recovery;
+- intentional clipping rules;
+- shadow-density classes;
+- midtone placement;
+- scene vs local contrast distinction;
+- dynamic-range translation without fake stop-count simulation;
+- camera/film exposure-response integration;
+- interior/window strategies;
+- night exposure hierarchy;
+- bright- and dark-environment behavior;
+- intentional under/overexposure;
+- HDR and clipping failure taxonomy;
+- exposure-lock and reference-match rules;
+- Exposure Reality Gate.
+
+Hard rules:
+
+```text
+dynamic range != everything visible
+good highlights != no clipping anywhere
+dense shadows != crushed blacks
+cinematic exposure != HDR recovery
+manufacturer stop count != literal generated-image capability
+```
+
+Acceptance: PASSED
+
+## 4.5 Film stock and sensor response mapping
+
+Status: COMPLETE
+Evidence: `references/film-and-sensor-response.md`
+
+Implemented runtime mappings for:
+
+- high-end digital cinema response;
+- ARRI ALEXA 35;
+- Sony VENICE 2;
+- RED V-RAPTOR;
+- Canon C500 Mark II;
+- Blackmagic URSA Mini Pro;
+- generic 35mm motion negative;
+- Kodak VISION3 500T;
+- Kodak VISION3 250D;
+- EASTMAN DOUBLE-X;
+- EKTACHROME 100D;
+- Portra;
+- Ektar 100;
+- T-MAX;
+- 16mm;
+- 8mm/Super-8-like intent;
+- cautious 65/70mm intent;
+- analog video/VHS;
+- low-fi digital.
+
+Also separated:
+
+```text
+stock/camera response
+grain or sensor noise
+halation
+bloom
+flare
+white-balance relationship
+final grade
+```
+
+Hard rules:
+
+```text
+film != warm + grain + faded
+500T != orange
+250D != blue
+camera reference != literal sensor simulation
+provider stock preset != universal stock truth
+halation / bloom / flare are separate systems
+```
+
+Acceptance: PASSED
+
+## 4.6 Color science and grading strategy
+
+Status: NEXT
+
+Must convert the Phase 1 color research into runtime rules for white balance, color separation, saturation, density, skin, black levels, highlight/shadow color and neutral vs stylized grades.
+
+## 4.7 Grain, halation, bloom, flare, and texture restraint
+
 Status: NOT STARTED
 
-Agreed split for this 7-task phase:
+Must define these as optional, physically contextual effects rather than mandatory cinema tokens.
 
-```text
-Chunk 1: 4.1 - 4.3
-Chunk 2: 4.4 - 4.5
-Chunk 3: 4.6 - 4.7 + Phase 4 gate
-```
+# Phase 4 Gate
 
-Next tasks:
+Status: NOT YET RUN
 
-```text
-4.1 Motivated-lighting engine
-4.2 Key, fill, negative fill, edge, bounce, and practical logic
-4.3 Environment-specific lighting recipes
-```
+Run after 4.6 and 4.7.
+
+Gate requirement:
+
+> The skill can construct lighting, exposure, film/sensor response, color and texture logic that feels physically motivated rather than procedurally decorated.
+
+---
+
+# Next
+
+Complete 4.6 and 4.7, run the Phase 4 gate, then continue directly into Phase 5 Tasks 5.1-5.3 to satisfy the five-task minimum batch rule.
 
 ---
 
@@ -358,7 +409,8 @@ Later phases may not silently:
 - convert marketing language into physical truth;
 - turn secondary public skills into authoritative cinematography sources;
 - use focal length as a false substitute for camera position;
-- use lens names as decorative prestige tokens;
-- default every cinematic image to shallow depth, grain, flare, haze, rim light, teal/orange, or motion blur.
+- use lens/camera/stock names as decorative prestige tokens;
+- default cinematic images to shallow depth, grain, flare, halation, haze, rim light, teal/orange, or motion blur;
+- force every tonal region into HDR-style equal visibility.
 
 Any later change that threatens these invariants triggers another architecture audit.
