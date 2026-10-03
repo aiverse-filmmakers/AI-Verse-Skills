@@ -12,15 +12,9 @@ This file is the authoritative completion state and restart point for future cha
 - Phase 0 post-research re-audit: PASSED
 - Phase 1: COMPLETE
 - Phase 1 gate: PASSED
-- Phase 2: IN PROGRESS
-- Task 2.1: COMPLETE
-- Task 2.2: COMPLETE
-- Task 2.3: COMPLETE
-- Task 2.4: NEXT
-- Task 2.5: NOT STARTED
-- Phase 2 progress: **3 / 5 tasks complete**
-
-Next task: **2.4 - Define confidence and uncertainty semantics**
+- Phase 2: COMPLETE
+- Phase 2 gate: PASSED
+- Next task: **3.1 - Visual intent and story-to-shot reasoning**
 
 ---
 
@@ -28,95 +22,27 @@ Next task: **2.4 - Define confidence and uncertainty semantics**
 
 Status: COMPLETE
 
-## 0.1 Package identity and routing
+Evidence:
 
-Status: COMPLETE
+- `references/routing.md`
+- `references/portability.md`
+- `references/host-capabilities.md`
+- `references/locks.md`
+- `references/success-contract.md`
+- `PHASE_0_AUDIT.md`
 
-Evidence: `references/routing.md`
+Core invariants remain frozen:
 
-Frozen identity:
+- first-party package identity: `cinematic-realism-director`;
+- still-image direction/realism is the primary scope;
+- standalone-folder operation is mandatory;
+- no required AI-Verse OS, MCP, sibling skill or API key for prompt-only reasoning;
+- image-capable hosts execute, weaker hosts degrade truthfully;
+- explicit user values and preservation requirements remain locks;
+- success/partial/blocked/failed are distinct;
+- tool execution is not automatically visual-quality verification.
 
-```text
-name: cinematic-realism-director
-display_name: AI-Verse Cinematic Realism Director
-location: skills/imported/ai-verse/cinematic-realism-director
-ownership: AI-Verse first-party
-primary_medium: still images
-```
-
-## 0.2 Standalone portability
-
-Status: COMPLETE
-
-Evidence: `references/portability.md`
-
-Core guarantees:
-
-- no required parent-repo knowledge;
-- no sibling-skill dependency;
-- no AI-Verse OS requirement for reasoning/prompt-only operation;
-- no MCP requirement;
-- no API key required for prompt-only use;
-- package-local references/adapters/schemas;
-- isolated-folder V1 release test required.
-
-## 0.3 Host capability degradation
-
-Status: COMPLETE
-
-Evidence: `references/host-capabilities.md`
-
-H1-H6 host classes cover native generation/editing through text-only operation. Every class has a useful truthful result path.
-
-## 0.4 Explicit locks
-
-Status: COMPLETE
-
-Evidence: `references/locks.md`
-
-User-supplied values and preservation requirements are locks. Unspecified values remain AUTO. Provider defaults cannot silently override locks.
-
-## 0.5 Success/failure contract
-
-Status: COMPLETE
-
-Evidence: `references/success-contract.md`
-
-Top-level states:
-
-```text
-success
-partial
-blocked
-failed
-```
-
-Verification levels:
-
-```text
-V0 reasoning only
-V1 execution confirmed
-V2 visual inspection completed
-V3 comparative/iterative acceptance
-```
-
-## Phase 0 Post-Research Re-Audit
-
-Status: PASSED
-
-Evidence: `PHASE_0_AUDIT.md`
-
-After Phase 1 research began landing:
-
-```text
-Architecture violations: 0
-Standalone violations: 0
-Scope violations: 0
-Lock violations: 0
-Host-capability violations: 0
-Success-contract violations: 0
-Research-isolation violations: 0
-```
+Post-research architecture re-audit: PASSED with zero contract violations.
 
 ---
 
@@ -126,281 +52,243 @@ Status: COMPLETE
 
 Gate: PASSED
 
-## 1.1 Source ledger framework
-
-Status: COMPLETE
-
 Evidence:
 
 - `references/source-ledger.md`
 - `references/source-ledger-addendum.md`
-
-Evidence classes:
-
-- CONFIRMED
-- CORROBORATED
-- MODEL-BEHAVIOR
-- PROVIDER-SPECIFIC
-- INFERRED
-
-## 1.2 Magnific public evidence
-
-Status: COMPLETE
-
-Evidence: `references/research/magnific.md`
-
-Captured live Cinematic model controls, camera/lens/focal/aperture/shot ontology, film stocks/movie looks, lighting, blur, grain, halation, tonal controls, structure-preservation/repair concepts, and the boundary around unknowable private internals.
-
-## 1.3 Higgsfield public evidence
-
-Status: COMPLETE
-
-Evidence: `references/research/higgsfield.md`
-
-Captured Soul Cinema role, Cinema Studio philosophy, cinematography vocabulary as model visual priors, DP/operator testing, lens-character amplification, prompt enhancement/AUTO principles, Soul ID/color continuity concepts, hero-frame workflow, and version drift.
-
-## 1.4 Camera manufacturer knowledge
-
-Status: COMPLETE
-
-Evidence: `references/research/cameras.md`
-
-First-party evidence for ARRI, Sony, RED, Canon and Blackmagic. IMAX/65-70mm deeper translation remains registered research debt.
-
-## 1.5 Lens manufacturer knowledge
-
-Status: COMPLETE
-
-Evidence:
-
+- `references/research/magnific.md`
+- `references/research/higgsfield.md`
+- `references/research/cameras.md`
 - `references/research/lenses.md`
 - `references/research/lenses-supplement.md`
+- `references/research/film-stocks.md`
+- `references/research/lighting.md`
+- `references/research/color-and-tone.md`
+- `references/research/provider-prompting.md`
+- `references/research/secondary-public-workflows.md`
+- `references/research/research-gap-audit.md`
 
-Strong/usable evidence covers ARRI Signature, ARRI/ZEISS Master Prime, Leitz SUMMILUX-C, Panavision G-Series, Cooke Panchro Classic, ZEISS Supreme/Radiance, Hawk V-Lite and Angenieux Optimo. Canon K35 detailed character remains conservative.
+Completed tasks:
 
-## 1.6 Film stock / photochemical knowledge
+```text
+1.1 source ledger framework                         COMPLETE
+1.2 Magnific public evidence                       COMPLETE
+1.3 Higgsfield public evidence                     COMPLETE
+1.4 camera manufacturer knowledge                  COMPLETE
+1.5 lens manufacturer knowledge                    COMPLETE
+1.6 film stock / photochemical knowledge           COMPLETE
+1.7 lighting / cinematography fundamentals         COMPLETE
+1.8 color / display-independent principles         COMPLETE
+1.9 provider prompting guidance                    COMPLETE
+1.10 secondary public workflow review              COMPLETE
+1.11 research gap audit                            COMPLETE
+```
 
-Status: COMPLETE
-
-Evidence: `references/research/film-stocks.md`
-
-Strong Kodak motion-stock evidence plus negative/reversal, white-balance, grain, halation and tonal-response distinctions.
-
-## 1.7 Lighting / cinematography fundamentals
-
-Status: COMPLETE
-
-Evidence: `references/research/lighting.md`
-
-Captured motivated lighting, source-size/softness, falloff, negative fill, bounce, practicals, sun/sky/window logic, exposure hierarchy, specular/diffuse response, atmosphere and mixed-source logic.
-
-## 1.8 Color and display-independent visual principles
-
-Status: COMPLETE
-
-Evidence: `references/research/color-and-tone.md`
-
-Captured scene-referred vs display-referred distinction, highlight rolloff, hue preservation, gamut/saturation discipline, skin/environment separation, white balance, density, black levels, display-independent language and color Reality Gate questions.
-
-## 1.9 Current model-provider prompting guidance
-
-Status: COMPLETE
-
-Evidence: `references/research/provider-prompting.md`
-
-Official/current guidance captured for OpenAI GPT Image, Gemini native image generation, Seedream, FLUX, Magnific and Higgsfield while preserving a model-independent core.
-
-## 1.10 Secondary public skills/workflows
-
-Status: COMPLETE
-
-Evidence: `references/research/secondary-public-workflows.md`
-
-Secondary public material is restricted to architecture/test hypotheses and cannot outrank first-party evidence.
-
-## 1.11 Research gap audit
-
-Status: COMPLETE
-
-Evidence: `references/research/research-gap-audit.md`
-
-Registered research debt:
-
-- RG-001 IMAX / 65-70mm translation;
-- RG-002 Canon K35 detailed character;
-- RG-003 selected non-Kodak stock depth;
-- RG-004 physical-realism/material taxonomy for Phase 5;
-- RG-005 cross-provider empirical calibration for Phase 9;
-- RG-006 continuous provider-version drift.
-
-None blocks Phase 2.
+Research debt remains explicitly registered rather than guessed, including IMAX/65-70mm deeper translation, Canon K35 character depth, selected non-Kodak stocks, Phase 5 material-realism taxonomy, Phase 9 provider calibration, and ongoing provider-version drift.
 
 ---
 
 # Phase 2 - Cinematic Shot Ontology and Structured Contracts
 
-Status: IN PROGRESS
+Status: COMPLETE
 
-Goal: create one provider-neutral internal language capable of representing beginner AUTO shots, expert locked shots, image repairs, and reference matches.
+Gate: PASSED
 
-## 2.1 Define `cinematic-shot-spec.schema.json`
+Evidence:
+
+- `schemas/cinematic-shot-spec.schema.json`
+- `schemas/realism-diagnosis.schema.json`
+- `schemas/reference-dna.schema.json`
+- `references/confidence-and-uncertainty.md`
+- `references/confidence-serialization.md`
+- `references/parameter-conflicts.md`
+- `PHASE_2_AUDIT.md`
+
+## 2.1 Cinematic Shot Spec
 
 Status: COMPLETE
 
-Evidence: `schemas/cinematic-shot-spec.schema.json`
-
-Implemented a Draft 2020-12 provider-neutral schema covering:
+`schemas/cinematic-shot-spec.schema.json` provides the provider-neutral universal representation for:
 
 - operation/mode;
-- creative intent and purpose;
-- scene/environment/action;
-- subjects and hierarchy;
-- framing, shot size, camera height/angle/distance and perspective;
-- capture format and camera character;
-- lens family plus observable lens behavior;
+- intent and purpose;
+- scene/action/environment;
+- subject hierarchy;
+- composition, camera height/angle/distance and perspective;
+- capture format/camera character;
+- lens family and observable lens character;
 - focal length, aperture, focus and depth;
-- lighting motivation, key/fill/practicals/ambient/bounce/negative fill;
-- exposure, highlights, shadows and specular strategy;
-- white balance, palette, separation, saturation, density and tone;
-- film/tonal response, grain, halation, bloom, flare and sharpness;
-- physical realism fields;
-- preserve / repair / allow-change / avoid constraints;
-- field-level parameter states and locks;
+- motivated lighting and exposure;
+- color/tone;
+- film/texture/finish;
+- physical realism;
+- preserve/repair/allow-change constraints;
+- parameter states and locks;
 - reference bindings;
-- provider adaptation isolated from core truth;
+- provider adaptation as a downstream layer;
 - Reality Gate carrier;
-- output status and provenance.
+- output and provenance.
 
-Key invariants:
-
-- explicit locks can be represented without being overwritten by AUTO;
-- perspective is represented separately from focal-length mythology;
-- lens name is separated from observable lens character;
-- provider parameters live only in an adapter-owned block;
-- prompt/output execution fields do not become the core cinematic model.
-
-Acceptance: PASSED
-
-## 2.2 Define `realism-diagnosis.schema.json`
-
-Status: COMPLETE
-
-Evidence: `schemas/realism-diagnosis.schema.json`
-
-Implemented structured representation for:
-
-- whether the image was actually available for inspection;
-- overall artificiality level and severity;
-- domain-specific findings;
-- visual evidence and confidence;
-- likely cause and visual impact;
-- preservation conflicts;
-- explicit preserve boundaries;
-- repair targets and priorities;
-- allowed changes;
-- minimal-change repair strategy;
-- single-edit, multi-region, multi-pass, regeneration and diagnosis-only paths;
-- provider handoff without assuming a provider exists;
-- post-edit preservation/realism verification;
-- provenance.
-
-The domain taxonomy includes perspective, focus/DOF, light, shadows, exposure, color, skin, hair, anatomy, fabric, materials, roughness, reflections/refractions, contact, gravity/weight, atmospheric depth, grain, bloom/halation, flare, sharpness, motion blur, composition, repetition and geometry.
-
-Key invariant: Reality Repair is represented as **diagnose -> preserve -> repair -> allow change -> verify**, not uncontrolled regeneration.
-
-Acceptance: PASSED
-
-## 2.3 Define `reference-dna.schema.json`
-
-Status: COMPLETE
-
-Evidence: `schemas/reference-dna.schema.json`
-
-Implemented structured representation for:
-
-- one or multiple reference sources and their roles;
-- observed composition;
-- perspective;
-- focus/depth;
-- lighting;
-- exposure/tone;
-- color;
-- texture;
-- atmosphere;
-- materials;
-- production design;
-- imperfections;
-- optional motion signature visible in a still;
-- transferable visual DNA;
-- content-specific/non-transferable features;
-- supplied metadata;
-- uncertain hardware hypotheses;
-- known unknowns and prohibited claims;
-- target-transfer instructions;
-- provenance.
-
-Critical separation:
+Key invariant:
 
 ```text
-OBSERVABLE VISUAL TRAIT
+provider-neutral cinematic truth
 !=
-EXACT HARDWARE FACT
+provider-specific syntax
 ```
 
-Exact camera/lens/stock information may be stored as fact only when supplied by the user, embedded metadata, or another documented external source. Visually inferred hardware is forced into `hardware_hypotheses` with `assertion_level: hypothesis_only`.
+## 2.2 Realism Diagnosis Schema
 
-This prevents the reference matcher from claiming exact unavailable metadata while still allowing useful focal/camera/lens-family hypotheses when needed.
+Status: COMPLETE
 
-Acceptance: PASSED
+`schemas/realism-diagnosis.schema.json` formalizes:
 
-## 2.4 Define confidence and uncertainty semantics
+```text
+diagnose
+-> preserve
+-> repair
+-> allow change
+-> verify
+```
 
-Status: NEXT
+It carries findings, severity, evidence, repair priorities, preservation boundaries, provider handoff and post-edit verification.
 
-Must formalize how numeric confidence and state labels map to:
+## 2.3 Reference DNA Schema
 
-- directly supplied user values;
-- strongly inferred values;
-- weakly inferred values;
-- reference-observed values;
-- known metadata;
-- intentionally AUTO values;
-- provider translations.
+Status: COMPLETE
 
-The first three Phase 2 schemas intentionally provide confidence/state carrier fields, but Task 2.4 remains authoritative for their interpretation.
+`schemas/reference-dna.schema.json` separates:
 
-## 2.5 Define parameter conflict resolution
+```text
+observable visual DNA
+transferable DNA
+content-specific details
+supplied metadata
+hardware hypotheses
+uncertainty
+```
 
-Status: NOT STARTED
+Exact hardware may only be represented as fact when supported by user input, metadata or another authoritative source.
 
-Must formalize structured reconciliation of technically tense or contradictory locks without silently changing the user's request.
+## 2.4 Confidence and Uncertainty Semantics
+
+Status: COMPLETE
+
+Evidence:
+
+- `references/confidence-and-uncertainty.md`
+- `references/confidence-serialization.md`
+
+Semantic states distinguish:
+
+- explicit user value;
+- preservation requirement;
+- direct observation;
+- metadata-confirmed fact;
+- strong inference;
+- medium inference;
+- weak inference;
+- AUTO-selected value;
+- intentionally open AUTO value;
+- provider translation;
+- unknown;
+- not applicable.
+
+Core rule:
+
+```text
+confidence describes evidence
+lock state describes authority
+```
+
+A low-confidence inference can never override a hard user lock.
+
+The shot schema's numeric confidence carrier is explicitly ordinal, not a calibrated probability. Canonical V1 serialization maps semantic confidence to compact state/ordinal values without exposing fake percentages to users.
+
+## 2.5 Parameter Conflict Resolution
+
+Status: COMPLETE
+
+Evidence: `references/parameter-conflicts.md`
+
+Conflict classes:
+
+```text
+C0 compatible
+C1 tension but reconcilable
+C2 direct contradiction
+C3 provider execution conflict
+```
+
+Rules:
+
+- preserve explicit locks first;
+- solve C1 tension through unlocked/AUTO fields before touching locks;
+- never hide a C2 contradiction;
+- provider limitations translate observable intent rather than fabricate controls;
+- reference DNA cannot silently override target locks;
+- preservation-vs-repair conflicts use the narrowest necessary change boundary;
+- unresolved hard-lock violations cannot produce full `success`.
+
+Canonical cases verified:
+
+- 14mm + request for reduced wide-angle distortion;
+- f/1.2 + deep-focus request;
+- 65/70mm capture reference + VHS finish;
+- lighting, color, preservation, reference-transfer and provider conflicts.
 
 # Phase 2 Gate
 
-Status: NOT YET RUN
+Status: PASSED
 
-Run only after Tasks 2.4 and 2.5 are complete.
+Evidence: `PHASE_2_AUDIT.md`
+
+The structured system successfully represents all four required classes:
+
+```text
+BEGINNER AUTO
+EXPERT LOCKED SHOT
+REALITY REPAIR
+REFERENCE MATCH
+```
+
+while preserving the distinction between:
+
+```text
+fact
+observation
+inference
+AUTO creative choice
+user lock
+preservation lock
+provider translation
+unknown
+```
+
+No Phase 0 invariant was broken.
 
 ---
 
 # Next
 
-**Task 2.4 - Define confidence and uncertainty semantics**
+**Task 3.1 - Visual intent and story-to-shot reasoning**
 
-After 2.4, Task 2.5 will complete conflict resolution and allow the Phase 2 gate to test whether one structured representation can cover beginner AUTO, expert locks, Reality Repair and Reference Match.
+Phase 3 will build the core cinematography knowledge engine on top of the completed structured contracts. It should convert narrative/commercial intent into visual decisions rather than applying generic cinematic presets.
+
+---
 
 # Change Discipline
 
 Phase 0 remains the governing architecture contract.
 
-Research and structured contracts may not silently:
+Later phases may not silently:
 
 - expand the skill into temporal video authority;
 - introduce required external runtime dependencies;
-- turn one image provider into the core brain;
+- turn one provider into the core brain;
 - override explicit user locks;
+- treat inferred reference hardware as known fact;
 - convert marketing language into physical truth;
-- turn secondary public skills into authoritative cinematography sources;
-- treat inferred reference metadata as confirmed hardware fact.
+- turn secondary public skills into authoritative cinematography sources.
 
 Any later change that threatens these invariants triggers another architecture audit.
