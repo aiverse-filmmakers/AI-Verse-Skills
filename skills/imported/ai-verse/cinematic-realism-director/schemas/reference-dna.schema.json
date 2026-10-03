@@ -1,0 +1,469 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aiverse.local/schemas/cinematic-realism-director/reference-dna.schema.json",
+  "title": "AI-Verse Reference DNA",
+  "description": "Structured observable visual DNA extracted from one or more reference stills. The schema separates directly observed visual properties, supplied metadata, and uncertain hardware hypotheses so a reference can guide composition, optics, lighting, color, texture, materials, and atmosphere without inventing exact unavailable camera/lens facts.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "references",
+    "observed_dna",
+    "transferable_dna",
+    "content_specific_features",
+    "metadata_and_hypotheses",
+    "uncertainty"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "1.0.0"
+    },
+    "dna_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "references": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/referenceSource"
+      },
+      "minItems": 1
+    },
+    "observed_dna": {
+      "$ref": "#/$defs/observedDNA"
+    },
+    "transferable_dna": {
+      "type": "array",
+      "description": "Visual principles that may be safely reused in a new target without copying incidental subject matter.",
+      "items": {
+        "$ref": "#/$defs/transferableTrait"
+      },
+      "default": []
+    },
+    "content_specific_features": {
+      "type": "array",
+      "description": "Reference-specific people, products, props, text, locations, story content, or copyrighted details that are not automatically part of the transferable look.",
+      "items": {
+        "$ref": "#/$defs/contentSpecificFeature"
+      },
+      "default": []
+    },
+    "metadata_and_hypotheses": {
+      "$ref": "#/$defs/metadataAndHypotheses"
+    },
+    "uncertainty": {
+      "$ref": "#/$defs/uncertainty"
+    },
+    "target_transfer": {
+      "$ref": "#/$defs/targetTransfer"
+    },
+    "provenance": {
+      "$ref": "#/$defs/provenance"
+    }
+  },
+  "$defs": {
+    "nullableString": {
+      "type": ["string", "null"]
+    },
+    "stringList": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true,
+      "default": []
+    },
+    "referenceSource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "availability", "role"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "availability": {
+          "type": "string",
+          "enum": ["direct_image", "user_description", "known_external_reference"]
+        },
+        "role": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "overall_visual_language",
+              "composition",
+              "perspective",
+              "lens_character",
+              "depth",
+              "lighting",
+              "exposure",
+              "color",
+              "texture",
+              "atmosphere",
+              "materials",
+              "production_design",
+              "identity",
+              "product",
+              "other"
+            ]
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "user_supplied_metadata": {
+          "type": "object",
+          "additionalProperties": true,
+          "description": "Literal metadata supplied by the user or a trustworthy source. This block may contain exact camera/lens/stock facts because they were supplied, not visually guessed."
+        },
+        "notes": {
+          "$ref": "#/$defs/nullableString"
+        }
+      }
+    },
+    "observedDNA": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "composition",
+        "perspective",
+        "focus_and_depth",
+        "lighting",
+        "exposure_and_tone",
+        "color",
+        "texture",
+        "atmosphere",
+        "materials",
+        "production_design",
+        "imperfections"
+      ],
+      "properties": {
+        "composition": {
+          "$ref": "#/$defs/traitGroup"
+        },
+        "perspective": {
+          "$ref": "#/$defs/traitGroup"
+        },
+        "focus_and_depth": {
+          "$ref": "#/$defs/traitGroup"
+        },
+        "lighting": {
+          "$ref": "#/$defs/traitGroup"
+        },
+        "exposure_and_tone": {
+          "$ref": "#/$defs/traitGroup"
+        },
+        "color": {
+          "$ref": "#/$defs/traitGroup"
+        },
+        "texture": {
+          "$ref": "#/$defs/traitGroup"
+        },
+        "atmosphere": {
+          "$ref": "#/$defs/traitGroup"
+        },
+        "materials": {
+          "$ref": "#/$defs/traitGroup"
+        },
+        "production_design": {
+          "$ref": "#/$defs/traitGroup"
+        },
+        "imperfections": {
+          "$ref": "#/$defs/traitGroup"
+        },
+        "motion_signature": {
+          "$ref": "#/$defs/traitGroupNullable"
+        }
+      }
+    },
+    "traitGroup": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["summary", "traits"],
+      "properties": {
+        "summary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "traits": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/observedTrait"
+          },
+          "default": []
+        }
+      }
+    },
+    "traitGroupNullable": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/traitGroup"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "observedTrait": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "value", "observation_type", "confidence"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "value": {
+          "type": "string",
+          "minLength": 1
+        },
+        "observation_type": {
+          "type": "string",
+          "enum": [
+            "directly_observable",
+            "geometric_inference",
+            "photographic_inference",
+            "user_supplied"
+          ]
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Carrier value only. Task 2.4 defines threshold semantics."
+        },
+        "evidence": {
+          "$ref": "#/$defs/stringList"
+        },
+        "reference_ids": {
+          "$ref": "#/$defs/stringList"
+        },
+        "notes": {
+          "$ref": "#/$defs/nullableString"
+        }
+      }
+    },
+    "transferableTrait": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["domain", "instruction", "priority"],
+      "properties": {
+        "domain": {
+          "type": "string",
+          "enum": [
+            "composition",
+            "perspective",
+            "focus_depth",
+            "lighting",
+            "exposure_tone",
+            "color",
+            "texture",
+            "atmosphere",
+            "materials",
+            "production_design",
+            "imperfection",
+            "motion_signature",
+            "other"
+          ]
+        },
+        "instruction": {
+          "type": "string",
+          "minLength": 1
+        },
+        "priority": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "why_transferable": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "source_trait_names": {
+          "$ref": "#/$defs/stringList"
+        },
+        "avoid_overcopying": {
+          "$ref": "#/$defs/stringList"
+        }
+      }
+    },
+    "contentSpecificFeature": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["feature", "category", "transfer_policy"],
+      "properties": {
+        "feature": {
+          "type": "string",
+          "minLength": 1
+        },
+        "category": {
+          "type": "string",
+          "enum": [
+            "identity",
+            "person",
+            "product",
+            "wardrobe",
+            "prop",
+            "location",
+            "text",
+            "logo",
+            "story_action",
+            "distinctive_design",
+            "other"
+          ]
+        },
+        "transfer_policy": {
+          "type": "string",
+          "enum": [
+            "do_not_transfer",
+            "transfer_only_if_user_requests",
+            "preserve_if_same_subject",
+            "safe_to_generalize"
+          ]
+        },
+        "notes": {
+          "$ref": "#/$defs/nullableString"
+        }
+      }
+    },
+    "metadataAndHypotheses": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["supplied_metadata", "hardware_hypotheses"],
+      "properties": {
+        "supplied_metadata": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/metadataClaim"
+          },
+          "default": []
+        },
+        "hardware_hypotheses": {
+          "type": "array",
+          "description": "Uncertain camera/lens/stock/format possibilities inferred from appearance. These are never facts unless promoted by external metadata evidence.",
+          "items": {
+            "$ref": "#/$defs/hardwareHypothesis"
+          },
+          "default": []
+        }
+      }
+    },
+    "metadataClaim": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["field", "value", "source_type"],
+      "properties": {
+        "field": {
+          "type": "string",
+          "minLength": 1
+        },
+        "value": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_type": {
+          "type": "string",
+          "enum": ["user_supplied", "embedded_metadata", "documented_external_source"]
+        },
+        "source_reference": {
+          "$ref": "#/$defs/nullableString"
+        }
+      }
+    },
+    "hardwareHypothesis": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["category", "hypothesis", "confidence", "observable_basis", "assertion_level"],
+      "properties": {
+        "category": {
+          "type": "string",
+          "enum": ["capture_format", "camera_family", "lens_family", "focal_length_range", "aperture_range", "film_stock_or_response", "other"]
+        },
+        "hypothesis": {
+          "type": "string",
+          "minLength": 1
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "observable_basis": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        },
+        "assertion_level": {
+          "type": "string",
+          "const": "hypothesis_only"
+        },
+        "alternatives": {
+          "$ref": "#/$defs/stringList"
+        }
+      }
+    },
+    "uncertainty": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["known_unknowns", "do_not_claim"],
+      "properties": {
+        "known_unknowns": {
+          "$ref": "#/$defs/stringList"
+        },
+        "do_not_claim": {
+          "$ref": "#/$defs/stringList"
+        },
+        "weak_observations": {
+          "$ref": "#/$defs/stringList"
+        },
+        "conflicting_reference_traits": {
+          "$ref": "#/$defs/stringList"
+        }
+      }
+    },
+    "targetTransfer": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "properties": {
+        "target_description": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "preserve_target_content": {
+          "$ref": "#/$defs/stringList"
+        },
+        "apply_dna": {
+          "$ref": "#/$defs/stringList"
+        },
+        "do_not_transfer": {
+          "$ref": "#/$defs/stringList"
+        },
+        "adaptation_notes": {
+          "$ref": "#/$defs/stringList"
+        }
+      }
+    },
+    "provenance": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "properties": {
+        "source_ledger_ids": {
+          "$ref": "#/$defs/stringList"
+        },
+        "classifications": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["CONFIRMED", "CORROBORATED", "MODEL-BEHAVIOR", "PROVIDER-SPECIFIC", "INFERRED"]
+          },
+          "uniqueItems": true,
+          "default": []
+        },
+        "notes": {
+          "$ref": "#/$defs/nullableString"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,157 @@
+{
+  "schema_version": "1.0.0",
+  "skill": "cinematic-realism-director",
+  "task": "9.3-expert-lock-evals",
+  "purpose": "Verify that explicit expert camera, lens, focal, aperture, framing, lighting, stock, color, texture and preservation choices remain locked while AUTO fills only compatible missing values.",
+  "scoring": {
+    "pass_condition": "Every feasible explicit value must survive unchanged. Genuine conflicts must be classified and surfaced rather than silently normalized. Provider limitations may trigger semantic translation but may not erase the lock.",
+    "critical_failures": [
+      "silently changing a user-specified focal length, aperture, camera, lens, angle, shot size, stock, lighting or preservation requirement",
+      "treating an unconventional but possible combination as invalid merely because it is unusual",
+      "solving provider incompatibility by changing the universal shot",
+      "relabeling an explicit user value as AUTO or inferred",
+      "using a provider preset that contradicts one or more field-level locks",
+      "claiming full success when mutually impossible locked outcomes remain unresolved"
+    ]
+  },
+  "cases": [
+    {
+      "id": "locks-001",
+      "prompt": "Portrait in 70mm format, 25mm lens, f/1.2, low angle. Fill everything else automatically.",
+      "expected_locks": {
+        "capture_format": "70mm",
+        "focal_length": "25mm",
+        "aperture": "f/1.2",
+        "camera_angle": "low"
+      },
+      "expected_auto": ["lens_family", "lighting", "exposure", "color", "texture", "composition refinements"],
+      "expected_conflict_class": "C0_or_C1",
+      "must_not": ["replace 25mm with a more typical portrait focal length", "close aperture for convenience", "change low angle"],
+      "reason": "Canonical manual-camera behavior: explicit values are locks, not suggestions."
+    },
+    {
+      "id": "locks-002",
+      "prompt": "Use a 14mm rectilinear lens very close to the foreground hand. I want huge near/far scale exaggeration but absolutely no fisheye curvature and straight architecture behind.",
+      "expected_locks": {
+        "focal_length": "14mm",
+        "projection": "rectilinear",
+        "foreground_strategy": "extreme_near_foreground",
+        "background_geometry": "straight_architecture",
+        "fisheye": false
+      },
+      "expected_conflict_class": "C0",
+      "must_not": ["substitute a longer focal length", "treat strong perspective as fisheye", "curve the background to express wideness"],
+      "reason": "Wide-angle perspective exaggeration and optical fisheye distortion are separate systems."
+    },
+    {
+      "id": "locks-003",
+      "prompt": "Keep f/1.2 locked but I want the face and the building several meters behind to both feel clearly readable.",
+      "expected_locks": {
+        "aperture": "f/1.2"
+      },
+      "expected_conflict_class": "C1_or_C2",
+      "allowed_auto_resolutions": ["camera distance", "subject/background spacing", "focus placement", "framing", "capture format if unspecified"],
+      "must_not": ["silently change f/1.2 to f/8", "promise impossible deep focus if geometry cannot support it"],
+      "reason": "Depth conflict must be solved through unlocked geometry first and surfaced if the requested result remains physically contradictory."
+    },
+    {
+      "id": "locks-004",
+      "prompt": "Make it feel like a 65/70mm large-format capture, but finish it with VHS color bleed and tape artifacts.",
+      "expected_locks": {
+        "capture_format_character": "65/70mm_large_format",
+        "finish": "VHS"
+      },
+      "expected_conflict_class": "C0",
+      "must_not": ["reject the combination as impossible", "collapse capture format and post/finish into one axis"],
+      "reason": "Acquisition-scale intent and downstream analog-video finish can coexist."
+    },
+    {
+      "id": "locks-005",
+      "prompt": "ARRI ALEXA 35 character, Cooke S4 lens, 35mm focal length, f/4, chest-height camera, medium shot, soft window key from camera-left, no haze, no flare.",
+      "expected_locks": {
+        "camera_reference": "ARRI ALEXA 35",
+        "lens_reference": "Cooke S4",
+        "focal_length": "35mm",
+        "aperture": "f/4",
+        "camera_height": "chest_height",
+        "shot_size": "medium",
+        "key_light": "soft_window_camera_left",
+        "haze": false,
+        "flare": false
+      },
+      "expected_conflict_class": "C0",
+      "must_not": ["add haze because the shot is cinematic", "add flare because Cooke glass was named", "change aperture to create more bokeh"],
+      "reason": "Multiple simultaneous expert locks must survive intact."
+    },
+    {
+      "id": "locks-006",
+      "prompt": "Magnific prompt only: use a 40mm focal length and Leitz SUMMILUX-C character. Do not substitute another lens even if Magnific has no exact native control.",
+      "target_provider": "magnific",
+      "expected_locks": {
+        "focal_length": "40mm",
+        "lens_reference": "Leitz SUMMILUX-C"
+      },
+      "expected_conflict_class": "C3",
+      "expected_provider_behavior": ["leave incompatible native focal/lens selector neutral or Auto when needed", "translate locked visual intent in prompt language", "disclose semantic translation if structured output is exposed"],
+      "must_not": ["round 40mm silently to 35mm or 50mm", "swap the lens for another native preset"],
+      "reason": "Provider enum gaps do not erase universal locks."
+    },
+    {
+      "id": "locks-007",
+      "prompt": "True 90-degree top-down camera, all five vehicles facing the same direction, same formation, same spacing. Only camera viewpoint may change.",
+      "expected_locks": {
+        "camera_angle": "true_90_degree_top_down",
+        "formation": "preserve",
+        "vehicle_orientation": "preserve",
+        "spacing": "preserve",
+        "change_scope": "camera_only"
+      },
+      "expected_conflict_class": "C0",
+      "must_not": ["use a high three-quarter view instead of true top-down", "rearrange vehicles", "rotate individual vehicles"],
+      "reason": "Geometric and preservation locks are equal first-class constraints."
+    },
+    {
+      "id": "locks-008",
+      "prompt": "Keep this exact frozen moment: same pose, gaze, expression, hands, props, lighting and shadows. Move only the camera to an over-the-shoulder position behind the father, looking down.",
+      "expected_locks": {
+        "timecode": "frozen_same_moment",
+        "pose": "preserve",
+        "gaze": "preserve",
+        "expression": "preserve",
+        "hands": "preserve",
+        "props": "preserve",
+        "lighting": "preserve",
+        "shadows": "preserve",
+        "camera_relation": "over_shoulder_behind_father_looking_down"
+      },
+      "expected_conflict_class": "C0",
+      "must_not": ["change body pose to make the OTS easier", "change action timing", "invent new expressions"],
+      "reason": "Frozen-moment camera changes must preserve scene state while allowing parallax/visibility changes caused by the new camera position."
+    },
+    {
+      "id": "locks-009",
+      "prompt": "Kodak VISION3 500T is locked, but keep the image clean and restrained with barely visible grain and no visible halation.",
+      "expected_locks": {
+        "film_stock": "Kodak VISION3 500T",
+        "grain": "barely_visible",
+        "halation": "none"
+      },
+      "expected_conflict_class": "C0",
+      "must_not": ["add strong grain because film was selected", "add orange-red halation automatically", "fade blacks to signal film"],
+      "reason": "Stock, grain and halation are separate systems."
+    },
+    {
+      "id": "locks-010",
+      "prompt": "Use hard noon sun and keep it noon. Do not turn this into golden hour. Preserve the white concrete walls and natural skin color.",
+      "expected_locks": {
+        "time_of_day": "noon",
+        "key_light": "hard_noon_sun",
+        "wall_color": "white_concrete_preserve",
+        "skin_color": "natural_preserve"
+      },
+      "expected_conflict_class": "C0",
+      "must_not": ["convert to sunset", "warm the entire scene to make it cinematic", "recover every shadow into flat HDR"],
+      "reason": "AUTO must complete around difficult real lighting rather than rewriting a locked condition."
+    }
+  ]
+}

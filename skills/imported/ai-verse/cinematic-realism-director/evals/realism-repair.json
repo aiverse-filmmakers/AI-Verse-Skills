@@ -1,0 +1,159 @@
+{
+  "schema_version": "1.0.0",
+  "skill": "cinematic-realism-director",
+  "task": "9.4-reality-repair-evals",
+  "purpose": "Verify taxonomy-driven diagnosis and minimal preservation-aware repair of common synthetic-image failures.",
+  "scoring": {
+    "pass_condition": "Each case must identify the relevant artifact domain, preserve locked content, repair dependencies in the correct order, choose the smallest justified edit scope, and avoid adding unrelated realism tokens.",
+    "critical_failures": [
+      "changing identity, product geometry, pose, composition, wardrobe, text, environment or other locked content without authorization",
+      "repairing surface texture before a structural, lighting, contact, shadow or reflection cause",
+      "using global regeneration when a local repair is sufficient",
+      "adding pores, dirt, scratches, wrinkles, grain, flyaways or asymmetry merely to make the image feel real",
+      "calling a reference-conditioned regeneration an exact edit",
+      "claiming the image was visually verified when the host could not inspect the result"
+    ]
+  },
+  "repair_dependency_order": [
+    "geometry_anatomy",
+    "focus_depth_motion",
+    "lighting",
+    "exposure_color",
+    "shadows_reflections",
+    "materials_contact",
+    "human_surface_realism",
+    "texture_optical_cleanup"
+  ],
+  "cases": [
+    {
+      "id": "repair-skin-001",
+      "artifact_domain": "skin",
+      "input_description": "Portrait has waxy, uniformly smooth facial skin while the original identity, makeup, expression and lighting are otherwise correct.",
+      "preserve": ["identity", "makeup", "expression", "pose", "framing", "lighting direction", "background"],
+      "expected_diagnosis": ["over-smoothed skin texture", "insufficient regional tonal variation", "implausibly uniform specular response"],
+      "repair_scope": "face_skin_only",
+      "expected_repair": ["restore region-specific fine texture", "restore subtle color variation", "match specular response to source light", "preserve age and makeup"],
+      "must_not": ["add exaggerated pores", "add freckles or wrinkles not present", "change face shape", "globally restyle image"]
+    },
+    {
+      "id": "repair-hair-001",
+      "artifact_domain": "hair",
+      "input_description": "Hair contains random broken flyaways and strands that detach from the hairstyle, but overall silhouette, color and wind direction are correct.",
+      "preserve": ["hair length", "hair color", "overall hairstyle", "head pose", "wind direction"],
+      "expected_diagnosis": ["strand continuity failure", "unmotivated detached flyaways"],
+      "repair_scope": "hair_edges_and_strands",
+      "expected_repair": ["restore continuous strand groups", "keep plausible wind-shaped flyaways", "retain silhouette and length"],
+      "must_not": ["make hair perfectly static", "change hairstyle", "shorten hair", "add extra volume unrelated to source"]
+    },
+    {
+      "id": "repair-eyes-001",
+      "artifact_domain": "eyes",
+      "input_description": "Both eyes have identical bright catchlights even though the key light comes strongly from camera-left and the right eye is partly shadowed.",
+      "preserve": ["identity", "gaze", "iris color", "expression", "lighting setup"],
+      "expected_diagnosis": ["catchlight geometry inconsistent with source direction", "eye specular symmetry inconsistent with lighting"],
+      "repair_scope": "eye_speculars_only",
+      "expected_repair": ["align catchlight intensity and placement with source geometry", "retain natural moisture and iris detail"],
+      "must_not": ["change gaze", "enlarge eyes", "beautify eye shape", "add fantasy reflections"]
+    },
+    {
+      "id": "repair-fabric-001",
+      "artifact_domain": "fabric",
+      "input_description": "A heavy wool coat looks like thin plastic; folds ignore body contact and wind direction.",
+      "preserve": ["coat design", "color", "body pose", "garment silhouette where physically compatible"],
+      "expected_diagnosis": ["wrong material roughness", "wrong fold scale", "missing weight/compression", "environment interaction mismatch"],
+      "repair_scope": "coat_material_and_folds",
+      "expected_repair": ["restore wool-like roughness", "weight-appropriate folds", "compression at body contact", "wind-consistent movement"],
+      "must_not": ["redesign garment", "add dirt", "change color", "create arbitrary wrinkles everywhere"]
+    },
+    {
+      "id": "repair-product-001",
+      "artifact_domain": "product_material",
+      "input_description": "Luxury watch geometry is correct but metal and glass look CG; highlights are too uniform and reflections do not match the studio setup.",
+      "preserve": ["exact watch geometry", "logo", "dial text", "camera angle", "composition"],
+      "expected_diagnosis": ["material response mismatch", "reflection-source mismatch", "uniform specular highlights"],
+      "repair_scope": "watch_material_response",
+      "expected_repair": ["metal-specific highlight shape", "glass reflection/refraction consistent with source", "surface roughness variation within material logic"],
+      "must_not": ["change case shape", "rewrite logo", "alter dial design", "add decorative scratches"]
+    },
+    {
+      "id": "repair-contact-001",
+      "artifact_domain": "contact_gravity",
+      "input_description": "A shoe appears to hover a few millimeters above the pavement and has no convincing weight/contact shadow.",
+      "preserve": ["shoe design", "foot pose", "camera", "pavement texture"],
+      "expected_diagnosis": ["missing ground contact", "contact-shadow failure", "weight cue failure"],
+      "repair_scope": "shoe_ground_interface",
+      "expected_repair": ["credible sole contact", "source-consistent contact shadow", "minor compression or occlusion cues if physically appropriate"],
+      "must_not": ["move the foot significantly", "dirty the shoe by default", "change pavement"]
+    },
+    {
+      "id": "repair-reflection-001",
+      "artifact_domain": "reflections",
+      "input_description": "A wet road reflects a bright sign that is not present in the scene and reflects the car at an impossible angle.",
+      "preserve": ["car position", "road layout", "actual lights/signs", "rainy condition", "composition"],
+      "expected_diagnosis": ["reflection content hallucination", "reflection geometry mismatch"],
+      "repair_scope": "wet_road_reflections",
+      "expected_repair": ["remove nonexistent reflected source", "align car/light reflections with scene geometry", "retain material-appropriate wet roughness"],
+      "must_not": ["add new neon signs", "change car position", "make road mirror-perfect"]
+    },
+    {
+      "id": "repair-shadow-001",
+      "artifact_domain": "shadows",
+      "input_description": "Subject has two conflicting hard shadows although the scene contains one visible hard sun source and weak sky fill.",
+      "preserve": ["subject pose", "sun direction", "environment", "camera"],
+      "expected_diagnosis": ["shadow-source count mismatch", "direction inconsistency"],
+      "repair_scope": "cast_shadows",
+      "expected_repair": ["one dominant hard sun shadow", "weak ambient/occlusion behavior consistent with sky fill"],
+      "must_not": ["soften the sun into studio light", "change time of day", "add a rim light to justify the second shadow"]
+    },
+    {
+      "id": "repair-lighting-001",
+      "artifact_domain": "lighting",
+      "input_description": "Face is bright from camera-right but every visible window and practical is camera-left; there is no plausible source on the right.",
+      "preserve": ["room layout", "visible windows", "practicals", "pose", "composition"],
+      "expected_diagnosis": ["unmotivated key direction"],
+      "repair_scope": "subject_lighting",
+      "expected_repair": ["align facial key with plausible source or reduce unsupported right-side illumination", "maintain ambient continuity"],
+      "must_not": ["invent an unseen studio key without reason", "change room architecture"]
+    },
+    {
+      "id": "repair-hdr-001",
+      "artifact_domain": "exposure_tone",
+      "input_description": "Interior window view, face and deep shadows are all equally visible, producing flat local-tone-mapped HDR halos.",
+      "preserve": ["composition", "window location", "subject", "time of day"],
+      "expected_diagnosis": ["implausible simultaneous local contrast recovery", "haloing", "flattened exposure hierarchy"],
+      "repair_scope": "tone_and_exposure_relationships",
+      "expected_repair": ["restore believable highlight/shadow hierarchy", "allow controlled clipping or density where justified", "remove local-tone-map halos"],
+      "must_not": ["force every tonal region to retain equal detail", "darken globally without hierarchy"]
+    },
+    {
+      "id": "repair-dof-001",
+      "artifact_domain": "focus_depth",
+      "input_description": "Portrait background has a binary cutout blur: the subject edge is razor-sharp and everything one pixel behind is uniformly smeared.",
+      "preserve": ["subject identity", "camera framing", "background content"],
+      "expected_diagnosis": ["synthetic depth segmentation", "non-continuous focus falloff"],
+      "repair_scope": "depth_rendering",
+      "expected_repair": ["continuous physically plausible focus transition", "distance-sensitive background blur", "natural edge transitions"],
+      "must_not": ["increase blur simply to hide the artifact", "change subject cutout shape"]
+    },
+    {
+      "id": "repair-sharpness-001",
+      "artifact_domain": "optical_finish",
+      "input_description": "Image is oversharpened with crunchy halos around hair, pores, fabric and architecture, while geometry/light are otherwise correct.",
+      "preserve": ["composition", "detail hierarchy", "identity", "materials", "color"],
+      "expected_diagnosis": ["excessive high-frequency sharpening", "edge halos"],
+      "repair_scope": "global_high_frequency_finish",
+      "expected_repair": ["restrained detail", "remove sharpening halos", "keep material-specific texture"],
+      "must_not": ["blur the whole image", "add film grain to hide sharpening", "soften important focus plane indiscriminately"]
+    },
+    {
+      "id": "repair-repetition-001",
+      "artifact_domain": "repetition_pattern",
+      "input_description": "Crowd scene contains repeated identical faces and duplicated jacket folds in several background people.",
+      "preserve": ["main subject", "crowd density", "composition", "lighting"],
+      "expected_diagnosis": ["duplicated identity/detail pattern"],
+      "repair_scope": "affected_background_people",
+      "expected_repair": ["introduce plausible non-repeating background variation without changing crowd structure"],
+      "must_not": ["change main subject", "randomize entire scene", "add dirt/grain instead of fixing duplicates"]
+    }
+  ]
+}

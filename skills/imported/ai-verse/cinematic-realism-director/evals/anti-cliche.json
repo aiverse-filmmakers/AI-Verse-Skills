@@ -1,0 +1,102 @@
+{
+  "schema_version": "1.0.0",
+  "skill": "cinematic-realism-director",
+  "task": "9.7-anti-cliche-evals",
+  "purpose": "Verify that cinematic direction is driven by story, physical capture logic, and user intent rather than a fixed bundle of fashionable cinematic effects.",
+  "pass_condition": "Each case must preserve the requested intent while avoiding unjustified cinematic defaults. An effect may appear only when the prompt or resolved shot gives it a specific narrative, optical, environmental, or capture justification.",
+  "critical_failures": [
+    "adding shallow depth of field merely because the user says cinematic",
+    "adding teal-orange separation without scene or user justification",
+    "adding haze or volumetric beams without atmospheric/source justification",
+    "adding anamorphic flare without compatible optics/light or an explicit request",
+    "adding strong grain merely to make a clean image feel photographic",
+    "adding dramatic rim light without a plausible motivated source",
+    "turning film into a mandatory stack of grain, halation, fade, warmth and lifted blacks"
+  ],
+  "cases": [
+    {
+      "id": "cliche-001",
+      "prompt": "Create a bright premium skincare commercial on a clean white set. Natural, polished and photographic.",
+      "must_preserve": ["bright commercial clarity", "clean white environment", "premium material rendering"],
+      "must_not_assume": ["grain", "halation", "haze", "teal-orange", "dramatic rim light", "shallow depth of field"],
+      "reason": "Clean commercial photography is allowed to remain clean."
+    },
+    {
+      "id": "cliche-002",
+      "prompt": "Documentary-style portrait of a baker working in a small kitchen in daylight.",
+      "must_preserve": ["documentary observation", "daylight motivation", "environmental context"],
+      "must_not_assume": ["anamorphic flare", "heavy grain", "orange practicals", "blue shadows", "haze"],
+      "reason": "Documentary honesty should not be converted into a prestige-cinema preset."
+    },
+    {
+      "id": "cliche-003",
+      "prompt": "A cyclist stopped beside a road at harsh midday in southern Spain. Keep the hard noon feeling.",
+      "must_preserve": ["hard midday source", "high sun character", "real exterior contrast"],
+      "must_not_assume": ["golden hour", "soft backlight", "rim light", "fog", "warm sunset grade"],
+      "reason": "AUTO must not beautify hard noon into golden hour."
+    },
+    {
+      "id": "cliche-004",
+      "prompt": "Wide architectural interior of a modern gallery. I need the room geometry readable from foreground to background.",
+      "must_preserve": ["deep spatial readability", "architecture hierarchy", "straight geometry"],
+      "must_not_assume": ["f/1.2", "extreme background blur", "fisheye", "cinematic haze"],
+      "reason": "Environmental information can require moderate or deep focus."
+    },
+    {
+      "id": "cliche-005",
+      "prompt": "Natural food photograph of fresh bread by a window in the morning.",
+      "must_preserve": ["window-motivated light", "food texture", "natural morning color"],
+      "must_not_assume": ["teal-orange", "anamorphic flare", "strong halation", "heavy vignette"],
+      "reason": "Food realism depends on material and light response, not cinematic artifacts."
+    },
+    {
+      "id": "cliche-006",
+      "prompt": "Night portrait outside a small convenience store with fluorescent and street lighting. Keep the color believable.",
+      "must_preserve": ["mixed-source night color", "believable practical motivation", "skin separation"],
+      "must_not_assume": ["teal-orange", "neon magenta-cyan makeover", "volumetric fog", "blue anamorphic flare"],
+      "reason": "Night does not imply neon cyberpunk treatment."
+    },
+    {
+      "id": "cliche-007",
+      "prompt": "Use Kodak VISION3 250D as the film-stock reference for a clean daylight fashion image.",
+      "must_preserve": ["named stock lock", "daylight fashion cleanliness"],
+      "must_not_assume": ["heavy grain", "orange halation", "faded blacks", "dust", "scratches", "warm cast"],
+      "reason": "A film-stock reference is not a bundle of every film stereotype."
+    },
+    {
+      "id": "cliche-008",
+      "prompt": "Make this ordinary portrait more cinematic, but keep it natural and contemporary.",
+      "must_preserve": ["portrait identity", "contemporary natural treatment"],
+      "must_not_assume": ["2.39 crop", "anamorphic lens", "f/1.2", "grain", "haze", "rim light", "teal-orange"],
+      "reason": "The word cinematic alone cannot activate a fixed style stack."
+    },
+    {
+      "id": "cliche-009",
+      "prompt": "Luxury watch product image, restrained and modern, brushed steel and black leather.",
+      "must_preserve": ["product geometry", "steel roughness", "leather material response", "restrained luxury"],
+      "must_not_assume": ["black-and-gold palette", "smoke", "god rays", "dramatic rim light", "floating product"],
+      "reason": "Luxury is not synonymous with black, gold, smoke and edge light."
+    },
+    {
+      "id": "cliche-010",
+      "prompt": "Still frame of a runner crossing a street. Freeze the decisive instant sharply.",
+      "must_preserve": ["decisive frozen motion", "sharp subject evidence"],
+      "must_not_assume": ["motion blur", "camera shake", "long exposure"],
+      "reason": "Action does not automatically require blur."
+    },
+    {
+      "id": "cliche-011",
+      "prompt": "Rainy evening street scene. Wet pavement, ordinary streetlights, realistic atmosphere.",
+      "must_preserve": ["wet-surface realism", "streetlight motivation", "rain evidence"],
+      "must_not_assume": ["dense fog", "volumetric beams", "blue-orange blockbuster grade", "lens flare everywhere"],
+      "reason": "Rain can be visible through surfaces and local atmosphere without theatrical fog."
+    },
+    {
+      "id": "cliche-012",
+      "prompt": "Natural beauty portrait with very clean makeup and controlled studio light. Keep the hair tidy.",
+      "must_preserve": ["clean makeup", "controlled studio polish", "tidy hairstyle"],
+      "must_not_assume": ["extra pores", "forced wrinkles", "random flyaways", "grain", "skin roughening"],
+      "reason": "Realism is not equivalent to adding visible imperfection."
+    }
+  ]
+}

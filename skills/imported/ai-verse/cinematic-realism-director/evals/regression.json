@@ -1,0 +1,33 @@
+{
+  "schema_version": "1.0.0",
+  "skill": "cinematic-realism-director",
+  "task": "9.11-regression-corpus",
+  "purpose": "Convert every verified implementation failure pattern into a permanent regression requirement.",
+  "source": "references/verified-pitfalls.md",
+  "maintenance_rule": "Every newly verified meaningful failure must be corrected at its responsible layer and added here before it can be considered closed.",
+  "pass_condition": "No regression case may violate its invariant. A visually attractive result is still a failure when the listed contract is broken.",
+  "cases": [
+    {"id":"reg-001","pitfall":"confidence-vocabulary-drift","input":"User locks 35mm. A reference analysis infers 50mm with high confidence.","must_hold":["35mm user lock remains authoritative","numeric/inferred confidence cannot override authority"]},
+    {"id":"reg-002","pitfall":"focal-length-as-perspective","input":"Huge foreground hand, wide rectilinear view, straight architecture.","must_hold":["scale exaggeration comes from camera proximity","background does not become fisheye"]},
+    {"id":"reg-003","pitfall":"large-format-or-wide-aperture-equals-cinema","input":"Environmental portrait where location must remain readable.","must_hold":["AUTO may choose moderate/deep focus","large format or f/1.2 is not mandatory"]},
+    {"id":"reg-004","pitfall":"cinematic-effect-stacking","input":"Bright clean commercial photograph.","must_hold":["no mandatory grain/haze/flare/halation/rim/teal-orange/shallow DOF"]},
+    {"id":"reg-005","pitfall":"film-warm-grain-fade-stereotype","input":"Clean daylight image with a named film-stock reference.","must_hold":["stock is not automatically warm/faded/heavily grained","grain/halation/color remain separate decisions"]},
+    {"id":"reg-006","pitfall":"realism-equals-dirt-damage","input":"Pristine luxury product image that must look real.","must_hold":["clean surfaces may remain pristine","no random dirt/scratches/asymmetry/noise added as realism tokens"]},
+    {"id":"reg-007","pitfall":"surface-before-structure","input":"Malformed hand with overly smooth skin.","must_hold":["geometry/anatomy repair precedes microtexture","grain/pores/sharpening cannot mask structural error"]},
+    {"id":"reg-008","pitfall":"skin-repair-pore-overlay","input":"Make this beauty portrait's skin look real without changing age or makeup.","must_hold":["region-specific texture and tonal/specular behavior","no global pore overlay","no forced aging"]},
+    {"id":"reg-009","pitfall":"hair-realism-flyaway-spam","input":"Keep hairstyle tidy but realistic.","must_hold":["hair mass/root/gravity remain coherent","flyaways optional and physically attached"]},
+    {"id":"reg-010","pitfall":"reflection-shadow-catchlight-incoherence","input":"Reflective wet-night portrait with visible practical source.","must_hold":["catchlights/shadows/reflections agree with source geometry"]},
+    {"id":"reg-011","pitfall":"repair-drifted-into-regeneration","input":"Fix only waxy skin while preserving identity, pose, wardrobe, framing and background.","must_hold":["smallest repair scope","preserved domains do not drift"]},
+    {"id":"reg-012","pitfall":"missing-target-treated-as-available","input":"User asks to edit an image that is not actually available in the active host context.","must_hold":["no claim of inspection/edit","return handoff spec or request image only if essential"]},
+    {"id":"reg-013","pitfall":"beginner-intake-form","input":"Woman waiting for a taxi in London at night.","must_hold":["AUTO completes without demanding camera/lens/aperture/stock/grade answers unless essential"]},
+    {"id":"reg-014","pitfall":"multi-reference-role-collapse","input":"A=identity, B=product geometry, C=lighting/color.","must_hold":["roles remain separate","one reference cannot silently overwrite another domain"]},
+    {"id":"reg-015","pitfall":"reference-hardware-hallucination","input":"Analyze a reference with no reliable metadata.","must_hold":["observable traits may be stated","exact camera/lens/stock/aperture remain hypothesis/unknown rather than fact"]},
+    {"id":"reg-016","pitfall":"frozen-moment-became-action-variation","input":"Same T0, same pose/gaze/hands/props; only camera changes.","must_hold":["scene state remains frozen","camera/parallax/framing may change","pose/action may not"]},
+    {"id":"reg-017","pitfall":"provider-adapter-became-second-brain","input":"Translate one resolved shot across Generic, OpenAI, Gemini, Seedream, FLUX, Magnific and Higgsfield.","must_hold":["creative intent and locks remain invariant","only provider expression changes"]},
+    {"id":"reg-018","pitfall":"stale-provider-controls-treated-current","input":"Active provider version differs from cached adapter enums.","must_hold":["use current verified/live surface or generic fallback","do not fabricate remembered controls"]},
+    {"id":"reg-019","pitfall":"adapter-existence-equals-access","input":"Magnific adapter exists but no Magnific tool/account is granted.","must_hold":["no external call","no claim of provider availability","prompt/spec degradation remains useful"]},
+    {"id":"reg-020","pitfall":"tool-success-equals-visual-success","input":"Image tool returns HTTP/API success but output has not been inspected.","must_hold":["V1 execution confirmed is allowed","V2 visual-quality claim is forbidden until inspection"]},
+    {"id":"reg-021","pitfall":"prompt-only-override-ignored","input":"Give me JSON/prompt only. Do not generate.","must_hold":["no image generation/edit execution regardless of tool availability"]},
+    {"id":"reg-022","pitfall":"standalone-package-repo-dependency","input":"Run the skill with only cinematic-realism-director/ available.","must_hold":["core routing/workflows/knowledge/schemas/adapters remain understandable","no required sibling skill, repo-root doc, OS, MCP, API key or private path for prompt/spec operation"]}
+  ]
+}

@@ -1,0 +1,871 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aiverse.local/schemas/cinematic-realism-director/cinematic-shot-spec.schema.json",
+  "title": "AI-Verse Cinematic Shot Spec",
+  "description": "Provider-neutral structured representation of a cinematic still-image generation, editing, reference-match, or prompt-only task. It captures user intent, locked values, AUTO decisions, photographic behavior, realism requirements, preservation constraints, verification state, and optional provider adaptation without treating provider syntax as the source of truth.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "operation",
+    "intent",
+    "scene",
+    "composition",
+    "capture",
+    "lighting",
+    "color_and_tone",
+    "texture_and_finish",
+    "physical_realism",
+    "constraints",
+    "parameter_states"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "1.0.0"
+    },
+    "spec_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Optional host-generated stable identifier for this shot specification."
+    },
+    "operation": {
+      "type": "string",
+      "enum": [
+        "auto_direct",
+        "cinematize",
+        "reality_repair",
+        "reference_match",
+        "manual_camera",
+        "prompt_only",
+        "shot_recipe"
+      ]
+    },
+    "intent": {
+      "$ref": "#/$defs/intent"
+    },
+    "scene": {
+      "$ref": "#/$defs/scene"
+    },
+    "subjects": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/subject"
+      },
+      "default": []
+    },
+    "composition": {
+      "$ref": "#/$defs/composition"
+    },
+    "capture": {
+      "$ref": "#/$defs/capture"
+    },
+    "lighting": {
+      "$ref": "#/$defs/lighting"
+    },
+    "color_and_tone": {
+      "$ref": "#/$defs/colorAndTone"
+    },
+    "texture_and_finish": {
+      "$ref": "#/$defs/textureAndFinish"
+    },
+    "physical_realism": {
+      "$ref": "#/$defs/physicalRealism"
+    },
+    "constraints": {
+      "$ref": "#/$defs/constraints"
+    },
+    "parameter_states": {
+      "type": "array",
+      "description": "Field-level state records used to preserve explicit locks and distinguish supplied, AUTO, inferred, reference-observed, and provider-translated values. Task 2.4 defines confidence semantics more deeply; this schema provides the carrier structure.",
+      "items": {
+        "$ref": "#/$defs/parameterState"
+      },
+      "default": []
+    },
+    "references": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/referenceBinding"
+      },
+      "default": []
+    },
+    "provider_adaptation": {
+      "$ref": "#/$defs/providerAdaptation"
+    },
+    "reality_gate": {
+      "$ref": "#/$defs/realityGate"
+    },
+    "output": {
+      "$ref": "#/$defs/output"
+    },
+    "provenance": {
+      "$ref": "#/$defs/provenance"
+    }
+  },
+  "$defs": {
+    "nullableString": {
+      "type": ["string", "null"]
+    },
+    "stringList": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true,
+      "default": []
+    },
+    "intent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["summary", "purpose", "emotional_target", "visual_priority"],
+      "properties": {
+        "summary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "purpose": {
+          "type": "string",
+          "enum": [
+            "narrative",
+            "commercial",
+            "editorial",
+            "documentary",
+            "portrait",
+            "product",
+            "fashion",
+            "travel",
+            "automotive",
+            "food",
+            "architecture",
+            "environment",
+            "storyboard",
+            "reference_study",
+            "other"
+          ]
+        },
+        "emotional_target": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        },
+        "visual_priority": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        },
+        "genre_or_register": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "realism_target": {
+          "type": "string",
+          "enum": [
+            "strict_photographic",
+            "cinematic_photographic",
+            "heightened_but_plausible",
+            "stylized_photographic",
+            "user_defined"
+          ],
+          "default": "cinematic_photographic"
+        },
+        "notes": {
+          "$ref": "#/$defs/stringList"
+        }
+      }
+    },
+    "scene": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["environment", "story_action"],
+      "properties": {
+        "environment": {
+          "type": "string",
+          "minLength": 1
+        },
+        "story_action": {
+          "type": "string",
+          "minLength": 1
+        },
+        "time_of_day": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "weather": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "season": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "production_design": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "foreground_elements": {
+          "$ref": "#/$defs/stringList"
+        },
+        "midground_elements": {
+          "$ref": "#/$defs/stringList"
+        },
+        "background_elements": {
+          "$ref": "#/$defs/stringList"
+        },
+        "atmospheric_conditions": {
+          "$ref": "#/$defs/stringList"
+        }
+      }
+    },
+    "subject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "description", "role"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1
+        },
+        "role": {
+          "type": "string",
+          "enum": ["primary", "secondary", "background", "product", "prop", "environmental"]
+        },
+        "action": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "expression_or_state": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "wardrobe_or_surface": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "identity_reference_id": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "importance": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "default": 0.5
+        }
+      }
+    },
+    "composition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["shot_size", "camera_angle", "camera_height", "camera_distance", "framing"],
+      "properties": {
+        "shot_size": {
+          "type": "string",
+          "enum": [
+            "extreme_close_up",
+            "close_up",
+            "medium_close_up",
+            "medium",
+            "medium_wide",
+            "three_quarter",
+            "full_body",
+            "wide",
+            "extreme_wide",
+            "macro",
+            "insert",
+            "over_the_shoulder",
+            "pov",
+            "custom"
+          ]
+        },
+        "camera_angle": {
+          "type": "string",
+          "enum": [
+            "eye_level",
+            "high_angle",
+            "low_angle",
+            "birds_eye",
+            "worms_eye",
+            "dutch",
+            "profile",
+            "three_quarter",
+            "rear",
+            "top_down",
+            "custom"
+          ]
+        },
+        "camera_height": {
+          "type": "string",
+          "description": "Human-readable physical/relative camera height, for example eye level, knee height, 1.2 m, overhead."
+        },
+        "camera_distance": {
+          "type": "string",
+          "description": "Human-readable subject distance or spatial relationship. Perspective is tied to camera position, not focal length alone."
+        },
+        "framing": {
+          "type": "string",
+          "minLength": 1
+        },
+        "aspect_ratio": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "orientation": {
+          "type": ["string", "null"],
+          "enum": ["landscape", "portrait", "square", null]
+        },
+        "visual_hierarchy": {
+          "$ref": "#/$defs/stringList"
+        },
+        "foreground_strategy": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "negative_space_strategy": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "perspective_behavior": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "horizon_and_verticals": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "occlusion_strategy": {
+          "$ref": "#/$defs/nullableString"
+        }
+      }
+    },
+    "capture": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["capture_format", "camera_character", "lens_family", "focal_length", "aperture", "focus_strategy", "depth_behavior"],
+      "properties": {
+        "capture_format": {
+          "type": "string",
+          "description": "Provider-neutral format intent such as Super 35, full frame, large format, medium format, 35mm film, 65/70mm reference, or AUTO-derived equivalent."
+        },
+        "camera_reference": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "camera_character": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sensor_or_emulsion_behavior": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "lens_family": {
+          "type": "string",
+          "minLength": 1
+        },
+        "lens_character": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "contrast": {
+              "$ref": "#/$defs/nullableString"
+            },
+            "microcontrast": {
+              "$ref": "#/$defs/nullableString"
+            },
+            "center_edge_behavior": {
+              "$ref": "#/$defs/nullableString"
+            },
+            "bokeh": {
+              "$ref": "#/$defs/nullableString"
+            },
+            "flare": {
+              "$ref": "#/$defs/nullableString"
+            },
+            "distortion": {
+              "$ref": "#/$defs/nullableString"
+            },
+            "chromatic_behavior": {
+              "$ref": "#/$defs/nullableString"
+            },
+            "anamorphic_squeeze": {
+              "$ref": "#/$defs/nullableString"
+            },
+            "breathing": {
+              "$ref": "#/$defs/nullableString"
+            },
+            "focus_falloff": {
+              "$ref": "#/$defs/nullableString"
+            }
+          }
+        },
+        "focal_length": {
+          "type": "string",
+          "minLength": 1
+        },
+        "aperture": {
+          "type": "string",
+          "minLength": 1
+        },
+        "focus_strategy": {
+          "type": "string",
+          "minLength": 1
+        },
+        "focus_target": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "focus_distance": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "depth_behavior": {
+          "type": "string",
+          "minLength": 1
+        },
+        "shutter_motion": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "motion_blur": {
+          "$ref": "#/$defs/nullableString"
+        }
+      }
+    },
+    "lighting": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["motivation", "key", "fill_strategy", "ambient", "contrast_strategy", "exposure_strategy"],
+      "properties": {
+        "motivation": {
+          "type": "string",
+          "minLength": 1
+        },
+        "key": {
+          "$ref": "#/$defs/lightDescription"
+        },
+        "fill_strategy": {
+          "type": "string",
+          "minLength": 1
+        },
+        "back_or_edge_light": {
+          "$ref": "#/$defs/lightDescriptionNullable"
+        },
+        "practicals": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/lightDescription"
+          },
+          "default": []
+        },
+        "ambient": {
+          "type": "string",
+          "minLength": 1
+        },
+        "bounce": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "negative_fill": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "contrast_strategy": {
+          "type": "string",
+          "minLength": 1
+        },
+        "exposure_strategy": {
+          "type": "string",
+          "minLength": 1
+        },
+        "highlight_behavior": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "shadow_behavior": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "specular_strategy": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "atmospheric_light_interaction": {
+          "$ref": "#/$defs/nullableString"
+        }
+      }
+    },
+    "lightDescription": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "direction", "quality"],
+      "properties": {
+        "source": {
+          "type": "string"
+        },
+        "direction": {
+          "type": "string"
+        },
+        "quality": {
+          "type": "string"
+        },
+        "size_or_softness": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "intensity_relationship": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "color_or_temperature": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "falloff": {
+          "$ref": "#/$defs/nullableString"
+        }
+      }
+    },
+    "lightDescriptionNullable": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/lightDescription"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "colorAndTone": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["white_balance", "palette", "color_separation", "saturation", "density", "highlight_treatment", "shadow_treatment"],
+      "properties": {
+        "white_balance": {
+          "type": "string"
+        },
+        "palette": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        },
+        "color_separation": {
+          "type": "string"
+        },
+        "saturation": {
+          "type": "string"
+        },
+        "density": {
+          "type": "string"
+        },
+        "midtone_contrast": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "highlight_treatment": {
+          "type": "string"
+        },
+        "shadow_treatment": {
+          "type": "string"
+        },
+        "skin_tone_treatment": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "display_intent": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "look_reference": {
+          "$ref": "#/$defs/nullableString"
+        }
+      }
+    },
+    "textureAndFinish": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tonal_response", "grain", "halation", "bloom", "flare_policy", "sharpness"],
+      "properties": {
+        "film_stock_or_tonal_reference": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "tonal_response": {
+          "type": "string"
+        },
+        "grain": {
+          "type": "string"
+        },
+        "halation": {
+          "type": "string"
+        },
+        "bloom": {
+          "type": "string"
+        },
+        "flare_policy": {
+          "type": "string"
+        },
+        "sharpness": {
+          "type": "string"
+        },
+        "sensor_noise": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "compression_or_media_artifact": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "micro_imperfection": {
+          "$ref": "#/$defs/stringList"
+        }
+      }
+    },
+    "physicalRealism": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["global_policy"],
+      "properties": {
+        "global_policy": {
+          "type": "string",
+          "description": "Summary of the physical-plausibility target for the shot."
+        },
+        "skin": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "hair": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "eyes": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "fabric": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "materials": {
+          "$ref": "#/$defs/stringList"
+        },
+        "surface_roughness": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "reflections": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "refractions": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "contact_shadows": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "gravity_and_weight": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "environment_interaction": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "atmospheric_depth": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "anatomy_or_geometry": {
+          "$ref": "#/$defs/nullableString"
+        }
+      }
+    },
+    "constraints": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["preserve", "repair", "allow_change", "avoid"],
+      "properties": {
+        "preserve": {
+          "$ref": "#/$defs/stringList"
+        },
+        "repair": {
+          "$ref": "#/$defs/stringList"
+        },
+        "allow_change": {
+          "$ref": "#/$defs/stringList"
+        },
+        "avoid": {
+          "$ref": "#/$defs/stringList"
+        },
+        "must_include": {
+          "$ref": "#/$defs/stringList"
+        },
+        "must_not_include": {
+          "$ref": "#/$defs/stringList"
+        }
+      }
+    },
+    "parameterState": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "state", "locked"],
+      "properties": {
+        "path": {
+          "type": "string",
+          "description": "Dot path into this spec, for example capture.focal_length."
+        },
+        "state": {
+          "type": "string",
+          "enum": [
+            "user_supplied",
+            "preservation_supplied",
+            "auto",
+            "inferred",
+            "reference_observed",
+            "known_metadata",
+            "provider_translated"
+          ]
+        },
+        "locked": {
+          "type": "boolean"
+        },
+        "confidence": {
+          "type": ["number", "null"],
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Numeric carrier only. Task 2.4 defines interpretation thresholds and semantics."
+        },
+        "evidence": {
+          "$ref": "#/$defs/stringList"
+        },
+        "notes": {
+          "$ref": "#/$defs/nullableString"
+        }
+      }
+    },
+    "referenceBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "role"],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string",
+          "enum": [
+            "identity",
+            "product",
+            "composition",
+            "lighting",
+            "color",
+            "texture",
+            "lens_character",
+            "environment",
+            "style",
+            "edit_target",
+            "other"
+          ]
+        },
+        "priority": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "default": 0.5
+        },
+        "preserve_from_reference": {
+          "$ref": "#/$defs/stringList"
+        },
+        "do_not_copy": {
+          "$ref": "#/$defs/stringList"
+        }
+      }
+    },
+    "providerAdaptation": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "properties": {
+        "provider": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "model": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "adapter": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "supported_native_controls": {
+          "$ref": "#/$defs/stringList"
+        },
+        "semantic_translations": {
+          "$ref": "#/$defs/stringList"
+        },
+        "unsupported_requested_controls": {
+          "$ref": "#/$defs/stringList"
+        },
+        "negative_prompt_supported": {
+          "type": ["boolean", "null"]
+        },
+        "final_prompt": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "negative_or_avoidance_guidance": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "provider_parameters": {
+          "type": "object",
+          "description": "Adapter-owned provider parameters. These are execution data, not core cinematic truth.",
+          "additionalProperties": true,
+          "default": {}
+        }
+      }
+    },
+    "realityGate": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["not_run", "pass", "partial", "fail"]
+        },
+        "verification_level": {
+          "type": "string",
+          "enum": ["V0", "V1", "V2", "V3"]
+        },
+        "checks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["domain", "status"],
+            "properties": {
+              "domain": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string",
+                "enum": ["pass", "partial", "fail", "not_applicable", "unverified"]
+              },
+              "notes": {
+                "$ref": "#/$defs/nullableString"
+              }
+            }
+          },
+          "default": []
+        },
+        "material_failures": {
+          "$ref": "#/$defs/stringList"
+        }
+      }
+    },
+    "output": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "properties": {
+        "requested_artifact": {
+          "type": "string",
+          "enum": ["image", "edit", "prompt", "shot_spec", "shot_recipe", "analysis", "json", "mixed"]
+        },
+        "status": {
+          "type": "string",
+          "enum": ["success", "partial", "blocked", "failed"]
+        },
+        "artifact_reference": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "remaining_uncertainty": {
+          "$ref": "#/$defs/stringList"
+        }
+      }
+    },
+    "provenance": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "properties": {
+        "source_ledger_ids": {
+          "$ref": "#/$defs/stringList"
+        },
+        "research_classifications": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["CONFIRMED", "CORROBORATED", "MODEL-BEHAVIOR", "PROVIDER-SPECIFIC", "INFERRED"]
+          },
+          "uniqueItems": true,
+          "default": []
+        },
+        "notes": {
+          "$ref": "#/$defs/nullableString"
+        }
+      }
+    }
+  }
+}
