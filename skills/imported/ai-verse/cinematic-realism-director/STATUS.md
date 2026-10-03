@@ -1,7 +1,7 @@
 # Cinematic Realism Director - Implementation Status
 
 Branch: `feat/cinematic-realism-director`
-
+Draft validation PR: `#17`
 Canonical task definitions: `IMPLEMENTATION_PLAN.md`
 
 This file is the authoritative completion state and restart point for future chats/agents.
@@ -19,16 +19,12 @@ This file is the authoritative completion state and restart point for future cha
 - Phase 7: COMPLETE, gate PASSED
 - Phase 8: COMPLETE, gate PASSED
 - Phase 9: COMPLETE, gate PASSED
-- Phase 10: IN PROGRESS
-- Tasks 10.1-10.3: COMPLETE
-- Task 10.4: TEST IMPLEMENTED; execution verification pending Task 10.7
-- Task 10.5: TEST IMPLEMENTED; execution verification pending Task 10.7
-- Task 10.6: NEXT
-- V1 implementation progress: **83 / 93 tasks implemented**
-
-Important verification note:
-
-> The repository's `.github/workflows/validate.yml` runs on `main` pushes and pull requests. This branch currently has no PR-triggered validation run. Do not claim Phase 10 PASS until Tasks 10.6-10.8 execute the repository-native validation, relevant tests, and admission/security checks.
+- Phase 10: COMPLETE, gate PASSED
+- Phase 11: IN PROGRESS
+- Task 11.1: COMPLETE
+- Task 11.2: COMPLETE
+- Task 11.3: NEXT
+- V1 task progress: **88 / 93 tasks complete**
 
 Agreed execution rule:
 
@@ -181,82 +177,76 @@ The regression corpus maps all 22 verified implementation failure patterns into 
 
 No superiority claim over Magnific or Higgsfield is permitted until repeated matched benchmark runs support it.
 
----
-
-# Phase 10 - Repository Integration and Standalone Verification
-
-Status: IN PROGRESS
-
-## 10.1 Canonical registry placement
+## Phase 10 - Repository Integration / Standalone Verification
 Status: COMPLETE
-Evidence: `REPOSITORY_INTEGRATION.md`
-
-Decision:
-
-```text
-canonical package path = skills/imported/ai-verse/cinematic-realism-director/
-ownership = AI-Verse first-party
-ranked 20 foundation + 100 employee catalog = unchanged in V1
-```
-
-The skill is first-party-native but is not silently promoted into the fixed ranked employee roster. Promotion remains a separate explicit catalog/product decision.
-
-## 10.2 Required registry metadata
-Status: COMPLETE
+Gate: PASSED
 Evidence:
 - `REPOSITORY_INTEGRATION.md`
-- `skills/imported/ai-verse/README.md`
-- existing `registry/trust-policy.json`
-- existing `registry/runtime-adapters.json`
+- `tests/test_cinematic_realism_director_contract.py`
+- `tests/test_cinematic_realism_director_security.py`
+- `PHASE_10_AUDIT.md`
 
-Result:
-- no new source-trust record required: the repository is already first-party/MIT/redistributable;
-- no new runtime-adapter record required: adapter surfaces are package-agnostic;
-- no alias required: canonical name is stable;
-- no operator dependency required for core prompt/spec behavior;
-- ranked registry/profile/role mutation deliberately deferred.
+Completed: 10.1-10.8.
 
-## 10.3 Contract tests
-Status: COMPLETE
-Evidence: `tests/test_cinematic_realism_director_contract.py`
+### Real validation evidence
 
-Coverage includes:
-- required package structure;
-- SKILL.md section contract;
-- sidecar manifest risk/effect boundaries;
-- JSON schema/eval parseability;
-- first-party trust inheritance;
-- intentional ranked-registry non-mutation.
+Draft PR `#17` was opened to trigger the repository-native validation workflow without merging.
 
-## 10.4 Standalone package test
-Status: TEST IMPLEMENTED; EXECUTION PENDING 10.7
-Evidence: `tests/test_cinematic_realism_director_contract.py`
-
-The test copies only `cinematic-realism-director/` to a temporary isolated directory and verifies:
-- no symlink dependency;
-- package-local paths referenced by `SKILL.md` still resolve;
-- schemas/evals parse without repository imports;
-- workflow, Reality Gate and generic adapter remain present;
-- no `../` runtime dependency is required from SKILL.md/reference index.
-
-## 10.5 Runtime adapter exposure test
-Status: TEST IMPLEMENTED; EXECUTION PENDING 10.7
-Evidence: `tests/test_cinematic_realism_director_contract.py`
-
-The test builds a synthetic immutable generation containing the complete package and materializes it through the repository's supported directory adapter machinery for:
+First validation run exposed real stale package paths:
 
 ```text
-agent-skills
-claude
-codex
-hermes
-openclaw
-gemini
+adapters/openai-image.md
+adapters/gemini-image.md
+../ paths in references/INDEX.md
 ```
 
-It verifies package digest identity, adapter verification, SKILL.md identity, and survival of references/adapters/schemas/examples/evals.
+Those were corrected before Phase 10 passed.
 
-This proves compatibility only after the test executes successfully; it never implies external provider authorization or invocation.
+Latest validated branch result:
+
+```text
+python scripts/validate_registry.py              PASS
+python -m unittest discover -s tests -v         PASS
+136 tests                                       OK
+standalone isolated-copy test                    PASS
+runtime adapter materialization test             PASS
+package deterministic admission/security scan   PASS
+installer list                                  PASS
+full-profile dry-run install                     PASS
+```
+
+The security test executes `installer.admission.scan_package()` against the complete Cinematic Realism Director package and requires `status == pass` with zero findings.
+
+The broader repository `Full E2E Install` workflow is supplementary and should be recorded in Task 11.6 before final merge readiness.
+
+---
+
+# Phase 11 - Release Readiness
+
+Status: IN PROGRESS
+Progress: **2 / 7**
+
+## 11.1 Final README polish
+Status: COMPLETE
+Evidence: `README.md`
+
+README now starts beginner-first:
+
+1. one-sentence AUTO example;
+2. expert technical-lock example;
+3. preservation-aware Reality Repair example;
+4. PROMPT ONLY example;
+5. provider/host behavior, standalone installation, evaluation, and scope.
+
+## 11.2 Version V1.0.0
+Status: COMPLETE
+Evidence:
+- `SKILL.md` -> `version: 1.0.0`
+- `aiverse.skill.yaml` -> `version: 1.0.0`
+- `README.md` -> Version 1.0.0
+- `CHANGELOG.md` -> V1 release notes
+
+V1 release notes record capabilities, invariants, scope, evaluation coverage, standalone behavior, and the rule that no Magnific/Higgsfield superiority claim is allowed without repeated matched evidence.
 
 ---
 
@@ -281,20 +271,22 @@ ranked catalog membership != first-party package ownership
 
 ---
 
-# Next Batch
+# Next Batch - Final V1 Batch
 
-Finish Phase 10 validation, run its gate, then continue into Phase 11 to satisfy the five-task minimum:
+Complete all five remaining V1 tasks and run the Phase 11 gate:
 
 ```text
-10.6 Run registry validation
-10.7 Run relevant unit/contract tests
-10.8 Run security/admission scan
-Phase 10 gate
-11.1 Final README polish
-11.2 Version V1.0.0
+11.3 Create completion report
+11.4 Final source audit
+11.5 Final portability audit
+11.6 Final full-repo audit
+11.7 Review branch and merge readiness
+Phase 11 gate
 ```
 
-Next task: **10.6 - Run registry validation**
+Next task: **11.3 - Create completion report**
+
+After this batch, V1 is complete. Phase 12 remains post-V1 roadmap only and must not delay release.
 
 ---
 
@@ -302,7 +294,7 @@ Next task: **10.6 - Run registry validation**
 
 Phase 0 remains the governing architecture contract.
 
-Later phases may not silently:
+Later work may not silently:
 - expand into temporal video authority;
 - introduce required external runtime dependencies;
 - turn a provider into the core cinematic brain;
