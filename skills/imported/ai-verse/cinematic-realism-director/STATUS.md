@@ -15,24 +15,19 @@ This file is the authoritative completion state and restart point for future cha
 - Phase 3: COMPLETE, gate PASSED
 - Phase 4: COMPLETE, gate PASSED
 - Phase 5: COMPLETE, gate PASSED
-- Phase 6: IN PROGRESS
-- Task 6.1: COMPLETE
-- Task 6.2: COMPLETE
-- Task 6.3: COMPLETE
-- Task 6.4: COMPLETE
-- Task 6.5: COMPLETE
-- Task 6.6: NEXT
-- V1 task progress: **48 / 93 tasks complete**
+- Phase 6: COMPLETE, gate PASSED
+- Phase 7: IN PROGRESS
+- Task 7.1: COMPLETE
+- Task 7.2: NEXT
+- V1 task progress: **53 / 93 tasks complete**
 
 Agreed execution rule:
 
 > Complete a minimum of five numbered tasks per batch. If the current phase ends before five tasks are available, finish the phase, run its gate, and continue into the next phase until at least five numbered tasks have been completed.
 
-## Completed foundations
+## Completed Phase Evidence
 
-### Phase 0 - Architecture / Governance
-Status: COMPLETE, gate PASSED
-
+### Phase 0 - Architecture, Scope, Governance
 Evidence:
 - `references/routing.md`
 - `references/portability.md`
@@ -41,14 +36,15 @@ Evidence:
 - `references/success-contract.md`
 - `PHASE_0_AUDIT.md`
 
-### Phase 1 - Research / Provenance
-Status: COMPLETE, gate PASSED
+### Phase 1 - Research Corpus and Provenance
+Evidence:
+- `references/source-ledger.md`
+- `references/source-ledger-addendum.md`
+- `references/research/`
 
-Evidence includes source ledger plus Magnific, Higgsfield, camera, lens, film, lighting, color, provider-prompting, secondary-workflow and research-gap files under `references/research/`.
+Completed: Tasks 1.1-1.11.
 
-### Phase 2 - Structured Contracts
-Status: COMPLETE, gate PASSED
-
+### Phase 2 - Cinematic Shot Ontology and Contracts
 Evidence:
 - `schemas/cinematic-shot-spec.schema.json`
 - `schemas/realism-diagnosis.schema.json`
@@ -57,6 +53,8 @@ Evidence:
 - `references/confidence-serialization.md`
 - `references/parameter-conflicts.md`
 - `PHASE_2_AUDIT.md`
+
+Completed: Tasks 2.1-2.5.
 
 Core distinctions:
 ```text
@@ -68,8 +66,6 @@ user lock != inference
 ```
 
 ### Phase 3 - Core Cinematography
-Status: COMPLETE, gate PASSED
-
 Evidence:
 - `references/visual-intent.md`
 - `references/composition-and-blocking.md`
@@ -80,9 +76,19 @@ Evidence:
 - `references/motion-and-shutter.md`
 - `PHASE_3_AUDIT.md`
 
-### Phase 4 - Lighting / Exposure / Film / Color
-Status: COMPLETE, gate PASSED
+Completed: Tasks 3.1-3.7.
 
+Core hard rules include:
+```text
+story before prestige camera/lens tokens
+perspective != focal length alone
+wide lens != fisheye
+large format != automatically shallow DOF
+cinematic != shallow depth
+motion blur != defocus
+```
+
+### Phase 4 - Lighting, Exposure, Film Response, Color
 Evidence:
 - `references/motivated-lighting.md`
 - `references/lighting-roles.md`
@@ -93,9 +99,19 @@ Evidence:
 - `references/texture-effects-restraint.md`
 - `PHASE_4_AUDIT.md`
 
-### Phase 5 - Physical Realism / Anti-AI
-Status: COMPLETE, gate PASSED
+Completed: Tasks 4.1-4.7.
 
+Core hard rules include:
+```text
+cinematic lighting starts from motivated sources
+dynamic range != everything visible
+film != warm + grain + faded
+log != final grade
+cinematic != teal-orange
+grain / halation / bloom / flare are separate optional systems
+```
+
+### Phase 5 - Physical Realism and Anti-AI Intelligence
 Evidence:
 - `references/anti-ai-artifact-taxonomy.md`
 - `references/skin-realism.md`
@@ -107,96 +123,134 @@ Evidence:
 - `references/reality-gate.md`
 - `PHASE_5_AUDIT.md`
 
-The reusable Reality Gate evaluates intent/locks, geometry, focus/depth/motion, lighting, exposure/color, shadows/reflections, anatomy/human surfaces, materials, contact/gravity/environment, atmosphere, optical effects, stylization restraint, and provider integrity.
+Completed: Tasks 5.1-5.8.
 
----
+Reality Gate order:
+```text
+locks / preservation
+-> geometry / perspective
+-> focus / depth / motion
+-> lighting
+-> exposure / color
+-> shadows / reflections
+-> anatomy / skin / hair / eyes
+-> fabric / materials
+-> contact / gravity / environment
+-> atmosphere
+-> optical effects
+-> stylization restraint
+-> provider integrity
+```
 
-# Phase 6 - Decision Engine and Workflows
+### Phase 6 - Decision Engine and Workflows
+Status: COMPLETE
+Gate: PASSED
+Evidence:
+- `references/workflows/auto-direct.md`
+- `references/workflows/cinematize.md`
+- `references/workflows/reality-repair.md`
+- `references/workflows/reference-match.md`
+- `references/workflows/manual-camera.md`
+- `references/workflows/prompt-only.md`
+- `references/progressive-disclosure-router.md`
+- `references/question-minimization.md`
+- `references/multi-reference-behavior.md`
+- `PHASE_6_AUDIT.md`
+
+Completed tasks:
+```text
+6.1 AUTO DIRECT                         COMPLETE
+6.2 CINEMATIZE                          COMPLETE
+6.3 REALITY REPAIR                      COMPLETE
+6.4 REFERENCE MATCH                     COMPLETE
+6.5 MANUAL CAMERA                       COMPLETE
+6.6 PROMPT ONLY                         COMPLETE
+6.7 progressive disclosure router       COMPLETE
+6.8 question-minimization policy        COMPLETE
+6.9 multi-image/reference behavior      COMPLETE
+```
+
+Phase 6 gate verified:
+- one-sentence beginner AUTO;
+- expert technical locks;
+- CINEMATIZE without concept drift;
+- targeted Reality Repair;
+- Reference Match without hardware hallucination;
+- prompt-only override;
+- multi-reference role separation;
+- frozen-moment camera changes.
+
+Audit result:
+```text
+scope violations: 0
+standalone violations: 0
+provider-core contamination: 0
+explicit-lock violations: 0
+preservation violations: 0
+false hardware-certainty violations: 0
+false visual-verification violations: 0
+question-bloat violations: 0
+reference-role violations: 0
+prompt-only override violations: 0
+```
+
+## Phase 7 - Provider and Host Adapters
 
 Status: IN PROGRESS
-Progress: **5 / 9 tasks complete**
+Goal: translate one provider-neutral cinematic brain into strong instructions across major image-generation environments.
 
-## 6.1 AUTO DIRECT
+### 7.1 Generic adapter
 Status: COMPLETE
-Evidence: `references/workflows/auto-direct.md`
+Evidence: `adapters/generic.md`
 
-One-sentence input is sufficient. The workflow resolves intent -> hierarchy -> composition -> capture -> optics -> lighting -> exposure/color -> realism -> provider adaptation -> Reality Gate. It asks no unnecessary camera questions and does not add cinematic cliches by default.
-
-## 6.2 CINEMATIZE
-Status: COMPLETE
-Evidence: `references/workflows/cinematize.md`
-
-Preserves the original concept and explicit locks while upgrading only underspecified/weak layers. Cinematization is defined as stronger visual causality and physical plausibility, not effect stacking or prompt inflation.
-
-## 6.3 REALITY REPAIR
-Status: COMPLETE
-Evidence: `references/workflows/reality-repair.md`
-
-Mandatory sequence:
-```text
-preserve targets
--> diagnose artificiality
--> prioritize repairs
--> avoid scene drift
--> adapt edit instructions
--> Reality Gate
-```
-
-The workflow requires a real target image for visual inspection/editing, uses minimal targeted repair, and never pretends an unavailable previous image is attached.
-
-## 6.4 REFERENCE MATCH
-Status: COMPLETE
-Evidence: `references/workflows/reference-match.md`
-
-Transfers observable visual DNA while separating observations from hardware hypotheses. Multiple references receive explicit roles/priorities; target locks outrank reference tendencies.
+Implemented:
+- mandatory fallback for unknown/changed providers;
+- provider-neutral natural-language serialization;
+- generation, edit, repair and reference-conditioned prompt structures;
+- positive physical-realism translation;
+- camera/lens names preserved as references while observable traits remain authoritative;
+- explicit camera-position/perspective translation;
+- motivated-lighting serialization;
+- no assumed negative-prompt support;
+- semantic fallback for unsupported controls;
+- truthful host degradation;
+- no fabricated provider parameters.
 
 Hard rule:
 ```text
-observed visual trait != known camera/lens/stock fact
+Cinematic Shot Spec = creative truth
+adapter = translation layer
 ```
 
-## 6.5 MANUAL CAMERA
-Status: COMPLETE
-Evidence: `references/workflows/manual-camera.md`
-
-Every explicit technical choice becomes a lock; AUTO fills only missing values. C0-C3 conflict handling is integrated. Unsupported provider controls are semantically translated and disclosed rather than silently changed.
-
-Hard rule:
-```text
-explicit user value = LOCK
-unspecified compatible value = AUTO
-```
-
-## Remaining Phase 6 tasks
+### Remaining Phase 7 tasks
 
 ```text
-6.6 Implement PROMPT ONLY workflow
-6.7 Build progressive disclosure router
-6.8 Define question-minimization policy
-6.9 Define multi-image/reference behavior
-Phase 6 gate
+7.2 OpenAI image adapter
+7.3 Gemini image adapter
+7.4 Seedream adapter
+7.5 FLUX adapter
+7.6 Magnific adapter
+7.7 Higgsfield Soul Cinema adapter
+7.8 Adapter fallback hierarchy
+7.9 Host action policy
+Phase 7 gate
 ```
 
-Phase 6 gate requirement:
+## Next Batch
 
-> The same skill behaves naturally for a novice sentence, expert camera specification, bad AI image, or reference frame.
-
-## Next batch
-
-Because only four numbered Phase 6 tasks remain, the next minimum-five batch is:
+Complete the next five numbered tasks:
 
 ```text
-6.6 PROMPT ONLY workflow
-6.7 progressive disclosure router
-6.8 question-minimization policy
-6.9 multi-image/reference behavior
-Phase 6 gate
-7.1 Generic provider adapter
+7.2 OpenAI image adapter
+7.3 Gemini image adapter
+7.4 Seedream adapter
+7.5 FLUX adapter
+7.6 Magnific adapter
 ```
 
----
+Then the following batch will finish Phase 7 and continue into Phase 8 as needed to satisfy the five-task minimum.
 
-# Change Discipline
+## Change Discipline
 
 Phase 0 remains the governing architecture contract.
 
@@ -209,4 +263,5 @@ Later phases may not silently:
 - convert marketing language into physical truth;
 - use cinematic artifacts as mandatory realism tokens;
 - beautify/redesign preserved identity during repair;
-- claim image generation/editing/visual verification when the host did not actually perform it.
+- claim image generation/editing/visual verification when the host did not actually perform it;
+- allow provider syntax or controls to redesign the universal shot.
