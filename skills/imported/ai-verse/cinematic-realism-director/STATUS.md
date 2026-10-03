@@ -18,11 +18,9 @@ This file is the authoritative completion state and restart point for future cha
 - Phase 6: COMPLETE, gate PASSED
 - Phase 7: COMPLETE, gate PASSED
 - Phase 8: COMPLETE, gate PASSED
-- Phase 9: IN PROGRESS
-- Tasks 9.1-9.6: COMPLETE
-- Task 9.7: NEXT
-- Phase 9 progress: **6 / 11 tasks complete**
-- V1 task progress: **73 / 93 tasks complete**
+- Phase 9: COMPLETE, gate PASSED
+- Phase 10: NEXT
+- V1 task progress: **78 / 93 tasks complete**
 
 Agreed execution rule:
 
@@ -33,11 +31,9 @@ Agreed execution rule:
 # Completed Phase Evidence
 
 ## Phase 0 - Architecture, Scope, Governance
-
 Status: COMPLETE
 Gate: PASSED
 Post-research audit: PASSED
-
 Evidence:
 - `references/routing.md`
 - `references/portability.md`
@@ -46,33 +42,18 @@ Evidence:
 - `references/success-contract.md`
 - `PHASE_0_AUDIT.md`
 
-Frozen invariants:
-```text
-still-image direction/realism is primary scope
-standalone-folder operation mandatory
-no required AI-Verse OS / MCP / sibling skill / API key for prompt-only reasoning
-capable hosts execute, weaker hosts degrade truthfully
-explicit user values and preservation requirements remain locks
-success != tool execution alone
-```
-
 ## Phase 1 - Research Corpus and Provenance
-
 Status: COMPLETE
 Gate: PASSED
-
 Evidence:
 - `references/source-ledger.md`
 - `references/source-ledger-addendum.md`
 - `references/research/`
-
 Completed: Tasks 1.1-1.11.
 
 ## Phase 2 - Cinematic Shot Ontology and Contracts
-
 Status: COMPLETE
 Gate: PASSED
-
 Evidence:
 - `schemas/cinematic-shot-spec.schema.json`
 - `schemas/realism-diagnosis.schema.json`
@@ -81,24 +62,11 @@ Evidence:
 - `references/confidence-serialization.md`
 - `references/parameter-conflicts.md`
 - `PHASE_2_AUDIT.md`
-
-Core distinctions:
-```text
-provider-neutral truth != provider syntax
-observation != exact hardware fact
-confidence != authority
-AUTO != unknown
-user lock != inference
-preservation lock != creative preference
-```
-
 Completed: Tasks 2.1-2.5.
 
 ## Phase 3 - Core Cinematography Knowledge Base
-
 Status: COMPLETE
 Gate: PASSED
-
 Evidence:
 - `references/visual-intent.md`
 - `references/composition-and-blocking.md`
@@ -108,24 +76,11 @@ Evidence:
 - `references/aperture-focus-and-depth.md`
 - `references/motion-and-shutter.md`
 - `PHASE_3_AUDIT.md`
-
 Completed: Tasks 3.1-3.7.
 
-Hard rules include:
-```text
-story before prestige camera/lens tokens
-perspective != focal length alone
-wide rectilinear != fisheye
-large format != automatically shallow DOF
-cinematic != shallow depth
-motion blur != defocus
-```
-
 ## Phase 4 - Lighting, Exposure, Film Response, Color
-
 Status: COMPLETE
 Gate: PASSED
-
 Evidence:
 - `references/motivated-lighting.md`
 - `references/lighting-roles.md`
@@ -135,14 +90,11 @@ Evidence:
 - `references/color-science-and-grading.md`
 - `references/texture-effects-restraint.md`
 - `PHASE_4_AUDIT.md`
-
 Completed: Tasks 4.1-4.7.
 
 ## Phase 5 - Physical Realism and Anti-AI Intelligence
-
 Status: COMPLETE
 Gate: PASSED
-
 Evidence:
 - `references/anti-ai-artifact-taxonomy.md`
 - `references/skin-realism.md`
@@ -153,31 +105,11 @@ Evidence:
 - `references/optical-imperfection.md`
 - `references/reality-gate.md`
 - `PHASE_5_AUDIT.md`
-
 Completed: Tasks 5.1-5.8.
 
-Reality Gate order:
-```text
-locks / preservation
--> geometry / perspective
--> focus / depth / motion
--> lighting
--> exposure / color
--> shadows / reflections
--> anatomy / skin / hair / eyes
--> fabric / materials
--> contact / gravity / environment
--> atmosphere
--> optical effects
--> stylization restraint
--> provider integrity
-```
-
 ## Phase 6 - Decision Engine and Workflows
-
 Status: COMPLETE
 Gate: PASSED
-
 Evidence:
 - `references/workflows/auto-direct.md`
 - `references/workflows/cinematize.md`
@@ -189,14 +121,11 @@ Evidence:
 - `references/question-minimization.md`
 - `references/multi-reference-behavior.md`
 - `PHASE_6_AUDIT.md`
-
 Completed: Tasks 6.1-6.9.
 
 ## Phase 7 - Provider and Host Adapters
-
 Status: COMPLETE
 Gate: PASSED
-
 Evidence:
 - `adapters/generic.md`
 - `adapters/openai.md`
@@ -208,192 +137,69 @@ Evidence:
 - `references/adapter-fallback-hierarchy.md`
 - `references/host-action-policy.md`
 - `PHASE_7_AUDIT.md`
-
 Completed: Tasks 7.1-7.9.
 
-Phase 7 invariants:
-```text
-one universal cinematic brain
-provider syntax stays downstream
-locks survive translation
-preservation survives translation
-reference roles survive translation
-unknown/stale provider controls fall back rather than being invented
-adapter existence != provider access
-V1 execution != V2 visual verification
-```
-
 ## Phase 8 - Portable Skill, Manifest, and UX
-
 Status: COMPLETE
 Gate: PASSED
-
 Evidence:
 - `SKILL.md`
 - `aiverse.skill.yaml`
 - `README.md`
 - `references/INDEX.md`
 - `references/verified-pitfalls.md`
-- `examples/beginner-auto.md`
-- `examples/expert-locks.md`
-- `examples/reality-repair.md`
-- `examples/reference-match.md`
-- `examples/prompt-only.md`
+- `examples/`
 - `PHASE_8_AUDIT.md`
-
 Completed: Tasks 8.1-8.6.
 
-Phase 8 gate result:
+## Phase 9 - Evaluation, Benchmarking, and Regression
+Status: COMPLETE
+Gate: PASSED
+Evidence:
+- `evals/routing.json`
+- `evals/shot-design.json`
+- `evals/expert-locks.json`
+- `evals/realism-repair.json`
+- `evals/reference-match.json`
+- `evals/adapter-behavior.json`
+- `evals/anti-cliche.json`
+- `evals/physical-plausibility.json`
+- `evals/adversarial.json`
+- `evals/benchmark-matrix.md`
+- `evals/regression.json`
+- `PHASE_9_AUDIT.md`
 
-> A capable agent receiving only `cinematic-realism-director/` can understand how and when to use it, route the correct workflow, load knowledge progressively, preserve locks, use the Reality Gate, adapt to providers, and degrade truthfully when execution tools are unavailable.
+Completed: Tasks 9.1-9.11.
+
+Phase 9 gate result:
+
+> The skill now has explicit repeatable behavior contracts rather than only subjective examples.
+
+Key evaluation coverage:
+
+```text
+routing
+beginner AUTO
+expert locks
+Reality Repair
+Reference Match
+cross-provider consistency
+anti-cliche restraint
+physical plausibility
+adversarial authority boundaries
+matched Magnific/Higgsfield benchmark protocol
+permanent regression corpus
+```
+
+The regression corpus maps all **22 verified implementation failure patterns** into permanent tests.
+
+Benchmark limitation remains explicit:
+
+> No claim is made that AI-Verse already outperforms Magnific or Higgsfield. `evals/benchmark-matrix.md` defines the controlled repeated benchmark required before any such claim can be supported.
 
 ---
 
-# Phase 9 - Evaluation, Benchmarking, and Regression System
-
-Status: IN PROGRESS
-Progress: **6 / 11**
-
-## 9.1 Routing evals
-Status: COMPLETE
-Evidence: `evals/routing.json`
-
-Covers 28 positive, negative, and boundary cases across AUTO, CINEMATIZE, REALITY REPAIR, REFERENCE MATCH, MANUAL CAMERA, PROMPT ONLY, shot recipes, and negative/non-scope tasks.
-
-## 9.2 Beginner AUTO evals
-Status: COMPLETE
-Evidence: `evals/shot-design.json`
-
-Coverage:
-- portrait
-- narrative drama
-- documentary
-- travel
-- product
-- automotive
-- food
-- architecture
-- fashion
-- night exterior
-- daylight exterior
-- interiors
-
-Key assertions:
-- no unnecessary beginner camera questions;
-- concept preserved;
-- story/geometry before prestige tokens;
-- motivated light and physical realism required;
-- cinematic cliches forbidden as defaults.
-
-## 9.3 Expert-lock evals
-Status: COMPLETE
-Evidence: `evals/expert-locks.json`
-
-Coverage includes:
-- multi-parameter manual locks;
-- 14mm rectilinear foreground exaggeration without fisheye;
-- f/1.2 + deep-focus tension;
-- 65/70mm capture intent + VHS finish;
-- provider enum gaps;
-- true 90-degree top-down preservation;
-- frozen-moment camera-only movement;
-- stock/grain/halation separation;
-- hard-noon preservation.
-
-## 9.4 Reality Repair evals
-Status: COMPLETE
-Evidence: `evals/realism-repair.json`
-
-Taxonomy-driven cases cover:
-- skin;
-- hair;
-- eyes;
-- fabric;
-- product materials;
-- contact/gravity;
-- reflections;
-- shadows;
-- lighting motivation;
-- fake HDR/exposure;
-- DOF segmentation;
-- oversharpening;
-- repeated background patterns.
-
-Critical rule:
-```text
-preserve first
-fix dependency causes before surface symptoms
-prefer smallest justified repair
-```
-
-## 9.5 Reference Match evals
-Status: COMPLETE
-Evidence: `evals/reference-match.json`
-
-Verifies:
-- observation vs exact hardware fact;
-- known metadata vs visual inference;
-- hardware hypotheses remain hypotheses;
-- explicit multi-reference roles;
-- target locks outrank reference tendencies;
-- transferable DNA vs incidental content;
-- frozen-moment camera changes;
-- true top-down formation preservation;
-- product identity priority;
-- provider reference-count fallback.
-
-## 9.6 Adapter consistency evals
-Status: COMPLETE
-Evidence: `evals/adapter-behavior.json`
-
-Cross-provider matrix covers:
-- Generic;
-- OpenAI;
-- Gemini;
-- Seedream;
-- FLUX;
-- Magnific;
-- Higgsfield Soul Cinema.
-
-Verified properties:
-- same universal shot survives provider translation;
-- locks/preservation/reference roles survive;
-- provider-specific controls stay downstream;
-- unsupported native enums use semantic translation/fallback;
-- PROMPT ONLY remains absolute;
-- unknown/new model versions degrade to provider-family/generic behavior rather than fabricated parameters;
-- adapter existence does not imply provider connection;
-- execution success is not V2 visual verification.
-
-## Remaining Phase 9 tasks
-
-```text
-9.7 Anti-cliche evals
-9.8 Physical plausibility evals
-9.9 Adversarial and instruction-boundary evals
-9.10 Magnific/Higgsfield comparison protocol
-9.11 Regression corpus
-Phase 9 gate
-```
-
-## Next Batch
-
-Complete the five remaining Phase 9 numbered tasks, then run the Phase 9 gate:
-
-```text
-9.7 Anti-cliche evals
-9.8 Physical plausibility evals
-9.9 Adversarial and instruction-boundary evals
-9.10 Magnific/Higgsfield comparison protocol
-9.11 Regression corpus
-Phase 9 gate
-```
-
-Next task: **9.7 - Anti-cliche evals**
-
----
-
-# Core Invariants Still Governing All Later Work
+# Core Invariants
 
 ```text
 story before prestige tokens
@@ -406,10 +212,30 @@ preserve before transforming
 Reality Gate before visual-success claims
 provider adapter != cinematic brain
 adapter file != provider access
-prompt-only override is absolute
+PROMPT ONLY override is absolute
 successful tool call != visual quality verified
 standalone package operation remains mandatory
 ```
+
+---
+
+# Next Batch - Phase 10
+
+Complete the next five numbered tasks:
+
+```text
+10.1 Determine canonical registry placement
+10.2 Update required registry metadata
+10.3 Add contract tests
+10.4 Add standalone package test
+10.5 Test runtime adapter exposure
+```
+
+Then continue with 10.6-10.8 and the Phase 10 gate in the following batch, extending into Phase 11 as needed to satisfy the five-task minimum.
+
+Next task: **10.1 - Determine canonical registry placement**
+
+---
 
 # Change Discipline
 
