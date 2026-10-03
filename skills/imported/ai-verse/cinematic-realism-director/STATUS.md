@@ -19,8 +19,16 @@ This file is the authoritative completion state and restart point for future cha
 - Phase 7: COMPLETE, gate PASSED
 - Phase 8: COMPLETE, gate PASSED
 - Phase 9: COMPLETE, gate PASSED
-- Phase 10: NEXT
-- V1 task progress: **78 / 93 tasks complete**
+- Phase 10: IN PROGRESS
+- Tasks 10.1-10.3: COMPLETE
+- Task 10.4: TEST IMPLEMENTED; execution verification pending Task 10.7
+- Task 10.5: TEST IMPLEMENTED; execution verification pending Task 10.7
+- Task 10.6: NEXT
+- V1 implementation progress: **83 / 93 tasks implemented**
+
+Important verification note:
+
+> The repository's `.github/workflows/validate.yml` runs on `main` pushes and pull requests. This branch currently has no PR-triggered validation run. Do not claim Phase 10 PASS until Tasks 10.6-10.8 execute the repository-native validation, relevant tests, and admission/security checks.
 
 Agreed execution rule:
 
@@ -30,10 +38,9 @@ Agreed execution rule:
 
 # Completed Phase Evidence
 
-## Phase 0 - Architecture, Scope, Governance
+## Phase 0 - Architecture / Governance
 Status: COMPLETE
 Gate: PASSED
-Post-research audit: PASSED
 Evidence:
 - `references/routing.md`
 - `references/portability.md`
@@ -42,16 +49,16 @@ Evidence:
 - `references/success-contract.md`
 - `PHASE_0_AUDIT.md`
 
-## Phase 1 - Research Corpus and Provenance
+## Phase 1 - Research / Provenance
 Status: COMPLETE
 Gate: PASSED
 Evidence:
 - `references/source-ledger.md`
 - `references/source-ledger-addendum.md`
 - `references/research/`
-Completed: Tasks 1.1-1.11.
+Completed: 1.1-1.11.
 
-## Phase 2 - Cinematic Shot Ontology and Contracts
+## Phase 2 - Structured Contracts
 Status: COMPLETE
 Gate: PASSED
 Evidence:
@@ -62,9 +69,9 @@ Evidence:
 - `references/confidence-serialization.md`
 - `references/parameter-conflicts.md`
 - `PHASE_2_AUDIT.md`
-Completed: Tasks 2.1-2.5.
+Completed: 2.1-2.5.
 
-## Phase 3 - Core Cinematography Knowledge Base
+## Phase 3 - Core Cinematography
 Status: COMPLETE
 Gate: PASSED
 Evidence:
@@ -76,9 +83,9 @@ Evidence:
 - `references/aperture-focus-and-depth.md`
 - `references/motion-and-shutter.md`
 - `PHASE_3_AUDIT.md`
-Completed: Tasks 3.1-3.7.
+Completed: 3.1-3.7.
 
-## Phase 4 - Lighting, Exposure, Film Response, Color
+## Phase 4 - Lighting / Exposure / Film / Color
 Status: COMPLETE
 Gate: PASSED
 Evidence:
@@ -90,9 +97,9 @@ Evidence:
 - `references/color-science-and-grading.md`
 - `references/texture-effects-restraint.md`
 - `PHASE_4_AUDIT.md`
-Completed: Tasks 4.1-4.7.
+Completed: 4.1-4.7.
 
-## Phase 5 - Physical Realism and Anti-AI Intelligence
+## Phase 5 - Physical Realism / Anti-AI
 Status: COMPLETE
 Gate: PASSED
 Evidence:
@@ -105,9 +112,9 @@ Evidence:
 - `references/optical-imperfection.md`
 - `references/reality-gate.md`
 - `PHASE_5_AUDIT.md`
-Completed: Tasks 5.1-5.8.
+Completed: 5.1-5.8.
 
-## Phase 6 - Decision Engine and Workflows
+## Phase 6 - Workflows
 Status: COMPLETE
 Gate: PASSED
 Evidence:
@@ -121,9 +128,9 @@ Evidence:
 - `references/question-minimization.md`
 - `references/multi-reference-behavior.md`
 - `PHASE_6_AUDIT.md`
-Completed: Tasks 6.1-6.9.
+Completed: 6.1-6.9.
 
-## Phase 7 - Provider and Host Adapters
+## Phase 7 - Provider / Host Adapters
 Status: COMPLETE
 Gate: PASSED
 Evidence:
@@ -137,9 +144,9 @@ Evidence:
 - `references/adapter-fallback-hierarchy.md`
 - `references/host-action-policy.md`
 - `PHASE_7_AUDIT.md`
-Completed: Tasks 7.1-7.9.
+Completed: 7.1-7.9.
 
-## Phase 8 - Portable Skill, Manifest, and UX
+## Phase 8 - Portable Package / UX
 Status: COMPLETE
 Gate: PASSED
 Evidence:
@@ -150,9 +157,9 @@ Evidence:
 - `references/verified-pitfalls.md`
 - `examples/`
 - `PHASE_8_AUDIT.md`
-Completed: Tasks 8.1-8.6.
+Completed: 8.1-8.6.
 
-## Phase 9 - Evaluation, Benchmarking, and Regression
+## Phase 9 - Evaluation / Benchmark / Regression
 Status: COMPLETE
 Gate: PASSED
 Evidence:
@@ -168,34 +175,88 @@ Evidence:
 - `evals/benchmark-matrix.md`
 - `evals/regression.json`
 - `PHASE_9_AUDIT.md`
+Completed: 9.1-9.11.
 
-Completed: Tasks 9.1-9.11.
+The regression corpus maps all 22 verified implementation failure patterns into permanent regression coverage.
 
-Phase 9 gate result:
+No superiority claim over Magnific or Higgsfield is permitted until repeated matched benchmark runs support it.
 
-> The skill now has explicit repeatable behavior contracts rather than only subjective examples.
+---
 
-Key evaluation coverage:
+# Phase 10 - Repository Integration and Standalone Verification
+
+Status: IN PROGRESS
+
+## 10.1 Canonical registry placement
+Status: COMPLETE
+Evidence: `REPOSITORY_INTEGRATION.md`
+
+Decision:
 
 ```text
-routing
-beginner AUTO
-expert locks
-Reality Repair
-Reference Match
-cross-provider consistency
-anti-cliche restraint
-physical plausibility
-adversarial authority boundaries
-matched Magnific/Higgsfield benchmark protocol
-permanent regression corpus
+canonical package path = skills/imported/ai-verse/cinematic-realism-director/
+ownership = AI-Verse first-party
+ranked 20 foundation + 100 employee catalog = unchanged in V1
 ```
 
-The regression corpus maps all **22 verified implementation failure patterns** into permanent tests.
+The skill is first-party-native but is not silently promoted into the fixed ranked employee roster. Promotion remains a separate explicit catalog/product decision.
 
-Benchmark limitation remains explicit:
+## 10.2 Required registry metadata
+Status: COMPLETE
+Evidence:
+- `REPOSITORY_INTEGRATION.md`
+- `skills/imported/ai-verse/README.md`
+- existing `registry/trust-policy.json`
+- existing `registry/runtime-adapters.json`
 
-> No claim is made that AI-Verse already outperforms Magnific or Higgsfield. `evals/benchmark-matrix.md` defines the controlled repeated benchmark required before any such claim can be supported.
+Result:
+- no new source-trust record required: the repository is already first-party/MIT/redistributable;
+- no new runtime-adapter record required: adapter surfaces are package-agnostic;
+- no alias required: canonical name is stable;
+- no operator dependency required for core prompt/spec behavior;
+- ranked registry/profile/role mutation deliberately deferred.
+
+## 10.3 Contract tests
+Status: COMPLETE
+Evidence: `tests/test_cinematic_realism_director_contract.py`
+
+Coverage includes:
+- required package structure;
+- SKILL.md section contract;
+- sidecar manifest risk/effect boundaries;
+- JSON schema/eval parseability;
+- first-party trust inheritance;
+- intentional ranked-registry non-mutation.
+
+## 10.4 Standalone package test
+Status: TEST IMPLEMENTED; EXECUTION PENDING 10.7
+Evidence: `tests/test_cinematic_realism_director_contract.py`
+
+The test copies only `cinematic-realism-director/` to a temporary isolated directory and verifies:
+- no symlink dependency;
+- package-local paths referenced by `SKILL.md` still resolve;
+- schemas/evals parse without repository imports;
+- workflow, Reality Gate and generic adapter remain present;
+- no `../` runtime dependency is required from SKILL.md/reference index.
+
+## 10.5 Runtime adapter exposure test
+Status: TEST IMPLEMENTED; EXECUTION PENDING 10.7
+Evidence: `tests/test_cinematic_realism_director_contract.py`
+
+The test builds a synthetic immutable generation containing the complete package and materializes it through the repository's supported directory adapter machinery for:
+
+```text
+agent-skills
+claude
+codex
+hermes
+openclaw
+gemini
+```
+
+It verifies package digest identity, adapter verification, SKILL.md identity, and survival of references/adapters/schemas/examples/evals.
+
+This proves compatibility only after the test executes successfully; it never implies external provider authorization or invocation.
 
 ---
 
@@ -215,25 +276,25 @@ adapter file != provider access
 PROMPT ONLY override is absolute
 successful tool call != visual quality verified
 standalone package operation remains mandatory
+ranked catalog membership != first-party package ownership
 ```
 
 ---
 
-# Next Batch - Phase 10
+# Next Batch
 
-Complete the next five numbered tasks:
+Finish Phase 10 validation, run its gate, then continue into Phase 11 to satisfy the five-task minimum:
 
 ```text
-10.1 Determine canonical registry placement
-10.2 Update required registry metadata
-10.3 Add contract tests
-10.4 Add standalone package test
-10.5 Test runtime adapter exposure
+10.6 Run registry validation
+10.7 Run relevant unit/contract tests
+10.8 Run security/admission scan
+Phase 10 gate
+11.1 Final README polish
+11.2 Version V1.0.0
 ```
 
-Then continue with 10.6-10.8 and the Phase 10 gate in the following batch, extending into Phase 11 as needed to satisfy the five-task minimum.
-
-Next task: **10.1 - Determine canonical registry placement**
+Next task: **10.6 - Run registry validation**
 
 ---
 
@@ -247,8 +308,8 @@ Later phases may not silently:
 - turn a provider into the core cinematic brain;
 - override explicit user or preservation locks;
 - treat inferred reference hardware as known fact;
-- convert marketing language into physical truth;
 - use cinematic artifacts as mandatory realism tokens;
 - beautify/redesign preserved identity during repair;
-- claim image generation/editing/visual verification when the host did not actually perform it;
-- allow provider syntax or controls to redesign the universal shot.
+- claim generation/editing/visual verification when the host did not actually perform it;
+- allow provider syntax to redesign the universal shot;
+- change the fixed ranked catalog without an explicit product decision and matching registry migration.
