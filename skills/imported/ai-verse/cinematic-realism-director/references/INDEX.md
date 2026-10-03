@@ -4,114 +4,116 @@ Status: RUNTIME LOADING MAP
 
 Purpose: help a capable host load only the local knowledge required for the current task.
 
+All paths below are package-root relative unless explicitly stated otherwise.
+
 Do **not** load every reference file by default.
 
 ## 1. Always-Useful Core
 
 Load these when routing, resolving authority, or verifying execution claims:
 
-- `routing.md` — activation boundaries and authority order.
-- `locks.md` — hard locks, preservation locks, AUTO, and conflict precedence.
-- `host-capabilities.md` — H1-H6 execution/degradation behavior.
-- `host-action-policy.md` — whether to generate/edit, return a prompt, or abstain from execution.
-- `success-contract.md` — success/partial/blocked/failed and V0-V3 verification levels.
-- `reality-gate.md` — final physical-plausibility and anti-AI verification.
+- `references/routing.md` — activation boundaries and authority order.
+- `references/locks.md` — hard locks, preservation locks, AUTO, and conflict precedence.
+- `references/host-capabilities.md` — H1-H6 execution/degradation behavior.
+- `references/host-action-policy.md` — whether to generate/edit, return a prompt, or abstain from execution.
+- `references/success-contract.md` — success/partial/blocked/failed and V0-V3 verification levels.
+- `references/reality-gate.md` — final physical-plausibility and anti-AI verification.
 
-Load `portability.md` when package/host integration or standalone behavior is relevant.
+Load `references/portability.md` when package/host integration or standalone behavior is relevant.
 
 ## 2. Workflow Routing
 
 Choose the smallest workflow matching the user's intent:
 
-- `workflows/auto-direct.md` — minimal idea -> complete shot.
-- `workflows/cinematize.md` — strengthen an existing concept without concept drift.
-- `workflows/reality-repair.md` — preserve -> diagnose -> targeted repair -> verify.
-- `workflows/reference-match.md` — transfer observable visual DNA.
-- `workflows/manual-camera.md` — explicit technical locks + AUTO completion.
-- `workflows/prompt-only.md` — adapted prompt/spec only, no generation.
+- `references/workflows/auto-direct.md` — minimal idea -> complete shot.
+- `references/workflows/cinematize.md` — strengthen an existing concept without concept drift.
+- `references/workflows/reality-repair.md` — preserve -> diagnose -> targeted repair -> verify.
+- `references/workflows/reference-match.md` — transfer observable visual DNA.
+- `references/workflows/manual-camera.md` — explicit technical locks + AUTO completion.
+- `references/workflows/prompt-only.md` — adapted prompt/spec only, no generation.
 
 Support policies:
 
-- `progressive-disclosure-router.md` — ambiguous or overlapping cases.
-- `question-minimization.md` — ask only when an answer materially changes execution or preservation.
-- `multi-reference-behavior.md` — roles, priorities, and multiple-reference handling.
+- `references/progressive-disclosure-router.md` — ambiguous or overlapping cases.
+- `references/question-minimization.md` — ask only when an answer materially changes execution or preservation.
+- `references/multi-reference-behavior.md` — roles, priorities, and multiple-reference handling.
 
 ## 3. Shot Design
 
 Load according to the missing decision layer.
 
 ### Intent / story
-- `visual-intent.md`
+- `references/visual-intent.md`
 
 ### Composition / blocking / viewpoint
-- `composition-and-blocking.md`
+- `references/composition-and-blocking.md`
 
 ### Capture format / camera character
-- `cameras-and-capture-formats.md`
+- `references/cameras-and-capture-formats.md`
 
 ### Lens rendering
-- `lens-character.md`
+- `references/lens-character.md`
 
 ### Focal length / distance / perspective
-- `focal-length-and-perspective.md`
+- `references/focal-length-and-perspective.md`
 
 ### Aperture / focus / depth
-- `aperture-focus-and-depth.md`
+- `references/aperture-focus-and-depth.md`
 
 ### Still-frame motion / shutter language
-- `motion-and-shutter.md`
+- `references/motion-and-shutter.md`
 
 ## 4. Lighting, Exposure, Film Response, Color, Texture
 
 ### Motivated source logic
-- `motivated-lighting.md`
-- `lighting-roles.md`
+- `references/motivated-lighting.md`
+- `references/lighting-roles.md`
 
 ### Environment-specific lighting
-- `environment-lighting-recipes.md`
+- `references/environment-lighting-recipes.md`
 
 ### Exposure / dynamic range
-- `exposure-and-dynamic-range.md`
+- `references/exposure-and-dynamic-range.md`
 
 ### Film/sensor character
-- `film-and-sensor-response.md`
+- `references/film-and-sensor-response.md`
 
 ### Color / grading
-- `color-science-and-grading.md`
+- `references/color-science-and-grading.md`
 
 ### Grain / halation / bloom / flare / diffusion restraint
-- `texture-effects-restraint.md`
-- `optical-imperfection.md`
+- `references/texture-effects-restraint.md`
+- `references/optical-imperfection.md`
 
 ## 5. Physical Realism / Reality Repair
 
 Start with:
 
-- `anti-ai-artifact-taxonomy.md`
-- `reality-gate.md`
+- `references/anti-ai-artifact-taxonomy.md`
+- `references/reality-gate.md`
 
 Then load only the affected domains:
 
-- `skin-realism.md`
-- `hair-and-eye-realism.md`
-- `fabric-and-material-realism.md`
-- `contact-gravity-environment.md`
-- `reflection-shadow-coherence.md`
-- `optical-imperfection.md`
+- `references/skin-realism.md`
+- `references/hair-and-eye-realism.md`
+- `references/fabric-and-material-realism.md`
+- `references/contact-gravity-environment.md`
+- `references/reflection-shadow-coherence.md`
+- `references/optical-imperfection.md`
 
 For structured repair output, also use:
 
-- `../schemas/realism-diagnosis.schema.json`
+- `schemas/realism-diagnosis.schema.json`
 
 ## 6. Reference Match / Uncertainty
 
 Load:
 
-- `multi-reference-behavior.md`
-- `confidence-and-uncertainty.md`
-- `confidence-serialization.md`
-- `parameter-conflicts.md`
-- `../schemas/reference-dna.schema.json`
+- `references/multi-reference-behavior.md`
+- `references/confidence-and-uncertainty.md`
+- `references/confidence-serialization.md`
+- `references/parameter-conflicts.md`
+- `schemas/reference-dna.schema.json`
 
 Hard rule:
 
@@ -125,10 +127,10 @@ Use exact camera/lens/stock metadata only when supplied by the user, embedded me
 
 Load:
 
-- `locks.md`
-- `parameter-conflicts.md`
+- `references/locks.md`
+- `references/parameter-conflicts.md`
 - whichever shot-domain references contain the locked/missing fields;
-- `../schemas/cinematic-shot-spec.schema.json` when structured state is useful.
+- `schemas/cinematic-shot-spec.schema.json` when structured state is useful.
 
 Authority remains:
 
@@ -147,17 +149,17 @@ Resolve the provider-neutral shot first.
 
 Then load one matching adapter:
 
-- `../adapters/generic.md`
-- `../adapters/openai-image.md`
-- `../adapters/gemini-image.md`
-- `../adapters/seedream.md`
-- `../adapters/flux.md`
-- `../adapters/magnific.md`
-- `../adapters/higgsfield-soul-cinema.md`
+- `adapters/generic.md`
+- `adapters/openai.md`
+- `adapters/gemini.md`
+- `adapters/seedream.md`
+- `adapters/flux.md`
+- `adapters/magnific.md`
+- `adapters/higgsfield-soul-cinema.md`
 
 Also load:
 
-- `adapter-fallback-hierarchy.md`
+- `references/adapter-fallback-hierarchy.md`
 
 when the provider/model is unknown, changed, unavailable, or missing a required capability.
 
@@ -167,15 +169,15 @@ Provider adapters may translate the shot. They may not redesign it.
 
 Use only when JSON/state handoff or machine validation helps:
 
-- `../schemas/cinematic-shot-spec.schema.json`
-- `../schemas/realism-diagnosis.schema.json`
-- `../schemas/reference-dna.schema.json`
+- `schemas/cinematic-shot-spec.schema.json`
+- `schemas/realism-diagnosis.schema.json`
+- `schemas/reference-dna.schema.json`
 
 Do not expose structured state merely because a schema exists if the user asked only for an image or concise prompt.
 
 ## 10. Research Evidence
 
-`research/` contains source/provenance evidence used to build the runtime knowledge.
+`references/research/` contains source/provenance evidence used to build the runtime knowledge.
 
 Normally **do not load research files during ordinary execution**.
 
@@ -188,22 +190,22 @@ Use them when:
 
 Important research files include:
 
-- `research/magnific.md`
-- `research/higgsfield.md`
-- `research/cameras.md`
-- `research/lenses.md`
-- `research/lenses-supplement.md`
-- `research/film-stocks.md`
-- `research/lighting.md`
-- `research/color-and-tone.md`
-- `research/provider-prompting.md`
-- `research/secondary-public-workflows.md`
-- `research/research-gap-audit.md`
+- `references/research/magnific.md`
+- `references/research/higgsfield.md`
+- `references/research/cameras.md`
+- `references/research/lenses.md`
+- `references/research/lenses-supplement.md`
+- `references/research/film-stocks.md`
+- `references/research/lighting.md`
+- `references/research/color-and-tone.md`
+- `references/research/provider-prompting.md`
+- `references/research/secondary-public-workflows.md`
+- `references/research/research-gap-audit.md`
 
 Source ledgers:
 
-- `source-ledger.md`
-- `source-ledger-addendum.md`
+- `references/source-ledger.md`
+- `references/source-ledger-addendum.md`
 
 Research evidence is not a second runtime brain.
 
@@ -212,55 +214,55 @@ Research evidence is not a second runtime brain.
 ### Beginner one-line image request
 
 ```text
-workflows/auto-direct.md
-visual-intent.md
-composition-and-blocking.md
+references/workflows/auto-direct.md
+references/visual-intent.md
+references/composition-and-blocking.md
 relevant capture/light references only
-reality-gate.md
-matching provider adapter or generic.md
+references/reality-gate.md
+matching provider adapter or adapters/generic.md
 ```
 
 ### Expert locked shot
 
 ```text
-workflows/manual-camera.md
-locks.md
-parameter-conflicts.md
+references/workflows/manual-camera.md
+references/locks.md
+references/parameter-conflicts.md
 relevant technical references
-reality-gate.md
+references/reality-gate.md
 matching adapter
 ```
 
 ### AI-looking portrait repair
 
 ```text
-workflows/reality-repair.md
-anti-ai-artifact-taxonomy.md
-skin-realism.md
-hair-and-eye-realism.md
-reflection-shadow-coherence.md when needed
-reality-gate.md
+references/workflows/reality-repair.md
+references/anti-ai-artifact-taxonomy.md
+references/skin-realism.md
+references/hair-and-eye-realism.md
+references/reflection-shadow-coherence.md when needed
+references/reality-gate.md
 matching edit-capable adapter
 ```
 
 ### Reference look match
 
 ```text
-workflows/reference-match.md
-multi-reference-behavior.md
-confidence-and-uncertainty.md
+references/workflows/reference-match.md
+references/multi-reference-behavior.md
+references/confidence-and-uncertainty.md
 relevant visual-domain references
-reference-dna.schema.json when structured output helps
-reality-gate.md
+schemas/reference-dna.schema.json when structured output helps
+references/reality-gate.md
 matching adapter
 ```
 
 ### Prompt-only request
 
 ```text
-workflows/prompt-only.md
+references/workflows/prompt-only.md
 only the domain references needed to resolve the shot
-matching adapter or generic.md
+matching adapter or adapters/generic.md
 ```
 
 ## 12. Loading Invariant
