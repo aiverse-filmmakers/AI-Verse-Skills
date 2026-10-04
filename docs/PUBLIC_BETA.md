@@ -1,7 +1,7 @@
 # AI-Verse Skills Public-Beta Contract
 
 **Status:** Skills-owned public-beta implementation contract  
-**Version:** 1.1.0-beta.1
+**Version:** 1.1.0-beta.2.dev0 (post-beta development)
 
 ## Ownership
 
