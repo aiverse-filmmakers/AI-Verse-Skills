@@ -1,38 +1,46 @@
 # Visual Intent and Story-to-Shot Reasoning
 
 Status: RUNTIME KNOWLEDGE
-Task: 3.1
 
-This reference converts narrative, commercial, editorial, documentary, portrait, product, travel, automotive, food, architecture, fashion, storyboard, and reference-study intent into visual priorities before camera or lighting choices are made.
+Purpose: convert narrative, commercial, editorial, documentary, portrait, product, travel, automotive, food, architecture, mobile, and other photographic intent into professional visual priorities before camera/provider decisions are made.
 
-The core rule is simple:
+Use with `references/professional-quality-floor.md`.
 
-> Story chooses cinematography. Cinematography does not decorate story.
+## Core Rule
 
-A cinematic result is not created by stacking camera names, shallow depth of field, grain, flare, haze, teal/orange grading, or dramatic rim light. The shot should first communicate the intended information and feeling. Capture, optics, lighting, color, texture, and realism choices follow from that purpose.
+> Story chooses cinematography. The Professional Quality Floor determines how expertly that story is executed.
 
-## 1. Intent Extraction Order
+Do not begin with prestige equipment names or a fixed effect bundle. Also do not interpret restraint as permission to deliver merely ordinary photography.
 
-When receiving a request, reason in this order:
+AUTO must answer two questions first:
 
-1. **What must the viewer understand?**
-2. **What should the viewer feel?**
-3. **What must remain visually dominant?**
-4. **What must remain believable?**
-5. **What contextual information must survive?**
-6. **What visual information can be simplified or suppressed?**
-7. **What cinematography choices support those answers?**
+1. What kind of image is the user actually asking for?
+2. What would an elite professional in that exact photographic/cinematic specialty do with it?
 
-Do not start by choosing a camera or lens.
+## Intent Extraction Order
 
-## 2. Minimum Intent Model
+Reason in this order:
 
-Represent the shot internally through at least:
+1. What must the viewer understand?
+2. What should the viewer feel?
+3. What photographic/cinematic medium is requested or implied?
+4. Which professional specialty best matches it?
+5. What must remain visually dominant?
+6. What context must remain readable?
+7. What must remain physically believable?
+8. What visual information can be simplified?
+9. What shot, light, color, texture, and finish choices best support those answers?
+
+## Minimum Intent Model
+
+Track at least:
 
 ```text
 purpose
 subject
 story_action
+requested_or_implied_medium
+professional_specialty
 emotional_target
 visual_priority
 context_priority
@@ -43,11 +51,9 @@ clarity_requirement
 preservation_constraints
 ```
 
-Map these into `cinematic-shot-spec.schema.json` rather than inventing a separate incompatible structure.
+## Beginner AUTO
 
-## 3. Beginner AUTO Rule
-
-A beginner may give only one sentence.
+One sentence is enough.
 
 Example:
 
@@ -55,486 +61,254 @@ Example:
 woman waiting for a taxi in London at night
 ```
 
-Do not ask for camera, lens, aperture, film stock, lighting, grade, or framing unless the task genuinely cannot proceed without them.
+Do not ask the user to choose camera, lens, aperture, stock, lighting, color grade, grain, or provider when safe professional choices can be inferred.
 
-Infer a coherent visual strategy from the story:
+Infer:
 
 ```text
 purpose: narrative/editorial
-subject: woman waiting for taxi
-story_action: waiting, watching traffic
-emotional_target: anticipation, isolation, urban night
-context_priority: London street must remain legible
-viewer_relationship: observational, close enough to feel present but not intrusive
-energy: restrained
-clarity_requirement: face readable, environment recognizable
+medium: cinematic photographic still
+professional_specialty: feature-film cinematography
+story_action: waiting / watching traffic
+viewer_relationship: observational but emotionally near
+visual_priority: face + waiting posture
+context_priority: London street remains legible
+realism_target: cinematic photographic
+finish: premium tonal response + subtle organic filmic texture
 ```
 
-Only after this should the skill design camera, composition, lens, lighting, and tone.
+The user does not need to say `Hollywood`, `ARRI`, or `cinematic` to unlock this standard.
 
-## 4. Expert Lock Rule
+## Medium Preservation
 
-If the user specifies camera, focal length, aperture, framing, angle, format, stock, lighting, or another technical parameter, treat it according to `references/locks.md`.
+Professionalization must respect the requested medium.
 
-Intent reasoning fills missing fields around the locks.
+### Mobile / selfie
 
-Example:
+If the user asks for an iPhone/mobile/selfie image, do not convert it into generic cinema-camera capture.
 
-```text
-User:
-woman waiting for a taxi in London at night, Alexa 35, 35mm, low angle
+Preserve:
 
-Locked:
-camera_reference = ARRI ALEXA 35
-focal_length = 35mm
-camera_angle = low
+- phone-like proximity/perspective;
+- casual/social plausibility;
+- appropriate depth behavior;
+- believable phone processing.
 
-AUTO:
-camera_distance
-shot_size
-aperture
-focus strategy
-lighting
-exposure
-color
-grain
-texture
-```
+Elevate through elite framing, timing, exposure, skin, color, local contrast, highlight control, and finishing.
 
-Do not change the user's locked 35mm to an 85mm merely because a portrait heuristic prefers compression.
+### Candid / documentary / street
 
-## 5. Viewer Relationship
+Prioritize believable access, non-performative gesture, decisive timing, context, layering, available/motivated light, and top editorial/documentary finishing.
 
-Before composition, determine how the viewer should relate to the subject.
+The image may feel discovered rather than staged while still being exceptionally composed.
 
-Useful relationship classes:
+### Narrative / cinematic
+
+Prioritize story beat, viewer relationship, production context, motivated light, premium tonal response, professional color separation, intentional depth, and polished movie-grade finishing.
+
+### Commercial / product / fashion / automotive / food / architecture / travel
+
+Use the professional specialty rules in `professional-quality-floor.md` instead of forcing one generic cinema aesthetic onto every field.
+
+## Viewer Relationship
+
+Choose the viewer relationship before composition.
 
 ### Intimate
-
-The viewer should feel physically or emotionally close.
-
-Possible consequences:
-
-- closer camera position;
-- face or gesture carries more frame weight;
-- environment becomes secondary but does not automatically disappear;
-- eye line and micro-expression matter more;
-- shallow depth may help, but is not mandatory.
+Closer physical/emotional relationship; face/gesture can dominate; environment may remain secondary but readable when important.
 
 ### Observational
-
-The viewer witnesses without feeling directly addressed.
-
-Possible consequences:
-
-- camera may sit outside immediate personal space;
-- foreground occlusion or environmental layering may feel natural;
-- subject need not face camera;
-- composition can preserve more contextual information.
+Viewer witnesses without direct address; environmental layering and non-performative behavior may improve authenticity.
 
 ### Participatory
-
-The viewer should feel inside the action or physically present.
-
-Possible consequences:
-
-- POV or over-the-shoulder framing;
-- stronger near/far scale relationships;
-- foreground body/prop presence;
-- less pristine composition may improve realism.
+Viewer feels inside the action; POV/OTS/foreground body or prop presence may be appropriate.
 
 ### Detached
+Environment/system/scale dominates; subject can be smaller; geometry and negative space may carry meaning.
 
-The viewer should read systems, scale, isolation, architecture, or environment more than facial emotion.
+### Iconic / heroic
+Subject/product is dominant and aspirational; silhouette/separation/composition become disciplined. Do not automatically add extreme low angle, rim light, or distortion.
 
-Possible consequences:
+## Information Hierarchy
 
-- wider spatial context;
-- smaller subject scale;
-- stronger geometry or negative space;
-- less aggressive subject separation.
+Every professional shot needs an explicit hierarchy.
 
-### Iconic / Heroic
-
-The subject should feel visually dominant, aspirational, powerful, monumental, or product-hero oriented.
-
-Possible consequences:
-
-- controlled low angle if justified;
-- simplified background hierarchy;
-- clear silhouette;
-- deliberate separation from environment;
-- cleaner light and material control.
-
-Do not equate heroic with extreme low angle, wide lens distortion, or rim light by default.
-
-## 6. Information Hierarchy
-
-Every shot should have an explicit visual hierarchy.
-
-Ask internally:
+Internally answer:
 
 ```text
-What should the eye see first?
-What should it see second?
-What context must remain readable?
-What can fall away?
+what should the eye see first?
+what second?
+what context must stay readable?
+what can fall away?
 ```
 
-Priority can be distributed across:
+Possible priorities include face, eyes, gesture, hands, product, vehicle, environment, architecture, food texture, costume, prop, light source, text/signage, or atmospheric scale.
 
-- face;
-- eyes;
-- gesture;
-- hands;
-- product;
-- vehicle;
-- environment;
-- architectural geometry;
-- food surface/texture;
-- costume;
-- prop;
-- light source;
-- text/signage;
-- atmospheric scale.
+Professional composition does not always mean isolating one subject with blur.
 
-A cinematic shot is not necessarily one with one isolated subject. Sometimes the story depends on multiple readable layers.
+## Emotional Target to Visual Strategy
 
-## 7. Emotional Target to Visual Strategy
-
-Emotion should influence cinematography through observable decisions, not adjectives alone.
+Translate emotion into observable choices rather than adjectives alone.
 
 ### Vulnerability
-
-Possible strategies:
-
-- more environmental exposure around the subject;
-- slight negative space;
-- observational camera position;
-- restrained contrast;
-- reduced visual dominance;
-- subject placement that feels less protected.
+May favor environmental exposure, negative space, observational distance, restrained dominance, and natural contrast.
 
 ### Intimacy
-
-Possible strategies:
-
-- closer spatial relationship;
-- gentle perspective;
-- clear eye/face priority;
-- soft but motivated light;
-- quieter background hierarchy.
+May favor closer spatial relationship, gentle perspective, clear expression priority, motivated soft light, and quieter background hierarchy.
 
 ### Tension
-
-Possible strategies:
-
-- withheld visual information;
-- asymmetric balance;
-- stronger foreground/background separation;
-- selective darkness;
-- tighter spatial relationships;
-- off-axis camera placement when justified.
-
-Do not automatically use dutch angle.
+May favor withheld information, asymmetry, selective darkness, layered foreground/background, or tighter spatial relationships. Do not automatically use Dutch angle.
 
 ### Isolation
-
-Possible strategies:
-
-- subject smaller relative to frame;
-- negative space;
-- environment allowed to dominate;
-- physical distance from other people/objects;
-- reduced visual clutter around the subject.
+May favor smaller subject scale, negative space, environmental dominance, or physical separation.
 
 ### Energy
-
-Possible strategies:
-
-- active diagonals;
-- closer camera relationship;
-- stronger near/far layering;
-- motion evidence if present;
-- less static balance.
-
-Do not automatically add motion blur.
+May favor diagonals, closer camera relationship, near/far layering, decisive motion evidence, or less static balance. Do not automatically add motion blur.
 
 ### Calm
-
-Possible strategies:
-
-- stable geometry;
-- simple hierarchy;
-- controlled negative space;
-- lower visual competition;
-- restrained texture/effects.
+May favor stable geometry, simple hierarchy, controlled negative space, restrained competition, and smooth tonal transitions.
 
 ### Luxury
-
-Possible strategies:
-
-- disciplined composition;
-- controlled surfaces/reflections;
-- precise visual hierarchy;
-- tonal density;
-- clean highlight behavior;
-- intentional texture rather than maximal gloss.
-
-Luxury is not synonymous with black backgrounds, gold light, or shallow depth.
+Favor disciplined composition, controlled surfaces/reflections, rich tonal density, precise highlights, purposeful materials, and brand-appropriate polish—not automatic black/gold, smoke, or rim light.
 
 ### Documentary honesty
+Favor plausible camera access, truthful environmental context, available/motivated light, natural imperfection, and restrained staging.
 
-Possible strategies:
-
-- plausible camera access;
-- available/motivated light;
-- natural imperfection;
-- truthful environmental context;
-- restrained beautification;
-- practical depth rather than artificial subject cutout.
-
-## 8. Purpose-Specific Reasoning
+## Purpose-Specific Direction
 
 ### Narrative
-
-Prioritize story beat and viewer relationship.
-
-Ask:
-
-- what just happened?
-- what is happening now?
-- what matters emotionally?
-- what information should remain unresolved?
-
-Do not make every narrative frame a poster.
+Prioritize the current story beat, emotional information, context, and what should remain unresolved. Do not make every frame a poster.
 
 ### Commercial
-
-Prioritize product/service clarity while preserving believable world-building.
-
-Balance:
-
-```text
-brand clarity
-product readability
-aspirational context
-material realism
-human emotion
-```
-
-Commercial does not mean flat catalog lighting unless that is the brief.
+Balance brand/product clarity, aspirational context, physical material realism, and human emotion. Apply top-tier campaign polish without flattening the world into catalog light.
 
 ### Editorial / Fashion
+Prioritize silhouette, styling, garment physics, attitude, environment, and image identity. Bold formal choices are allowed when conceptually justified.
 
-Prioritize silhouette, styling, attitude, environment, texture, and image identity.
-
-Allow bolder formal choices when they support the concept, but maintain believable anatomy, fabric, light, and spatial logic.
-
-### Documentary
-
-Prioritize plausibility, context, available-light logic, truthful imperfection, and non-performative framing.
-
-Avoid over-directed visual polish unless the brief explicitly asks for stylized documentary.
+### Documentary / Candid
+Prioritize believable access, moment, gesture, context, available-light logic, and truthful imperfection. The professional quality comes from timing/judgment/finishing, not artificial staging.
 
 ### Portrait
-
-Prioritize face, expression, skin, gaze, posture, and background relationship.
-
-Do not assume 85mm + f/1.4.
-
-The environment may carry essential identity or story.
+Prioritize identity, expression, gaze, posture, skin, dimensionality, and background relationship. Do not assume 85mm + f/1.4.
 
 ### Product
-
-Prioritize exact product form, logo/text where required, materials, surface response, scale, and purposeful environment.
-
-Do not sacrifice product geometry for lens spectacle.
+Prioritize exact geometry, logo/text where required, materials, surfaces, scale, contact, controlled reflections, and appropriate specialist lighting.
 
 ### Automotive
-
-Prioritize vehicle proportions, body surfaces, reflections, wheel geometry, road contact, environment, and speed/state.
-
-Avoid wide-angle deformation that changes recognizable body proportions unless intentionally requested.
+Prioritize vehicle proportions, wheel geometry, paint/surface response, road contact, reflections, location, and motion state.
 
 ### Food
+Prioritize edible cues, moisture/crust/translucency, physically justified steam/condensation, plate geometry, action, and tactile realism.
 
-Prioritize edible material cues, moisture, crust, translucency, steam/condensation when justified, plate geometry, and tactile realism.
+### Architecture / Interiors
+Prioritize spatial clarity, vertical/horizon logic, material scale, human scale, source balance, and believable camera position.
 
-Do not over-sharpen every crumb.
+### Travel / Hospitality
+Balance destination identity, human experience, atmosphere, environment scale, material appeal, and aspirational polish.
 
-### Architecture
+### Mobile / Social
+Preserve the capture language of a phone/selfie/social image while applying elite mobile-photography composition, light, exposure, color, and editing.
 
-Prioritize spatial clarity, vertical/horizon logic, materials, human scale, light direction, and believable camera position.
-
-Do not use cinematic distortion as a substitute for architecture photography logic.
-
-### Travel
-
-Balance destination identity, human experience, atmosphere, and environmental scale.
-
-Avoid generic postcard perfection when lived experience is part of the brief.
-
-### Storyboard / Shot Design
-
-Prioritize blocking, readable action, spatial continuity, camera intent, and reproducibility over final-beauty polish.
-
-## 9. Context Preservation
-
-Before choosing shallow depth or tight framing, determine whether context carries story information.
-
-Context may include:
-
-- location identity;
-- social relationship;
-- danger;
-- scale;
-- product use;
-- architecture;
-- weather;
-- time of day;
-- crowd density;
-- cultural/environmental cues.
-
-If context matters, preserve it through framing, focus strategy, camera distance, or layering.
-
-Do not erase narrative information merely to increase subject separation.
-
-## 10. Realism Target
-
-Use the `intent.realism_target` field from the shot schema.
+## Realism Target
 
 ### strict_photographic
-
-Favor physically conservative capture logic and minimal stylization.
+Physically conservative capture logic; minimal stylization; still professionally executed.
 
 ### cinematic_photographic
-
-Allow deliberate cinema choices while keeping the image plausible as a real photographed frame.
+Feature-film-level choices while remaining plausible as a photographed frame. Default general photographic AUTO target when no stronger specialty/medium signal exists.
 
 ### heightened_but_plausible
-
-Permit stronger contrast, palette, atmosphere, lens character, or production design while preserving coherent physical behavior.
+Stronger contrast/palette/atmosphere/lens/production design while maintaining physical coherence.
 
 ### stylized_photographic
-
-Allow more overt art direction while maintaining photographic capture logic where possible.
+Overt art direction allowed while retaining photographic capture logic where possible.
 
 ### user_defined
-
 Follow the user's explicit target.
 
-## 11. Visual Priority Before Technical Choice
+## Default Professional Finish
 
-Use this internal sequence:
+For normal photography, AUTO should usually resolve unspecified finishing toward:
 
 ```text
-intent
--> viewer relationship
--> information hierarchy
--> context requirement
--> composition/blocking
--> camera position
--> capture format
--> lens/focal choice
--> aperture/focus
--> lighting
--> exposure
--> color/tone
--> texture
--> realism verification
+intentional composition
+professional exposure hierarchy
+controlled highlight rolloff
+natural shadow density
+clean color separation
+credible skin/material response
+realistic optical/focus transition
+subtle organic texture
+high-end restrained grading
 ```
 
-Do not reverse the sequence by selecting a camera/lens first and forcing the story into it.
+For cinematic/narrative work, premium digital-cinema tonal behavior and ARRI-like highlight rolloff/skin response may be used as observable targets without claiming literal ARRI capture.
 
-## 12. Anti-Cliche Guard
+## Texture Default
 
-The following are never automatic consequences of the word `cinematic`:
+Subtle organic filmic texture is normally part of professional photographic finishing unless:
 
-- f/1.2;
+- the user says no grain/pristine/clinical/noise-free;
+- the medium clearly requires sterile technical cleanliness;
+- texture would damage critical product/material readability.
+
+Strong grain, halation, bloom, scratches, dust, heavy flare, and other visible film artifacts still require stronger justification.
+
+## Anti-Cliche Guard
+
+These are **not** automatic consequences of professional/cinematic quality:
+
 - maximum background blur;
 - anamorphic lens;
 - horizontal blue flare;
-- 2.39:1 crop;
 - teal/orange grade;
-- warm highlights/cool shadows;
 - haze;
-- rim light;
-- grain;
-- halation;
-- bloom;
-- dutch angle;
+- dramatic rim light;
+- Dutch angle;
 - underexposure;
-- handheld imperfection;
-- orange practicals;
-- blue moonlight.
+- orange practicals + blue moonlight;
+- strong halation;
+- lifted blacks;
+- heavy vignette;
+- exaggerated film damage.
 
-Every such choice requires a story, realism, location, or aesthetic reason.
+Important distinction:
 
-## 13. Ambiguity Policy
+```text
+professional finish != cinematic cliché stack
+subtle organic texture != heavy film-effect preset
+premium tonal response != prestige camera-name spam
+```
 
-Do not ask a beginner to choose between technical options the skill can safely infer.
+## Context Preservation
+
+Before choosing tight framing or shallow depth, decide whether context carries identity, social relationship, scale, product use, architecture, weather, time, culture, location, or danger.
+
+Do not erase useful story information merely to increase subject separation.
+
+## Ambiguity Policy
 
 Ask only when:
 
-- two interpretations would produce materially different content, not merely different cinematography;
-- a user-supplied lock is directly contradictory and cannot be reconciled;
-- a missing reference or asset is essential to the requested preservation task;
-- safety or rights constraints require clarification;
-- the user explicitly wants to choose among creative directions.
+- two interpretations materially change content rather than just professional shot choices;
+- hard locks directly conflict and cannot be reconciled;
+- a missing reference/asset is essential to preservation;
+- the user explicitly wants to choose among directions.
 
-Otherwise choose a coherent AUTO solution.
+Otherwise choose the strongest professional AUTO solution.
 
-## 14. Shot Intent Output
+## Reality Gate Questions for Intent
 
-Before downstream camera reasoning, the internal intent should be reducible to a compact brief like:
+Before accepting the design:
 
-```text
-PURPOSE
-Narrative urban-night still.
+- does the frame communicate the literal request?
+- is the professional specialty appropriate to the requested medium?
+- did AUTO elevate the image without erasing its medium?
+- is viewer relationship coherent?
+- is important context preserved?
+- are light/color/depth choices motivated?
+- is the finish premium rather than merely ordinary?
+- did any cliché get added without reason?
+- did the quality floor override any user lock? If yes, fix it.
 
-STORY
-A woman waits for a taxi while traffic passes behind her.
-
-VIEWER RELATIONSHIP
-Observational but emotionally near.
-
-PRIMARY PRIORITY
-Face and waiting posture.
-
-SECONDARY PRIORITY
-Recognizable wet London street context.
-
-EMOTION
-Anticipation, slight isolation, realism.
-
-CONTEXT REQUIREMENT
-Keep city lights, curb, road activity, and weather readable.
-
-REALISM TARGET
-Cinematic photographic.
-```
-
-This brief is not necessarily shown to the user. It is the decision basis for the rest of the shot.
-
-## 15. Reality Gate Questions for Intent
-
-Before accepting the shot design, ask internally:
-
-- does the shot communicate the requested subject and action?
-- does the emotional target come from composition/light/camera rather than filler adjectives?
-- is the viewer relationship coherent?
-- is important context accidentally erased?
-- did any cinematic cliche get added without a reason?
-- did AUTO choices respect all user locks?
-- would a real cinematographer have a plausible reason for the chosen camera relationship?
-
-If not, revise before provider adaptation.
-
-## 16. Requirements Carried Forward
-
-Tasks 3.2 through 3.7 must treat this file as the upstream intent layer.
-
-Composition, capture, lens, focal length, focus, and motion choices should explain themselves through the visual priorities established here.
-
-Later provider adapters may translate the decisions but must not reinterpret the story or replace explicit user intent.
+A shot that is merely competent because the user gave a simple prompt fails the intent layer.
