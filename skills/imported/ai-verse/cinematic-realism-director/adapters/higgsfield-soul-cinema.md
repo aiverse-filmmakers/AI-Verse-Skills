@@ -1,198 +1,144 @@
-# Higgsfield Soul Cinema Adapter
+# Higgsfield Soul Cinema Explicit-Target Adapter
 
-Status: RUNTIME ADAPTER
-Task: 7.7
-Verified against public first-party Higgsfield tooling and repository evidence on 2026-10-03.
+Status: OPTIONAL EXPLICIT-TARGET / BENCHMARK ADAPTER
 
-Purpose: translate the provider-neutral Cinematic Shot Spec into Higgsfield Soul Cinema / Soul-aware still-image instructions without turning Higgsfield product semantics into the universal cinematic brain.
+Purpose: translate an already-resolved Cinematic Shot Spec into Higgsfield Soul Cinema/Soul-aware instructions **only when the user explicitly requests Higgsfield output/execution or a controlled benchmark names Higgsfield**.
 
-## Core Boundary
+## Non-Negotiable Boundary
+
+Higgsfield Soul Cinema is a competitor/reference system for the Cinematic Realism Director. It is **not** a default backend.
 
 ```text
-Cinematic Shot Spec = creative truth
-Higgsfield adapter = provider translation / routing
-Soul identity = identity continuity, not cinematography authority
+ordinary image request -> DO NOT auto-select Higgsfield
+native/local host image capability available -> use native/local
+user explicitly requests Higgsfield -> this adapter may be used
+controlled benchmark explicitly names Higgsfield -> this adapter may be used
 ```
 
-Do not infer private prompt enhancers, hidden control weights, training data, or proprietary lens-profile logic.
+Execution routing belongs to `references/execution-priority.md`.
 
-## Current Public Surface
+## Why This Adapter Exists
 
-Current first-party Higgsfield agent tooling publicly exposes:
+Use only for:
 
-- `soul_cinematic` as a Soul-aware cinematic generation route;
-- reusable Soul identity references through Soul ID / Soul Character systems;
-- quality tiers including 1.5K and 2K for Soul image generation in current public tooling;
-- ordinary prompt-driven generation through the Higgsfield generation CLI/skill.
+- explicit Higgsfield/Soul Cinema prompt export;
+- explicit Higgsfield execution when genuinely connected/permitted;
+- controlled comparative benchmarking;
+- compatibility with an existing user Higgsfield workflow;
+- provider research/translation maintenance.
 
-Current model names and controls are provider-specific and may drift. Recheck the live Higgsfield surface before depending on exact names or parameters.
+The skill's cinematic intelligence must remain independent of Higgsfield.
 
-## When to Use
+## Creative Authority
 
-Use this adapter when:
+```text
+Professional Quality Floor + Cinematic Shot Spec = creative truth
+Higgsfield/Soul = optional translation/identity surface
+```
 
-- the active provider is Higgsfield and the requested still-image path is Soul Cinema / `soul_cinematic`;
-- a user explicitly asks for Soul Cinema behavior;
-- a reusable Soul identity reference is available and should remain identity-locked;
-- the host exposes current Higgsfield generation tooling with Soul support.
+The universal shot must already resolve composition, camera relationship, optics/depth, motivated light, exposure, color, texture, physical realism, and locks before this adapter runs.
 
-Do not use merely because the user says `cinematic` when another provider is active.
+Do not outsource core direction to an opaque provider enhancer.
 
-## Input
+## Explicit Invocation Requirement
 
-Consume:
+Use this adapter only when:
 
-- resolved Cinematic Shot Spec;
-- active workflow;
-- user and preservation locks;
-- optional Soul identity reference;
-- optional reference-role map;
-- host capability class;
-- V0 Reality Gate result.
+1. the user explicitly requests Higgsfield/Soul Cinema; or
+2. a benchmark/evaluation explicitly specifies Higgsfield.
 
-The adapter must not redesign unresolved cinematic decisions on its own.
+If neither is true, do not use Higgsfield for ordinary generation.
 
 ## Soul Identity Separation
 
-If a Soul identity reference exists:
+If an explicitly requested Higgsfield workflow uses a Soul identity reference:
 
 ```text
-identity reference -> face / identity continuity
-shot spec -> camera / composition / light / color / realism
+identity asset -> identity continuity
+universal shot -> cinematography / composition / light / color / realism
 ```
 
-Do not let an identity asset silently override:
-
-- age or appearance instructions explicitly locked by the user;
-- pose;
-- wardrobe;
-- shot size;
-- lens behavior;
-- lighting;
-- color design;
-- scene geometry.
-
-If the identity system conflicts with a hard preservation constraint, preserve the user constraint and report the conflict rather than silently substituting.
+Identity assets must not silently override pose, wardrobe, shot size, camera relationship, lighting, color, age/appearance locks, or scene geometry.
 
 ## Prompt Translation
 
-Use strong natural language that preserves the universal shot structure:
+When explicitly invoked, preserve this order:
 
-1. subject / action / story moment;
-2. environment and production context;
-3. composition, camera position, angle and perspective;
-4. focal/lens/depth behavior;
-5. motivated lighting and exposure;
-6. color, density and tonal treatment;
-7. skin, material, contact and reflection realism;
-8. atmosphere and justified optical/capture texture;
-9. explicit preservation instructions when editing/reference conditioning;
+1. subject/action/story;
+2. environment/production context;
+3. composition/camera position/perspective;
+4. lens/focal/depth behavior;
+5. motivated lighting/exposure;
+6. color/density/tonal finish;
+7. skin/material/contact/reflection realism;
+8. subtle/justified texture and atmosphere;
+9. preservation/reference instructions;
 10. output/aspect requirements.
 
-Do not replace physical instructions with `cinematic`, `movie still`, or prestige camera names alone.
+Do not replace this with `cinematic`, `movie still`, or a prestige camera name alone.
 
-## Camera and Lens Language
+## Camera / Lens Language
 
-Higgsfield public engineering material supports camera/lens vocabulary as useful learned visual priors, but the adapter must still express observable behavior.
+Named camera/lens vocabulary may be useful as a provider prior when explicitly using Higgsfield, but observable behavior remains authoritative.
 
-If the user locks a camera or lens reference:
+Do not claim literal physical simulation or private lens-profile knowledge.
 
-- keep the literal reference where useful;
-- preserve its observable intended behavior;
-- do not claim literal physical simulation.
+If a named reference responds weakly, reinforce the specific observable traits rather than exaggerating every stereotyped artifact.
 
-If the model response to a named lens is weak, reinforce only the relevant observable traits rather than exaggerating every possible artifact.
+## Professional Quality Floor
 
-## Beginner Enhancement
+Higgsfield must not be needed to make the image professional.
 
-For short prompts, the universal AUTO DIRECT workflow completes the shot before this adapter runs.
+The professional image design must already exist before this adapter.
 
-Do not outsource core cinematography reasoning to an opaque provider enhancer.
-
-Provider enhancement, when available, is an execution convenience after the shot spec is resolved.
+Subtle organic photographic texture, premium tonal response, motivated light, color separation, and physical realism come from the skill's own policies—not from Soul Cinema presets.
 
 ## Reference Handling
 
-Keep reference roles explicit.
+Keep reference roles explicit:
 
-Example:
+- identity;
+- product;
+- composition;
+- pose;
+- lighting;
+- color;
+- texture;
+- environment.
 
-```text
-Soul ID: identity only
-Reference image 1: wardrobe / product geometry
-Reference image 2: lighting and color language
-Shot Spec: target composition and cinematography
-```
+Do not average roles or allow an identity reference to become the cinematography authority.
 
-Do not treat every reference as equal global style authority.
+## Provider Enhancement
 
-## Color Continuity
+Any provider-side enhancement is downstream execution convenience only.
 
-If Higgsfield exposes current color/palette continuity controls, map only the relevant shot-spec color intent into them.
+It may not:
 
-The universal color design remains:
+- replace the universal shot;
+- override locks;
+- choose a different visual concept;
+- become a hidden dependency for professional quality.
 
-- white balance;
-- palette;
-- separation;
-- saturation;
-- density;
-- highlight/shadow chroma;
-- skin treatment.
+## Version Drift
 
-A provider palette feature does not replace this reasoning.
-
-## Reality Repair
-
-When repairing an existing image through a Higgsfield-capable host:
-
-- preserve the actual target image and identity references;
-- use the smallest provider operation capable of the requested change;
-- keep `PRESERVE`, `CHANGE`, and `DESIRED PHYSICAL RESULT` separate;
-- avoid full regeneration when a targeted operation is available and preservation matters;
-- perform a post-generation Reality Gate if the host can inspect the result.
-
-If current Higgsfield tooling cannot guarantee the required edit preservation, fall back to an explicit repair prompt/spec rather than claiming exact preservation.
-
-## Hero-Frame Principle
-
-For broader cinematic workflows, treat the still image as a hero frame:
+When explicitly executing Higgsfield:
 
 ```text
-resolve still-frame visual truth first
--> verify it
--> hand off to temporal/video systems later if requested
+current verified public/live behavior
+> cached adapter knowledge
+> generic natural-language translation
 ```
 
-Do not expand this V1 skill into video direction merely because Higgsfield supports video.
+Never fabricate current controls, private prompt enhancers, hidden weights, or proprietary lens behavior.
 
-## Unsupported or Changed Controls
+## Failure Conditions
 
-If a remembered Higgsfield control is missing or changed:
+This adapter is used incorrectly if:
 
-1. preserve the universal shot decision;
-2. translate it into natural-language visible behavior;
-3. use only current verified provider parameters;
-4. fall back to `adapters/generic.md` when exact support is uncertain;
-5. never invent a provider flag.
-
-## Host Degradation
-
-- Higgsfield generation tool connected and user asks for an image: execute through the current permitted image route.
-- Higgsfield unavailable: return the adapted prompt/spec or use another granted provider through its adapter.
-- PROMPT ONLY: never execute generation.
-- No target image available for an edit: do not pretend the edit occurred.
-
-## Verification
-
-Before handoff or execution, verify:
-
-- user locks survived;
-- Soul identity is used only for identity continuity;
-- reference roles survived;
-- no hidden hardware certainty was invented;
-- provider version-specific assumptions are current or omitted;
-- cinematography remains provider-neutral upstream;
-- Reality Gate corrections survived translation.
-
-Acceptance: Soul Cinema receives a coherent cinematic shot while identity continuity and provider semantics remain separate from universal creative authority.
+- Higgsfield is selected automatically for an ordinary request;
+- it is preferred merely because it is cinema-oriented;
+- provider enhancement becomes the source of the core look;
+- Soul identity overrides cinematography or user locks;
+- private/internal provider behavior is invented;
+- provider access is inferred from adapter presence;
+- tool success is called visual-quality success without inspection.
