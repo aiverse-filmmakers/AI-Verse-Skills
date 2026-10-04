@@ -102,6 +102,14 @@ The public pin command creates a durable lease before returning the selected gen
 ./aiverse-skills pin --package verification-harness --json
 ```
 
+When a host has already resolved a specific immutable generation and must retain that exact selection after the active pointer changes, pass its ID explicitly:
+
+```bash
+./aiverse-skills pin --generation-id <resolved-generation-id> --package verification-harness --json
+```
+
+The package is validated before the lease is written, so a rejected package request cannot strand a lease.
+
 The JSON includes generation identity/path, lease ID, lease token, and the owner process identity. The default lease owner is the calling parent process; a host may provide its exact live worker PID with `--lease-owner-pid`. Keep the lease for the entire execution and release it in the host's normal cleanup/finally path:
 
 ```bash
