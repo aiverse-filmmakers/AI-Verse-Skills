@@ -26,12 +26,17 @@ class CinematicRealismDirectorContractTests(unittest.TestCase):
         required = (
             "SKILL.md",
             "README.md",
+            "CHANGELOG.md",
             "aiverse.skill.yaml",
             "references/INDEX.md",
+            "references/professional-quality-floor.md",
+            "references/execution-priority.md",
             "references/reality-gate.md",
             "references/routing.md",
             "references/locks.md",
             "references/host-action-policy.md",
+            "references/host-capabilities.md",
+            "references/workflows/auto-direct.md",
             "adapters/generic.md",
             "adapters/openai.md",
             "adapters/gemini.md",
@@ -42,7 +47,12 @@ class CinematicRealismDirectorContractTests(unittest.TestCase):
             "schemas/cinematic-shot-spec.schema.json",
             "schemas/realism-diagnosis.schema.json",
             "schemas/reference-dna.schema.json",
+            "examples/beginner-auto.md",
+            "examples/mobile-selfie.md",
+            "examples/candid-auto.md",
             "evals/routing.json",
+            "evals/professional-quality.json",
+            "evals/execution-priority.json",
             "evals/shot-design.json",
             "evals/expert-locks.json",
             "evals/realism-repair.json",
@@ -77,6 +87,7 @@ class CinematicRealismDirectorContractTests(unittest.TestCase):
         for marker in (
             "contract: aiverse-skill-v1",
             "name: cinematic-realism-director",
+            "version: 1.1.0",
             "category: film-media",
             "risk: low",
             "- workspace.read",
@@ -88,8 +99,6 @@ class CinematicRealismDirectorContractTests(unittest.TestCase):
         ):
             self.assertIn(marker, manifest)
 
-        # The sidecar describes possible host effects; it does not grant a provider,
-        # secret, image service, or executable dependency.
         self.assertIn("toolpacks: []", manifest)
         self.assertNotIn("process.exec", manifest)
 
@@ -102,6 +111,79 @@ class CinematicRealismDirectorContractTests(unittest.TestCase):
             with self.subTest(eval=eval_file.name):
                 parsed = json.loads(eval_file.read_text(encoding="utf-8"))
                 self.assertIsInstance(parsed, dict)
+
+    def test_professional_quality_floor_is_authoritative(self):
+        skill = (PACKAGE / "SKILL.md").read_text(encoding="utf-8")
+        quality = (PACKAGE / "references" / "professional-quality-floor.md").read_text(
+            encoding="utf-8"
+        )
+        auto = (
+            PACKAGE / "references" / "workflows" / "auto-direct.md"
+        ).read_text(encoding="utf-8")
+        texture = (PACKAGE / "references" / "texture-effects-restraint.md").read_text(
+            encoding="utf-8"
+        )
+
+        self.assertIn("Professional Quality Floor is mandatory", skill)
+        self.assertIn("should not need to type", quality)
+        self.assertIn("elite mobile photographer/editor", quality)
+        self.assertIn("feature-film", quality)
+        self.assertIn("ARRI-like", quality)
+        self.assertIn("subtle organic filmic texture", quality)
+        self.assertIn("world-class visual-director default", auto)
+        self.assertIn("subtle organic filmic texture", auto)
+        self.assertIn("Subtle Organic Texture Is the Normal Photographic Baseline", texture)
+
+        # Professional quality must not erase medium fidelity or user cleanliness locks.
+        self.assertIn("Do not turn every request into the same cinema-camera image", quality)
+        self.assertIn("no grain", quality)
+        self.assertIn("phone/selfie", skill)
+
+    def test_execution_priority_is_native_first_and_competitors_are_explicit_only(self):
+        skill = (PACKAGE / "SKILL.md").read_text(encoding="utf-8")
+        priority = (PACKAGE / "references" / "execution-priority.md").read_text(
+            encoding="utf-8"
+        )
+        host = (PACKAGE / "references" / "host-action-policy.md").read_text(
+            encoding="utf-8"
+        )
+        magnific = (PACKAGE / "adapters" / "magnific.md").read_text(encoding="utf-8")
+        higgsfield = (PACKAGE / "adapters" / "higgsfield-soul-cinema.md").read_text(
+            encoding="utf-8"
+        )
+
+        self.assertIn("host-native/local image generation/editing", skill)
+        self.assertIn("native/local host image generation or editing capability", priority)
+        self.assertIn("Magnific Cinematic and Higgsfield Soul Cinema are benchmark/reference competitors", priority)
+        self.assertIn("MCP is a transport/capability surface, not a creative-quality signal", priority)
+        self.assertIn("automatically routes an ordinary request to Magnific or Higgsfield", host)
+        self.assertIn("OPTIONAL EXPLICIT-TARGET / BENCHMARK ADAPTER", magnific)
+        self.assertIn("ordinary image request -> DO NOT auto-select Magnific", magnific)
+        self.assertIn("OPTIONAL EXPLICIT-TARGET / BENCHMARK ADAPTER", higgsfield)
+        self.assertIn("ordinary image request -> DO NOT auto-select Higgsfield", higgsfield)
+
+    def test_new_regressions_cover_reported_failures(self):
+        execution = json.loads(
+            (PACKAGE / "evals" / "execution-priority.json").read_text(encoding="utf-8")
+        )
+        quality = json.loads(
+            (PACKAGE / "evals" / "professional-quality.json").read_text(encoding="utf-8")
+        )
+        regression = json.loads(
+            (PACKAGE / "evals" / "regression.json").read_text(encoding="utf-8")
+        )
+
+        exec_ids = {case["id"] for case in execution["cases"]}
+        quality_ids = {case["id"] for case in quality["cases"]}
+        regression_ids = {case["id"] for case in regression["cases"]}
+
+        self.assertIn("exec-native-001", exec_ids)
+        self.assertIn("exec-benchmark-001", exec_ids)
+        self.assertIn("quality-mobile-001", quality_ids)
+        self.assertIn("quality-candid-001", quality_ids)
+        self.assertIn("quality-narrative-001", quality_ids)
+        for expected in ("reg-023", "reg-024", "reg-025", "reg-026", "reg-027"):
+            self.assertIn(expected, regression_ids)
 
     def test_ranked_registry_remains_explicit_and_unchanged(self):
         skills = json.loads((ROOT / "registry" / "skills.json").read_text(encoding="utf-8"))
@@ -142,15 +224,12 @@ class CinematicRealismDirectorContractTests(unittest.TestCase):
             isolated = Path(temp) / "cinematic-realism-director"
             shutil.copytree(PACKAGE, isolated, symlinks=True)
 
-            # Standalone package must not depend on symlinked repo state.
             symlinks = [path for path in isolated.rglob("*") if path.is_symlink()]
             self.assertEqual(symlinks, [])
 
             skill = (isolated / "SKILL.md").read_text(encoding="utf-8")
             index = (isolated / "references" / "INDEX.md").read_text(encoding="utf-8")
 
-            # Every package-local runtime path named by SKILL.md must resolve after
-            # copying only this directory out of the repository.
             refs = set(
                 re.findall(
                     r"(?:(?:references|adapters|schemas|examples)/[A-Za-z0-9._/-]+)",
@@ -166,19 +245,21 @@ class CinematicRealismDirectorContractTests(unittest.TestCase):
             self.assertNotIn("../", skill)
             self.assertNotIn("../", index)
 
-            # Core structured artifacts remain readable without importing any
-            # repository module, AI-Verse OS, MCP, or provider SDK.
             for relative in (
                 "schemas/cinematic-shot-spec.schema.json",
                 "schemas/realism-diagnosis.schema.json",
                 "schemas/reference-dna.schema.json",
                 "evals/routing.json",
+                "evals/professional-quality.json",
+                "evals/execution-priority.json",
                 "evals/regression.json",
             ):
                 parsed = json.loads((isolated / relative).read_text(encoding="utf-8"))
                 self.assertIsInstance(parsed, dict)
 
             self.assertTrue((isolated / "adapters" / "generic.md").is_file())
+            self.assertTrue((isolated / "references" / "professional-quality-floor.md").is_file())
+            self.assertTrue((isolated / "references" / "execution-priority.md").is_file())
             self.assertTrue((isolated / "references" / "workflows" / "auto-direct.md").is_file())
             self.assertTrue((isolated / "references" / "reality-gate.md").is_file())
 
@@ -189,7 +270,7 @@ class CinematicRealismDirectorContractTests(unittest.TestCase):
             base = Path(temp)
             root = base / "skills-install"
             root.mkdir()
-            generation_id = "cinematic-release-test"
+            generation_id = "cinematic-professional-quality-test"
             stage = base / "stage"
             staged_package = stage / "imported" / "ai-verse" / "cinematic-realism-director"
             staged_package.parent.mkdir(parents=True)
@@ -251,11 +332,16 @@ class CinematicRealismDirectorContractTests(unittest.TestCase):
                         (PACKAGE / "SKILL.md").read_text(encoding="utf-8"),
                     )
                     for relative in (
+                        "references/professional-quality-floor.md",
+                        "references/execution-priority.md",
                         "references/reality-gate.md",
                         "references/INDEX.md",
                         "adapters/generic.md",
                         "schemas/cinematic-shot-spec.schema.json",
                         "examples/beginner-auto.md",
+                        "examples/mobile-selfie.md",
+                        "evals/professional-quality.json",
+                        "evals/execution-priority.json",
                         "evals/regression.json",
                     ):
                         self.assertTrue((copied / relative).is_file(), relative)

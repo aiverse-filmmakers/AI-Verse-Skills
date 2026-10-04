@@ -1,40 +1,28 @@
 # Reality Gate
 
 Status: RUNTIME KNOWLEDGE
-Task: 5.8
 
-This is the reusable physical-plausibility and anti-AI verification policy for the Cinematic Realism Director.
-
-It is used:
-
-- before final prompt/spec delivery when reasoning-only;
-- after image generation when the host allows visual inspection;
-- before and after Reality Repair;
-- during Reference Match transfer;
-- during provider adaptation whenever controls may distort the original intent.
+Purpose: verify both physical plausibility **and** the Professional Quality Floor before a still-image result is considered complete.
 
 Use with:
 
+- `references/professional-quality-floor.md`
+- `references/execution-priority.md`
 - `schemas/cinematic-shot-spec.schema.json`
 - `schemas/realism-diagnosis.schema.json`
-- `references/anti-ai-artifact-taxonomy.md`
-- all Phase 3 camera references;
-- all Phase 4 lighting/exposure/color references;
-- all Phase 5 physical-realism references.
+- physical-realism references in this package.
 
-## 1. Purpose
+## Core Question
 
-The Reality Gate asks one core question:
+The gate asks:
 
-> Could a real camera plausibly record this scene under the stated visual conditions, while still respecting the user's chosen stylization level?
+> Could an elite professional plausibly create this requested image in the stated medium and conditions, with coherent geometry, optics, lighting, exposure, color, materials and finishing?
 
-It is not a demand for documentary realism.
+A result can be physically possible yet still fail if it is merely generic, under-directed, sterile, or below the professional standard safely inferable from the request.
 
-Stylized, surreal, commercial, fashion, fantasy, and heightened images may pass when their internal physics and chosen visual language are coherent.
+The gate is not a demand for one house style. Mobile, candid, documentary, product, architecture, fashion, food, travel and cinematic work each have different professional standards.
 
-## 2. Gate Outcomes
-
-Use four outcomes:
+## Outcomes
 
 ```text
 PASS
@@ -44,394 +32,380 @@ BLOCKED_BY_CONSTRAINT
 ```
 
 ### PASS
-No material realism issue remains for the requested target.
+No material professional-quality, realism, lock, preservation or execution-integrity issue remains at the verification level available.
 
 ### PASS_WITH_NOTES
-Minor uncertainty or stylized departure exists but does not materially harm the result.
+Minor uncertainty/stylized departure exists but does not materially harm the requested result.
 
 ### REPAIR_REQUIRED
 One or more material failures should be corrected before claiming visual success.
 
 ### BLOCKED_BY_CONSTRAINT
-A hard lock, unavailable image, provider limitation, or contradictory requirement prevents a valid repair/verification path.
+A hard lock, missing target, provider limitation, contradictory requirement or unavailable capability prevents valid repair/verification.
 
-These map into the broader success vocabulary from `references/success-contract.md`.
-
-## 3. Verification Levels
-
-Reuse the existing verification levels:
+## Verification Levels
 
 ```text
 V0 reasoning only
 V1 execution confirmed
-V2 visual inspection completed
-V3 comparative / iterative acceptance
+V2 actual image inspected
+V3 inspected + corrected / comparative acceptance
 ```
 
-The gate must never imply V2 visual verification when no image was actually inspected.
+Never imply V2 when no returned image was actually inspected.
 
-## 4. Evaluation Order
+## Evaluation Order
 
-Always evaluate in this order because later visual systems depend on earlier geometry:
+Evaluate in dependency order:
 
 ```text
-1. intent / preservation / locks
-2. scene geometry and perspective
-3. composition / camera position
-4. focus / depth / motion
-5. lighting motivation and direction
-6. exposure / tone / color
-7. shadows / reflections / refractions
-8. anatomy / skin / hair / eyes
-9. fabric / materials / roughness
-10. contact / gravity / environmental interaction
-11. atmosphere / particles
-12. optical effects / texture
-13. stylization restraint
-14. provider-translation integrity
+1. literal user intent / requested medium / locks / preservation
+2. Professional Quality Floor / professional specialty
+3. scene geometry / perspective
+4. composition / camera position / timing
+5. focus / depth / motion
+6. lighting motivation / direction / falloff
+7. exposure / tonal response / highlight rolloff / shadows
+8. color / white balance / grade
+9. shadows / reflections / refractions
+10. anatomy / skin / hair / eyes
+11. fabric / materials / roughness
+12. contact / gravity / environment
+13. atmosphere / particles
+14. optical effects / base texture / visible grain
+15. stylization / anti-cliche restraint
+16. execution-priority / provider-translation integrity
 ```
 
-Do not try to solve a structural geometry failure by adding texture, grain, blur, or flare.
+Do not solve structural problems with grain, blur, flare, texture or color grading.
 
-## 5. Gate A - Intent and Preservation
-
-Check:
-
-- Does the result still satisfy the user's actual request?
-- Are explicit camera/lens/shot/lighting locks preserved?
-- Are identity, pose, product geometry, wardrobe, composition, text, or scene elements preserved where required?
-- Did AUTO fill only unspecified values?
-- Did provider translation silently substitute a different creative decision?
-
-Fail if:
-
-- a hard lock was silently changed;
-- Reality Repair drifted the scene unnecessarily;
-- a provider limitation was hidden.
-
-## 6. Gate B - Perspective and Geometry
+## Gate A - Intent, Medium, Locks and Preservation
 
 Check:
 
-- Does camera position plausibly explain near/far scale?
-- Is focal-length behavior consistent with framing and format?
+- Is the literal subject/action/environment still correct?
+- Is the requested or clearly implied photographic medium preserved?
+- Are explicit camera/lens/shot/light/style/cleanliness/provider locks intact?
+- Are identity, pose, product geometry, wardrobe, composition, text or scene elements preserved where required?
+- Did AUTO fill only genuinely unspecified fields?
+
+Fail if an iPhone/selfie became generic cinema-camera imagery, a candid became staged fashion, architecture lost geometry discipline, or a hard lock was silently changed.
+
+## Gate B - Professional Quality Floor
+
+Check:
+
+- Was the correct professional specialty inferred?
+- Would the image look intentionally made by a top practitioner of that specialty rather than merely generated literally?
+- Is composition/timing/viewer relationship professionally judged?
+- Are lighting, exposure, tonal response, color and finishing at a professional standard appropriate to the medium?
+- Does the image avoid sterile AI cleanliness where subtle organic texture would improve it?
+- Did the user have to supply words such as `professional`, `cinematic`, `Hollywood`, `ARRI`, `high quality`, `good lighting` or `good composition` to obtain that standard? If yes, the default failed.
+
+For narrative/cinematic/general photographic work without a stronger specialty signal, check for a feature-film-level finish: premium digital-cinema tonal behavior, smooth controlled highlights, rich readable shadows, professional color separation, realistic optical falloff, natural skin/material response and restrained organic texture.
+
+`ARRI-like` tonal behavior may be used as an observable target, not as a literal sensor claim.
+
+A physically coherent but generic/flat/under-finished image is `REPAIR_REQUIRED` under this gate.
+
+## Gate C - Geometry and Perspective
+
+Check:
+
+- Does camera position explain near/far scale?
+- Are field of view and format coherent with framing?
 - Are straight lines/vanishing relationships plausible for the projection?
-- Is wide-angle proximity being mistaken for fisheye?
-- Are body/object proportions coherent with viewpoint?
-- Does architecture retain consistent geometry?
+- Is rectilinear wide-angle proximity being mistaken for fisheye?
+- Are body/object/architecture proportions coherent with viewpoint?
 
-Common failure:
+Perspective is not focal length alone.
 
-```text
-close wide-angle subject proportions + telephoto-looking background relationship
-```
-
-without a coherent camera position.
-
-## 7. Gate C - Focus, Depth, and Motion
+## Gate D - Composition, Camera Relationship and Timing
 
 Check:
 
-- Is there a coherent focus plane?
-- Does depth transition continuously with distance?
-- Is shallow/deep focus justified by story and geometry?
-- Is motion blur distinguished from defocus?
-- Do blur direction and amount match subject/camera motion?
-- Are reflections/shadows compatible with motion state?
+- Is visual hierarchy intentional?
+- Does camera height/distance/angle match viewer relationship?
+- Is important environmental context preserved when it carries story or product/location identity?
+- For candid/documentary work, does the frame feel believably observed rather than staged?
+- For mobile/selfie, is framing/proximity plausible for the device/gesture?
+- For product/architecture/automotive/food, are specialist composition priorities respected?
 
-Fail if blur looks like segmentation, pasted bokeh, or random smear.
-
-## 8. Gate D - Lighting Motivation
+## Gate E - Focus, Depth and Motion
 
 Check:
 
-- What are the dominant and secondary sources?
-- Do their direction, apparent size, softness, color, and falloff make sense?
-- Does the face/product receive light that could plausibly exist in the scene?
-- Is any rim/edge light actually motivated?
-- Are practicals behaving locally rather than lighting the whole room magically?
-- Does atmosphere reveal beams only when scattering supports it?
+- coherent focus plane;
+- continuous depth transition;
+- depth strategy supports information hierarchy;
+- motion blur distinguished from defocus;
+- blur direction/amount matches camera/subject motion;
+- no segmentation-like bokeh or pasted blur.
 
-Fail if attractive highlights cannot be traced to a source.
+Do not require shallow depth merely because the image is cinematic.
 
-## 9. Gate E - Exposure and Tone
-
-Check:
-
-- Is there a clear exposure hierarchy?
-- Are important highlights preserved where needed?
-- Are some highlights allowed to clip naturally?
-- Are blacks intentionally dense rather than accidentally crushed?
-- Is the frame avoiding fake HDR/local-tone-mapping halos?
-- Are subject and environment exposures mutually plausible?
-
-Hard rule:
-
-```text
-realistic dynamic range != every region perfectly visible
-```
-
-## 10. Gate F - Color
+## Gate F - Lighting Motivation
 
 Check:
 
-- Is white balance coherent with dominant/mixed sources?
-- Do skin/product colors remain plausible under those sources?
-- Are bright saturated colors retaining hue/texture rather than clipping into digital patches?
-- Are shadow colors consistent with ambient illumination?
-- Does the grade preserve the original light logic?
-- Is teal/orange or other split-toning actually intentional?
+- dominant/secondary sources are identifiable;
+- source direction, size, softness, color and falloff make sense;
+- faces/products/materials receive light that could plausibly exist;
+- practicals behave locally;
+- rim/edge light is motivated if present;
+- atmosphere reveals beams only when light + scattering justify them.
 
-Fail if the grade paints over the physics of the light.
+Attractive highlights without a plausible source fail.
 
-## 11. Gate G - Shadows, Reflections, and Refractions
+## Gate G - Exposure and Tonal Response
 
 Check:
 
-- Do cast shadows point consistently from plausible sources?
-- Does softness match apparent source size and geometry?
-- Are contact shadows tied to real contact?
-- Do reflections agree with camera viewpoint, curvature, roughness, and environment?
-- Do eye catchlights correspond to sources?
-- Are mirrors/glass geometrically coherent?
-- Do wet surfaces reflect the correct lights and plane?
+- clear exposure hierarchy;
+- important highlights protected where appropriate;
+- natural clipping allowed where plausible;
+- shadows intentionally dense/open rather than accidentally crushed/lifted;
+- subject/environment exposure relationship is plausible;
+- no fake HDR/local-tone halos;
+- professional highlight rolloff appropriate to the medium.
 
-## 12. Gate H - Anatomy, Skin, Hair, and Eyes
+For premium cinematic work, harsh digital clipping or flat equalized visibility is normally a defect unless explicitly desired.
 
-Check anatomy first, then surface realism.
+## Gate H - Color and Grade
+
+Check:
+
+- white balance agrees with sources;
+- skin/product colors remain plausible;
+- saturated highlights retain believable hue/texture;
+- shadow color agrees with ambient illumination;
+- grade preserves source logic;
+- color separation is professional rather than muddy or oversaturated;
+- stylization is deliberate, not a generic preset.
+
+Teal/orange is never a default requirement.
+
+## Gate I - Shadows, Reflections and Refractions
+
+Check:
+
+- cast-shadow direction/softness agrees with sources;
+- contact shadows match real contact;
+- reflections agree with viewpoint, curvature, roughness and environment;
+- eye catchlights correspond to sources;
+- mirrors/glass/wet surfaces are geometrically coherent.
+
+## Gate J - Anatomy, Skin, Hair and Eyes
+
+Anatomy first, surface detail second.
 
 ### Anatomy
+
 - hands/fingers/joints plausible;
-- limbs connect correctly;
-- facial/ear/teeth geometry coherent;
-- accessories do not intersect anatomy.
+- limbs/facial features connect coherently;
+- accessories do not intersect anatomy impossibly.
 
 ### Skin
-- texture varies by region and age/context;
-- pores are not uniform overlays;
-- speculars follow the light;
-- color has subtle local variation;
-- makeup remains distinct from skin material;
-- no plastic/wax sheen unless intentionally cosmetic.
+
+- region-specific texture and subtle tonal variation;
+- source-consistent specular response;
+- age/context/makeup preserved;
+- no wax/plastic smoothing;
+- no universal pore overlay.
 
 ### Hair
-- mass and silhouette are primary;
-- strand detail is secondary and scale-dependent;
-- gravity/wind are coherent;
-- no floating spaghetti strands or fused intersections.
+
+- mass/silhouette/root direction/gravity first;
+- strand/flyaway detail scale-appropriate;
+- no floating/fused strands.
 
 ### Eyes
-- shared gaze direction;
-- plausible sclera/iris/pupil balance;
-- catchlights tied to sources;
-- corneal reflection curvature plausible;
-- eyes are not sharper/brighter than the capture logic supports.
 
-## 13. Gate I - Fabric and Materials
+- coherent gaze/alignment;
+- plausible iris/pupil/sclera;
+- source-consistent catchlights;
+- no decorative glass-marble look.
 
-Check:
-
-- folds have causes;
-- cloth weight/stiffness matches deformation;
-- weave/detail respects scale and focus;
-- metal reflects environment rather than reading as gray plastic;
-- glass combines reflection/transmission/refraction plausibly;
-- wood/stone grain follows object geometry;
-- roughness affects highlight/reflection structure;
-- wear/dirt is contextually placed;
-- pristine commercial products remain allowed to be pristine.
-
-Hard rule:
-
-```text
-more microtexture is not automatically more realistic
-```
-
-## 14. Gate J - Contact, Gravity, and Environment
+## Gate K - Fabric and Materials
 
 Check:
 
-- feet/tyres/objects sit on their support plane;
-- hands actually contact/grip objects;
+- folds have tension/compression/gravity causes;
+- fabric weight/stiffness matches deformation;
+- weave/detail respects distance/focus;
+- metal/glass/wood/stone/leather/plastic/rubber respond according to material category;
+- roughness shapes highlights/reflections;
+- product surfaces may remain pristine when intended.
+
+More microtexture is not automatically more realistic.
+
+## Gate L - Contact, Gravity and Environment
+
+Check:
+
+- bodies/objects/vehicles sit on support planes;
+- grip/contact is real;
 - soft surfaces compress under load;
-- clothing responds to posture/contact;
-- tracks/footprints connect with motion;
-- wind affects relevant elements coherently but material-dependently;
-- moisture/dust/sand/snow follow environmental cause and gravity;
-- object placement is stable.
+- clothing responds to posture/contact/wind;
+- footprints/tracks/moisture/sand/snow/dust follow cause and gravity;
+- nothing floats without intent.
 
-Fail if subjects look composited into the scene.
-
-## 15. Gate K - Atmosphere and Particles
+## Gate M - Atmosphere and Particles
 
 Check:
 
-- haze/fog density changes with depth;
-- visible beams correspond to light + scattering;
-- rain/snow/dust follow gravity/wind/motion;
-- particle scale and contrast change with distance;
-- atmosphere does not erase all depth structure.
+- haze/fog varies with depth;
+- beams require source + scattering;
+- rain/snow/dust follow scale, gravity, wind and depth;
+- atmosphere does not flatten all scene structure.
 
-## 16. Gate L - Optical Effects and Texture
+Atmosphere is optional, not a cinema token.
 
-Check each independently:
+## Gate N - Optical Effects and Texture
+
+Evaluate separately:
 
 - focus falloff;
-- edge behavior;
-- chromatic aberration;
-- geometric distortion;
-- flare;
-- veiling glare;
+- lens edge behavior;
+- distortion;
+- flare / veiling glare;
 - bloom;
 - halation;
-- grain/noise;
-- analog/compression artifacts.
+- subtle base texture;
+- visible stock-specific grain / digital noise;
+- compression/analog artifacts.
 
-Ask:
+### Subtle base texture
 
-> Is this effect caused by the chosen capture/lens/reference, or was it added because it sounds cinematic?
+For most photographic/cinematic output, confirm a fine organic non-uniform texture is present or represented in the prompt/spec unless:
 
-Remove unsupported effects.
+- the user explicitly requests no grain/pristine/noise-free/clinical output;
+- the professional specialty materially benefits from near-perfect cleanliness;
+- visible texture would damage required product/beauty/technical detail.
 
-## 17. Gate M - Stylization Restraint
+### Visible grain/effects
 
-Explicitly test against recurring AI/cinematic clichés:
+Strong/coarse grain, halation, bloom, flare, scratches, haze and other overt effects still need a medium/story/optical reason.
+
+Do not confuse the normal subtle professional base texture with heavy `film-look` effect stacking.
+
+## Gate O - Stylization / Anti-Cliche Restraint
+
+Test against automatic clichés:
 
 ```text
-mandatory shallow DOF
-mandatory teal/orange
-mandatory haze
-mandatory rim light
-mandatory anamorphic streak
-mandatory heavy grain
-mandatory halation
-mandatory bloom
-mandatory crushed blacks
-mandatory desaturation
-mandatory wet pavement
-mandatory perfect symmetry
-mandatory beauty retouching
+maximum shallow DOF
+teal/orange preset
+haze/fog
+rim light
+anamorphic blue streak
+strong/coarse grain
+heavy halation
+heavy bloom
+crushed blacks
+forced desaturation
+wet pavement everywhere
+perfect symmetry
+beauty-filter retouching
 ```
 
-Any of these may be valid when justified. None is a default requirement.
+Any may be valid when justified. None defines professional cinematic quality by itself.
 
-## 18. Gate N - Provider Translation
+Anti-cliche restraint must not remove professional composition, premium tonal response, color separation, natural material response, restrained grade or subtle organic texture.
+
+## Gate P - Execution Priority and Provider Integrity
 
 Check:
 
-- Did the adapter preserve the universal shot intent?
-- Did unsupported controls get translated semantically instead of fabricated?
-- Did a provider preset introduce unwanted artifacts/effects?
-- Did the model's output drift identity/product/composition locks?
-- Are provider-specific negative/avoidance mechanisms used only where supported?
+- Was execution path selected before provider adapter?
+- If no provider was explicitly locked, was an adequate native/local image capability used first?
+- Was an external MCP/plugin/connector chosen only because native lacked a material required capability?
+- Were Magnific/Higgsfield kept inactive for ordinary requests?
+- Were they used only for explicit target/export or controlled benchmark cases?
+- Did adapter translation preserve the Professional Quality Floor and all locks?
+- Were unsupported controls translated semantically rather than fabricated?
+- Did provider presets introduce unwanted effects or redesign the shot?
 
-## 19. Severity and Repair Priority
+Using an external provider because it appears more cinematic or specialized is a gate failure.
 
-Prioritize failures by downstream impact:
+## Severity / Repair Priority
 
-### P0 - structural blockers
+### P0 - contract/structural blockers
+
+- missing/incorrect subject;
 - identity/product corruption;
-- major anatomy;
-- impossible geometry;
-- broken perspective;
-- missing required subject/object;
-- hard-lock violation.
+- hard-lock/provider-lock violation;
+- requested medium erased;
+- impossible anatomy/geometry/perspective;
+- ordinary request wrongly routed to external competitor.
 
-### P1 - physical coherence failures
-- impossible lighting;
+### P1 - professional/physical coherence failures
+
+- Professional Quality Floor materially absent;
+- impossible/unmotivated lighting;
 - contradictory shadows/reflections;
-- floating/contact;
-- material category failure;
-- severe depth/motion inconsistency.
+- floating/contact failures;
+- severe material/depth/motion inconsistency;
+- harsh/flat tonal response incompatible with requested premium cinematic work.
 
-### P2 - realism surface failures
-- skin/hair/eye artificiality;
-- fabric roughness/folds;
-- over-HDR;
-- oversharpening;
-- fake bokeh.
+### P2 - realism/finish failures
 
-### P3 - finish/cliche failures
+- plastic skin/hair/eyes;
+- fabric/material roughness/fold errors;
+- over-HDR/oversharpening/fake bokeh;
+- weak color separation;
+- sterile AI-clean texture where subtle organic finishing is appropriate.
+
+### P3 - over-effect/cliche failures
+
 - excessive grain;
-- unnecessary bloom/halation/flare;
-- overdone grade;
+- unnecessary bloom/halation/flare/haze;
+- generic preset grade;
 - decorative imperfections.
 
-Repair P0 before P1, P1 before P2, P2 before P3 unless preservation constraints force a different order.
+Repair higher-impact failures first.
 
-## 20. Minimal-Change Repair Policy
-
-For Reality Repair:
+## Minimal-Change Repair
 
 ```text
 preserve what works
-identify the highest-impact failure
-change the smallest region/system that can solve it
-re-check dependent systems
-repeat only as necessary
+-> identify highest-impact failed gate
+-> change smallest region/system that can solve it
+-> re-check dependencies
+-> repeat only as necessary
 ```
 
-Do not regenerate the whole image when a targeted repair can solve the problem.
+If native/local execution created the first result, prefer focused native/local correction where practical before external fallback.
 
-## 21. Structured Gate Record
+## Structured Gate Record
 
-When an internal structured result is useful, record:
+When useful internally:
 
 ```text
 reality_gate:
   status: PASS | PASS_WITH_NOTES | REPAIR_REQUIRED | BLOCKED_BY_CONSTRAINT
   verification_level: V0 | V1 | V2 | V3
-  checks:
-    - domain
-    - result
-    - severity
-    - evidence
-    - repair_needed
-  preserved_locks_verified: true | false
+  professional_quality_floor: pass | fail | unknown
+  medium_fidelity: pass | fail | unknown
+  physical_coherence: pass | fail | unknown
+  execution_priority: pass | fail | not_applicable
+  preserved_locks_verified: true | false | unknown
   provider_translation_verified: true | false | unknown
   unresolved_issues: []
 ```
 
-This structure may be serialized into `cinematic-shot-spec.schema.json` / `realism-diagnosis.schema.json` carriers without making the user read the full internal checklist.
+Do not expose the full internal checklist to normal users unless requested.
 
-## 22. Beginner Behavior
+## Final Pass Criteria
 
-Do not expose a giant checklist to normal users.
+A still-image result passes when, at the strongest verification level available:
 
-Run the Reality Gate silently and return:
-
-- the corrected result;
-- a concise note only if a material limitation/conflict remains.
-
-## 23. Expert / Explain Behavior
-
-When the user asks why a shot looks fake or requests a technical breakdown, expose the relevant failed gates and evidence.
-
-Do not dump unrelated gate sections.
-
-## 24. Final Pass Criteria
-
-A still-image result may be considered Reality-Gate-passed when:
-
-- explicit locks/preservation are intact;
-- no material P0/P1 physical contradiction remains;
-- surface realism matches the requested stylization level;
-- lighting, exposure, materials, contact, shadows and reflections belong to one coherent scene;
-- optional cinematic effects are justified rather than automatic;
-- provider translation has not silently changed the shot.
-
-## 25. Hard Reality Gate Rules
-
-```text
-physical coherence before decorative finish
-locks before AUTO
-preservation before repair drift
-geometry before texture
-light/material/contact must agree
-reflection/shadow logic shares one scene
-imperfection is optional
-stylization may bend realism but must remain internally coherent
-no visual-success claim without actual visual inspection when V2 is required
-```
-
-Acceptance: PASSED
+- literal request/medium and explicit locks are intact;
+- Professional Quality Floor is met for the correct specialty;
+- no material geometry/light/exposure/material/contact contradiction remains;
+- skin/material/detail treatment matches requested realism;
+- professional finishing is present without unjustified cliché stacking;
+- subtle texture vs clean-output choice is appropriate;
+- execution-priority policy was obeyed;
+- provider translation did not silently weaken or redesign the image;
+- no visual-quality claim exceeds actual inspection evidence.

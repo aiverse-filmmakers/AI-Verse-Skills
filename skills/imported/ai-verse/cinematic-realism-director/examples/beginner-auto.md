@@ -14,38 +14,62 @@ woman waiting for a taxi in London at night
 workflow = AUTO DIRECT
 technical locks = none
 preservation locks = none
+provider lock = none
 question required = no
+professional specialty = feature-film cinematography
+execution = native/local image model first when available
 ```
+
+The user does **not** need to add `cinematic`, `Hollywood`, `ARRI`, `professional`, or `high quality`.
 
 ## Internal Shot Direction
 
-The skill may infer a coherent shot such as:
+AUTO may infer a professional shot such as:
 
-- lonely-but-natural late-night street moment rather than a posed fashion portrait;
+- natural narrative moment rather than a posed fashion portrait;
 - medium-wide environmental framing so London context remains readable;
-- camera near eye/chest height with a slight observational offset rather than perfect frontal symmetry;
-- moderate wide-normal rectilinear perspective, not fisheye;
-- enough depth to retain wet street, taxi lights, architecture, and atmospheric context;
-- practical street/shop/taxi sources as the lighting motivation;
-- mixed warm practicals and cooler ambient night light with believable local color contamination;
-- controlled highlights on wet pavement without fake HDR recovery;
-- natural skin and fabric response, coherent reflections, contact shadows, and rain/wet-surface behavior;
-- grain, bloom, flare, haze, and shallow depth only if the resolved shot actually benefits from them.
+- observational eye/chest-height camera relationship with slight off-axis asymmetry;
+- rectilinear wide-normal perspective, not fisheye;
+- enough depth to retain street architecture, taxi lights, and contextual layers;
+- practical street/storefront/vehicle sources as the lighting motivation;
+- premium digital-cinema tonal behavior with smooth highlight rolloff and rich readable shadows;
+- ARRI-like highlight-to-mid transition and natural skin separation as observable tonal targets, without claiming literal ARRI capture;
+- controlled mixed-source color with believable warm practicals and cooler ambient night spill;
+- wet pavement reflections only where physically motivated;
+- realistic skin, coat fabric, contact shadows, glass/metal/wet-surface response;
+- subtle organic filmic texture as part of the normal professional finish;
+- no automatic teal-orange grade, decorative rim light, haze, anamorphic streak, maximum blur, or strong halation.
 
 ## Example Final Generic Prompt
 
 ```text
-A woman waits alone for a taxi on a London street at night, caught in a natural unposed moment. Medium-wide environmental framing from an observational eye-to-chest-height camera position, slightly off-axis, with a rectilinear wide-normal field of view that keeps the street architecture and approaching traffic readable without fisheye curvature. The woman is the visual priority but the city remains part of the story.
+A woman waits for a taxi on a London street at night, captured as a natural narrative moment rather than a posed portrait. Feature-film-quality visual hierarchy: she is the emotional priority while the London street, curb, storefronts and moving traffic remain readable context. Medium-wide environmental framing from an observational eye-to-chest-height position, slightly off-axis, with a rectilinear wide-normal perspective and believable camera distance.
 
-Lighting is motivated by real street and storefront practicals, vehicle headlights and cooler ambient night sky/city spill. Warm practical light shapes one side of her face and coat while cooler ambient fill remains in the shadows. Wet pavement carries viewpoint-consistent reflections from signs and headlights. Preserve a realistic exposure hierarchy: bright practicals may approach or exceed clipping while the face remains readable; do not flatten the whole scene into HDR.
+Lighting is motivated by real street lamps, storefront practicals and passing vehicle lights. Shape the face naturally from the available sources, with restrained ambient fill and believable source falloff. Premium digital-cinema tonal response: smooth highlight rolloff, gentle highlight-to-mid transition, rich readable shadows, no fake HDR flattening. Natural skin tone separation within mixed warm practical and cooler ambient night color.
 
-Natural skin texture and source-consistent specular response, believable coat fabric weight and moisture, grounded feet/contact shadows, coherent rain and wet-surface behavior, subtle atmospheric depth. Clean cinematic color separation with restrained saturation and dense night blacks. No automatic teal-orange grade, decorative rim light, fisheye distortion, excessive bokeh, or mandatory grain/flare.
+Preserve realistic optical depth and focus falloff without excessive bokeh. Wet pavement and glass/metal reflections must remain viewpoint-consistent. Natural skin texture, physically believable coat fabric and moisture response, grounded feet/contact shadows, coherent environmental atmosphere. Apply a high-end restrained grade and subtle fine organic filmic texture to avoid sterile AI cleanliness while keeping the image contemporary and photographic.
+
+No automatic teal-orange look, anamorphic blue streaks, decorative rim light, cinematic fog, Dutch angle, heavy bloom, strong halation or arbitrary motion blur.
 ```
+
+## Execution
+
+If the host has both a native/local image generator and optional external MCP/provider tools:
+
+```text
+native/local image model first
+```
+
+Do not automatically route to Magnific Cinematic or Higgsfield Soul Cinema.
+
+Those providers are used only if the user explicitly requests them or a controlled benchmark names them.
 
 ## Why This Passes
 
-- the user was not asked to choose a camera;
-- AUTO filled only missing decisions;
-- story/context drove framing and light;
-- physical realism was specified through causes and relationships rather than quality adjectives;
-- no cinematic cliché was added by default.
+- zero technical intake questions;
+- professional quality was automatic;
+- feature-film standard was inferred from the general narrative photographic request;
+- premium tonal/color/texture finish was added without cliché stacking;
+- subtle organic texture was treated as finishing, not as a heavy film effect;
+- provider selection remained native-first;
+- story/context drove camera, light, exposure and color.

@@ -1,160 +1,183 @@
 {
-  "schema_version": "1.0.0",
+  "schema_version": "1.1.0",
   "skill": "cinematic-realism-director",
-  "task": "9.2-beginner-auto-evals",
-  "purpose": "Verify that minimal beginner prompts are expanded into coherent cinematic still-image decisions without unnecessary questions, arbitrary prestige gear, or generic cinematic cliches.",
+  "purpose": "Verify that minimal beginner prompts are expanded into specialist professional-quality images without unnecessary questions, medium drift, arbitrary prestige tokens, or cinematic cliche stacking.",
   "scoring": {
-    "pass_condition": "For each case, the result must preserve the literal concept, infer the missing shot design coherently, avoid unnecessary intake questions, run a V0 Reality Gate, and satisfy all case invariants without requiring one exact camera/lens solution.",
+    "pass_condition": "For each case, preserve literal content/medium, infer the correct professional specialty, apply the Professional Quality Floor, resolve shot design coherently, ask no unnecessary technical questions, run V0 Reality Gate, and satisfy all case invariants without requiring one exact camera/lens solution.",
     "critical_failures": [
-      "asking a beginner to choose camera, lens, aperture, stock, lighting ratio, or grade when the prompt is already sufficient",
-      "changing the literal subject/action/environment instead of completing the shot",
-      "starting from prestige camera/lens tokens rather than story and visual hierarchy",
-      "adding shallow depth, anamorphic flare, grain, halation, haze, rim light, teal-orange, or motion blur solely because the request is cinematic",
+      "asking a beginner to choose camera/lens/aperture/stock/light ratio/grade/provider when the prompt is sufficient",
+      "changing literal subject/action/environment or requested medium",
+      "returning merely ordinary competent photography because the user did not ask for professional/cinematic quality",
+      "starting from prestige camera/lens names instead of intent and professional specialty",
+      "forcing cinema-camera language onto explicit phone/selfie/mobile capture",
+      "adding shallow depth, anamorphic flare, heavy grain, halation, haze, rim light, teal-orange or motion blur solely as cinematic decoration",
+      "removing all subtle professional texture by default and leaving photographic work sterile/AI-clean",
       "using focal length as a substitute for camera position",
-      "producing physically incoherent light, contact, reflection, shadow, material, or depth behavior",
-      "claiming image execution or V2 visual verification when only reasoning/prompt output occurred"
+      "producing physically incoherent light/contact/reflection/shadow/material/depth behavior",
+      "claiming V2 visual verification from prompt/reasoning only"
     ]
   },
   "global_invariants": {
     "must": [
-      "extract subject, action, environment and purpose/mood where implied",
+      "extract subject/action/environment/requested or implied medium",
+      "infer the appropriate professional specialty",
+      "apply the Professional Quality Floor without requiring quality keywords",
       "choose viewer relationship and visual hierarchy",
-      "design composition and camera position before focal length",
-      "choose capture/optics/depth only after shot geometry is coherent",
-      "use motivated lighting rather than generic cinematic-lighting language",
-      "define exposure/color/material realism appropriate to the scene",
+      "design composition/camera position before focal length",
+      "use motivated lighting and professional exposure/tonal response",
+      "use professional color separation and material/skin realism",
+      "use subtle organic filmic texture for most photographic output unless the medium/user calls for clean/no-grain output",
       "run Reality Gate V0 before provider adaptation",
-      "adapt to provider only after the universal shot is resolved"
+      "choose execution path before adapter"
     ],
     "must_not": [
       "require named hardware",
       "invent user locks",
-      "default every shot to shallow depth of field",
-      "default every shot to grain or film emulation",
-      "default every shot to haze, rim light, flare, halation or teal-orange",
-      "use empty quality adjectives as the main realism mechanism"
+      "default every shot to shallow depth",
+      "default every shot to obvious/heavy grain or film-emulation artifacts",
+      "default every shot to haze/rim/flare/halation/teal-orange",
+      "use empty quality adjectives instead of concrete professional decisions",
+      "erase requested medium"
     ]
   },
   "cases": [
+    {
+      "id": "auto-mobile-001",
+      "category": "mobile_selfie",
+      "prompt": "iPhone mirror selfie in a hotel room.",
+      "expected_questions": 0,
+      "expected_specialty": "elite mobile photographer/editor",
+      "must_preserve": ["iPhone/mobile capture", "mirror selfie", "hotel room"],
+      "must_infer": ["believable phone distance/perspective", "professional mobile framing", "available-light optimization", "exposure/white balance", "skin realism", "professional mobile edit"],
+      "must_not_default": ["Alexa camera framing", "cinema-lens bokeh", "beauty-filter plasticity", "fake HDR", "obvious 35mm grain"]
+    },
+    {
+      "id": "auto-candid-001",
+      "category": "candid_documentary",
+      "prompt": "Candid photo of two friends laughing outside a restaurant.",
+      "expected_questions": 0,
+      "expected_specialty": "elite candid/editorial photographer",
+      "must_preserve": ["candid moment", "two friends laughing", "restaurant context"],
+      "must_infer": ["decisive moment", "non-performative gesture", "layered composition", "believable available light", "professional exposure/color", "subtle organic texture"],
+      "must_not_default": ["fashion pose", "studio beauty light", "staged symmetry"]
+    },
     {
       "id": "auto-portrait-001",
       "category": "portrait",
       "prompt": "A tired nurse sitting alone after a night shift.",
       "expected_questions": 0,
+      "expected_specialty": "top editorial portrait photographer",
       "must_preserve": ["tired nurse", "sitting alone", "after a night shift"],
-      "must_infer": ["viewer relationship", "shot size", "camera position", "focus/depth", "motivated light", "exposure hierarchy", "skin realism"],
-      "must_not_default": ["beauty lighting", "f/1.2", "glamour retouching", "rim light", "film grain"],
-      "reason": "Portrait direction should support fatigue and intimacy without beautifying or forcing shallow depth."
+      "must_infer": ["viewer relationship", "shot size", "camera position", "motivated light", "exposure hierarchy", "skin realism", "professional finishing"],
+      "must_not_default": ["glamour beauty light", "f/1.2", "aggressive retouch", "dramatic rim light"]
     },
     {
       "id": "auto-narrative-001",
       "category": "narrative_drama",
       "prompt": "A teenage boy waits outside a closed police station at 2am.",
       "expected_questions": 0,
-      "must_preserve": ["teenage boy", "outside a closed police station", "2am"],
-      "must_infer": ["story priority", "environmental context", "viewer distance", "night light motivation", "exposure hierarchy"],
-      "must_not_default": ["neon cyberpunk", "Dutch angle", "blue-orange split", "heavy haze"],
-      "reason": "Narrative tension should come from composition, access, darkness and environment rather than genre cliches."
+      "expected_specialty": "feature-film cinematography",
+      "must_preserve": ["teenage boy", "closed police station", "2am"],
+      "must_infer": ["story priority", "viewer distance", "night light motivation", "premium tonal response", "professional color separation", "subtle filmic texture"],
+      "must_not_default": ["neon cyberpunk", "Dutch angle", "blue-orange split", "heavy haze"]
     },
     {
       "id": "auto-documentary-001",
       "category": "documentary",
       "prompt": "A fisherman repairing his net on the dock before sunrise.",
       "expected_questions": 0,
-      "must_preserve": ["fisherman", "repairing his net", "dock", "before sunrise"],
-      "must_infer": ["observational viewer relationship", "work-hands priority", "available-light logic", "environmental context", "material realism"],
-      "must_not_default": ["studio key", "beauty dish", "hero pose", "excessive bokeh"],
-      "reason": "Documentary honesty should preserve plausible access, labor detail and available-light character."
+      "expected_specialty": "elite documentary/editorial photographer",
+      "must_preserve": ["fisherman", "repairing net", "dock", "before sunrise"],
+      "must_infer": ["observational relationship", "hands/work priority", "available-light logic", "environment context", "material realism", "subtle organic texture"],
+      "must_not_default": ["studio key", "beauty dish", "hero pose", "excessive bokeh"]
     },
     {
       "id": "auto-travel-001",
       "category": "travel",
       "prompt": "A quiet breakfast terrace overlooking the sea in Greece.",
       "expected_questions": 0,
+      "expected_specialty": "top travel/hospitality photographer",
       "must_preserve": ["breakfast terrace", "sea", "Greece", "quiet atmosphere"],
-      "must_infer": ["environment-first hierarchy", "depth strategy", "daylight motivation", "food/material realism", "travel context"],
-      "must_not_default": ["orange-teal grade", "extreme saturation", "sun flare", "empty luxury cliches"],
-      "reason": "Travel imagery should keep location readable rather than sacrificing it to generic shallow-focus prettiness."
+      "must_infer": ["environment-first hierarchy", "professional daylight", "food/material realism", "destination identity", "premium color/tonal finish"],
+      "must_not_default": ["orange-teal grade", "extreme saturation", "decorative sun flare", "generic luxury cliches"]
     },
     {
       "id": "auto-product-001",
       "category": "product",
       "prompt": "A premium black wristwatch on a stone surface for an ad.",
       "expected_questions": 0,
+      "expected_specialty": "world-class product photographer",
       "must_preserve": ["black wristwatch", "stone surface", "advertising purpose"],
-      "must_infer": ["product hierarchy", "camera geometry", "surface/reflection control", "motivated studio lighting", "material roughness", "brand-neutral clean grade"],
-      "must_not_default": ["black-and-gold luxury trope", "floating product", "fake reflections", "unmotivated rim light"],
-      "reason": "Commercial product realism depends on geometry, material response and reflection control, not luxury adjectives."
+      "must_infer": ["product hierarchy", "camera geometry", "surface/reflection control", "specialist lighting", "material roughness", "brand-appropriate finish"],
+      "must_not_default": ["black-and-gold trope", "floating product", "fake reflections", "unmotivated rim light", "visible grain if it damages product clarity"]
     },
     {
       "id": "auto-automotive-001",
       "category": "automotive",
       "prompt": "A silver sports car parked outside a modern hotel just after rain.",
       "expected_questions": 0,
+      "expected_specialty": "specialist automotive campaign photographer",
       "must_preserve": ["silver sports car", "modern hotel", "just after rain", "parked"],
-      "must_infer": ["vehicle geometry priority", "camera height/distance", "wet-surface reflection logic", "sky/building light motivation", "contact with ground"],
-      "must_not_default": ["car floating above road", "impossible mirror reflections", "neon night conversion", "speed blur on parked car"],
-      "reason": "Automotive realism requires body-panel, ground and wet-reflection coherence."
+      "must_infer": ["vehicle geometry priority", "specialist camera height/distance", "wet reflection logic", "paint/surface control", "ground contact", "premium campaign finish"],
+      "must_not_default": ["floating car", "impossible reflections", "neon conversion", "speed blur on parked car"]
     },
     {
       "id": "auto-food-001",
       "category": "food",
       "prompt": "Fresh pasta being served at a small family restaurant.",
       "expected_questions": 0,
+      "expected_specialty": "specialist food photographer",
       "must_preserve": ["fresh pasta", "being served", "small family restaurant"],
-      "must_infer": ["food/action hierarchy", "camera proximity", "steam/specular realism if justified", "restaurant practical/daylight motivation", "natural color"],
-      "must_not_default": ["plastic glossy food", "floating garnish", "excessive steam", "extreme saturation"],
-      "reason": "Food should look edible and physically present, with plausible moisture, texture and serving action."
+      "must_infer": ["food/action hierarchy", "camera proximity", "edible material cues", "restaurant light motivation", "natural professional color"],
+      "must_not_default": ["plastic glossy food", "floating garnish", "excessive steam", "extreme saturation"]
     },
     {
       "id": "auto-architecture-001",
       "category": "architecture",
       "prompt": "A minimalist concrete house in a pine forest on an overcast day.",
       "expected_questions": 0,
+      "expected_specialty": "elite architectural photographer",
       "must_preserve": ["minimalist concrete house", "pine forest", "overcast day"],
-      "must_infer": ["architecture hierarchy", "camera height", "rectilinear geometry", "vertical treatment", "overcast light", "material roughness"],
-      "must_not_default": ["fisheye", "tilted verticals without intent", "golden-hour conversion", "shallow-focus building"],
-      "reason": "Architecture requires credible projection, verticals, scale and material-light response."
+      "must_infer": ["architecture hierarchy", "camera height", "rectilinear geometry", "vertical treatment", "overcast tonal control", "material roughness"],
+      "must_not_default": ["fisheye", "unintentional tilted verticals", "golden-hour conversion", "shallow-focus building"]
     },
     {
       "id": "auto-fashion-001",
       "category": "fashion",
       "prompt": "A model in a red wool coat walking through a windy city street.",
       "expected_questions": 0,
+      "expected_specialty": "top editorial/fashion photographer",
       "must_preserve": ["red wool coat", "walking", "windy city street"],
-      "must_infer": ["garment hierarchy", "body/coat blocking", "fabric weight and wind response", "street light motivation", "motion signature only if justified"],
-      "must_not_default": ["impossible floating fabric", "beauty retouching that erases skin", "random motion blur", "studio background replacement"],
-      "reason": "Fashion direction must preserve garment material physics and environmental interaction."
+      "must_infer": ["garment hierarchy", "fabric physics", "editorial composition", "street light motivation", "professional skin/color finish"],
+      "must_not_default": ["floating fabric", "plastic beauty retouch", "random motion blur", "studio replacement"]
     },
     {
       "id": "auto-night-001",
       "category": "night_exterior",
       "prompt": "A woman waiting for a taxi in London at night.",
       "expected_questions": 0,
-      "must_preserve": ["woman", "waiting for a taxi", "London", "night"],
-      "must_infer": ["story/viewer relationship", "street/practical light motivation", "location readability", "night exposure hierarchy", "wetness only if stated or justified"],
-      "must_not_default": ["cyberpunk neon", "blue moonlight everywhere", "orange-teal grade", "volumetric haze", "anamorphic flare"],
-      "reason": "The canonical beginner case must become cinematic through coherent decisions rather than night-scene cliches."
+      "expected_specialty": "feature-film cinematography",
+      "must_preserve": ["woman", "waiting for taxi", "London", "night"],
+      "must_infer": ["narrative hierarchy", "street/practical motivation", "location readability", "premium highlight rolloff", "rich readable shadows", "professional color separation", "subtle filmic texture"],
+      "must_not_default": ["cyberpunk neon", "blue moonlight everywhere", "orange-teal grade", "volumetric haze", "anamorphic flare"]
     },
     {
       "id": "auto-daylight-001",
       "category": "daylight_exterior",
       "prompt": "Two friends eating ice cream on concrete steps at noon.",
       "expected_questions": 0,
-      "must_preserve": ["two friends", "eating ice cream", "concrete steps", "noon"],
-      "must_infer": ["two-person hierarchy", "hard-sun behavior", "fill/bounce from environment", "skin highlight control", "contact shadows"],
-      "must_not_default": ["golden hour", "soft studio light", "backlit sunset", "fake HDR recovery"],
-      "reason": "AUTO must respect harsh midday reality rather than changing time of day to an easier cinematic look."
+      "must_preserve": ["two friends", "ice cream", "concrete steps", "noon"],
+      "must_infer": ["professional candid/lifestyle hierarchy", "hard-sun behavior", "environment bounce", "skin highlight control", "contact shadows", "professional finish"],
+      "must_not_default": ["golden hour", "soft studio light", "backlit sunset", "fake HDR"]
     },
     {
       "id": "auto-interior-001",
       "category": "interior",
       "prompt": "An elderly man reading the newspaper in a small kitchen on a grey morning.",
       "expected_questions": 0,
-      "must_preserve": ["elderly man", "reading newspaper", "small kitchen", "grey morning"],
-      "must_infer": ["window/practical motivation", "paper/skin material behavior", "interior depth", "environment context", "natural exposure"],
-      "must_not_default": ["dramatic rim light", "orange practicals plus blue window as mandatory split", "deep crushed blacks", "cinematic haze"],
-      "reason": "Interior cinematography should derive from plausible window/practical sources and story context."
+      "must_preserve": ["elderly man", "newspaper", "small kitchen", "grey morning"],
+      "must_infer": ["professional observational framing", "window/practical motivation", "paper/skin response", "interior depth", "premium restrained tonal/color finish", "subtle texture"],
+      "must_not_default": ["dramatic rim light", "mandatory orange-blue split", "crushed blacks", "cinematic haze"]
     }
   ]
 }

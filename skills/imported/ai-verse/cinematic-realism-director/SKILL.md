@@ -1,7 +1,7 @@
 ---
 name: cinematic-realism-director
-description: Design, generate, edit, diagnose, and adapt cinematic still images with physically grounded camera, lens, lighting, exposure, color, material, and realism logic. Use for cinematic image creation, prompt cinematization, AI-look repair, reference matching, expert camera locks, shot recipes, and provider-specific image prompts. Works from one simple sentence or detailed cinematography instructions; creates/edits directly only when the host actually exposes a suitable image capability.
-version: 1.0.0
+description: Direct, generate, edit, diagnose, and adapt professional cinematic or photographic still images from minimal or expert input. Automatically applies the best professional execution appropriate to the requested medium, preserves explicit camera/style locks, uses the host-native/local image model before optional external providers, and keeps Magnific/Higgsfield as explicit-target or benchmark adapters rather than default backends.
+version: 1.1.0
 license: MIT
 compatibility: Portable Agent Skill. Works in text-only mode; image generation/editing and provider-specific execution are optional host capabilities.
 metadata:
@@ -15,57 +15,63 @@ metadata:
 
 ## Purpose
 
-Turn simple or expert still-image requests into coherent cinematic image direction grounded in observable camera geometry, optics, motivated lighting, exposure, color, materials, and physical realism.
+Turn any still-image request—from a one-line beginner idea to a fully specified cinematography brief—into the strongest professional image appropriate to that exact medium, subject, and context.
 
-The skill is a **director and translation layer**, not a prompt-suffix library.
+The user should not need to type `professional`, `cinematic`, `Hollywood`, `ARRI`, `good lighting`, `good composition`, `realistic`, or `high quality` to unlock expert direction.
 
 Core architecture:
 
 ```text
 USER INTENT
+-> REQUESTED / IMPLIED IMAGE MEDIUM
+-> PROFESSIONAL QUALITY FLOOR
 -> CINEMATIC SHOT SPEC
 -> REALITY GATE
--> PROVIDER / HOST ADAPTER
+-> EXECUTION PRIORITY
+-> PROVIDER ADAPTER FOR THE ALREADY-CHOSEN PATH
 -> IMAGE OR PRODUCTION-READY PROMPT
 ```
 
-The universal shot remains authoritative. Provider syntax never becomes the creative brain.
+The skill is a visual director and cinematography/photography intelligence layer, not a prompt-suffix library and not a router to premium third-party generators.
 
 ## When to Use
 
 Use for:
 
-- generating a cinematic or photoreal still image;
-- turning a weak/ordinary prompt into a stronger cinematic shot;
+- generating a cinematic or professional photographic still;
+- turning a simple/ordinary prompt into a top-tier professional image;
+- mobile/iPhone/selfie photography that should look expertly shot and edited while remaining recognizably mobile;
+- candid, documentary, street, editorial, narrative, portrait, product, fashion, automotive, food, architecture, travel, hospitality, and commercial imagery;
 - repairing an AI-looking or physically inconsistent image;
-- matching the observable visual DNA of one or more references;
-- designing a shot from explicit camera/lens/focal/aperture/lighting choices;
-- creating a provider-specific prompt for OpenAI Images, Gemini, Seedream, FLUX, Magnific, Higgsfield Soul Cinema, or an unknown provider;
-- explaining the camera, lens, lighting, exposure, color, and realism recipe behind a still frame.
+- matching observable visual DNA from references;
+- respecting explicit camera/lens/focal/aperture/lighting/stock/color/texture locks;
+- creating a provider-specific prompt when the user explicitly requests one;
+- explaining a professional shot recipe.
 
 Do not use as the primary skill for:
 
 - timeline editing, cuts, captions, B-roll placement, EDLs, rendering, or temporal continuity;
-- video motion choreography, duration, lip-sync, or temporal camera moves except where a single still-frame decision depends on motion/shutter appearance;
+- video motion choreography, duration, or lip-sync except where a still-frame choice depends on motion/shutter appearance;
 - website/app/dashboard/product UI design;
-- unrelated diagrams, charts, logos, icons, or general illustration tasks where cinematic photographic reasoning is not the goal;
-- pure equipment-shopping questions that do not require image direction.
+- unrelated charts/diagrams/logos/icons;
+- pure equipment-shopping questions with no image-direction task.
 
 ## Inputs
 
 The minimum input may be one sentence.
 
-Useful optional inputs include:
+Useful optional inputs:
 
 - subject / action / environment;
-- purpose or emotional intent;
-- target aspect ratio;
-- reference image(s) and their intended roles;
-- target image for editing/Reality Repair;
-- explicit camera, lens, focal length, aperture, shot, lighting, stock, color, or texture choices;
+- requested medium (`iPhone selfie`, `candid photo`, `movie still`, `product ad`, etc.);
+- purpose/emotional intent;
+- aspect ratio;
+- references and their roles;
+- target image for editing;
+- explicit camera, lens, focal, aperture, shot, light, stock, color, or texture choices;
 - preservation constraints;
-- target provider/model;
-- output intent: image, edit, prompt only, JSON/spec, or shot recipe.
+- explicit provider/model request;
+- output intent: image, edit, prompt-only, JSON/spec, or shot recipe.
 
 Do not require technical camera knowledge from a beginner.
 
@@ -73,74 +79,144 @@ Do not require technical camera knowledge from a beginner.
 
 Success requires that the result:
 
-1. preserves explicit user and preservation locks;
-2. resolves unspecified cinematic decisions coherently rather than randomly;
-3. keeps perspective, optics, focus, lighting, exposure, color, materials, contact, shadows, and reflections physically plausible for the requested stylization level;
-4. avoids generic cinematic effect stacking unless those effects are justified;
-5. truthfully distinguishes observation from inferred hardware/reference metadata;
-6. uses only provider capabilities that are actually verified/available;
-7. executes image generation/editing when requested and genuinely available, otherwise returns the strongest executable prompt/specification;
-8. never claims visual verification unless an image was actually inspected.
+1. preserves literal subject/action/environment and explicit user/preservation locks;
+2. applies the **Professional Quality Floor** to every unspecified decision;
+3. chooses the professional specialty appropriate to the requested medium rather than applying one generic cinema preset;
+4. resolves composition, camera relationship, optics/depth, motivated lighting, exposure, color, texture, materials, contact, shadows, and reflections coherently;
+5. reaches a world-class professional standard without needing the user to add quality/cinema keywords;
+6. uses subtle organic filmic texture by default for most photographic/cinematic work unless the medium/user calls for pristine cleanliness;
+7. avoids cinematic cliché stacking such as automatic blue anamorphic streaks, teal/orange, haze, rim light, maximum blur, Dutch angle, or heavy halation;
+8. uses the host-native/local image capability before optional external MCP/plugin/provider execution unless the user explicitly locks a provider or native lacks a material required capability;
+9. never automatically selects Magnific Cinematic or Higgsfield Soul Cinema for ordinary requests;
+10. truthfully distinguishes observation from inferred hardware/reference metadata;
+11. executes image generation/editing when requested and genuinely available, otherwise returns the strongest production-ready prompt/spec;
+12. never claims visual verification unless an actual image was inspected.
 
-Use the broader status vocabulary in `references/success-contract.md`:
-
-```text
-success
-partial
-blocked
-failed
-```
-
-and verification levels:
-
-```text
-V0 reasoning only
-V1 execution confirmed
-V2 visual inspection complete
-V3 comparative / iterative acceptance
-```
+Use `references/success-contract.md` for `success`, `partial`, `blocked`, `failed` and V0-V3 verification semantics.
 
 ## Constraints
 
+### Professional Quality Floor is mandatory
+
+Load and apply `references/professional-quality-floor.md` for ordinary generation/editing work.
+
+A basic prompt must not receive merely competent, generic, or under-directed photography when a stronger professional interpretation is safely inferable.
+
+Professionalization is medium-aware:
+
+```text
+iPhone/selfie -> elite mobile photographer/editor
+candid/documentary -> elite candid/editorial/documentary photographer
+narrative/movie-like -> feature-film cinematographer
+portrait/beauty -> top portrait/beauty photographer
+fashion -> top editorial/fashion photographer
+product -> world-class commercial product photographer
+automotive -> specialist automotive campaign photographer
+food -> specialist food photographer
+architecture -> elite architectural photographer
+travel/hospitality -> top travel/hospitality photographer/cinematographer
+```
+
+Do not convert an explicit phone/selfie request into generic cinema-camera imagery. Execute the requested medium expertly.
+
 ### User locks are authoritative
 
-Every explicit user technical choice is a lock unless the user changes it.
+Every explicit user technical/aesthetic/provider choice is a lock unless the user changes it.
 
-Use `references/locks.md` and `references/parameter-conflicts.md`.
+Use:
 
-Do not silently replace locked values because another combination would be easier or more fashionable.
+- `references/locks.md`
+- `references/parameter-conflicts.md`
 
-### AUTO fills only missing decisions
+AUTO fills only unspecified fields.
 
-AUTO may infer unspecified values. It may not rewrite explicit ones.
+### Native/local execution is the default
 
-### Physical plausibility before decoration
+Follow `references/execution-priority.md`.
 
-Do not default to:
+```text
+1. explicit user-locked provider, if actually available/permitted
+2. host-native/local image generation/editing
+3. permitted external MCP/plugin/connector only when native/local lacks a material requirement
+4. prompt/spec fallback
+```
 
-- shallow depth of field;
-- grain;
-- halation;
-- bloom;
-- flare;
-- haze;
-- rim light;
-- anamorphic distortion;
+Never prefer an external provider merely because it looks more cinematic, premium, specialized, or exposes more controls.
+
+MCP is transport, not creative authority.
+
+### Magnific/Higgsfield are not automatic backends
+
+`adapters/magnific.md` and `adapters/higgsfield-soul-cinema.md` are explicit-target/benchmark adapters only.
+
+Use them only when:
+
+- the user explicitly requests that provider/export; or
+- a controlled benchmark explicitly names it.
+
+Do not route ordinary image requests to either provider.
+
+### Default professional cinema DNA
+
+For narrative/cinematic work—or a general photographic scene without a stronger medium signal—AUTO should normally target observable qualities such as:
+
+```text
+feature-film visual hierarchy
+premium digital-cinema tonal response
+ARRI-like highlight rolloff / gentle highlight-to-mid transition
+rich but readable shadows
+motivated source falloff
+professional color separation
+natural skin/material rendering
+realistic optical/focus falloff
+subtle organic filmic texture
+high-end restrained grade
+```
+
+`ARRI-like` is an observable tonal target, not a claim of literal ARRI capture/simulation.
+
+### Texture default
+
+For most photographic/cinematic outputs, subtle organic filmic texture is a normal finishing layer.
+
+Strong/coarse grain, halation, bloom, flare, dirt, scratches, or obvious vintage artifacts still require a specific reason.
+
+Reduce/remove base texture when:
+
+- user says no grain/pristine/clinical/noise-free;
+- the medium clearly requires sterile technical cleanliness;
+- a product/beauty macro requires texture-free clarity.
+
+See `references/texture-effects-restraint.md`.
+
+### Professional quality is not cliché stacking
+
+Do not automatically add:
+
+- anamorphic blue streaks;
 - teal/orange grading;
-- extreme local contrast;
-- motion blur.
+- haze/fog;
+- dramatic rim light;
+- f/1.2 / maximum bokeh;
+- Dutch angle;
+- heavy bloom;
+- obvious halation;
+- strong vignette;
+- arbitrary motion blur;
+- crushed blacks;
+- prestige camera/lens tokens with no observable purpose.
 
-Use them only when justified by the shot.
+Restraint must not be used as an excuse for ordinary/sterile output.
 
 ### Perspective is not focal length alone
 
-Camera position/distance is the primary driver of perspective. Focal length controls field of view for a given format.
+Camera position/distance primarily drives perspective. Focal length controls field of view for a given format.
 
 Do not turn wide rectilinear requests into fisheye unless requested.
 
 ### Reference observation is not hardware fact
 
-A reference may support observable statements such as:
+Visible traits may support statements such as:
 
 ```text
 wide-normal field of view
@@ -149,11 +225,11 @@ moderate depth
 warm practical key
 ```
 
-It does not prove an exact camera, lens, aperture, stock, or LUT without metadata/evidence.
+They do not prove an exact camera/lens/aperture/stock/LUT without evidence.
 
 ### Preserve before transforming
 
-For edits, explicitly separate:
+For edits, separate:
 
 ```text
 PRESERVE
@@ -165,24 +241,23 @@ Do not regenerate the entire scene when a local repair can satisfy the request.
 
 ### Host truthfulness
 
-An adapter does not grant provider access.
-
 Never:
 
-- claim an image was generated without a tool execution;
+- claim an image was generated without tool execution;
 - claim an edit when the target image was unavailable;
-- claim V2 visual success from an API/tool success alone;
-- fabricate provider controls, model names, enum values, or permissions.
+- claim V2 visual success from API/tool success alone;
+- fabricate provider controls/model names/permissions;
+- treat adapter presence as provider access.
 
 ### Standalone invariant
 
-Use only files within this package for core cinematic intelligence. Do not require sibling skills, repository-root documents, AI-Verse OS, MCP, API keys, or private machine state for prompt-only operation.
+Core cinematic intelligence must use only files within this package. Do not require sibling skills, repository-root docs, AI-Verse OS, MCP, API keys, or private machine state for prompt/spec operation.
 
 ## Procedure
 
 ### 1. Determine output intent
 
-Classify what the user actually wants:
+Classify:
 
 ```text
 image generation
@@ -193,149 +268,147 @@ structured shot spec / JSON
 shot recipe / explanation
 ```
 
-If the user explicitly requests prompt-only output, never auto-generate.
+PROMPT ONLY is absolute.
 
-### 2. Route to a workflow
+### 2. Identify medium and professional specialty
 
-Use the smallest matching workflow:
+From the user's wording, infer whether this is mobile/selfie, candid/documentary, narrative/cinematic, portrait, fashion, product, automotive, food, architecture, travel/hospitality, or another specialty.
 
-- **AUTO DIRECT** — minimal idea to complete shot: `references/workflows/auto-direct.md`
-- **CINEMATIZE** — strengthen an existing concept without concept drift: `references/workflows/cinematize.md`
-- **REALITY REPAIR** — diagnose and minimally repair an existing image: `references/workflows/reality-repair.md`
-- **REFERENCE MATCH** — transfer observable visual DNA: `references/workflows/reference-match.md`
-- **MANUAL CAMERA** — preserve expert locks and fill only missing values: `references/workflows/manual-camera.md`
-- **PROMPT ONLY** — return prompt/spec even when generation is available: `references/workflows/prompt-only.md`
+Do not ask if a reasonable professional choice is inferable.
 
-Use `references/progressive-disclosure-router.md` for ambiguous cases and `references/question-minimization.md` to avoid unnecessary intake questions.
+### 3. Apply the Professional Quality Floor
 
-### 3. Build the provider-neutral shot
+Load `references/professional-quality-floor.md`.
 
-Represent the shot using `schemas/cinematic-shot-spec.schema.json` where structured state is useful.
+Resolve the best professional execution appropriate to that medium before provider selection.
+
+### 4. Route to a workflow
+
+- **AUTO DIRECT** — minimal idea to complete professional shot.
+- **CINEMATIZE** — strengthen an existing concept without concept drift.
+- **REALITY REPAIR** — diagnose and minimally repair an existing image.
+- **REFERENCE MATCH** — transfer observable visual DNA.
+- **MANUAL CAMERA** — preserve expert locks and fill only missing values.
+- **PROMPT ONLY** — return prompt/spec and never generate.
+
+Use `references/progressive-disclosure-router.md` and `references/question-minimization.md`.
+
+### 5. Build the provider-neutral shot
 
 Reason in this order:
 
 ```text
-intent / story
+intent / requested medium
+-> professional specialty / quality floor
 -> visual hierarchy
 -> composition / blocking
--> camera position / capture format
+-> camera position / capture character
 -> lens / focal / aperture / focus / depth
 -> motivated lighting
--> exposure / tonal response
--> white balance / color / grade
--> materials / skin / hair / eyes / fabric
+-> exposure / highlight rolloff / shadow density
+-> white balance / color separation / grade
+-> skin / hair / fabric / materials
 -> contact / gravity / shadows / reflections
--> atmosphere / restrained optical texture
+-> subtle base texture + any justified optical effects
 ```
 
-Load only relevant reference files rather than every file in the package.
+Use `schemas/cinematic-shot-spec.schema.json` when structured state helps.
 
-### 4. Resolve locks, confidence, and conflicts
+### 6. Resolve locks/conflicts
 
-Use:
-
-- `references/locks.md`
-- `references/confidence-and-uncertainty.md`
-- `references/confidence-serialization.md`
-- `references/parameter-conflicts.md`
-
-Authority order:
+Authority:
 
 ```text
 current explicit user instruction
 > preservation requirement
 > active explicit lock
-> physical/logical package rules
+> package physical/logical rules
+> Professional Quality Floor for unspecified fields
 > AUTO inference
 > provider default
 ```
 
-Solve conflicts by changing unlocked/AUTO fields first.
+Change unlocked/AUTO fields first.
 
-### 5. Run the Reality Gate
+### 7. Run Reality Gate V0
 
-Use `references/reality-gate.md` before final handoff.
+Use `references/reality-gate.md`.
 
 Core question:
 
-> Could a real camera plausibly record this scene under the stated conditions, while respecting the requested stylization?
+> Could an elite professional plausibly create this requested image under the stated medium/conditions, with physically coherent capture and finishing?
 
-Check in dependency order:
+Check geometry, perspective, depth, lighting, exposure, color, shadows/reflections, anatomy/skin/hair, materials, contact/gravity, texture/effects, medium fidelity, locks, and professional finish.
 
-```text
-locks / preservation
--> geometry / perspective
--> focus / depth / motion
--> lighting
--> exposure / color
--> shadows / reflections
--> anatomy / skin / hair / eyes
--> fabric / materials
--> contact / gravity / environment
--> atmosphere
--> optical effects
--> stylization restraint
--> provider integrity
-```
+### 8. Choose execution path before provider adapter
 
-Do not fix structural problems with grain, blur, flare, or texture.
-
-### 6. Choose host action
-
-Follow `references/host-action-policy.md` and `references/host-capabilities.md`.
+Follow `references/execution-priority.md` and `references/host-action-policy.md`.
 
 ```text
-image tool available + image requested -> generate/edit
-no image tool + image requested -> adapted prompt/spec
-prompt only requested -> never generate
+explicit provider lock
+> native/local host image tool
+> external fallback only for missing material capability
+> prompt/spec
 ```
 
-For preservation-sensitive edits, the real target image must be available.
+Do not scan adapters to decide which provider looks best.
 
-### 7. Adapt to provider
+### 9. Adapt only to the chosen path
 
-First resolve the shot. Then adapt it.
-
-Available adapters:
+Default/generic/native-hidden provider:
 
 - `adapters/generic.md`
+
+Known normal providers when actually selected by the host:
+
 - `adapters/openai.md`
 - `adapters/gemini.md`
 - `adapters/seedream.md`
 - `adapters/flux.md`
+
+Explicit-target/benchmark only:
+
 - `adapters/magnific.md`
 - `adapters/higgsfield-soul-cinema.md`
 
-Use `references/adapter-fallback-hierarchy.md` whenever model/provider support is unknown or changed.
+Use `references/adapter-fallback-hierarchy.md` for translation/version fallback.
 
-Never fabricate unsupported provider parameters. Fall back to observable natural-language behavior.
+### 10. Execute or deliver
 
-### 8. Execute or deliver
+If image execution is requested and available, execute through the chosen path.
 
-If execution is available and requested, create/edit the image through the host's actual granted tool.
+Otherwise return the strongest provider-neutral/adapted prompt/spec.
 
-If not, return the strongest provider-appropriate prompt/specification.
+### 11. Verify actual output
 
-### 9. Verify
+If the host can inspect the generated/edited image, run V2 Reality Gate.
 
-If the host can inspect the resulting image, run a post-generation V2 Reality Gate.
-
-When a domain fails, repair that domain while preserving successful areas rather than redesigning the shot by default.
+Repair material failures while preserving successful regions/locks. If native/local execution produced an imperfect first result, try focused native/local correction before escaping to an external provider.
 
 ## References
 
-Load progressively.
+Load progressively from `references/INDEX.md`.
 
-### Core governance
+Core:
 
-- `references/routing.md`
-- `references/portability.md`
+- `references/professional-quality-floor.md`
+- `references/execution-priority.md`
+- `references/locks.md`
 - `references/host-capabilities.md`
 - `references/host-action-policy.md`
-- `references/locks.md`
 - `references/success-contract.md`
+- `references/reality-gate.md`
 
-### Shot design
+Workflows:
+
+- `references/workflows/auto-direct.md`
+- `references/workflows/cinematize.md`
+- `references/workflows/reality-repair.md`
+- `references/workflows/reference-match.md`
+- `references/workflows/manual-camera.md`
+- `references/workflows/prompt-only.md`
+
+Technical domains:
 
 - `references/visual-intent.md`
 - `references/composition-and-blocking.md`
@@ -343,103 +416,83 @@ Load progressively.
 - `references/lens-character.md`
 - `references/focal-length-and-perspective.md`
 - `references/aperture-focus-and-depth.md`
-- `references/motion-and-shutter.md`
-
-### Lighting, exposure, color, texture
-
 - `references/motivated-lighting.md`
-- `references/lighting-roles.md`
-- `references/environment-lighting-recipes.md`
 - `references/exposure-and-dynamic-range.md`
 - `references/film-and-sensor-response.md`
 - `references/color-science-and-grading.md`
 - `references/texture-effects-restraint.md`
-
-### Physical realism
-
-- `references/anti-ai-artifact-taxonomy.md`
-- `references/skin-realism.md`
-- `references/hair-and-eye-realism.md`
-- `references/fabric-and-material-realism.md`
-- `references/contact-gravity-environment.md`
-- `references/reflection-shadow-coherence.md`
-- `references/optical-imperfection.md`
-- `references/reality-gate.md`
-
-### References / uncertainty / provider behavior
-
-- `references/multi-reference-behavior.md`
-- `references/confidence-and-uncertainty.md`
-- `references/parameter-conflicts.md`
-- `references/adapter-fallback-hierarchy.md`
-- `adapters/`
+- physical-realism references listed in `references/INDEX.md`.
 
 ## Pitfalls
 
-- Starting with a prestigious camera/lens token instead of story and geometry.
+- Returning ordinary literal photography because the user did not say `professional` or `cinematic`.
+- Forcing cinema-camera aesthetics onto an explicit phone/selfie/mobile request.
+- Treating anti-cliché restraint as `no professional finish`.
+- Using strong grain/effects instead of physical realism.
 - Treating focal length as perspective by itself.
-- Using maximum aperture for every cinematic image.
-- Turning wide rectilinear perspective into fisheye.
-- Adding rim light or volumetric beams without a plausible source/atmosphere.
-- Recovering every highlight and shadow into fake HDR.
-- Treating film as `warm + grain + faded`.
-- Treating realism as dirt, damage, grain, pores, asymmetry, or vintage artifacts.
-- Adding pores globally instead of fixing skin/light interaction.
-- Repairing surface texture before anatomy/geometry.
-- Letting reflections, shadows, catchlights, or wet-surface highlights disagree with source geometry.
-- Collapsing multiple references into one undefined style influence.
-- Guessing exact hardware from pixels.
-- Returning prompts when an image was requested and a suitable permitted image tool is actually available.
-- Generating despite an explicit PROMPT ONLY request.
-- Treating provider/API success as proof of visual success.
+- Treating wide as fisheye.
+- Treating shallow depth as automatically cinematic.
+- Automatically routing to an MCP/external provider before native/local generation.
+- Automatically selecting Magnific/Higgsfield because they are cinema-oriented.
+- Treating adapters as provider recommendations/access.
+- Letting provider controls redesign the universal shot.
+- Claiming exact hardware from a visual reference without evidence.
+- Broad regeneration when a local preservation-safe edit is enough.
+- Claiming visual success after tool execution without inspection.
 
 ## Verification
 
-Before claiming success, verify:
+### V0 - reasoning/spec
 
-- output intent was respected;
-- all explicit locks survived;
-- preservation constraints survived;
-- no unsupported hardware/provider certainty was invented;
-- perspective and depth are coherent;
-- lighting has plausible motivation/direction;
-- exposure and color preserve visual hierarchy;
-- shadows/reflections/contact/materials are coherent;
-- realism effects are restrained to what the shot requires;
-- provider translation did not redesign the shot;
-- execution claims match actual host actions;
-- V2/V3 claims are made only after real visual inspection/comparison.
+Verify:
+
+- requested medium recognized;
+- professional specialty chosen correctly;
+- quality floor applied;
+- user locks preserved;
+- shot physically coherent;
+- subtle texture/finish appropriate;
+- clichés absent unless justified;
+- execution path obeys native-first policy;
+- Magnific/Higgsfield not selected automatically;
+- provider translation does not alter creative truth.
+
+### V1 - execution confirmed
+
+Tool/provider completed and returned an output. Do not infer visual success.
+
+### V2 - visual inspection
+
+Inspect actual output for:
+
+- professional-quality floor;
+- medium fidelity;
+- composition/camera relationship;
+- light/exposure/color;
+- skin/material/contact/reflection realism;
+- focus/depth;
+- texture quality;
+- AI artifacts;
+- locks/preservation.
+
+### V3 - iterative acceptance
+
+Correct material failures and re-run V2 until the result satisfies task-specific acceptance or a real limitation remains.
 
 ## Output
 
-Return the smallest useful artifact for the requested mode.
+### Image-capable host
 
-### Image requested and execution available
+Return the generated/edited image directly. Keep internal technical machinery hidden unless useful/requested.
 
-Primary output: generated/edited image.
+### Image unavailable
 
-Optionally include a concise status or shot recipe only when useful/requested.
+Return a production-ready professional prompt/spec that already contains the quality floor; do not ask the user to add cinema/quality keywords later.
 
-### Image requested but execution unavailable
+### Prompt-only
 
-Return:
+Return only the requested prompt/spec/JSON/settings. Execute no provider.
 
-- provider-adapted or generic final prompt;
-- essential locked settings/preservation instructions;
-- truthful partial/blocked execution status when relevant.
+### Shot recipe / explain
 
-### Prompt only
-
-Return the final adapted prompt without generation.
-
-### Shot recipe / explanation
-
-Return concise professional decisions for composition, capture, optics, light, exposure, color, texture, and realism.
-
-### Structured handoff
-
-Use the package schemas when JSON/agent handoff is requested:
-
-- `schemas/cinematic-shot-spec.schema.json`
-- `schemas/realism-diagnosis.schema.json`
-- `schemas/reference-dna.schema.json`
+Explain locked vs AUTO decisions, medium/professional specialty, composition, capture, lighting, exposure, color, texture, realism, and provider translation when relevant.

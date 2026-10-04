@@ -1,245 +1,176 @@
-# Cinematic Realism Director - Host Capability Degradation Contract
+# Cinematic Realism Director - Host Capability Contract
 
-Status: FROZEN FOR V1
+Status: RUNTIME POLICY
 
-This contract defines how the skill behaves across hosts with different image, vision, tool, and execution capabilities.
+Purpose: define useful behavior across hosts with different native image, vision, and external-tool capabilities without sacrificing the Professional Quality Floor.
 
-The cinematic reasoning layer must remain useful even when the host cannot generate or edit images directly.
+Use with:
 
-## Core Rule
+- `references/execution-priority.md`
+- `references/host-action-policy.md`
+- `references/professional-quality-floor.md`
+
+## Core Separation
 
 Always separate:
 
 ```text
-WHAT THE SHOT SHOULD BE
+WHAT THE IMAGE SHOULD BE
 ```
 
 from:
 
 ```text
-WHAT THE CURRENT HOST CAN EXECUTE
+HOW THE CURRENT HOST CAN EXECUTE IT
 ```
 
-The first is owned by the Cinematic Realism Director. The second depends on the host.
+The Cinematic Realism Director owns the first. Host capability owns the second.
 
-The skill must never pretend that a tool exists, fabricate generation, or claim an edit was performed when the host only produced instructions.
+Execution limitations must never lower the cinematography/photography reasoning quality.
+
+## Universal Execution Priority
+
+Unless the user explicitly locks a provider:
+
+```text
+native/local image capability
+> permitted external MCP/plugin/connector only when native/local lacks a material requirement
+> prompt/spec fallback
+```
+
+Magnific Cinematic and Higgsfield Soul Cinema are not default backends. They are explicit-request/benchmark targets only.
 
 ## Capability Classes
 
-### H1 - Native image generation and image editing
+### H1 - Native generation + native editing
 
-Host capabilities:
-
-- understands text instructions;
-- can inspect supplied images;
-- can generate new images;
-- can edit supplied images.
+Host can generate and edit images directly.
 
 Behavior:
 
-- if the user asks for a new image, design the shot and execute generation;
-- if the user asks to repair/edit an image, preserve the supplied image as the edit target and execute an edit;
-- do not return a prompt instead of executing unless the user explicitly asks for prompt-only output or host/tool policy blocks execution;
-- keep detailed internal shot reasoning concise unless the user asks to see it;
-- if generation/editing fails, return the best available prompt/specification plus a clear partial/blocked status rather than pretending success.
+- apply the Professional Quality Floor;
+- use native generation for new-image requests;
+- use native editing for supplied-target edits;
+- do not route externally merely because another provider appears more cinematic;
+- if the first result fails visual inspection, repair through native tools where practical;
+- use an external provider only for a missing material capability or explicit provider lock.
 
 Expected output priority:
 
-1. generated or edited image;
-2. concise result status;
-3. optional shot recipe only when useful/requested.
+1. generated/edited image;
+2. concise material limitation only when needed;
+3. shot recipe only if requested/useful.
 
-### H2 - Native image generation, no image editing
-
-Host capabilities:
-
-- can generate images from text;
-- may understand uploaded images;
-- cannot perform a true edit against an existing target.
+### H2 - Native generation, no native editing
 
 Behavior:
 
-- new-image requests: execute generation normally;
-- Reality Repair/reference-preservation requests: analyze the source if vision is available, then construct a preservation-aware regeneration prompt/specification;
-- never claim that identity, composition, geometry, product design, or pose will be perfectly preserved when the host cannot perform source-conditioned editing;
-- if preservation is critical, report the limitation and return the strongest edit/regeneration handoff specification.
+- new images: use native generation;
+- supplied-image repair: analyze if vision exists;
+- if a preservation-sensitive external editor is permitted and materially required, it may be used under `execution-priority.md`;
+- otherwise return the strongest repair/regeneration handoff;
+- never call external generation merely because it has more cinematic controls.
 
-### H3 - Image editing, no general text-to-image generation
-
-Host capabilities:
-
-- can edit a supplied image;
-- cannot create a new image from scratch.
+### H3 - Native editing, no native text-to-image generation
 
 Behavior:
 
-- edit/repair requests: execute the edit;
-- new-image requests without a source image: produce a cinematic shot specification and final generation prompt;
-- do not attempt to misuse an unrelated placeholder image merely to force execution.
+- edit supplied targets natively;
+- new-image requests may use a permitted external generator only when native generation truly does not exist and execution is appropriate;
+- otherwise return a production-ready shot/prompt;
+- never misuse a placeholder image to force edit execution.
 
-### H4 - Vision + external image tool(s)
-
-Host capabilities:
-
-- can inspect images;
-- has one or more external generation/editing providers through tools/plugins/connectors/MCP/API wrappers.
+### H4 - Vision + external image tools, no native image execution
 
 Behavior:
 
-1. determine the requested operation first;
-2. construct the provider-neutral Cinematic Shot Spec;
-3. identify an actually available image tool/provider;
-4. load the matching local adapter when known;
-5. preserve user locks;
-6. execute only within granted tool permissions;
-7. verify returned output where the host can inspect it;
-8. if the preferred provider is unavailable, fall back to another suitable granted image tool or return a prompt/specification.
+1. analyze the request/reference;
+2. resolve the provider-neutral shot and Professional Quality Floor;
+3. identify a genuinely granted external provider;
+4. use a generic/non-competitor route by default when several are available;
+5. use Magnific/Higgsfield only if explicitly requested or benchmarking;
+6. adapt after the execution path is selected;
+7. execute and inspect where possible.
 
-Do not silently send images to an external service merely because an adapter exists. Tool availability and authorization belong to the host/user.
-
-### H5 - Vision, no image generation/editing
-
-Host capabilities:
-
-- can inspect user-supplied images;
-- cannot create or modify images.
+### H5 - Vision only
 
 Behavior:
 
-- reference analysis: perform full observable visual analysis;
-- Reality Repair: diagnose artificiality, create preserve/repair/allow-change sets, then produce an edit specification/prompt;
-- new-image request: produce a complete Cinematic Shot Spec plus an adapted or generic prompt;
-- explicitly distinguish analysis from execution.
-
-This class must remain highly useful for users who intend to paste the resulting prompt into another generator.
+- analyze references/targets fully;
+- build the same professional shot/repair specification a generation-capable host would use;
+- return prompt/spec without pretending execution occurred.
 
 ### H6 - Text only
 
-Host capabilities:
-
-- no image understanding;
-- no image generation;
-- no image editing.
-
 Behavior:
 
-- simple text idea: perform AUTO DIRECT reasoning and return the final cinematic prompt/specification;
-- manual-camera request: preserve locks and complete unspecified values;
-- prompt enhancement: cinematize the user's text;
-- if the user references an unseen image, do not pretend to inspect it;
-- ask for a textual description only when the missing visual information is essential to the requested result;
-- if enough user description exists, continue without unnecessary questions.
+- one-line request: run AUTO DIRECT with the Professional Quality Floor;
+- expert request: preserve locks and complete missing decisions;
+- prompt enhancement: produce a professionalized shot/prompt;
+- if an unseen image is essential, say so rather than pretending to inspect it.
 
 ## Operation Matrix
 
 | User request | H1 | H2 | H3 | H4 | H5 | H6 |
 | --- | --- | --- | --- | --- | --- | --- |
-| New cinematic image | generate | generate | prompt/spec | tool-generate | prompt/spec | prompt/spec |
-| Repair supplied AI image | edit | analyze + regeneration handoff | edit | tool-edit | diagnose + edit prompt | requires description / prompt-only |
-| Match supplied reference | analyze + generate/edit | analyze + generate | analyze + edit if target exists | analyze + tool execution | analyze + recipe | requires textual reference description |
-| Expert camera locks | preserve + execute | preserve + execute | preserve + prompt/edit | preserve + execute | preserve + prompt | preserve + prompt |
+| New image | native generate | native generate | external if appropriate, else prompt | external generate | prompt/spec | prompt/spec |
+| Repair supplied image | native edit | analyze + external edit if materially needed, else handoff | native edit | external edit | diagnose + edit prompt | requires description / prompt-only |
+| Match reference | native analyze + generate/edit | analyze + native generate | analyze + native edit if target exists | analyze + external execution | analyze + recipe | textual reference description |
+| Expert locks | preserve + native execute | preserve + native execute | preserve + native edit/prompt | preserve + external execute | preserve + prompt | preserve + prompt |
 | Prompt only | prompt only | prompt only | prompt only | prompt only | prompt only | prompt only |
-| Explain shot recipe | explain | explain | explain | explain | explain | explain |
+| Explain | explain | explain | explain | explain | explain | explain |
 
-## Action Priority
+## Professional Quality Is Host-Independent
 
-When the user asks for an image rather than a prompt:
+Every host class should retain the same core direction quality:
 
-```text
-1. USE SUITABLE NATIVE/GRANTED IMAGE TOOL IF AVAILABLE
-2. OTHERWISE USE A SUITABLE GRANTED EXTERNAL IMAGE TOOL
-3. OTHERWISE RETURN THE BEST EXECUTABLE PROMPT + SHOT SPEC
-```
+- best-professional interpretation of the requested medium;
+- composition and camera relationship;
+- optics/focus logic;
+- motivated lighting;
+- exposure and premium tonal response;
+- color separation and finishing;
+- subtle organic texture where appropriate;
+- physical material/skin/contact realism;
+- Reality Gate verification at the strongest level available.
 
-Do not stop at step 3 when step 1 or 2 is available and the user's request clearly asks for image creation/editing.
+A text-only host should not receive lower-quality cinematography reasoning than an image-capable host.
 
 ## Prompt-Only Override
 
-If the user explicitly asks for:
+If the user explicitly asks for prompt/JSON/settings/shot recipe/no generation, execute no image provider—native or external.
 
-- prompt only;
-- JSON only;
-- shot recipe only;
-- settings only;
-- no generation;
+## Target Availability
 
-then do not generate an image even if the host can.
+Preservation-sensitive edit claims require the actual target image in the active context.
 
-Explicit output intent overrides automatic execution.
-
-## Image Target Rule
-
-For edits, restoration, realism repair, relighting, lens-look changes, or preservation-sensitive operations, the host must have access to the actual target image.
-
-If the image is not available in the active context/tool environment:
+If unavailable:
 
 - do not invent it;
-- do not claim the edit was performed;
-- produce a repair/edit specification if enough description exists;
-- otherwise request the missing image only when required to proceed.
+- do not claim inspection/edit;
+- return a repair/edit handoff when possible;
+- request the image only when essential.
 
-## Verification Rule
-
-If the host can inspect generated/edited output, perform a post-generation Reality Gate before claiming the visual target was achieved.
-
-If the host cannot inspect the returned image, distinguish:
+## Verification
 
 ```text
-EXECUTION CONFIRMED
+V0 reasoning/spec verified
+V1 execution confirmed
+V2 actual image inspected
+V3 inspected + corrected/accepted
 ```
 
-from:
-
-```text
-VISUAL QUALITY VERIFIED
-```
-
-A successful tool call is not proof that the resulting frame meets realism/cinematic criteria.
-
-## Provider Unknown Rule
-
-If the host exposes an image capability but the exact underlying provider/model is unknown:
-
-- use the universal Cinematic Shot Spec;
-- use `adapters/generic.md` when available;
-- avoid provider-specific syntax that cannot be verified;
-- never fabricate model parameters.
-
-## Degradation Quality Requirement
-
-Degradation means reduced execution capability, not reduced cinematography quality.
-
-A text-only host should still receive the same core decisions about:
-
-- visual intent;
-- framing;
-- camera position;
-- lens/focal behavior;
-- focus/depth;
-- lighting motivation;
-- exposure;
-- color;
-- texture;
-- materials;
-- physical realism;
-- preservation constraints;
-- Reality Gate.
-
-Only the final execution step changes.
+API/tool success is not V2.
 
 ## Failure Conditions
 
-Host-capability behavior is incorrect if the skill:
+Incorrect behavior includes:
 
-- claims an image was created without an image tool;
-- returns only explanation when a suitable image tool is available and the user requested an image;
-- silently ignores a user request for prompt-only output;
-- claims to have inspected an image unavailable to the host;
-- treats a provider adapter as proof that the provider is connected;
-- exposes or requests raw credentials unnecessarily;
-- sacrifices locked creative intent merely because a particular tool has different defaults;
-- treats a successful API/tool call as proof of visual-quality success without inspection when inspection is possible.
-
-## V1 Acceptance
-
-Task 0.3 is satisfied when every capability class above has a useful result path and no class requires the host to pretend it has capabilities it does not possess.
+- external/MCP execution taking precedence over an adequate native/local model without justification;
+- ordinary requests automatically sent to Magnific/Higgsfield;
+- a one-line request receiving merely ordinary/under-directed photography because the user did not specify cinema terminology;
+- generation claims without generation;
+- edit claims without target image;
+- prompt-only being ignored;
+- provider adapters treated as access or routing authority;
+- execution limitations degrading the Professional Quality Floor.
