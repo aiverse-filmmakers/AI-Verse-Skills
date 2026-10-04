@@ -1,136 +1,160 @@
 # Grain, Halation, Bloom, Flare, and Texture Restraint
 
 Status: RUNTIME KNOWLEDGE
-Task: 4.7
 
-This reference governs texture/effect behavior so cinematic realism is not reduced to a bundle of fashionable artifacts.
+Purpose: govern photographic texture so the image receives a premium finished character without collapsing cinema into a bundle of fashionable artifacts.
 
 Use with:
 
+- `references/professional-quality-floor.md`
 - `references/film-and-sensor-response.md`
 - `references/lens-character.md`
 - `references/color-science-and-grading.md`
 - `references/exposure-and-dynamic-range.md`
 
-## 1. Governing Principle
+## Governing Principle
 
-Grain, halation, bloom, flare, diffusion, sharpening, noise, and compression artifacts are separate phenomena.
-
-Do not collapse them into one `film look` switch.
+Professional photographic finishing should usually avoid sterile AI cleanliness, but each optical/capture effect remains physically distinct.
 
 Reason in this order:
 
 ```text
-capture intent
--> optical system
+requested medium
+-> professional specialty
+-> capture intent
+-> optics
 -> exposure / bright-source behavior
--> medium response
--> texture requirement
--> effect restraint
+-> tonal/color finish
+-> subtle base texture
+-> optional stronger effects only when justified
 ```
 
-Every effect needs a cause and a purpose.
+## Subtle Organic Texture Is the Normal Photographic Baseline
 
-## 2. Grain
+For most photographic and cinematic outputs, AUTO should include a **subtle organic filmic texture** unless the user or medium clearly calls for pristine digital cleanliness.
 
-Grain should be treated as structured image texture, not uniform digital noise.
+Target character:
+
+- fine rather than coarse;
+- low-amplitude rather than obvious;
+- non-uniform rather than pasted noise;
+- luminance-aware;
+- compatible with the apparent capture medium;
+- barely-to-gently visible at normal viewing size;
+- never strong enough to hide skin/material defects.
+
+Its function is to support photographic cohesion and avoid sterile synthetic smoothness—not to advertise a `film look`.
+
+### Normally retain subtle texture
+
+- narrative/cinematic frames;
+- candid/documentary/street images;
+- portraits;
+- fashion/editorial;
+- lifestyle/commercial scenes;
+- travel/hospitality;
+- mobile/phone photography when it improves naturalness;
+- environmental product/automotive work where texture does not damage required detail.
+
+### Normally reduce/remove texture
+
+- explicit `no grain`, `pristine digital`, `noise-free`, `clinical`, `sterile`, `perfectly clean` instructions;
+- technical/medical documentation;
+- pure e-commerce packshots where a spotless background and exact microdetail are the priority;
+- certain beauty/product macros where visible grain interferes with material readability;
+- non-photographic screens/graphics outside this skill's main scope.
+
+The user can always override AUTO.
+
+## Grain
+
+Grain should read as structured photographic texture, not uniform digital noise.
 
 Consider:
 
-- capture medium;
-- format size;
-- stock/sensitivity role;
-- exposure level;
-- enlargement/scan impression;
+- apparent capture medium/format;
+- exposure;
+- output size;
 - luminance region;
-- final output size;
-- story intent.
+- professional specialty;
+- requested cleanliness;
+- whether the user explicitly named a stock/format.
 
-### AUTO behavior
+### Strong/coarse grain still needs a reason
 
-Default to little or no visible grain unless:
+Use stronger visible grain when:
 
-- film/analog medium is selected;
-- a specific stock reference supports it;
-- the story benefits from tactile texture;
-- a reference image visibly contains it;
-- provider benchmarking shows subtle grain improves realism.
+- a film/analog medium is explicitly requested;
+- a stock/format/reference visibly supports it;
+- period/archival intent benefits from it;
+- a deliberate rough/tactile aesthetic is part of the brief.
 
 ### Avoid
 
-- equal noise everywhere;
-- giant coarse grain on clean large-format digital capture;
-- grain pasted over specular highlights and shadows with identical strength;
-- grain as proof that an image is cinematic.
+- identical noise everywhere;
+- giant 16mm-style grain on clean large-format digital work without intent;
+- using grain to hide structural errors;
+- treating grain strength as the only difference between digital and film;
+- adding obvious grain to a pristine clinical/product requirement.
 
-## 3. Sensor Noise
+## Digital Sensor Noise
 
-Digital noise and film grain are not interchangeable.
+Digital noise and filmic texture are different.
 
-Digital low-light response may include:
+Low-light digital capture may show luminance/chroma noise, denoising artifacts, pattern noise, or shadow detail loss. Only add these when the requested medium/conditions benefit from imperfect digital capture.
 
-- chroma noise;
-- luminance noise;
-- pattern/fixed noise;
-- denoising artifacts;
-- detail loss in deep shadows.
+Premium digital-cinema or elite mobile finishing usually controls ugly sensor noise while retaining enough texture to avoid waxy smoothness.
 
-Only introduce these when the chosen capture/story intent benefits from imperfect low-light digital response.
+## ARRI-Like Tonal Finish vs Grain
 
-Do not contaminate premium clean digital-cinema AUTO shots with obvious noise merely for authenticity.
+`ARRI-like` in this skill refers to observable tonal goals such as:
 
-## 4. Halation
+- smooth highlight rolloff;
+- gentle highlight-to-mid transition;
+- natural skin-tone separation;
+- rich readable shadows;
+- controlled color density.
 
-Halation is not a universal red outline around highlights.
+It does **not** mean:
 
-Use only when:
+- literal ARRI sensor simulation;
+- mandatory ARRI camera naming in prompts;
+- mandatory grain;
+- mandatory warmth;
+- a single LUT/preset.
 
-- the film/medium reference plausibly supports it;
-- bright sources/edges are intense enough to motivate it;
-- the provider can express it without turning every highlight into a glow effect;
-- the user/reference explicitly asks for visible halation.
+Subtle filmic texture may complement this tonal goal, but the two are separate systems.
+
+## Halation
+
+Halation is never a default consequence of the base texture layer.
+
+Use visible halation only when:
+
+- film/medium reference plausibly supports it;
+- bright sources/edges motivate it;
+- the provider can express it without global glow;
+- the user/reference calls for it.
 
 Keep it localized and exposure-dependent.
 
-Avoid:
+Avoid red/orange outlines on every bright edge.
 
-- red/orange halos on every white edge;
-- halation on matte midtones;
-- treating halation as lens flare;
-- adding it to all film-stock references.
+## Bloom
 
-## 5. Bloom
+Bloom is bright-value light spread, not global blur.
 
-Bloom is soft light spread around sufficiently bright areas.
+It may come from optical diffusion, mist/filter behavior, bright-source scatter, or provider-specific post behavior.
 
-It may come from:
+Tie bloom to genuinely bright regions and source context. Do not soften the whole image under the label `cinematic`.
 
-- optical diffusion;
-- sensor/film response approximation;
-- mist/filter behavior;
-- bright-source scatter;
-- provider-specific post effects.
+## Lens Flare
 
-Bloom should increase with genuinely bright values and source context.
+Flare requires source/lens geometry.
 
-Avoid globally softening the whole image under the label `bloom`.
+Possible forms include veiling glare, ghosts, streaks, reduced local contrast, and internal reflections.
 
-## 6. Lens Flare
-
-Flare requires light-source geometry relative to the lens.
-
-Possible forms:
-
-- veiling glare;
-- ghosts;
-- streaks;
-- reduced local contrast;
-- anamorphic streak behavior;
-- colored internal reflections.
-
-AUTO flare should generally be absent unless a strong source is in-frame or near the optical axis and the selected lens character supports visible flare.
-
-Hard rule:
+AUTO flare should remain absent unless a plausible source and lens behavior justify it.
 
 ```text
 cinematic != flare
@@ -138,205 +162,113 @@ anamorphic != mandatory blue streak
 vintage lens != flare everywhere
 ```
 
-## 7. Veiling Glare
+## Optical Diffusion
 
-Veiling glare can lower local/global contrast near a strong source.
+Diffusion may reduce brittle high-frequency detail while preserving the focus plane.
 
-Use it as a spatial optical response, not a gray haze overlay over the entire frame.
+Possible consequences:
 
-It should agree with:
-
-- source position;
-- lens/coating character;
-- exposure;
-- atmosphere;
-- framing.
-
-## 8. Optical Diffusion
-
-If the user requests diffusion, distinguish it from defocus and bloom.
-
-Possible visible consequences:
-
-- gentler high-frequency facial detail;
+- gentler facial microcontrast;
 - highlight spread;
-- softened microcontrast;
-- less brittle edges;
-- preserved underlying focus plane.
+- smoother tonal transitions;
+- less brittle edges.
 
-Do not turn diffusion into smeared focus.
+Do not turn diffusion into missed focus.
 
-## 9. Sharpness
+## Sharpness and Microcontrast
 
-Avoid both extremes:
+Professional detail is material-specific and focus-dependent.
 
-- brittle digital oversharpening;
-- indiscriminate cinematic softness.
-
-Sharpness should follow:
-
-- focus plane;
-- lens character;
-- motion state;
-- depth strategy;
-- material texture;
-- capture medium;
-- output use.
-
-Faces may retain pores without every pore having an edge-enhancement halo.
-
-## 10. Microcontrast
-
-Microcontrast affects perceived texture and dimensionality.
-
-Too much can produce:
+Avoid:
 
 - crunchy skin;
-- exaggerated pores;
-- fake fabric detail;
-- excessive local HDR;
-- over-separated texture.
+- pore halos;
+- fake fabric weave;
+- HDR-like local contrast;
+- oversharpened hair;
+- indiscriminate softness.
 
-Too little can produce waxy surfaces.
+Faces can retain real structure without every pore being edge-enhanced.
 
-Keep microcontrast material-specific and lighting-dependent.
+## Mobile / iPhone Texture
 
-## 11. Compression and Low-Fi Media Artifacts
+For phone/selfie/social photography:
 
-VHS, consumer digital, Pixelvision-type references, phone compression, or archival media may justify:
+- preserve believable phone acuity, depth, and computational-processing character;
+- suppress ugly oversharpening, fake HDR, denoising waxiness, and cutout portrait blur;
+- a very subtle organic finishing texture may be added when it keeps the image natural;
+- do not force obvious 35mm grain or cinema-camera softness onto a phone image.
 
-- chroma bleed;
-- reduced resolution;
-- edge ringing;
-- scanline/interlace cues;
-- block/compression artifacts;
-- color instability;
-- tape noise/dropout where appropriate.
+The professional goal is elite mobile photography/editorial finishing, not disguise of the medium.
 
-These are medium-specific, not generic vintage decoration.
+## Clean Commercial Work
 
-Do not add all artifacts simultaneously unless the reference supports them.
+Clean commercial does not mean sterile plastic.
 
-## 12. Film Dirt, Dust, Scratches, Gate Weave
+A premium clean result may have:
 
-These are projection/scan/physical-medium artifacts, not mandatory film-stock characteristics.
+- nearly invisible or absent grain where product clarity requires;
+- controlled highlights;
+- exact material microtexture;
+- clean color separation;
+- restrained sharpening;
+- subtle natural surface variation;
+- professional tonal polish.
 
-AUTO should omit them unless:
+For lifestyle/commercial scenes, subtle organic texture may remain if it strengthens cohesion without damaging product readability.
 
-- archival/damaged print is the intent;
-- user explicitly requests them;
-- reference match requires them.
+## Documentary / Candid / Naturalistic Drama
 
-Clean film capture can be filmic without visible scratches or dust.
+These normally benefit from:
 
-## 13. Texture Hierarchy
+- subtle organic texture;
+- realistic optical/focus transition;
+- believable available/motivated light;
+- non-plastic skin/material response;
+- professional color/exposure finishing.
 
-The image should not have equal texture strength everywhere.
+They do not automatically require heavy grain, flare, haze, or vintage damage.
 
-Prioritize material-appropriate variation:
+## Vintage / Period Intent
 
-- skin texture responds to light and focus;
+Choose one coherent medium/period rather than stacking unrelated old-media artifacts.
+
+Do not combine 35mm grain + VHS chroma bleed + modern anamorphic streak + Polaroid color shift unless the user intentionally wants a hybrid.
+
+## Texture Hierarchy
+
+Texture strength should vary by material, focus, light, and depth.
+
+- skin texture follows lighting/focus;
 - fabric weave depends on distance/focus;
-- brushed metal has directional texture;
-- glass is mostly seen through reflections, refraction, dust/smudges where appropriate;
-- walls/stone may retain fine irregularity;
-- background texture should soften with depth/motion as appropriate.
+- brushed metal has directional response;
+- glass is primarily defined by reflection/refraction;
+- stone/walls can retain fine irregularity;
+- background detail should follow depth/motion.
 
-Global texture overlays are a common AI-look amplifier.
+Global overlays are a common AI-look amplifier.
 
-## 14. Bright Commercial Work
-
-Do not assume clean commercial = sterile plastic.
-
-A clean commercial result may have:
-
-- little/no visible grain;
-- no halation;
-- no flare;
-- precise material microtexture;
-- clean highlights;
-- controlled sharpening;
-- subtle natural imperfections.
-
-Realism comes from physical consistency, not dirtiness.
-
-## 15. Naturalistic Drama
-
-May use:
-
-- subtle grain;
-- restrained lens softness;
-- occasional motivated flare;
-- slight highlight bloom;
-- natural material/skin variation.
-
-But none is mandatory.
-
-## 16. Vintage / Period Intent
-
-First decide which period/medium is intended.
-
-Then choose only relevant traits.
-
-Do not combine:
-
-```text
-1970s 35mm grain
-+ VHS chroma bleed
-+ modern anamorphic flare
-+ heavy digital sharpening
-+ Polaroid color shift
-```
-
-unless the user explicitly wants hybrid media.
-
-## 17. Reference Match
-
-Observe texture effects separately:
-
-```text
-grain
-noise
-sharpness
-diffusion
-bloom
-halation
-flare
-compression
-physical media damage
-```
-
-Do not infer one from another.
-
-A soft reference may be caused by lens falloff, focus, motion, diffusion, low resolution, compression, or enlargement. Mark uncertainty instead of inventing the cause.
-
-## 18. Provider Behavior
-
-Some providers expose explicit sliders/toggles for grain, halation, flare, sharpen, skin detail, or film looks.
-
-Adapters may use those controls, but the universal brain must decide first whether each effect is actually needed.
-
-Provider availability does not imply creative necessity.
-
-## 19. Texture Reality Gate
+## Reality Gate
 
 Check:
 
-1. Is the texture/effect motivated by medium, optics, exposure, or user intent?
-2. Is grain spatially and tonally plausible rather than uniform noise?
-3. Is halation localized to sufficiently bright boundaries?
-4. Is bloom tied to bright values?
-5. Does flare geometry correspond to a plausible source?
-6. Does sharpness follow focus/depth/motion?
-7. Is microcontrast appropriate to the material?
-8. Are media artifacts internally consistent with one medium?
-9. Has an AUTO effect been added simply because `cinematic` was requested?
-10. Would removing the effect improve realism? If yes, remove it.
+1. Is subtle base texture appropriate to the requested medium?
+2. If texture is absent, does the image risk sterile/waxy AI cleanliness?
+3. If texture is visible, is it fine and non-uniform rather than pasted noise?
+4. Does strong grain have a specific reason?
+5. Is halation localized to sufficiently bright boundaries?
+6. Is bloom tied to bright values?
+7. Does flare geometry correspond to a plausible source?
+8. Does sharpness follow focus/depth/motion/material?
+9. Are media artifacts internally consistent?
+10. Did any effect appear because `cinematic` was treated as an effects preset?
 
-## 20. Hard Rules
+## Hard Rules
 
 ```text
-film != grain + warmth
+subtle organic texture = normal photographic finish unless medium/user says otherwise
+strong grain = intentional choice
+film != grain + warmth + fade
 halation != universal red glow
 bloom != global blur
 flare != mandatory cinema token
@@ -344,6 +276,6 @@ anamorphic != blue-streak preset
 diffusion != missed focus
 sharpness != edge halos
 realism != dirtiness
-vintage != stack every old-media artifact
+professional finish != sterile AI cleanliness
 provider effect control != reason to use it
 ```
