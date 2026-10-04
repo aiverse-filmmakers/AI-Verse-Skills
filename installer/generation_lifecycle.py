@@ -476,20 +476,27 @@ def activate_generation(root: Path, generation_id: str) -> Dict[str, object]:
     return pointer
 
 
+def pin_generation(root: Path, generation_id: str, digest_fn) -> GenerationPin:
+    """Capture and verify one exact immutable generation."""
+
+    root = Path(root).resolve()
+    path = generation_path(root, generation_id)
+    errors = verify_generation(root, generation_id, digest_fn)
+    if errors:
+        raise RuntimeError(f"Generation {generation_id} failed verification:\n" + "\n".join(errors))
+    manifest = read_generation_manifest(root, generation_id)
+    digest = str(manifest.get("generation_digest_sha256", ""))
+    if not digest:
+        raise RuntimeError(f"Generation {generation_id} has no content digest")
+    return GenerationPin(generation_id, path, manifest, digest)
+
+
 def pin_active_generation(root: Path, digest_fn) -> GenerationPin:
     """Capture a complete immutable generation for one execution."""
 
     root = Path(root).resolve()
     pointer = read_active_pointer(root)
-    generation_id = str(pointer["generation_id"])
-    errors = verify_generation(root, generation_id, digest_fn)
-    if errors:
-        raise RuntimeError("Active generation failed verification:\n" + "\n".join(errors))
-    manifest = read_generation_manifest(root, generation_id)
-    digest = str(manifest.get("generation_digest_sha256", ""))
-    if not digest:
-        raise RuntimeError(f"Generation {generation_id} has no content digest")
-    return GenerationPin(generation_id, generation_path(root, generation_id), manifest, digest)
+    return pin_generation(root, str(pointer["generation_id"]), digest_fn)
 
 
 def _generation_lease_path(root: Path, generation_id: str, lease_id: str) -> Path:
@@ -508,8 +515,10 @@ def acquire_generation_lease(
     digest_fn,
     *,
     owner_pid: Optional[int] = None,
+    generation_id: Optional[str] = None,
+    package_id: Optional[str] = None,
 ) -> GenerationLease:
-    """Atomically pin the active immutable generation for a live execution.
+    """Atomically pin an active or explicitly selected generation for execution.
 
     The lease and explicit purge share the lifecycle lock, so purge cannot pass
     its lease scan between generation selection and durable lease publication.
@@ -525,7 +534,15 @@ def acquire_generation_lease(
         raise RuntimeError(f"Generation lease owner process is not verifiably live: {pid}")
 
     with lifecycle_lock(root):
-        pin = pin_active_generation(root, digest_fn)
+        pin = (
+            pin_active_generation(root, digest_fn)
+            if generation_id is None
+            else pin_generation(root, generation_id, digest_fn)
+        )
+        # Validate requested package before publishing a durable lease. A failed
+        # pin request must never strand a lease the caller cannot release.
+        if package_id is not None:
+            pin.package_path(package_id)
         lease_id = uuid.uuid4().hex
         token = uuid.uuid4().hex
         hostname = socket.gethostname()
