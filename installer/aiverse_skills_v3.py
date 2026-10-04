@@ -838,7 +838,13 @@ def cmd_adapter_verify(a):
 def cmd_pin(a):
     root = Path(a.root).expanduser().resolve()
     owner_pid = a.lease_owner_pid if a.lease_owner_pid is not None else os.getppid()
-    lease = acquire_generation_lease(root, digest, owner_pid=owner_pid)
+    lease = acquire_generation_lease(
+        root,
+        digest,
+        owner_pid=owner_pid,
+        generation_id=getattr(a, "generation_id", None),
+        package_id=a.package,
+    )
     data = {
         "generation_id": lease.generation_id,
         "generation_path": str(lease.generation_path),
@@ -940,6 +946,7 @@ def parser():
 
     q = sub.add_parser("pin")
     q.add_argument("--package")
+    q.add_argument("--generation-id", help="lease this exact previously selected generation")
     q.add_argument("--lease-owner-pid", type=int)
     q.add_argument("--json", action="store_true")
     q.set_defaults(fn=cmd_pin)
