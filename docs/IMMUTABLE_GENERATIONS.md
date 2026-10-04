@@ -92,6 +92,29 @@ The lock lives beside the canonical root rather than inside a generation, so rep
 
 A recent lock is not stolen. A clearly stale lock can be recovered after the stale threshold.
 
+## Execution-generation leases
+
+A filesystem path alone does not keep an immutable generation available: explicit retention maintenance may remove an old generation. Every consumer that uses a generation beyond a short metadata read must hold an execution lease for that use.
+
+The public pin command creates a durable lease before returning the selected generation:
+
+```bash
+./aiverse-skills pin --package verification-harness --json
+```
+
+The JSON includes generation identity/path, lease ID, lease token, and the owner process identity. The default lease owner is the calling parent process; a host may provide its exact live worker PID with `--lease-owner-pid`. Keep the lease for the entire execution and release it in the host's normal cleanup/finally path:
+
+```bash
+./aiverse-skills unpin \
+  --generation-id <generation-id> \
+  --lease-id <lease-id> \
+  --lease-token <lease-token>
+```
+
+Lease files are controller-owned under `.aiverse/leases/<generation-id>/<lease-id>.json`. Lease acquisition, release, and explicit purge serialize through the same per-root lifecycle lock. A lease for a verifiably live local process protects its generation regardless of age or the requested `--keep` count. A provably dead local owner is reaped after its lease identity is re-read. Foreign-host, malformed, and otherwise unverifiable leases fail closed: purge retains the referenced generation and reports the lease for operator verification. Age alone never reclaims a live lease.
+
+If an execution exits normally, it must release its lease. If its owner crashes, a later explicit purge can reclaim the lease only after local process liveness proves that owner dead. An unknown remote or unverifiable holder requires operator investigation; manually remove its lease only after confirming no execution still uses that generation.
+
 ## Install and update
 
 The lifecycle is:
