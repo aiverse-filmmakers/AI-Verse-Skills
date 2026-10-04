@@ -125,7 +125,7 @@ class CinematicRealismDirectorContractTests(unittest.TestCase):
         )
 
         self.assertIn("Professional Quality Floor is mandatory", skill)
-        self.assertIn("The user should not need to type", quality)
+        self.assertIn("should not need to type", quality)
         self.assertIn("elite mobile photographer/editor", quality)
         self.assertIn("feature-film", quality)
         self.assertIn("ARRI-like", quality)
@@ -153,9 +153,9 @@ class CinematicRealismDirectorContractTests(unittest.TestCase):
         )
 
         self.assertIn("host-native/local image generation/editing", skill)
-        self.assertIn("native/local host image capability", priority)
+        self.assertIn("native/local host image generation or editing capability", priority)
         self.assertIn("Magnific Cinematic and Higgsfield Soul Cinema are benchmark/reference competitors", priority)
-        self.assertIn("MCP is transport", priority)
+        self.assertIn("MCP is a transport/capability surface, not a creative-quality signal", priority)
         self.assertIn("automatically routes an ordinary request to Magnific or Higgsfield", host)
         self.assertIn("OPTIONAL EXPLICIT-TARGET / BENCHMARK ADAPTER", magnific)
         self.assertIn("ordinary image request -> DO NOT auto-select Magnific", magnific)
