@@ -36,6 +36,8 @@ try:  # package import
         mark_uninstalled,
         new_generation_id,
         pin_active_generation,
+        acquire_generation_lease,
+        release_generation_lease,
         read_active_pointer,
         read_generation_manifest,
         rollback_active_generation,
@@ -55,6 +57,8 @@ except ImportError:  # direct script execution
         mark_uninstalled,
         new_generation_id,
         pin_active_generation,
+        acquire_generation_lease,
+        release_generation_lease,
         read_active_pointer,
         read_generation_manifest,
         rollback_active_generation,
@@ -833,14 +837,20 @@ def cmd_adapter_verify(a):
 
 def cmd_pin(a):
     root = Path(a.root).expanduser().resolve()
-    pin = pin_active_generation(root, digest)
+    owner_pid = a.lease_owner_pid if a.lease_owner_pid is not None else os.getppid()
+    lease = acquire_generation_lease(root, digest, owner_pid=owner_pid)
     data = {
-        "generation_id": pin.generation_id,
-        "generation_path": str(pin.generation_path),
-        "generation_digest_sha256": pin.generation_digest_sha256,
+        "generation_id": lease.generation_id,
+        "generation_path": str(lease.generation_path),
+        "generation_digest_sha256": lease.generation_digest_sha256,
+        "lease_id": lease.lease_id,
+        "lease_token": lease.lease_token,
+        "lease_owner_pid": lease.owner_pid,
+        "lease_owner_hostname": lease.hostname,
+        "lease_release_required": True,
     }
     if a.package:
-        package = pin.package_path(a.package)
+        package = lease.package_path(a.package)
         data["package_id"] = a.package
         data["package_path"] = str(package)
         data["skill_md"] = str(package / "SKILL.md")
@@ -849,6 +859,16 @@ def cmd_pin(a):
     else:
         for key, value in data.items():
             print(f"{key}: {value}")
+
+
+def cmd_unpin(a):
+    root = Path(a.root).expanduser().resolve()
+    released = release_generation_lease(root, a.generation_id, a.lease_id, a.lease_token)
+    data = {"released": released, "generation_id": a.generation_id, "lease_id": a.lease_id}
+    if a.json:
+        print(json.dumps(data, indent=2, sort_keys=True))
+    else:
+        print(f"generation lease released: {released}")
 
 
 def cmd_e2e(a):
@@ -920,8 +940,16 @@ def parser():
 
     q = sub.add_parser("pin")
     q.add_argument("--package")
+    q.add_argument("--lease-owner-pid", type=int)
     q.add_argument("--json", action="store_true")
     q.set_defaults(fn=cmd_pin)
+
+    q = sub.add_parser("unpin")
+    q.add_argument("--generation-id", required=True)
+    q.add_argument("--lease-id", required=True)
+    q.add_argument("--lease-token", required=True)
+    q.add_argument("--json", action="store_true")
+    q.set_defaults(fn=cmd_unpin)
 
     q = sub.add_parser("e2e")
     q.set_defaults(fn=cmd_e2e)
