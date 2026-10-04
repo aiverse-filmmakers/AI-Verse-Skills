@@ -293,6 +293,11 @@ def purge_generations(impl: Any, root: Path, *, keep: int, confirmed: bool) -> D
         history = [str(x) for x in pointer.get("history", [])]
         protected.update(history[:max(0, keep)])
 
+        # Live execution leases are authoritative retention references. Unknown
+        # or foreign holders fail closed and keep the associated generation.
+        leases = impl.active_generation_leases(root)
+        protected.update(str(x) for x in leases["protected_generation_ids"])
+
         # Keep every generation referenced by learning rollback/archive provenance.
         base = learning.learning_dir(root)
         proposals = base / "proposals"
@@ -320,7 +325,14 @@ def purge_generations(impl: Any, root: Path, *, keep: int, confirmed: bool) -> D
         pointer["history"] = [x for x in history if impl.generation_path(root, x).exists()]
         impl._atomic_json_write(impl.active_pointer_path(root), pointer)
         learning.append_audit(root, "lifecycle.purge", {"removed": removed, "protected": sorted(protected)})
-    return {"removed": removed, "protected": sorted(protected), "automatic_purge": False}
+    return {
+        "removed": removed,
+        "protected": sorted(protected),
+        "live_execution_leases": leases["live"],
+        "unverifiable_execution_leases": leases["unverifiable"],
+        "stale_execution_leases_reaped": leases["stale_reaped"],
+        "automatic_purge": False,
+    }
 
 
 def _print(data: Any, as_json: bool) -> None:
