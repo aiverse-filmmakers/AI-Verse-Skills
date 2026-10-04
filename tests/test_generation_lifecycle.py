@@ -315,6 +315,31 @@ class ImmutableGenerationLifecycleTests(unittest.TestCase):
             self.assertEqual(active_generation_leases(root)["protected_generation_ids"], [])
 
 
+    def test_exact_generation_lease_can_pin_previously_selected_generation(self):
+        with tempfile.TemporaryDirectory() as temp:
+            base = Path(temp)
+            root = base / "skills"
+            root.mkdir()
+            GenerationFixture.commit(root, base, "gen-v1", "v1")
+            GenerationFixture.commit(root, base, "gen-v2", "v2")
+            lease = acquire_generation_lease(root, digest, generation_id="gen-v1", package_id="sample")
+            self.assertEqual(lease.generation_id, "gen-v1")
+            self.assertIn("instructions-v1", (lease.package_path("sample") / "SKILL.md").read_text(encoding="utf-8"))
+            report = skills.purge_generations(root, keep=0, confirmed=True)
+            self.assertTrue(generation_path(root, "gen-v1").is_dir())
+            self.assertIn("gen-v1", report["protected"])
+            self.assertTrue(release_generation_lease(root, lease.generation_id, lease.lease_id, lease.lease_token))
+
+    def test_invalid_package_does_not_publish_execution_lease(self):
+        with tempfile.TemporaryDirectory() as temp:
+            base = Path(temp)
+            root = base / "skills"
+            root.mkdir()
+            GenerationFixture.commit(root, base, "gen-v1", "v1")
+            with self.assertRaisesRegex(RuntimeError, "Package not installed"):
+                acquire_generation_lease(root, digest, package_id="missing")
+            self.assertFalse(generation_leases_dir(root).exists())
+
     def test_purge_protects_live_execution_lease_until_explicit_release(self):
         with tempfile.TemporaryDirectory() as temp:
             base = Path(temp)
