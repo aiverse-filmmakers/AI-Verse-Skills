@@ -125,6 +125,14 @@ Pin one immutable generation before loading a Skill:
 
 A consumer must use the returned generation for the entire execution. Do not load `SKILL.md` from one generation and helper files from another.
 
+The pin creates a durable execution lease. Keep its lease ID and token, then release it after the execution finishes:
+
+```bash
+./aiverse-skills unpin --generation-id <generation-id> --lease-id <lease-id> --lease-token <lease-token>
+```
+
+Release the lease in the host's normal cleanup/finally path. Explicit retention purge preserves live execution leases regardless of age or `--keep`; crashed local holders are recovered only after process-death verification. See [Immutable Generation Lifecycle](docs/IMMUTABLE_GENERATIONS.md#execution-generation-leases) for the recovery and fail-closed rules.
+
 ### Runtime support claims
 
 Current public-beta support is intentionally precise:

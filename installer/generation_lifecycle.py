@@ -28,6 +28,7 @@ ACTIVE_SCHEMA_VERSION = 1
 GENERATION_SCHEMA_VERSION = 1
 LOCK_STALE_SECONDS = 300
 LOCK_TIMEOUT_SECONDS = 30.0
+GENERATION_LEASE_SCHEMA_VERSION = 1
 WINDOWS_REPARSE_POINT = 0x0400
 
 
@@ -43,6 +44,24 @@ class GenerationPin:
             if package.get("id") == package_id:
                 return self.generation_path / str(package["path"])
         raise RuntimeError(f"Package not installed in pinned generation: {package_id}")
+
+
+@dataclass(frozen=True)
+class GenerationLease:
+    generation_id: str
+    lease_id: str
+    lease_token: str
+    owner_pid: int
+    hostname: str
+    generation_path: Path
+    manifest: Dict[str, object]
+    generation_digest_sha256: str
+
+    def package_path(self, package_id: str) -> Path:
+        for package in self.manifest.get("packages", []):
+            if package.get("id") == package_id:
+                return self.generation_path / str(package["path"])
+        raise RuntimeError(f"Package not installed in leased generation: {package_id}")
 
 
 def _absolute_path(path: Path) -> Path:
@@ -115,6 +134,10 @@ def metadata_dir(root: Path) -> Path:
 
 def generations_dir(root: Path) -> Path:
     return controller_path(root, "generations")
+
+
+def generation_leases_dir(root: Path) -> Path:
+    return controller_path(root, "leases")
 
 
 def active_pointer_path(root: Path) -> Path:
@@ -453,20 +476,229 @@ def activate_generation(root: Path, generation_id: str) -> Dict[str, object]:
     return pointer
 
 
+def pin_generation(root: Path, generation_id: str, digest_fn) -> GenerationPin:
+    """Capture and verify one exact immutable generation."""
+
+    root = Path(root).resolve()
+    path = generation_path(root, generation_id)
+    errors = verify_generation(root, generation_id, digest_fn)
+    if errors:
+        raise RuntimeError(f"Generation {generation_id} failed verification:\n" + "\n".join(errors))
+    manifest = read_generation_manifest(root, generation_id)
+    digest = str(manifest.get("generation_digest_sha256", ""))
+    if not digest:
+        raise RuntimeError(f"Generation {generation_id} has no content digest")
+    return GenerationPin(generation_id, path, manifest, digest)
+
+
 def pin_active_generation(root: Path, digest_fn) -> GenerationPin:
     """Capture a complete immutable generation for one execution."""
 
     root = Path(root).resolve()
     pointer = read_active_pointer(root)
-    generation_id = str(pointer["generation_id"])
-    errors = verify_generation(root, generation_id, digest_fn)
-    if errors:
-        raise RuntimeError("Active generation failed verification:\n" + "\n".join(errors))
-    manifest = read_generation_manifest(root, generation_id)
-    digest = str(manifest.get("generation_digest_sha256", ""))
-    if not digest:
-        raise RuntimeError(f"Generation {generation_id} has no content digest")
-    return GenerationPin(generation_id, generation_path(root, generation_id), manifest, digest)
+    return pin_generation(root, str(pointer["generation_id"]), digest_fn)
+
+
+def _generation_lease_path(root: Path, generation_id: str, lease_id: str) -> Path:
+    generation_path(root, generation_id)  # validates the generation identifier and controller chain
+    if (
+        not isinstance(lease_id, str)
+        or len(lease_id) != 32
+        or any(ch not in "0123456789abcdef" for ch in lease_id)
+    ):
+        raise RuntimeError("Invalid generation lease id")
+    return controller_path(root, "leases", generation_id, lease_id + ".json")
+
+
+def acquire_generation_lease(
+    root: Path,
+    digest_fn,
+    *,
+    owner_pid: Optional[int] = None,
+    generation_id: Optional[str] = None,
+    package_id: Optional[str] = None,
+) -> GenerationLease:
+    """Atomically pin an active or explicitly selected generation for execution.
+
+    The lease and explicit purge share the lifecycle lock, so purge cannot pass
+    its lease scan between generation selection and durable lease publication.
+    A lease belongs to a local or remote process identity; only a verifiably
+    dead local process can be reaped automatically.
+    """
+
+    root = _absolute_path(root)
+    pid = os.getpid() if owner_pid is None else owner_pid
+    if not isinstance(pid, int) or isinstance(pid, bool) or pid <= 0:
+        raise RuntimeError("Generation lease owner PID must be a positive integer")
+    if _process_is_alive(pid) is not True:
+        raise RuntimeError(f"Generation lease owner process is not verifiably live: {pid}")
+
+    with lifecycle_lock(root):
+        pin = (
+            pin_active_generation(root, digest_fn)
+            if generation_id is None
+            else pin_generation(root, generation_id, digest_fn)
+        )
+        # Validate requested package before publishing a durable lease. A failed
+        # pin request must never strand a lease the caller cannot release.
+        if package_id is not None:
+            pin.package_path(package_id)
+        lease_id = uuid.uuid4().hex
+        token = uuid.uuid4().hex
+        hostname = socket.gethostname()
+        path = _generation_lease_path(root, pin.generation_id, lease_id)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        _atomic_json_write(path, {
+            "schema_version": GENERATION_LEASE_SCHEMA_VERSION,
+            "generation_id": pin.generation_id,
+            "lease_id": lease_id,
+            "lease_token": token,
+            "pid": pid,
+            "hostname": hostname,
+            "created_at": dt.datetime.now(dt.timezone.utc).isoformat(),
+        })
+        return GenerationLease(
+            generation_id=pin.generation_id,
+            lease_id=lease_id,
+            lease_token=token,
+            owner_pid=pid,
+            hostname=hostname,
+            generation_path=pin.generation_path,
+            manifest=pin.manifest,
+            generation_digest_sha256=pin.generation_digest_sha256,
+        )
+
+
+def release_generation_lease(
+    root: Path,
+    generation_id: str,
+    lease_id: str,
+    lease_token: str,
+) -> bool:
+    """Release one lease only when the caller presents its unguessable token."""
+
+    root = _absolute_path(root)
+    if not isinstance(lease_token, str) or not lease_token:
+        raise RuntimeError("Generation lease token is required")
+    with lifecycle_lock(root):
+        path = _generation_lease_path(root, generation_id, lease_id)
+        try:
+            data = json.loads(path.read_text(encoding="utf-8"))
+        except FileNotFoundError:
+            return False
+        except (json.JSONDecodeError, OSError, UnicodeError) as exc:
+            raise RuntimeError(f"Generation lease is unreadable; refusing release: {path}") from exc
+        if not isinstance(data, dict) or data.get("lease_token") != lease_token:
+            raise RuntimeError("Generation lease token mismatch")
+        if data.get("generation_id") != generation_id or data.get("lease_id") != lease_id:
+            raise RuntimeError("Generation lease identity mismatch")
+        current = None
+        try:
+            current = json.loads(path.read_text(encoding="utf-8"))
+        except (FileNotFoundError, json.JSONDecodeError, OSError, UnicodeError):
+            return False
+        if not isinstance(current, dict) or current.get("lease_token") != lease_token:
+            raise RuntimeError("Generation lease changed before release")
+        path.unlink(missing_ok=True)
+        try:
+            path.parent.rmdir()
+        except OSError:
+            pass
+        return True
+
+
+def active_generation_leases(root: Path) -> Dict[str, object]:
+    """Classify leases while the caller holds lifecycle_lock(root).
+
+    Malformed, foreign-host, and otherwise unverifiable leases protect their
+    generation. Age never authorizes reclaim of a live process lease.
+    """
+
+    root = _absolute_path(root)
+    lease_root = generation_leases_dir(root)
+    result: Dict[str, object] = {
+        "protected_generation_ids": [],
+        "live": [],
+        "unverifiable": [],
+        "stale_reaped": [],
+    }
+    if not lease_root.exists():
+        return result
+    protected = set()
+    for generation_entry in sorted(lease_root.iterdir()):
+        generation_id = generation_entry.name
+        if _is_symlink_or_reparse(generation_entry) or not generation_entry.is_dir():
+            raise RuntimeError(f"Unsafe generation lease entry: {generation_entry}")
+        generation_path(root, generation_id)
+        entries = sorted(generation_entry.iterdir())
+        if not entries:
+            try:
+                generation_entry.rmdir()
+            except OSError:
+                pass
+            continue
+        for path in entries:
+            identity = {"generation_id": generation_id, "lease_id": path.stem}
+            if _is_symlink_or_reparse(path) or not path.is_file() or path.suffix != ".json":
+                protected.add(generation_id)
+                result["unverifiable"].append({**identity, "reason": "unexpected lease entry"})
+                continue
+            try:
+                data = json.loads(path.read_text(encoding="utf-8"))
+            except (json.JSONDecodeError, OSError, UnicodeError):
+                protected.add(generation_id)
+                result["unverifiable"].append({**identity, "reason": "unreadable lease"})
+                continue
+            valid = (
+                isinstance(data, dict)
+                and data.get("schema_version") == GENERATION_LEASE_SCHEMA_VERSION
+                and data.get("generation_id") == generation_id
+                and data.get("lease_id") == path.stem
+                and isinstance(data.get("lease_token"), str)
+                and bool(data.get("lease_token"))
+                and isinstance(data.get("pid"), int)
+                and not isinstance(data.get("pid"), bool)
+                and data.get("pid") > 0
+                and isinstance(data.get("hostname"), str)
+                and bool(data.get("hostname"))
+            )
+            if not valid:
+                protected.add(generation_id)
+                result["unverifiable"].append({**identity, "reason": "malformed lease identity"})
+                continue
+            host = data["hostname"]
+            if host != socket.gethostname():
+                protected.add(generation_id)
+                result["unverifiable"].append({**identity, "reason": "foreign-host holder"})
+                continue
+            alive = _process_is_alive(data["pid"])
+            if alive is True:
+                protected.add(generation_id)
+                result["live"].append({**identity, "pid": data["pid"], "hostname": host})
+                continue
+            if alive is None:
+                protected.add(generation_id)
+                result["unverifiable"].append({**identity, "reason": "holder liveness unavailable"})
+                continue
+            # Re-read the lease identity before reclaiming a dead holder, so a
+            # concurrent replacement can never be removed using stale evidence.
+            current = _read_lock_holder(path)
+            if current is None or current.get("lease_token") != data["lease_token"]:
+                protected.add(generation_id)
+                result["unverifiable"].append({**identity, "reason": "lease changed during stale recovery"})
+                continue
+            try:
+                path.unlink()
+            except FileNotFoundError:
+                pass
+            result["stale_reaped"].append(identity)
+        if not any(generation_entry.iterdir()):
+            try:
+                generation_entry.rmdir()
+            except OSError:
+                pass
+    result["protected_generation_ids"] = sorted(protected)
+    return result
 
 
 def rollback_active_generation(root: Path, digest_fn) -> GenerationPin:

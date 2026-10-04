@@ -50,6 +50,9 @@ def _purge_generations(impl: Any, root: Path, *, keep: int, confirmed: bool) -> 
         history = [str(x) for x in pointer.get("history", [])]
         protected.update(history[:max(0, keep)])
 
+        leases = lifecycle.active_generation_leases(root)
+        protected.update(str(x) for x in leases["protected_generation_ids"])
+
         base = learning.learning_dir(root)
         proposals = base / "proposals"
         if proposals.exists():
@@ -87,7 +90,14 @@ def _purge_generations(impl: Any, root: Path, *, keep: int, confirmed: bool) -> 
         pointer["history"] = [generation_id for generation_id in history if impl.generation_path(root, generation_id).exists()]
         impl._atomic_json_write(impl.active_pointer_path(root), pointer)
         learning.append_audit(root, "lifecycle.purge", {"removed": removed, "protected": sorted(protected)})
-    return {"removed": removed, "protected": sorted(protected), "automatic_purge": False}
+    return {
+        "removed": removed,
+        "protected": sorted(protected),
+        "live_execution_leases": leases["live"],
+        "unverifiable_execution_leases": leases["unverifiable"],
+        "stale_execution_leases_reaped": leases["stale_reaped"],
+        "automatic_purge": False,
+    }
 
 
 def apply_controller_containment(impl: Any) -> None:
@@ -99,6 +109,9 @@ def apply_controller_containment(impl: Any) -> None:
 
     impl.controller_path = lifecycle.controller_path
     impl.metadata_dir = lifecycle.metadata_dir
+    impl.acquire_generation_lease = lifecycle.acquire_generation_lease
+    impl.release_generation_lease = lifecycle.release_generation_lease
+    impl.active_generation_leases = lifecycle.active_generation_leases
 
     # Legacy mutable-layout detection is still supported, but its controller
     # manifest must obey the same root confinement as the generation lifecycle.
