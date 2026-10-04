@@ -1,21 +1,27 @@
 # Progressive Disclosure Router
 
 Status: RUNTIME KNOWLEDGE
-Task: 6.7
 
-Purpose: keep the skill fast, readable, and portable by loading only the references needed for the active request instead of treating every knowledge file as mandatory context.
+Purpose: keep the skill fast and portable by loading only the local references needed for the active request while guaranteeing the Professional Quality Floor and native-first execution policy are never skipped.
 
 ## Core Rule
 
 ```text
-route first -> load only relevant references -> reason -> adapt -> verify
+route
+-> load quality floor + locks + execution priority
+-> load active workflow
+-> load only relevant visual domains
+-> resolve universal shot
+-> choose execution path
+-> adapt for that chosen path
+-> verify
 ```
 
 Do not load the entire package for every request.
 
 ## Stage 1 - Identify Operation
 
-Route the request to one primary workflow:
+Choose one primary workflow:
 
 ```text
 AUTO_DIRECT
@@ -27,30 +33,26 @@ PROMPT_ONLY
 SHOT_RECIPE / EXPLAIN
 ```
 
-When several apply, choose one primary workflow and treat others as modifiers.
+Modifiers may coexist with one primary workflow.
 
-Examples:
+## Stage 2 - Always-Available Core
 
-- `Make this image more cinematic but keep the person identical` -> CINEMATIZE with preservation constraints.
-- `Fix the plastic skin in this image` -> REALITY_REPAIR.
-- `Match this reference but use a 35mm lens` -> REFERENCE_MATCH + MANUAL_CAMERA lock.
-- `Give me a Seedream prompt only` -> PROMPT_ONLY + provider adapter.
+For ordinary generation/editing requests, the minimum core should include:
 
-## Stage 2 - Always-Available Core Contracts
-
-The host should know or load the minimum contract set needed to remain safe and coherent:
-
-- `references/routing.md`
+- `references/professional-quality-floor.md`
+- `references/execution-priority.md`
 - `references/locks.md`
-- `references/success-contract.md`
 - `references/host-capabilities.md`
-- `schemas/cinematic-shot-spec.schema.json` when structured output is needed.
+- `references/host-action-policy.md`
+- `references/success-contract.md`
 
-Do not repeatedly restate these to the user.
+Use `references/routing.md` when activation boundaries are relevant and `schemas/cinematic-shot-spec.schema.json` when structured state helps.
+
+The quality floor is not optional just because a prompt is simple.
 
 ## Stage 3 - Workflow Reference
 
-Load exactly the active workflow file:
+Load exactly the active workflow:
 
 ```text
 AUTO DIRECT      -> references/workflows/auto-direct.md
@@ -65,8 +67,7 @@ PROMPT ONLY      -> references/workflows/prompt-only.md
 
 Load only the systems materially involved.
 
-### Camera / framing
-Use as needed:
+### Intent / camera / framing
 
 - `references/visual-intent.md`
 - `references/composition-and-blocking.md`
@@ -77,7 +78,6 @@ Use as needed:
 - `references/motion-and-shutter.md`
 
 ### Lighting / color / finish
-Use as needed:
 
 - `references/motivated-lighting.md`
 - `references/lighting-roles.md`
@@ -88,7 +88,6 @@ Use as needed:
 - `references/texture-effects-restraint.md`
 
 ### Realism / repair
-Use as needed:
 
 - `references/anti-ai-artifact-taxonomy.md`
 - `references/skin-realism.md`
@@ -100,95 +99,118 @@ Use as needed:
 - `references/reality-gate.md`
 
 ### Reference analysis
-Use:
 
-- `schemas/reference-dna.schema.json`
+- `references/multi-reference-behavior.md`
 - `references/confidence-and-uncertainty.md`
 - `references/confidence-serialization.md`
+- `schemas/reference-dna.schema.json`
 
-### Conflicts
-Load `references/parameter-conflicts.md` only when a real contradiction or strong technical tension exists.
+Load `references/parameter-conflicts.md` only for a real contradiction/technical tension.
 
-## Stage 5 - Provider Adapter
+## Stage 5 - Resolve Professional Shot Before Provider
 
-Only after the universal shot or repair plan is resolved:
+The universal shot must already contain:
+
+- the requested/implicit image medium;
+- professional specialty standard;
+- visual hierarchy;
+- composition/camera relationship;
+- optics/depth;
+- motivated light;
+- exposure/tonal response;
+- color/grade;
+- default subtle organic texture when appropriate;
+- physical realism;
+- user locks.
+
+A provider adapter is not allowed to supply the missing professional vision.
+
+## Stage 6 - Choose Execution Path
+
+Follow `references/execution-priority.md`:
 
 ```text
-generic / unknown -> adapters/generic.md
-OpenAI -> provider adapter
-Gemini -> provider adapter
-Seedream -> provider adapter
-FLUX -> provider adapter
-Magnific -> provider adapter
-Higgsfield -> provider adapter
+explicit provider lock
+> native/local host image capability
+> permitted external provider only for missing material capability
+> prompt/spec fallback
 ```
 
-A provider adapter may translate the shot. It may not redesign it silently.
+Magnific/Higgsfield are explicit-target/benchmark only, never automatic choices.
 
-## Stage 6 - Reality Gate Depth
+## Stage 7 - Provider Adapter
 
-Use the lightest verification appropriate to the task:
+Only now load the adapter for the path already selected.
+
+```text
+unknown/native hidden provider -> adapters/generic.md
+OpenAI -> adapters/openai.md
+Gemini -> adapters/gemini.md
+Seedream -> adapters/seedream.md
+FLUX -> adapters/flux.md
+Magnific -> adapters/magnific.md ONLY when explicitly requested/benchmarking
+Higgsfield -> adapters/higgsfield-soul-cinema.md ONLY when explicitly requested/benchmarking
+```
+
+Provider adapters translate. They do not choose providers or redesign the shot.
+
+## Stage 8 - Reality Gate
 
 ### V0 prompt/spec
-Run reasoning checks on planned geometry, light, exposure, materials, locks, and provider translation.
+Check planned geometry, light, exposure, materials, professional finish, locks, and translation.
 
 ### V2 inspected/generated image
-Run full visual Reality Gate only if an actual image is available for inspection.
-
-Do not simulate visual inspection from a prompt alone.
+Inspect the actual pixels where possible. If material failures exist, repair them while preserving successful domains.
 
 ## Loading Examples
 
 ### Beginner: `A woman waiting alone at a rainy bus stop at night`
+
 Load:
+
+- Professional Quality Floor;
+- Execution Priority;
 - AUTO DIRECT;
 - visual intent;
-- composition;
-- camera/perspective/depth;
-- motivated lighting + night environment recipe;
-- exposure/color;
+- composition/camera/depth;
+- night lighting + exposure/color;
+- texture restraint;
 - Reality Gate;
-- active provider adapter.
+- adapter for the already-chosen execution path.
 
-Do not load detailed skin, fabric, film-stock, or repair taxonomies unless the shot requires them.
+### Mobile: `iPhone mirror selfie in a hotel room`
+
+Load:
+
+- Professional Quality Floor;
+- AUTO DIRECT;
+- composition/perspective;
+- lighting/exposure/color;
+- skin/material realism;
+- Reality Gate;
+- native/local adapter path.
+
+Do not load a cinema-camera provider merely because the skill is named Cinematic Realism Director.
 
 ### Repair: `Fix the fake skin and hair but change nothing else`
-Load:
-- REALITY REPAIR;
-- realism-diagnosis schema;
-- anti-AI taxonomy;
-- skin;
-- hair/eyes;
-- Reality Gate;
-- edit-capable provider adapter.
 
-Do not load full lens research unless the visible problem involves optics.
+Load:
+
+- Professional Quality Floor;
+- Execution Priority;
+- REALITY REPAIR;
+- diagnosis + skin/hair references;
+- Reality Gate;
+- native edit path first.
 
 ### Expert: `Alexa 35, Signature Prime 35mm, T2.8, deep focus, hard noon desert`
-Load:
-- MANUAL CAMERA;
-- camera/capture;
-- lens character;
-- perspective;
-- depth;
-- hard-noon/desert lighting;
-- exposure/color;
-- parameter conflicts if needed;
-- Reality Gate;
-- adapter.
+
+Load MANUAL CAMERA, locks, relevant technical/light references, quality floor, Reality Gate, then the chosen execution adapter.
 
 ## Anti-Bloat Rule
 
-Do not load research evidence files during normal runtime unless:
-
-- a claim needs provenance verification;
-- an adapter is being updated;
-- a runtime reference contains an unresolved evidence note.
-
-Runtime references should contain the synthesized behavior.
+Do not load research evidence during ordinary runtime unless provenance/adapters require verification.
 
 ## Standalone Rule
 
-Every routed path must resolve only to files inside this package folder. Missing optional references must degrade to the universal shot spec and generic adapter rather than requiring a sibling skill or external service.
-
-Acceptance: each major workflow can execute from a small, explicit subset of local files while retaining locks, physical plausibility, and provider-neutral reasoning.
+Every routed path must resolve only to files inside this package. Missing optional references or external tools degrade to the universal shot and generic adapter rather than requiring a sibling skill or external service.
