@@ -1,3 +1,5 @@
+import contextlib
+import io
 import json
 import os
 import shutil
@@ -7,6 +9,7 @@ import tempfile
 import threading
 import time
 import unittest
+from types import SimpleNamespace
 from pathlib import Path
 from unittest import mock
 
@@ -22,7 +25,11 @@ from installer.generation_lifecycle import (
     controller_path,
     generation_content_digest,
     generation_path,
+    generation_leases_dir,
     generations_dir,
+    acquire_generation_lease,
+    active_generation_leases,
+    release_generation_lease,
     lifecycle_lock,
     lifecycle_lock_path,
     mark_uninstalled,
@@ -274,6 +281,148 @@ class ImmutableGenerationLifecycleTests(unittest.TestCase):
             copied = target / "sample"
             self.assertIn("instructions-v1", (copied / "SKILL.md").read_text(encoding="utf-8"))
             self.assertIn("script-v1", (copied / "scripts" / "run.py").read_text(encoding="utf-8"))
+
+    def test_public_pin_command_returns_lease_and_unpin_releases_it(self):
+        with tempfile.TemporaryDirectory() as temp:
+            base = Path(temp)
+            root = base / "skills"
+            root.mkdir()
+            GenerationFixture.commit(root, base, "gen-v1", "v1")
+
+            output = io.StringIO()
+            with contextlib.redirect_stdout(output):
+                skills.cmd_pin(SimpleNamespace(
+                    root=str(root), lease_owner_pid=os.getpid(), package="sample", json=True
+                ))
+            pinned = json.loads(output.getvalue())
+            self.assertEqual(pinned["generation_id"], "gen-v1")
+            self.assertTrue(pinned["lease_release_required"])
+            self.assertEqual(pinned["package_id"], "sample")
+            self.assertTrue((Path(pinned["package_path"]) / "SKILL.md").is_file())
+            leases = active_generation_leases(root)
+            self.assertEqual(leases["protected_generation_ids"], ["gen-v1"])
+
+            output = io.StringIO()
+            with contextlib.redirect_stdout(output):
+                skills.cmd_unpin(SimpleNamespace(
+                    root=str(root),
+                    generation_id=pinned["generation_id"],
+                    lease_id=pinned["lease_id"],
+                    lease_token=pinned["lease_token"],
+                    json=True,
+                ))
+            self.assertTrue(json.loads(output.getvalue())["released"])
+            self.assertEqual(active_generation_leases(root)["protected_generation_ids"], [])
+
+
+    def test_purge_protects_live_execution_lease_until_explicit_release(self):
+        with tempfile.TemporaryDirectory() as temp:
+            base = Path(temp)
+            root = base / "skills"
+            root.mkdir()
+            GenerationFixture.commit(root, base, "gen-v1", "v1")
+            lease = acquire_generation_lease(root, digest)
+
+            GenerationFixture.commit(root, base, "gen-v2", "v2")
+            report = skills.purge_generations(root, keep=0, confirmed=True)
+            self.assertTrue(generation_path(root, "gen-v1").is_dir())
+            self.assertIn("gen-v1", report["protected"])
+            self.assertEqual(len(report["live_execution_leases"]), 1)
+            self.assertEqual(report["unverifiable_execution_leases"], [])
+
+            with self.assertRaisesRegex(RuntimeError, "token mismatch"):
+                release_generation_lease(root, lease.generation_id, lease.lease_id, "wrong-token")
+            self.assertTrue(generation_path(root, "gen-v1").is_dir())
+
+            self.assertTrue(release_generation_lease(
+                root, lease.generation_id, lease.lease_id, lease.lease_token
+            ))
+            second = skills.purge_generations(root, keep=0, confirmed=True)
+            self.assertFalse(generation_path(root, "gen-v1").exists())
+            self.assertIn("gen-v1", second["removed"])
+            self.assertEqual(second["live_execution_leases"], [])
+            self.assertEqual(active_generation_leases(root)["protected_generation_ids"], [])
+
+    def test_live_old_execution_lease_is_not_reclaimed_by_age_and_dead_holder_recovers(self):
+        with tempfile.TemporaryDirectory() as temp:
+            base = Path(temp)
+            root = base / "skills"
+            root.mkdir()
+            GenerationFixture.commit(root, base, "gen-v1", "v1")
+            holder = subprocess.Popen(
+                [sys.executable, "-c", "import time; time.sleep(60)"],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+            )
+            try:
+                time.sleep(0.1)
+                lease = acquire_generation_lease(root, digest, owner_pid=holder.pid)
+                lease_file = generation_leases_dir(root) / "gen-v1" / (lease.lease_id + ".json")
+                os.utime(lease_file, (1, 1))
+                GenerationFixture.commit(root, base, "gen-v2", "v2")
+
+                live = skills.purge_generations(root, keep=0, confirmed=True)
+                self.assertTrue(generation_path(root, "gen-v1").is_dir())
+                self.assertEqual(len(live["live_execution_leases"]), 1)
+                self.assertEqual(live["stale_execution_leases_reaped"], [])
+
+                holder.terminate()
+                holder.wait(timeout=10)
+                recovered = skills.purge_generations(root, keep=0, confirmed=True)
+                self.assertFalse(generation_path(root, "gen-v1").exists())
+                self.assertEqual(recovered["live_execution_leases"], [])
+                self.assertEqual(len(recovered["stale_execution_leases_reaped"]), 1)
+            finally:
+                if holder.poll() is None:
+                    holder.terminate()
+                    holder.wait(timeout=10)
+
+    def test_foreign_or_unverifiable_execution_lease_fails_closed(self):
+        with tempfile.TemporaryDirectory() as temp:
+            base = Path(temp)
+            root = base / "skills"
+            root.mkdir()
+            GenerationFixture.commit(root, base, "gen-v1", "v1")
+            lease = acquire_generation_lease(root, digest)
+            lease_file = generation_leases_dir(root) / "gen-v1" / (lease.lease_id + ".json")
+            record = json.loads(lease_file.read_text(encoding="utf-8"))
+            record["hostname"] = "unreachable-remote-host"
+            lease_file.write_text(json.dumps(record), encoding="utf-8")
+
+            GenerationFixture.commit(root, base, "gen-v2", "v2")
+            report = skills.purge_generations(root, keep=0, confirmed=True)
+            self.assertTrue(generation_path(root, "gen-v1").is_dir())
+            self.assertIn("gen-v1", report["protected"])
+            self.assertEqual(report["live_execution_leases"], [])
+            self.assertEqual(report["unverifiable_execution_leases"][0]["reason"], "foreign-host holder")
+
+            self.assertTrue(release_generation_lease(
+                root, lease.generation_id, lease.lease_id, lease.lease_token
+            ))
+            final = skills.purge_generations(root, keep=0, confirmed=True)
+            self.assertFalse(generation_path(root, "gen-v1").exists())
+            self.assertIn("gen-v1", final["removed"])
+
+    def test_generation_lease_controller_indirection_fails_closed(self):
+        with tempfile.TemporaryDirectory() as temp:
+            base = Path(temp)
+            root = base / "skills"
+            root.mkdir()
+            GenerationFixture.commit(root, base, "gen-v1", "v1")
+            lease = acquire_generation_lease(root, digest)
+            leases = generation_leases_dir(root)
+            shutil.rmtree(leases)
+            outside = base / "outside-leases"
+            outside.mkdir()
+            sentinel = outside / "sentinel.json"
+            sentinel.write_text('{"must":"remain"}', encoding="utf-8")
+            self._make_dir_link(leases, outside)
+
+            with self.assertRaises(RuntimeError):
+                skills.purge_generations(root, keep=0, confirmed=True)
+            self.assertEqual(sentinel.read_text(encoding="utf-8"), '{"must":"remain"}')
+            self.assertTrue(generation_path(root, lease.generation_id).is_dir())
+
 
     def test_controller_rejects_metadata_and_generation_indirection(self):
         cases = (".aiverse", ".aiverse/generations")
