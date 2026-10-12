@@ -2,8 +2,8 @@
   "schema_version": "ai-verse.component-release/v1",
   "component_id": "ai-verse-skills",
   "version": "1.1.0-beta.2.dev0",
-  "revision": "fa455961c17691862bd86b7e0f658690e9ecb86d",
-  "release_status": "development",
+  "revision": "afde5c06307fba7d074de2929c2eb6c3dc6bdab8",
+  "release_status": "accepted",
   "package": {
     "repository": "aiverse-filmmakers/AI-Verse-Skills",
     "source_type": "git",
@@ -38,6 +38,7 @@
     "state_format": "immutable-generation-v3"
   },
   "migration": {
+    "change_classification": "non-breaking",
     "compatibility": "none-required",
     "from_versions": [],
     "requires_explicit_migration": false,
@@ -52,8 +53,24 @@
     "exposes_remote_listener": false
   },
   "evidence": {
-    "ci": [],
-    "acceptance": []
+    "ci": [
+      {
+        "kind": "owner-native-ci",
+        "status": "pass",
+        "revision": "afde5c06307fba7d074de2929c2eb6c3dc6bdab8",
+        "run_id": "37183671930",
+        "url": "https://github.com/aiverse-filmmakers/AI-Verse-Skills/actions/runs/37183671930"
+      }
+    ],
+    "acceptance": [
+      {
+        "kind": "owner-local-native-workflow-acceptance",
+        "status": "pass",
+        "revision": "afde5c06307fba7d074de2929c2eb6c3dc6bdab8",
+        "run_id": "37183671930",
+        "url": "https://github.com/aiverse-filmmakers/AI-Verse-Skills/actions/runs/37183671930"
+      }
+    ]
   },
   "semantics": {
     "release_metadata_only": true,
