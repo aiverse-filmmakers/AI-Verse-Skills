@@ -1,0 +1,73 @@
+{
+  "schema_version": "1.0.0",
+  "skill": "cinematic-realism-director",
+  "purpose": "Verify that AUTO applies the best professional execution appropriate to the requested medium without requiring the user to ask for professional/cinematic quality.",
+  "pass_condition": "Each case must preserve the literal medium/content while elevating composition, capture, lighting, exposure, color, texture, and finishing to specialist professional quality.",
+  "critical_failures": [
+    "user must add professional/cinematic/Hollywood/ARRI/high quality to unlock premium direction",
+    "one-line prompt is rendered as merely ordinary competent photography",
+    "requested mobile/selfie/candid medium is erased by generic cinema-camera styling",
+    "cinematic/narrative work lacks premium tonal response, color separation, motivated lighting or professional finishing without reason",
+    "anti-cliche restraint removes subtle professional texture and creates sterile AI cleanliness",
+    "professional quality floor overrides an explicit no-grain, clinical, raw, degraded, or medium-specific lock"
+  ],
+  "global_must": [
+    "infer professional specialty from requested/implicit medium",
+    "apply professional composition/timing appropriate to that specialty",
+    "use physically motivated light and exposure",
+    "apply premium tonal/color finishing",
+    "use subtle organic texture for most photographic output unless medium/user says otherwise",
+    "preserve explicit user locks and literal content"
+  ],
+  "cases": [
+    {
+      "id": "quality-general-001",
+      "prompt": "A girl drinking coffee by a window.",
+      "expected_specialty": "cinematic/editorial lifestyle photography",
+      "must": ["intentional professional framing", "motivated window light", "premium highlight rolloff", "natural skin/material response", "professional color separation", "subtle organic texture"],
+      "must_not_require_user_words": ["cinematic", "professional", "Hollywood", "ARRI", "film grain", "high quality"]
+    },
+    {
+      "id": "quality-mobile-001",
+      "prompt": "iPhone mirror selfie in a hotel room.",
+      "expected_specialty": "elite mobile photographer/editor",
+      "must": ["believable phone proximity/perspective", "professional mobile composition", "excellent exposure/white balance", "real skin", "controlled phone processing", "subtle natural texture if compatible"],
+      "must_not": ["pretend Alexa capture", "cinema-lens bokeh inconsistent with phone", "beauty-filter plasticity", "fake HDR"]
+    },
+    {
+      "id": "quality-candid-001",
+      "prompt": "Candid photo of two friends laughing outside a restaurant.",
+      "expected_specialty": "elite candid/editorial/documentary photographer",
+      "must": ["decisive natural moment", "non-performative body language", "layered contextual composition", "believable available/motivated light", "professional exposure/color", "subtle organic texture"],
+      "must_not": ["fashion pose", "obvious studio light", "generic staged symmetry"]
+    },
+    {
+      "id": "quality-narrative-001",
+      "prompt": "A woman waiting for a taxi in London at night.",
+      "expected_specialty": "feature-film cinematography",
+      "must": ["narrative hierarchy", "motivated practical light", "premium digital-cinema tonal response", "ARRI-like highlight rolloff as observable target", "rich readable shadows", "professional color separation", "subtle filmic texture"],
+      "must_not": ["automatic teal-orange", "automatic anamorphic flare", "automatic haze", "automatic rim light"]
+    },
+    {
+      "id": "quality-product-001",
+      "prompt": "Premium skincare bottle on pale stone.",
+      "expected_specialty": "world-class product photographer",
+      "must": ["exact product geometry", "controlled specular highlights", "glass/liquid/material realism", "brand-appropriate polish", "professional exposure/color"],
+      "must_not": ["mandatory visible grain when pristine product clarity is better", "floating product", "generic black-and-gold luxury treatment"]
+    },
+    {
+      "id": "quality-architecture-001",
+      "prompt": "Modern concrete house in a pine forest on an overcast day.",
+      "expected_specialty": "elite architectural photographer",
+      "must": ["credible geometry/verticals", "professional camera position", "material scale", "overcast tonal control", "humanly believable spatial perspective"],
+      "must_not": ["fisheye", "shallow-focus building", "forced golden hour"]
+    },
+    {
+      "id": "quality-override-001",
+      "prompt": "Raw unedited iPhone snapshot, harsh flash, no grain added.",
+      "expected_specialty": "expert execution of requested raw/degraded mobile aesthetic",
+      "must": ["preserve raw phone/flash character", "preserve no-grain lock", "maintain physical coherence"],
+      "must_not": ["cinema-camera conversion", "polished film grade", "added grain"]
+    }
+  ]
+}

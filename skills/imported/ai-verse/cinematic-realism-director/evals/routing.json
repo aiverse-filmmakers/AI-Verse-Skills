@@ -1,242 +1,49 @@
 {
-  "schema_version": "1.0.0",
+  "schema_version": "1.1.0",
   "skill": "cinematic-realism-director",
-  "task": "9.1-routing-evals",
-  "purpose": "Verify positive activation, negative activation, primary workflow selection, and important routing boundaries for the Cinematic Realism Director.",
+  "purpose": "Verify activation for professional photographic/cinematic stills even when the user does not say cinematic, plus correct negative and boundary routing.",
   "scoring": {
-    "pass_condition": "expected_activation must match; when activated, expected_workflow must match or be a documented equivalent route; negative cases must not be forced into cinematic still-image authority.",
+    "pass_condition": "expected_activation must match; positive photographic stills should activate based on professional visual-direction need rather than cinema keywords alone; negative cases must not be forced into still-image authority.",
     "critical_failures": [
+      "failing to activate for an ordinary photographic still such as a selfie or candid merely because the user did not say cinematic",
       "activating for video timeline/editorial work",
       "activating for UI/product interface design",
-      "ignoring an explicit PROMPT ONLY request",
-      "failing to activate for preservation-sensitive still-image realism repair",
-      "treating a pure equipment-fact question as an image-direction task"
+      "ignoring PROMPT ONLY",
+      "failing to activate for preservation-sensitive realism repair",
+      "treating pure equipment facts/shopping as an image-direction task"
     ]
   },
   "cases": [
-    {
-      "id": "route-pos-001",
-      "class": "positive",
-      "prompt": "Create a cinematic photo of a woman waiting for a taxi in London at night.",
-      "expected_activation": true,
-      "expected_workflow": "auto_direct",
-      "reason": "Minimal cinematic still-image request should route to beginner AUTO."
-    },
-    {
-      "id": "route-pos-002",
-      "class": "positive",
-      "prompt": "Make this prompt more cinematic but keep the same subject and concept: a man eating breakfast alone in a small kitchen.",
-      "expected_activation": true,
-      "expected_workflow": "cinematize",
-      "reason": "Existing concept should be strengthened without concept drift."
-    },
-    {
-      "id": "route-pos-003",
-      "class": "positive",
-      "prompt": "This AI portrait looks fake. Make it realistic but keep the person's identity, pose, clothes, framing and background exactly the same.",
-      "expected_activation": true,
-      "expected_workflow": "reality_repair",
-      "reason": "Preservation-sensitive anti-AI repair is first-class scope."
-    },
-    {
-      "id": "route-pos-004",
-      "class": "positive",
-      "prompt": "Match the lighting, depth, lens feel, color and texture of this reference, but keep my subject and location.",
-      "expected_activation": true,
-      "expected_workflow": "reference_match",
-      "reason": "Observable visual-DNA transfer should use Reference Match."
-    },
-    {
-      "id": "route-pos-005",
-      "class": "positive",
-      "prompt": "Desert portrait, ARRI ALEXA 35 character, Cooke S4 look, 35mm, f/4, low angle, three-quarter framing, no haze, no flare.",
-      "expected_activation": true,
-      "expected_workflow": "manual_camera",
-      "reason": "Explicit technical choices must become locks."
-    },
-    {
-      "id": "route-pos-006",
-      "class": "positive",
-      "prompt": "Give me the final Seedream prompt only for a luxury watch product shot. Do not generate anything.",
-      "expected_activation": true,
-      "expected_workflow": "prompt_only",
-      "reason": "Provider-specific prompt request with explicit no-generation override."
-    },
-    {
-      "id": "route-pos-007",
-      "class": "positive",
-      "prompt": "Explain the camera, lens, lighting, exposure and color recipe you would use for a moody motel-room still.",
-      "expected_activation": true,
-      "expected_workflow": "shot_recipe",
-      "reason": "Still-frame cinematography explanation is in scope."
-    },
-    {
-      "id": "route-pos-008",
-      "class": "positive",
-      "prompt": "Create a clean high-end skincare product image that looks like a real commercial photograph, not AI.",
-      "expected_activation": true,
-      "expected_workflow": "auto_direct",
-      "reason": "Commercial photoreal still direction belongs to AUTO when no technical locks are given."
-    },
-    {
-      "id": "route-pos-009",
-      "class": "positive",
-      "prompt": "Use the exact same frozen moment from this image and show it from an over-the-shoulder camera behind the father. Do not change pose, gaze, hands, props or timing.",
-      "expected_activation": true,
-      "expected_workflow": "reference_match",
-      "reason": "Reference-conditioned frozen-moment camera redesign is still-image cinematography with strict preservation."
-    },
-    {
-      "id": "route-pos-010",
-      "class": "positive",
-      "prompt": "I want a 90-degree top-down photo of the vehicles in exactly the same formation, all facing the same direction, in the same desert.",
-      "expected_activation": true,
-      "expected_workflow": "reference_match",
-      "reason": "Camera/viewpoint transformation with formation preservation is in scope."
-    },
-    {
-      "id": "route-pos-011",
-      "class": "positive",
-      "prompt": "Generate a realistic rainy-night portrait, but keep the background sharp enough that the location still tells the story.",
-      "expected_activation": true,
-      "expected_workflow": "auto_direct",
-      "reason": "Depth and realism constraints are cinematic still-image direction."
-    },
-    {
-      "id": "route-pos-012",
-      "class": "positive",
-      "prompt": "Analyze why this image feels AI-generated and give me a repair plan only. Don't edit it.",
-      "expected_activation": true,
-      "expected_workflow": "reality_repair",
-      "reason": "Diagnosis and repair planning are part of Reality Repair even without execution."
-    },
-    {
-      "id": "route-pos-013",
-      "class": "positive",
-      "prompt": "Turn this simple prompt into a Magnific Cinematic-ready prompt while preserving the exact concept.",
-      "expected_activation": true,
-      "expected_workflow": "cinematize",
-      "reason": "Cinematization is resolved before downstream Magnific adaptation."
-    },
-    {
-      "id": "route-pos-014",
-      "class": "positive",
-      "prompt": "Give me JSON for the shot: 24mm rectilinear lens, camera very close to the foreground shoe, huge near/far scale difference, but straight architecture in the background.",
-      "expected_activation": true,
-      "expected_workflow": "manual_camera",
-      "reason": "Structured expert shot request with explicit perspective/optical locks."
-    },
-    {
-      "id": "route-neg-001",
-      "class": "negative",
-      "prompt": "Cut my 30-second video into a faster 15-second edit, add captions and choose B-roll.",
-      "expected_activation": false,
-      "expected_workflow": null,
-      "reason": "Timeline editing, cuts, captions and B-roll belong to video editing authority."
-    },
-    {
-      "id": "route-neg-002",
-      "class": "negative",
-      "prompt": "Design a responsive analytics dashboard with a sidebar, KPI cards and dark mode.",
-      "expected_activation": false,
-      "expected_workflow": null,
-      "reason": "Product/interface design is outside cinematic still-image authority."
-    },
-    {
-      "id": "route-neg-003",
-      "class": "negative",
-      "prompt": "Create a simple flat vector logo for my coffee shop.",
-      "expected_activation": false,
-      "expected_workflow": null,
-      "reason": "Generic logo/vector design is not cinematic photographic direction."
-    },
-    {
-      "id": "route-neg-004",
-      "class": "negative",
-      "prompt": "Which is better to buy, Sony FX3 or Canon R5 C? Compare battery life, autofocus and price.",
-      "expected_activation": false,
-      "expected_workflow": null,
-      "reason": "Pure equipment shopping/comparison without image direction should not activate."
-    },
-    {
-      "id": "route-neg-005",
-      "class": "negative",
-      "prompt": "What is the native ISO of the Sony VENICE 2?",
-      "expected_activation": false,
-      "expected_workflow": null,
-      "reason": "Pure factual equipment question is not a shot-design task."
-    },
-    {
-      "id": "route-neg-006",
-      "class": "negative",
-      "prompt": "Animate this character walking forward for 8 seconds, then have the camera orbit around them.",
-      "expected_activation": false,
-      "expected_workflow": null,
-      "reason": "Temporal motion choreography and camera motion are outside V1 primary scope."
-    },
-    {
-      "id": "route-neg-007",
-      "class": "negative",
-      "prompt": "Make a pie chart showing revenue by region.",
-      "expected_activation": false,
-      "expected_workflow": null,
-      "reason": "Chart/data visualization is unrelated to cinematic photographic reasoning."
-    },
-    {
-      "id": "route-neg-008",
-      "class": "negative",
-      "prompt": "Crop this photo to exactly 1200 by 628 pixels without changing anything else.",
-      "expected_activation": false,
-      "expected_workflow": null,
-      "reason": "Exact pixel crop alone does not need cinematic direction."
-    },
-    {
-      "id": "route-neg-009",
-      "class": "negative",
-      "prompt": "Write a voiceover script for a luxury travel commercial.",
-      "expected_activation": false,
-      "expected_workflow": null,
-      "reason": "Script/voiceover writing is not still-image cinematography."
-    },
-    {
-      "id": "route-neg-010",
-      "class": "negative",
-      "prompt": "Explain the exposure triangle to me in simple terms.",
-      "expected_activation": false,
-      "expected_workflow": null,
-      "reason": "General photography education with no shot-design task does not require this skill."
-    },
-    {
-      "id": "route-boundary-001",
-      "class": "boundary",
-      "prompt": "Create a cinematic hero frame for a video concept. I only need the still image right now.",
-      "expected_activation": true,
-      "expected_workflow": "auto_direct",
-      "reason": "A hero frame is a still-image deliverable even if it may later feed a video workflow."
-    },
-    {
-      "id": "route-boundary-002",
-      "class": "boundary",
-      "prompt": "How should the shutter/motion blur look in a single still frame of a runner at night?",
-      "expected_activation": true,
-      "expected_workflow": "shot_recipe",
-      "reason": "Motion/shutter language is in scope where it changes a frozen still frame."
-    },
-    {
-      "id": "route-boundary-003",
-      "class": "boundary",
-      "prompt": "Create a cinematic website homepage with dramatic lighting and movie-like visuals.",
-      "expected_activation": false,
-      "expected_workflow": null,
-      "reason": "The word cinematic does not override the fact that the primary deliverable is interface design."
-    },
-    {
-      "id": "route-boundary-004",
-      "class": "boundary",
-      "prompt": "Make this existing product photo more realistic and fix the fake reflections without changing product geometry or composition.",
-      "expected_activation": true,
-      "expected_workflow": "reality_repair",
-      "reason": "Still-image material/reflection repair is core scope."
-    }
+    {"id":"route-pos-001","class":"positive","prompt":"woman waiting for a taxi in London at night","expected_activation":true,"expected_workflow":"auto_direct","reason":"General narrative photographic still should receive feature-film-quality AUTO without requiring the word cinematic."},
+    {"id":"route-pos-002","class":"positive","prompt":"iPhone mirror selfie in a hotel room","expected_activation":true,"expected_workflow":"auto_direct","reason":"Mobile photographic still should receive elite mobile direction while preserving phone medium."},
+    {"id":"route-pos-003","class":"positive","prompt":"candid photo of two friends laughing outside a restaurant","expected_activation":true,"expected_workflow":"auto_direct","reason":"Candid/editorial still is professional photographic direction scope."},
+    {"id":"route-pos-004","class":"positive","prompt":"Make this prompt more cinematic but keep the same subject and concept: a man eating breakfast alone in a small kitchen.","expected_activation":true,"expected_workflow":"cinematize","reason":"Existing concept should be strengthened without drift."},
+    {"id":"route-pos-005","class":"positive","prompt":"This AI portrait looks fake. Make it realistic but keep identity, pose, clothes, framing and background exactly the same.","expected_activation":true,"expected_workflow":"reality_repair","reason":"Preservation-sensitive anti-AI repair is core scope."},
+    {"id":"route-pos-006","class":"positive","prompt":"Match the lighting, depth, lens feel, color and texture of this reference, but keep my subject and location.","expected_activation":true,"expected_workflow":"reference_match","reason":"Observable visual-DNA transfer belongs here."},
+    {"id":"route-pos-007","class":"positive","prompt":"Desert portrait, ARRI ALEXA 35 character, Cooke S4 look, 35mm, f/4, low angle, three-quarter framing, no haze, no flare.","expected_activation":true,"expected_workflow":"manual_camera","reason":"Explicit technical choices become locks."},
+    {"id":"route-pos-008","class":"positive","prompt":"Give me the final Seedream prompt only for a luxury watch product shot. Do not generate anything.","expected_activation":true,"expected_workflow":"prompt_only","reason":"Provider-specific prompt request with no-generation override."},
+    {"id":"route-pos-009","class":"positive","prompt":"Explain the camera, lens, lighting, exposure and color recipe you would use for a moody motel-room still.","expected_activation":true,"expected_workflow":"shot_recipe","reason":"Still-frame professional recipe is in scope."},
+    {"id":"route-pos-010","class":"positive","prompt":"Create a clean high-end skincare product image that looks like a real commercial photograph, not AI.","expected_activation":true,"expected_workflow":"auto_direct","reason":"Commercial product photography is core scope."},
+    {"id":"route-pos-011","class":"positive","prompt":"Use the exact same frozen moment from this image and show it from an over-the-shoulder camera behind the father. Do not change pose, gaze, hands, props or timing.","expected_activation":true,"expected_workflow":"reference_match","reason":"Frozen-moment camera redesign with preservation is in scope."},
+    {"id":"route-pos-012","class":"positive","prompt":"I want a 90-degree top-down photo of the vehicles in exactly the same formation, all facing the same direction, in the same desert.","expected_activation":true,"expected_workflow":"reference_match","reason":"Viewpoint transformation with formation preservation is in scope."},
+    {"id":"route-pos-013","class":"positive","prompt":"Analyze why this image feels AI-generated and give me a repair plan only. Don't edit it.","expected_activation":true,"expected_workflow":"reality_repair","reason":"Diagnosis/repair planning remains Reality Repair even without execution."},
+    {"id":"route-pos-014","class":"positive","prompt":"Turn this simple prompt into a Magnific Cinematic-ready prompt while preserving the exact concept.","expected_activation":true,"expected_workflow":"cinematize","reason":"Explicit Magnific export is allowed after universal direction is resolved."},
+    {"id":"route-pos-015","class":"positive","prompt":"Give me JSON for the shot: 24mm rectilinear lens, camera very close to the foreground shoe, huge near/far scale difference, but straight architecture in the background.","expected_activation":true,"expected_workflow":"manual_camera","reason":"Structured expert shot with perspective/optical locks."},
+
+    {"id":"route-neg-001","class":"negative","prompt":"Cut my 30-second video into a faster 15-second edit, add captions and choose B-roll.","expected_activation":false,"expected_workflow":null,"reason":"Timeline editing belongs to video authority."},
+    {"id":"route-neg-002","class":"negative","prompt":"Design a responsive analytics dashboard with a sidebar, KPI cards and dark mode.","expected_activation":false,"expected_workflow":null,"reason":"Interface design is outside still-image authority."},
+    {"id":"route-neg-003","class":"negative","prompt":"Create a simple flat vector logo for my coffee shop.","expected_activation":false,"expected_workflow":null,"reason":"Flat logo/vector design is not photographic still direction."},
+    {"id":"route-neg-004","class":"negative","prompt":"Which is better to buy, Sony FX3 or Canon R5 C? Compare battery life, autofocus and price.","expected_activation":false,"expected_workflow":null,"reason":"Pure equipment shopping without image direction should not activate."},
+    {"id":"route-neg-005","class":"negative","prompt":"What is the native ISO of the Sony VENICE 2?","expected_activation":false,"expected_workflow":null,"reason":"Pure equipment fact is not a shot-design task."},
+    {"id":"route-neg-006","class":"negative","prompt":"Animate this character walking forward for 8 seconds, then have the camera orbit around them.","expected_activation":false,"expected_workflow":null,"reason":"Temporal motion choreography is outside primary scope."},
+    {"id":"route-neg-007","class":"negative","prompt":"Make a pie chart showing revenue by region.","expected_activation":false,"expected_workflow":null,"reason":"Data visualization is unrelated to photographic direction."},
+    {"id":"route-neg-008","class":"negative","prompt":"Crop this photo to exactly 1200 by 628 pixels without changing anything else.","expected_activation":false,"expected_workflow":null,"reason":"Exact pixel crop alone does not need cinematic/professional direction."},
+    {"id":"route-neg-009","class":"negative","prompt":"Write a voiceover script for a luxury travel commercial.","expected_activation":false,"expected_workflow":null,"reason":"Voiceover writing is not still-image direction."},
+    {"id":"route-neg-010","class":"negative","prompt":"Explain the exposure triangle to me in simple terms.","expected_activation":false,"expected_workflow":null,"reason":"General education with no image-design task need not activate this skill."},
+
+    {"id":"route-boundary-001","class":"boundary","prompt":"Create a cinematic hero frame for a video concept. I only need the still image right now.","expected_activation":true,"expected_workflow":"auto_direct","reason":"Current deliverable is a still image."},
+    {"id":"route-boundary-002","class":"boundary","prompt":"How should the shutter/motion blur look in a single still frame of a runner at night?","expected_activation":true,"expected_workflow":"shot_recipe","reason":"Motion/shutter language affects a frozen frame."},
+    {"id":"route-boundary-003","class":"boundary","prompt":"Create a cinematic website homepage with dramatic lighting and movie-like visuals.","expected_activation":false,"expected_workflow":null,"reason":"Cinematic wording does not override interface-design primary intent."},
+    {"id":"route-boundary-004","class":"boundary","prompt":"Make this existing product photo more realistic and fix the fake reflections without changing product geometry or composition.","expected_activation":true,"expected_workflow":"reality_repair","reason":"Material/reflection repair is core still-image scope."}
   ]
 }

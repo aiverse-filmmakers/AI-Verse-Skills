@@ -2,97 +2,86 @@
 
 Status: RUNTIME LOADING MAP
 
-Purpose: help a capable host load only the local knowledge required for the current task.
+Purpose: help a capable host load only the local knowledge required for the current task while never skipping the Professional Quality Floor or execution-priority rules.
 
-All paths below are package-root relative unless explicitly stated otherwise.
+All paths are package-root relative.
 
-Do **not** load every reference file by default.
+Do **not** load every reference by default.
 
-## 1. Always-Useful Core
+## 1. Core Runtime Policies
 
-Load these when routing, resolving authority, or verifying execution claims:
+For normal image generation/editing, treat these as the core:
 
-- `references/routing.md` — activation boundaries and authority order.
-- `references/locks.md` — hard locks, preservation locks, AUTO, and conflict precedence.
-- `references/host-capabilities.md` — H1-H6 execution/degradation behavior.
-- `references/host-action-policy.md` — whether to generate/edit, return a prompt, or abstain from execution.
-- `references/success-contract.md` — success/partial/blocked/failed and V0-V3 verification levels.
-- `references/reality-gate.md` — final physical-plausibility and anti-AI verification.
+- `references/professional-quality-floor.md` — best-professional interpretation of every photographic request.
+- `references/execution-priority.md` — explicit provider lock, otherwise native/local first, external fallback only when materially required.
+- `references/locks.md` — hard locks, preservation locks, AUTO, conflict precedence.
+- `references/host-capabilities.md` — H1-H6 host behavior.
+- `references/host-action-policy.md` — execute vs prompt/spec and edit requirements.
+- `references/success-contract.md` — success/partial/blocked/failed and V0-V3 verification.
+- `references/reality-gate.md` — physical plausibility and anti-AI verification.
 
-Load `references/portability.md` when package/host integration or standalone behavior is relevant.
+Load `references/routing.md` for activation boundaries and `references/portability.md` for package/host integration.
 
 ## 2. Workflow Routing
 
-Choose the smallest workflow matching the user's intent:
-
-- `references/workflows/auto-direct.md` — minimal idea -> complete shot.
+- `references/workflows/auto-direct.md` — minimal idea -> professional complete shot.
 - `references/workflows/cinematize.md` — strengthen an existing concept without concept drift.
 - `references/workflows/reality-repair.md` — preserve -> diagnose -> targeted repair -> verify.
 - `references/workflows/reference-match.md` — transfer observable visual DNA.
 - `references/workflows/manual-camera.md` — explicit technical locks + AUTO completion.
 - `references/workflows/prompt-only.md` — adapted prompt/spec only, no generation.
 
-Support policies:
+Support:
 
-- `references/progressive-disclosure-router.md` — ambiguous or overlapping cases.
-- `references/question-minimization.md` — ask only when an answer materially changes execution or preservation.
-- `references/multi-reference-behavior.md` — roles, priorities, and multiple-reference handling.
+- `references/progressive-disclosure-router.md`
+- `references/question-minimization.md`
+- `references/multi-reference-behavior.md`
 
 ## 3. Shot Design
 
-Load according to the missing decision layer.
-
-### Intent / story
+### Intent / professional specialty
 - `references/visual-intent.md`
+- `references/professional-quality-floor.md`
 
-### Composition / blocking / viewpoint
+### Composition / viewpoint
 - `references/composition-and-blocking.md`
 
-### Capture format / camera character
+### Capture / camera character
 - `references/cameras-and-capture-formats.md`
 
 ### Lens rendering
 - `references/lens-character.md`
 
-### Focal length / distance / perspective
+### Focal / distance / perspective
 - `references/focal-length-and-perspective.md`
 
 ### Aperture / focus / depth
 - `references/aperture-focus-and-depth.md`
 
-### Still-frame motion / shutter language
+### Still-frame motion
 - `references/motion-and-shutter.md`
 
-## 4. Lighting, Exposure, Film Response, Color, Texture
+## 4. Lighting, Exposure, Color, Texture
 
-### Motivated source logic
 - `references/motivated-lighting.md`
 - `references/lighting-roles.md`
-
-### Environment-specific lighting
 - `references/environment-lighting-recipes.md`
-
-### Exposure / dynamic range
 - `references/exposure-and-dynamic-range.md`
-
-### Film/sensor character
 - `references/film-and-sensor-response.md`
-
-### Color / grading
 - `references/color-science-and-grading.md`
-
-### Grain / halation / bloom / flare / diffusion restraint
 - `references/texture-effects-restraint.md`
 - `references/optical-imperfection.md`
 
-## 5. Physical Realism / Reality Repair
+The quality floor sets the default professional finish. These domain files refine how that finish is achieved without cliché stacking.
+
+## 5. Physical Realism / Repair
 
 Start with:
 
 - `references/anti-ai-artifact-taxonomy.md`
 - `references/reality-gate.md`
 
-Then load only the affected domains:
+Then load affected domains only:
 
 - `references/skin-realism.md`
 - `references/hair-and-eye-realism.md`
@@ -101,13 +90,9 @@ Then load only the affected domains:
 - `references/reflection-shadow-coherence.md`
 - `references/optical-imperfection.md`
 
-For structured repair output, also use:
-
-- `schemas/realism-diagnosis.schema.json`
+Structured repair: `schemas/realism-diagnosis.schema.json`.
 
 ## 6. Reference Match / Uncertainty
-
-Load:
 
 - `references/multi-reference-behavior.md`
 - `references/confidence-and-uncertainty.md`
@@ -121,156 +106,134 @@ Hard rule:
 observable trait != exact hardware fact
 ```
 
-Use exact camera/lens/stock metadata only when supplied by the user, embedded metadata, or documented evidence supports it.
-
-## 7. Expert Locks / Manual Camera
+## 7. Expert Locks
 
 Load:
 
 - `references/locks.md`
 - `references/parameter-conflicts.md`
-- whichever shot-domain references contain the locked/missing fields;
-- `schemas/cinematic-shot-spec.schema.json` when structured state is useful.
+- relevant technical domain files;
+- `schemas/cinematic-shot-spec.schema.json` when structured state helps.
 
-Authority remains:
+Authority:
 
 ```text
 current explicit user instruction
 > preservation requirement
 > active explicit lock
 > package physical/logical rules
+> Professional Quality Floor for unspecified fields
 > AUTO inference
 > provider default
 ```
 
-## 8. Provider Adaptation
+## 8. Execution and Provider Adaptation
 
-Resolve the provider-neutral shot first.
+Choose execution **before** loading a provider adapter.
 
-Then load one matching adapter:
+Execution priority:
+
+```text
+explicit user provider lock
+> native/local host image path
+> permitted external path only when native/local lacks a material requirement
+> prompt/spec fallback
+```
+
+Then load the adapter for the selected path:
 
 - `adapters/generic.md`
 - `adapters/openai.md`
 - `adapters/gemini.md`
 - `adapters/seedream.md`
 - `adapters/flux.md`
-- `adapters/magnific.md`
-- `adapters/higgsfield-soul-cinema.md`
+- `adapters/magnific.md` — explicit user request or controlled benchmark only.
+- `adapters/higgsfield-soul-cinema.md` — explicit user request or controlled benchmark only.
 
-Also load:
+Use `references/adapter-fallback-hierarchy.md` for translation/version fallback.
 
-- `references/adapter-fallback-hierarchy.md`
-
-when the provider/model is unknown, changed, unavailable, or missing a required capability.
-
-Provider adapters may translate the shot. They may not redesign it.
+Adapter presence must never cause provider selection.
 
 ## 9. Structured Contracts
-
-Use only when JSON/state handoff or machine validation helps:
 
 - `schemas/cinematic-shot-spec.schema.json`
 - `schemas/realism-diagnosis.schema.json`
 - `schemas/reference-dna.schema.json`
 
-Do not expose structured state merely because a schema exists if the user asked only for an image or concise prompt.
+Do not expose structured state merely because a schema exists.
 
 ## 10. Research Evidence
 
-`references/research/` contains source/provenance evidence used to build the runtime knowledge.
+`references/research/` contains provenance used to build runtime knowledge. Normally do not load it during ordinary execution.
 
-Normally **do not load research files during ordinary execution**.
+Use it for factual audits, provider refreshes, source provenance, or knowledge-base maintenance.
 
-Use them when:
-
-- auditing a factual camera/lens/stock claim;
-- refreshing provider-specific behavior;
-- checking source provenance;
-- updating the knowledge base.
-
-Important research files include:
-
-- `references/research/magnific.md`
-- `references/research/higgsfield.md`
-- `references/research/cameras.md`
-- `references/research/lenses.md`
-- `references/research/lenses-supplement.md`
-- `references/research/film-stocks.md`
-- `references/research/lighting.md`
-- `references/research/color-and-tone.md`
-- `references/research/provider-prompting.md`
-- `references/research/secondary-public-workflows.md`
-- `references/research/research-gap-audit.md`
-
-Source ledgers:
-
-- `references/source-ledger.md`
-- `references/source-ledger-addendum.md`
-
-Research evidence is not a second runtime brain.
+Magnific/Higgsfield research is competitor/provider evidence, not a default execution recommendation.
 
 ## 11. Fast Loading Recipes
 
-### Beginner one-line image request
+### Beginner one-line image
 
 ```text
-references/workflows/auto-direct.md
-references/visual-intent.md
-references/composition-and-blocking.md
-relevant capture/light references only
-references/reality-gate.md
-matching provider adapter or adapters/generic.md
+professional-quality-floor
+execution-priority
+auto-direct
+visual-intent
+composition + relevant technical/light/color/texture references
+reality-gate
+adapter for chosen native/local path
+```
+
+### iPhone / selfie
+
+```text
+professional-quality-floor
+auto-direct
+composition + perspective
+lighting/exposure/color
+skin/material realism
+reality-gate
+native/local path
 ```
 
 ### Expert locked shot
 
 ```text
-references/workflows/manual-camera.md
-references/locks.md
-references/parameter-conflicts.md
+professional-quality-floor
+manual-camera
+locks + parameter-conflicts
 relevant technical references
-references/reality-gate.md
-matching adapter
+reality-gate
+chosen execution adapter
 ```
 
 ### AI-looking portrait repair
 
 ```text
-references/workflows/reality-repair.md
-references/anti-ai-artifact-taxonomy.md
-references/skin-realism.md
-references/hair-and-eye-realism.md
-references/reflection-shadow-coherence.md when needed
-references/reality-gate.md
-matching edit-capable adapter
+professional-quality-floor
+execution-priority
+reality-repair
+anti-ai + skin + hair/eyes (+ reflection/shadow if needed)
+reality-gate
+native/local edit first
 ```
 
-### Reference look match
+### Prompt only
 
 ```text
-references/workflows/reference-match.md
-references/multi-reference-behavior.md
-references/confidence-and-uncertainty.md
-relevant visual-domain references
-schemas/reference-dna.schema.json when structured output helps
-references/reality-gate.md
-matching adapter
-```
-
-### Prompt-only request
-
-```text
-references/workflows/prompt-only.md
-only the domain references needed to resolve the shot
-matching adapter or adapters/generic.md
+professional-quality-floor
+prompt-only
+only required domain references
+requested provider adapter or generic
 ```
 
 ## 12. Loading Invariant
 
 Progressive loading is correct when:
 
-- the host can understand the active task from `SKILL.md`;
+- the host understands the active task from `SKILL.md`;
+- Professional Quality Floor and execution priority are not skipped;
 - only relevant domain knowledge is opened;
-- provider files are loaded after shot design;
+- provider files are loaded after execution-path selection;
 - research evidence is not routinely loaded;
 - no parent/sibling file is required for core operation.

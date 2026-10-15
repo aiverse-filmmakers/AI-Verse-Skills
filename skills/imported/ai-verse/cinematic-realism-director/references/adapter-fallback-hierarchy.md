@@ -1,9 +1,19 @@
 # Adapter Fallback Hierarchy
 
 Status: RUNTIME POLICY
-Task: 7.8
 
-Purpose: choose the strongest valid provider translation without fabricating capabilities when a provider, model, host, or version differs from what the package has verified.
+Purpose: translate an already-resolved shot into the strongest truthful provider syntax without allowing adapter availability to choose the execution provider.
+
+Use with `references/execution-priority.md`.
+
+## Core Separation
+
+```text
+execution-priority.md chooses WHERE to execute
+this file chooses HOW to translate for that already-chosen path
+```
+
+An adapter is never a routing recommendation.
 
 ## Core Rule
 
@@ -13,9 +23,9 @@ never sacrifice shot truth to preserve adapter specificity
 
 A lower-specificity truthful adapter is better than a high-specificity stale or invented one.
 
-## Fallback Order
+## Translation Fallback Order
 
-Use this hierarchy:
+For the provider/path already selected:
 
 ```text
 1. exact current provider + current model adapter
@@ -24,152 +34,113 @@ Use this hierarchy:
 4. provider-neutral shot spec / prompt-only handoff
 ```
 
-Execution availability is a separate host question handled by `host-action-policy.md`.
+Do **not** interpret this hierarchy as permission to choose an external provider over the native/local image model.
 
 ## Level 1 - Exact Current Adapter
 
-Use when:
+Use only when:
 
-- provider is known;
-- model/surface is known;
-- required capability has been verified recently enough for the task;
-- the live host exposes the expected operation.
+- the execution provider/path has already been selected under `execution-priority.md`;
+- provider/model is known;
+- required semantics are verified sufficiently for the task;
+- the active host exposes the expected operation.
 
 Use native controls only when they actually exist.
 
 ## Level 2 - Provider-Family Adapter
 
-Use when the provider is known but the exact model/version differs and the remaining semantics are still verified at provider-family level.
+Use when the selected provider is known but exact model/version differs and family-level semantics remain verified.
 
-Allowed:
-
-- natural-language prompt strategy known to the family;
-- current reference behavior known to be shared;
-- provider-wide positive-prompt or edit conventions when documented.
-
-Not allowed:
-
-- stale enum values;
-- old model names treated as current;
-- assumed reference limits;
-- assumed negative-prompt support;
-- assumed regional-edit controls;
-- assumed cinematic selector names.
+Do not assume stale enum values, old model names, reference limits, negative-prompt support, regional-edit controls, or cinematic selector names.
 
 ## Level 3 - Generic Adapter
 
 Use `adapters/generic.md` when:
 
-- provider/model is unknown;
-- model is newer than the adapter;
+- provider/model is hidden or unknown;
+- model is newer than cached adapter knowledge;
 - controls changed;
-- the host hides the underlying provider;
-- documentation is contradictory or incomplete;
-- execution tool accepts only generic natural-language instructions.
+- documentation is incomplete;
+- execution accepts generic natural-language instructions.
 
-The generic adapter preserves:
+The generic adapter must preserve professional quality, shot intent, geometry, optics/depth, lighting/exposure, color/tone, physical realism, preservation boundaries, reference roles, and output constraints.
 
-- shot intent;
-- camera geometry;
-- optics/depth;
-- lighting/exposure;
-- color/tone;
-- physical realism;
-- preservation boundaries;
-- reference roles;
-- output constraints.
+## Level 4 - Shot Spec / Prompt Handoff
 
-## Level 4 - Shot Spec / Prompt-Only Handoff
+Use when no suitable execution path exists or the user requested prompt-only output.
 
-Use when no suitable image execution path exists.
+Return a production-ready prompt/spec without implying generation occurred.
 
-Return:
+## Competitor Adapter Boundary
 
-- final adapted or generic prompt;
-- essential locked parameters;
-- preservation constraints for edits;
-- relevant shot recipe when useful;
-- truthful blocked/partial status if execution was requested but unavailable.
+`adapters/magnific.md` and `adapters/higgsfield-soul-cinema.md` are explicit-target/benchmark translation adapters.
 
-Never imply generation occurred.
+They must not be selected automatically for ordinary requests.
+
+Only use them when:
+
+- the user explicitly requests that provider/export; or
+- a controlled benchmark explicitly names that provider.
 
 ## Capability-Specific Fallback
 
-Fallback may happen per capability rather than per whole provider.
+Fallback may occur per capability rather than for the whole provider.
 
-Example:
-
-```text
-provider supports generation + references
-but not verified regional editing
-```
-
-Then:
-
-- use provider adapter for generation/reference syntax;
-- translate regional-edit intent into natural-language preservation instructions;
-- do not fabricate a mask/coordinate parameter.
+If the chosen provider supports generation and references but lacks verified regional editing, keep the provider for supported features and translate the edit intent semantically; do not fabricate unsupported controls.
 
 ## Locked Parameter Rule
 
-A provider limitation does not erase a lock.
-
 If a locked value has no literal provider control:
 
-1. keep the lock in the Cinematic Shot Spec;
+1. keep the lock in the universal shot;
 2. translate its observable result into prompt language;
-3. mark it as semantic translation if structured output is visible;
-4. report a hard execution conflict only when the provider genuinely cannot honor the requested outcome.
+3. mark semantic translation when structured output is visible;
+4. report a hard conflict only when the chosen provider genuinely cannot honor the requested outcome.
 
 ## Reference Fallback
 
-If a provider cannot accept all references or role types:
+If the chosen provider cannot accept all reference roles:
 
-1. preserve the reference-role map internally;
-2. prioritize references required for identity/product/preservation locks;
-3. translate lower-priority style/lighting references into observed visual DNA where possible;
-4. disclose meaningful loss of conditioning rather than pretending all references were used.
+1. preserve the role map internally;
+2. prioritize identity/product/preservation references;
+3. translate lower-priority style/light references into observed visual DNA;
+4. disclose meaningful conditioning loss rather than pretending every reference was used.
 
 ## Edit Fallback
 
-If a provider cannot perform preservation-sensitive editing:
-
 ```text
-true edit available -> targeted edit
+true targeted edit available -> targeted edit
 reference-conditioned regeneration only -> disclose preservation risk
-no image conditioning -> return repair handoff prompt/spec
+no image conditioning -> repair handoff prompt/spec
 ```
 
 Do not call regeneration an exact edit.
 
-## Negative-Prompt Fallback
+## Version Drift
 
-If negative-prompt support is unverified:
+Live verified host/provider behavior wins over cached adapter details.
 
-- use positive desired-state language;
-- do not invent a `negative_prompt` field.
+```text
+live verified surface
+> cached provider adapter
+> generic adapter
+```
 
-## Version Drift Rule
+At every level:
 
-Provider facts are time-sensitive.
-
-Before release and whenever a live host contradicts an adapter:
-
-- live verified schema/documentation wins;
-- update adapter later through normal package maintenance;
-- current task falls back immediately rather than blocking on maintenance.
+```text
+user locks + Professional Quality Floor + universal shot
+> provider defaults
+```
 
 ## Failure Conditions
 
 Incorrect behavior includes:
 
-- using stale exact parameters because an adapter file exists;
-- silently swapping a locked lens/camera/stock for a provider preset;
-- fabricating a provider feature;
-- dropping preservation constraints during fallback;
-- treating generic fallback as lower cinematography quality;
-- claiming identity/reference conditioning that was not actually supplied.
-
-## Acceptance
-
-Any provider/model change can degrade gracefully from exact adapter to generic prompt/spec while preserving the creative shot, locks, reference roles, and truthfulness of execution claims.
+- scanning adapter files and selecting a provider because its adapter appears richer;
+- choosing Magnific/Higgsfield automatically for cinematic quality;
+- stale exact parameters used as current truth;
+- locked lens/camera/stock silently changed for a provider preset;
+- fabricated provider features;
+- preservation constraints dropped during fallback;
+- generic fallback treated as lower creative/cinematography quality.

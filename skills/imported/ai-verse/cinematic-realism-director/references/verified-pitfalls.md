@@ -1,414 +1,315 @@
 # Verified Pitfalls and Regression Lessons
 
 Status: RUNTIME / EVAL SUPPORT
-Task: 8.6
 
-This file contains failure patterns actually exposed during implementation reviews, phase gates, schema integration, or provider/host integration work for this package.
-
-It intentionally avoids hypothetical filler. Each item should become or support a permanent regression test.
+This file records meaningful failure patterns actually exposed during implementation, review, provider integration, or real use. Every item must support a permanent regression test.
 
 ## 1. Confidence Vocabulary Drift
 
-### Failure
+Failure: inferred confidence could be confused with authority.
 
-The structured shot schema initially carried a coarse parameter state plus numeric confidence, while the richer confidence policy used more nuanced semantic labels. Without an explicit bridge, different hosts could serialize the same evidence inconsistently or treat numeric confidence as a fake calibrated probability.
-
-### Correction
-
-Added `confidence-serialization.md` and fixed the rule:
+Correction:
 
 ```text
 confidence != authority
-numeric confidence is a carrier, not a calibrated probability by default
-user lock outranks any confidence value
+user/preservation locks outrank inferred confidence
 ```
 
-### Regression Requirement
-
-Never let a high inferred confidence override a user or preservation lock.
+Regression: high-confidence inference must never override a lock.
 
 ---
 
-## 2. Focal Length Used as a False Substitute for Perspective
+## 2. Focal Length Used as Perspective
 
-### Failure
+Failure: wide lens, camera proximity, perspective exaggeration, and fisheye were collapsed into one concept.
 
-Common cinematic prompting collapses `wide lens`, camera proximity, perspective exaggeration, and fisheye into one concept.
+Correction: camera position/distance drives perspective relationship; focal length + format drives field of view; projection determines rectilinear/fisheye behavior.
 
-### Correction
-
-Phase 3 separated:
-
-```text
-camera position / distance -> perspective relationship
-focal length + format -> field of view
-projection / lens design -> rectilinear vs fisheye behavior
-```
-
-### Regression Requirement
-
-A request for strong close foreground scale must not automatically curve the background or become fisheye.
+Regression: close-foreground scale exaggeration must not automatically curve architecture or become fisheye.
 
 ---
 
 ## 3. Large Format / Wide Aperture Treated as Automatic Cinema
 
-### Failure
+Failure: cinematic quality was equated with large format and maximum aperture.
 
-Early design risk: generative conventions tend to equate large format and maximum aperture with cinematic quality.
+Correction: depth is story/information/geometry-driven.
 
-### Correction
-
-Depth is now story- and geometry-driven. Large format does not imply shallow depth, and `f/1.2` is not automatically preferable to `f/4`, `f/8`, or deeper focus.
-
-### Regression Requirement
-
-AUTO must choose deep/moderate focus when environmental information is narratively important.
+Regression: AUTO must choose moderate/deep focus when context matters.
 
 ---
 
 ## 4. Cinematic Effect Stacking
 
-### Failure
+Failure: `cinematic` triggered a fixed bundle of shallow DOF, haze, flare, bloom, halation, rim light, teal/orange, motion blur, and visible grain.
 
-The phrase `cinematic` can cause automatic addition of grain, haze, flare, bloom, halation, shallow depth, dramatic rim light, teal/orange separation, lifted blacks, or motion blur.
+Correction: professional finish is separated from optional visible effects. Subtle organic base texture may be normal; heavy/obvious effects still require a reason.
 
-### Correction
-
-Phase 4 separated all of these into optional systems with physical/story justification requirements.
-
-### Regression Requirement
-
-A clean bright commercial, neutral documentary frame, or hard-noon exterior must remain allowed to contain none of these effects.
+Regression: clean professional imagery must avoid unjustified effect stacking while still receiving premium tonal/color/texture finishing.
 
 ---
 
 ## 5. Film Reduced to Warmth + Grain + Fade
 
-### Failure
+Failure: film response became a warm/faded/grain preset.
 
-Generic prompt behavior often treats film response as one warm faded grain preset.
+Correction: film/sensor response, color, grain strength, halation, bloom, exposure, and optics are separate systems.
 
-### Correction
-
-Film/sensor response, color, grain, halation, bloom, exposure, and optical behavior are separate layers.
-
-### Regression Requirement
-
-A named film stock must not automatically add every stereotypical film artifact.
+Regression: named film stock must not automatically add every film stereotype.
 
 ---
 
 ## 6. Realism Confused with Dirt, Damage, Pores, or Asymmetry
 
-### Failure
+Failure: anti-AI repair added random pores, dirt, wrinkles, scratches, flyaways, asymmetry, or noise.
 
-An anti-AI repair can make a clean image worse by adding random pores, dirt, wrinkles, grain, scratches, flyaways, asymmetry, or surface noise simply to make it look less perfect.
+Correction: realism is material/light/contact/geometry coherence, not imperfection quantity.
 
-### Correction
-
-Phase 5 defined realism through material/light/contact/geometry coherence rather than imperfection quantity.
-
-### Regression Requirement
-
-A pristine commercial product or beauty image must be allowed to remain pristine and polished while still passing the Reality Gate.
+Regression: pristine product/beauty images may remain pristine.
 
 ---
 
-## 7. Surface Texture Repaired Before Structural Geometry
+## 7. Surface Texture Repaired Before Structure
 
-### Failure
+Failure: microtexture was used to mask broken anatomy, perspective, contact, reflection, or light.
 
-Adding skin/fabric microtexture can mask but not solve broken anatomy, perspective, contact, or lighting.
+Correction: Reality Gate dependency order keeps structure/light before surface finish.
 
-### Correction
-
-The Reality Gate enforces dependency order, with geometry/focus/light before surface texture.
-
-### Regression Requirement
-
-A malformed hand or impossible reflection must not be `fixed` by grain, blur, pores, or sharpening.
+Regression: malformed geometry cannot be `fixed` by grain, pores, blur, or sharpening.
 
 ---
 
 ## 8. Skin Repair Became Pore Overlay
 
-### Failure
+Failure: synthetic skin repair added equally sharp pores everywhere.
 
-Synthetic skin repair can overcompensate by placing equally sharp pores everywhere.
+Correction: anatomy, regional texture, tonal/specular behavior, age/context, scale, and focus govern skin realism.
 
-### Correction
-
-Skin realism now prioritizes anatomy, region-specific texture, tonal variation, source-consistent specular response, age/context, focus, and scale.
-
-### Regression Requirement
-
-`Make skin realistic` must not imply stronger pores, extra wrinkles, or forced aging.
+Regression: `make skin realistic` must not force pores, wrinkles, or aging.
 
 ---
 
-## 9. Hair Realism Became Mandatory Flyaways
+## 9. Hair Realism Became Flyaway Spam
 
-### Failure
+Failure: random flyaways were used as a realism token.
 
-Flyaways are often used as a generic realism token and can break hairstyle length or create floating disconnected strands.
+Correction: hair mass/root direction/gravity/clumps precede strand/flyaway detail.
 
-### Correction
-
-Hair hierarchy is mass/silhouette -> root direction -> gravity/clumps -> only then scale-appropriate strand detail/flyaways.
-
-### Regression Requirement
-
-A clean hairstyle can remain clean; flyaways are optional and physically attached.
+Regression: a clean hairstyle may remain clean.
 
 ---
 
 ## 10. Reflection / Shadow / Catchlight Incoherence
 
-### Failure
+Failure: local prettiness hid impossible scene-wide source geometry.
 
-Local beauty can hide scene-wide inconsistencies: catchlights with no source, wet reflections pointing incorrectly, shadows with incompatible direction/softness, or reflective materials behaving independently from environment geometry.
+Correction: reflections, shadows, catchlights, wet surfaces, and material response share one plausible lighting geometry.
 
-### Correction
-
-Reflection/shadow coherence became its own physical-realism system and Reality Gate stage.
-
-### Regression Requirement
-
-All visible light evidence must agree with the plausible source geometry.
+Regression: visible light evidence must agree.
 
 ---
 
 ## 11. Repair Drifted Into Regeneration
 
-### Failure
+Failure: `make this less AI-looking` changed identity, pose, wardrobe, framing, background, light, or product geometry.
 
-`Make this less AI-looking` can accidentally redesign identity, face, pose, wardrobe, framing, background, lighting, or product geometry.
-
-### Correction
-
-REALITY REPAIR requires:
+Correction:
 
 ```text
-PRESERVE
--> DIAGNOSE
--> REPAIR
--> ALLOW CHANGE
--> VERIFY
+PRESERVE -> DIAGNOSE -> REPAIR -> ALLOW CHANGE -> VERIFY
 ```
 
-### Regression Requirement
-
-Local realism failures must use the smallest repair scope compatible with the request.
+Regression: use the smallest repair scope compatible with the request.
 
 ---
 
-## 12. Missing Target Image Treated as If It Were Available
+## 12. Missing Target Treated as Available
 
-### Failure
+Failure: an unavailable prior image was treated as inspectable/editable.
 
-A chat/host may refer to a previous image that is not actually available in the current tool context.
+Correction: never claim inspection/edit without the real target.
 
-### Correction
-
-The host/image-target contract forbids pretending to inspect or edit an unavailable image.
-
-### Regression Requirement
-
-When the target is unavailable, return a repair specification or request the image only when essential; never claim an edit occurred.
+Regression: return a handoff spec or request the target only when essential.
 
 ---
 
-## 13. Beginner Workflow Turned Into a Camera Intake Form
+## 13. Beginner Workflow Became a Camera Intake Form
 
-### Failure
+Failure: one-line requests triggered unnecessary questions about focal length, aperture, body, light ratio, stock, grade, or provider.
 
-A one-sentence creative request can trigger unnecessary questions about focal length, aperture, camera body, lighting ratio, stock, or grade.
+Correction: infer safe professional choices automatically.
 
-### Correction
-
-Question-minimization policy: ask only when the missing answer materially changes the required deliverable, preservation boundary, or execution possibility.
-
-### Regression Requirement
-
-Beginner AUTO should normally complete the shot without requiring technical input.
+Regression: beginner AUTO normally asks zero technical questions.
 
 ---
 
-## 14. Multiple References Collapsed Into One Undefined Style
+## 14. Multi-Reference Roles Collapsed
 
-### Failure
+Failure: identity, product, composition, light, color, and style references competed as one undefined style source.
 
-Identity, product, composition, lighting, color, and style references can fight each other when their roles are not explicit.
+Correction: assign explicit roles/priorities.
 
-### Correction
-
-Multi-reference behavior assigns roles and priorities to every reference.
-
-### Regression Requirement
-
-The skill must preserve role separation and target locks; one reference may not silently overwrite another domain.
+Regression: one reference must not silently overwrite another domain.
 
 ---
 
 ## 15. Reference Hardware Hallucination
 
-### Failure
+Failure: exact camera/lens/aperture/stock/LUT was claimed from appearance alone.
 
-A visually similar reference can tempt the system to claim an exact camera, lens, aperture, film stock, or LUT.
-
-### Correction
-
-Reference Match explicitly separates:
+Correction:
 
 ```text
-observable trait
-known metadata
-hardware hypothesis
-unknown
+observable trait != known metadata
 ```
 
-### Regression Requirement
-
-Exact equipment claims require supplied metadata or documented evidence.
+Regression: exact hardware claims require evidence.
 
 ---
 
-## 16. Frozen-Moment Multi-Camera Requests Became Pose/Action Variations
+## 16. Frozen Moment Became Action Variation
 
-### Failure
+Failure: multi-camera same-T0 requests changed pose/gaze/hands/props/time.
 
-When asked for multiple cameras around one frozen instant, generative reasoning can change pose, gaze, props, or time between views.
+Correction: scene state remains frozen; only camera/parallax/framing may change.
 
-### Correction
-
-Composition/blocking and multi-reference policies define:
-
-```text
-same T0
-same scene state
-same pose/action
-only camera changes
-```
-
-### Regression Requirement
-
-Camera variation must not become subject/action variation when the user locks the instant.
+Regression: camera variation must not become subject/action variation.
 
 ---
 
-## 17. Provider Adapter Became a Second Cinematic Brain
+## 17. Provider Adapter Became a Second Creative Brain
 
-### Failure
+Failure: provider advice changed composition, lens, light, grade, or concept.
 
-Provider-specific prompt advice can accidentally alter composition, lens choice, lighting, or grade to fit remembered provider preferences.
-
-### Correction
-
-Phase 7 enforces:
+Correction:
 
 ```text
-Cinematic Shot Spec = creative truth
-adapter = translation layer
+Professional Quality Floor + universal shot = creative truth
+adapter = translation only
 ```
 
-### Regression Requirement
-
-The same resolved shot must preserve its intent and locks across Generic, OpenAI, Gemini, Seedream, FLUX, Magnific, and Higgsfield adapters.
+Regression: normal provider translation may change syntax/verified controls, not the resolved image design.
 
 ---
 
-## 18. Stale Provider Controls Were Treated as Current
+## 18. Stale Provider Controls Treated as Current
 
-### Failure
+Failure: cached model names/enums/reference limits were assumed current.
 
-Provider model names, enums, reference limits, editing controls, and product surfaces change over time.
+Correction: live verified surface > cached adapter > generic language.
 
-### Correction
-
-Every named adapter includes a verification/fallback rule; unknown or changed capability falls back to generic observable language rather than invented parameters.
-
-### Regression Requirement
-
-Never fabricate a current control solely because an older provider version exposed it.
+Regression: never fabricate current controls from memory.
 
 ---
 
 ## 19. Adapter Existence Mistaken for Provider Access
 
-### Failure
+Failure: provider file presence was treated as tool/account authorization.
 
-Having `adapters/magnific.md` or another provider file could be misread as permission/connectivity to that service.
+Correction: package knowledge is separate from granted execution capability.
 
-### Correction
-
-Host action policy separates package knowledge from actual granted tools.
-
-### Regression Requirement
-
-Adapter presence alone must never trigger an external call or claim provider availability.
+Regression: adapter presence alone cannot trigger external execution.
 
 ---
 
 ## 20. Tool Execution Mistaken for Visual Verification
 
-### Failure
+Failure: successful API/tool return was equated with a successful image.
 
-A successful generation/edit API call may still return a visually wrong image.
-
-### Correction
-
-Verification levels remain distinct:
+Correction:
 
 ```text
 V1 = execution confirmed
-V2 = actual visual inspection completed
+V2 = actual visual inspection
 ```
 
-### Regression Requirement
-
-Never claim the visual target passed the Reality Gate merely because the tool returned successfully.
+Regression: do not claim the visual target passed without inspection.
 
 ---
 
-## 21. PROMPT ONLY Override Was At Risk of Being Ignored
+## 21. PROMPT ONLY Override At Risk
 
-### Failure
+Failure: image-capable hosts could generate despite explicit prompt-only output.
 
-Tool-capable hosts naturally prefer execution and can generate despite a user explicitly asking for a prompt only.
+Correction: PROMPT ONLY is absolute.
 
-### Correction
-
-PROMPT ONLY is an absolute output-intent override.
-
-### Regression Requirement
-
-`Do not generate`, `prompt only`, `JSON only`, or equivalent instructions must prevent image execution.
+Regression: `prompt only`, `JSON only`, `do not generate` must prevent execution.
 
 ---
 
-## 22. Standalone Package Could Accidentally Depend on Repo Context
+## 22. Standalone Package Could Depend on Repo Context
 
-### Failure
+Failure: first-party package could accidentally rely on siblings/root docs/private paths/OS services.
 
-A first-party package can unknowingly rely on sibling skills, repository-root docs, private paths, or OS-specific behavior.
+Correction: all runtime intelligence remains package-local.
 
-### Correction
+Regression: the folder must remain independently understandable and useful.
 
-Phase 0 froze the standalone-folder invariant and all runtime references remain package-local.
+---
 
-### Regression Requirement
+## 23. External/MCP Tool Took Priority Over Native/Local Image Generation
 
-A capable agent receiving only this folder must still understand routing, workflows, shot design, realism, adapters, schemas, and fallback behavior.
+Failure: when both native/local generation and an external MCP/provider were available, the system could choose the external provider because it appeared more specialized or cinematic.
+
+Correction: `execution-priority.md` now requires:
+
+```text
+explicit provider lock
+> native/local image capability
+> external fallback only for a missing material capability
+> prompt/spec
+```
+
+Regression: MCP/external execution must never preempt an adequate native/local path without an explicit provider lock or genuine missing capability.
+
+---
+
+## 24. Competitor Provider Became the Default Backend
+
+Failure: Magnific Cinematic and Higgsfield Soul Cinema were listed as ordinary execution adapters, allowing the skill intended to compete with them to outsource final generation to them.
+
+Correction: both adapters are explicit-target/benchmark-only.
+
+Regression: ordinary image requests may not auto-route to Magnific or Higgsfield.
+
+---
+
+## 25. Missing Professional Quality Floor
+
+Failure: AUTO optimized for coherent/neutral photography but did not guarantee world-class execution when the user gave a simple prompt.
+
+Correction: every photographic request now receives the best-professional interpretation appropriate to its medium.
+
+Regression: users must not need to add `professional`, `cinematic`, `Hollywood`, `ARRI`, `good lighting`, or `high quality` to get professional-grade direction.
+
+---
+
+## 26. Professionalization Erased the Requested Medium
+
+Failure risk: fixing the quality floor could turn an iPhone selfie/candid/mobile request into a generic cinema-camera frame.
+
+Correction: professionalization is medium-aware. Mobile stays mobile, candid stays candid, architecture follows architecture discipline, etc.
+
+Regression: an iPhone selfie must look like elite mobile photography/editing, not an Alexa shot pretending to be a selfie.
+
+---
+
+## 27. Anti-Cliche Restraint Produced Sterile / Ordinary Output
+
+Failure: grain and other finishing decisions were suppressed so aggressively that AUTO could produce clean but synthetic/ordinary images instead of polished professional imagery.
+
+Correction: subtle organic filmic texture is now a normal photographic finishing layer for most imagery, while heavy grain/halation/flare/haze and other visible effects remain optional.
+
+Regression: anti-cliche rules must prevent effect stacking without removing professional tonal/color/texture finishing.
 
 ---
 
 # Maintenance Rule
 
-When a new meaningful failure is found:
+When a new meaningful failure is verified:
 
-1. reproduce or document the evidence;
-2. correct the smallest responsible contract/reference/workflow;
-3. add the failure to this file only if verified;
-4. add or update a regression eval in Phase 9;
-5. never pad this file with theoretical pitfalls merely for completeness.
+1. document the evidence;
+2. correct the smallest responsible runtime layer;
+3. add/update the permanent regression requirement;
+4. keep the eval corpus aligned;
+5. do not add hypothetical filler.

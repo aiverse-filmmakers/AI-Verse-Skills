@@ -1,21 +1,26 @@
 {
-  "schema_version": "1.0.0",
+  "schema_version": "1.1.0",
   "skill": "cinematic-realism-director",
-  "task": "9.6-adapter-consistency-evals",
-  "purpose": "Verify that one provider-neutral Cinematic Shot Spec retains the same creative truth, locks, preservation boundaries, reference roles, physical realism, and verification semantics across Generic, OpenAI, Gemini, Seedream, FLUX, Magnific, and Higgsfield adapters.",
+  "purpose": "Verify that adapters translate an already-resolved professional shot without choosing the provider, redesigning the image, or turning competitor systems into default backends.",
   "scoring": {
-    "pass_condition": "Adapters may change serialization, use verified native controls, or degrade to generic language, but they may not redesign the universal shot. All hard locks, preserve/change boundaries, reference roles, physical relationships, and output intent must survive translation.",
+    "pass_condition": "Provider selection must occur before adaptation. Normal adapters may change serialization/verified controls only. Magnific/Higgsfield adapters may be used only for explicit user targets or controlled benchmarks.",
     "critical_failures": [
-      "provider adapter changes the creative shot rather than translating it",
-      "a locked focal length, aperture, camera relation, capture reference, stock, lighting choice, or preservation constraint is silently changed",
-      "provider defaults add shallow DOF, haze, grain, flare, halation, teal-orange, rim light, motion blur, or another unrequested cinematic effect",
-      "provider enum limitations are solved by altering the universal shot rather than semantic translation/fallback",
-      "reference roles collapse or preservation-critical references are silently discarded",
-      "PROMPT ONLY is ignored by an image-capable provider",
-      "adapter existence is treated as proof of provider/tool access",
-      "successful execution is reported as V2 visual success without image inspection",
-      "stale or unknown provider parameters are fabricated instead of falling back"
+      "adapter availability influences provider selection",
+      "external provider selected before an adequate native/local path without explicit provider lock or missing material capability",
+      "Magnific/Higgsfield selected automatically for ordinary generation",
+      "adapter changes creative shot or Professional Quality Floor",
+      "hard lock or preservation boundary silently changed",
+      "provider defaults add unjustified strong cinematic effects",
+      "reference roles collapse",
+      "PROMPT ONLY ignored",
+      "adapter existence treated as provider access",
+      "successful execution reported as V2 without visual inspection",
+      "stale provider parameters fabricated"
     ]
+  },
+  "provider_classes": {
+    "normal_translation_adapters": ["generic", "openai", "gemini", "seedream", "flux"],
+    "explicit_target_or_benchmark_only": ["magnific", "higgsfield_soul_cinema"]
   },
   "universal_test_shots": [
     {
@@ -23,67 +28,57 @@
       "name": "narrative_night",
       "shot_spec": {
         "subject": "woman waiting for a taxi in London at night",
+        "professional_specialty": "feature-film cinematography",
         "camera_position": "eye-level observational distance",
         "projection": "rectilinear",
         "focal_length": "35mm",
         "aperture": "f/4",
         "focus": "subject sharp with readable environmental depth",
-        "lighting": "motivated street and storefront practicals only",
-        "exposure": "night density with retained practical color and no fake HDR flattening",
-        "color": "neutral-cool night ambience with natural skin; no mandatory teal-orange",
-        "texture": "clean contemporary capture; no grain unless provider cannot avoid subtle native texture",
-        "avoid": ["haze", "anamorphic flare", "rim light", "heavy motion blur"]
+        "lighting": "motivated street/storefront practicals",
+        "exposure": "premium night density with controlled highlight rolloff",
+        "color": "natural skin and believable mixed-source separation",
+        "texture": "subtle organic filmic texture",
+        "avoid": ["haze", "anamorphic flare", "dramatic rim light", "teal-orange preset"]
       },
-      "hard_locks": ["focal_length=35mm", "aperture=f/4", "projection=rectilinear", "environment=London_night"],
-      "required_invariants": ["location remains readable", "perspective remains observational", "lighting remains motivated", "no cinematic-effect stacking"]
+      "hard_locks": ["focal_length=35mm", "aperture=f/4", "projection=rectilinear", "environment=London_night"]
     },
     {
       "id": "adapter-shot-002",
+      "name": "mobile_selfie",
+      "shot_spec": {
+        "subject": "iPhone mirror selfie in a hotel room",
+        "professional_specialty": "elite mobile photographer/editor",
+        "capture_medium": "phone/mobile",
+        "perspective": "believable phone proximity",
+        "lighting": "optimized available hotel-room light",
+        "finish": "professional mobile edit, real skin, controlled phone processing",
+        "avoid": ["cinema-camera bokeh", "fake HDR", "beauty-filter skin"]
+      },
+      "hard_locks": ["capture_medium=mobile"]
+    },
+    {
+      "id": "adapter-shot-003",
       "name": "wide_rectilinear_foreground",
       "shot_spec": {
         "subject": "fashion subject with one shoe extremely close to camera",
         "camera_position": "very close and low",
         "focal_length": "14mm",
         "projection": "rectilinear",
-        "perspective": "strong near/far scale exaggeration caused by camera proximity",
-        "background_geometry": "straight architecture without fisheye curvature",
-        "aperture": "f/5.6",
-        "lighting": "bright natural commercial daylight",
-        "texture": "clean"
+        "perspective": "strong near/far exaggeration from proximity",
+        "background_geometry": "straight architecture",
+        "aperture": "f/5.6"
       },
-      "hard_locks": ["focal_length=14mm", "projection=rectilinear", "aperture=f/5.6", "fisheye=false"],
-      "required_invariants": ["foreground shoe remains intentionally huge", "background remains rectilinear", "provider cannot substitute longer focal length"]
-    },
-    {
-      "id": "adapter-shot-003",
-      "name": "product_repair",
-      "operation": "reality_repair",
-      "shot_spec": {
-        "target": "luxury wristwatch product photo",
-        "preserve": ["exact watch geometry", "logo", "dial text", "camera angle", "composition", "background"],
-        "repair": ["metal highlight shape", "glass reflections", "material roughness", "contact shadow"],
-        "allow_change": ["only defective material/reflection regions"],
-        "lighting": "existing studio source geometry must remain authoritative"
-      },
-      "hard_locks": ["watch_geometry=preserve", "logo=preserve", "dial_text=preserve", "composition=preserve"],
-      "required_invariants": ["local repair preferred", "no product redesign", "no whole-scene restyle"]
+      "hard_locks": ["focal_length=14mm", "projection=rectilinear", "fisheye=false"]
     },
     {
       "id": "adapter-shot-004",
-      "name": "multi_reference",
-      "operation": "reference_match",
+      "name": "product_repair",
+      "operation": "reality_repair",
       "shot_spec": {
-        "reference_roles": {
-          "reference_A": "identity_only",
-          "reference_B": "product_geometry_material_only",
-          "reference_C": "lighting_color_only"
-        },
-        "target_scene": "new environment",
-        "target_locks": ["identity from A", "product geometry from B"],
-        "transfer": ["lighting and color DNA from C"]
-      },
-      "hard_locks": ["identity_reference=A", "product_reference=B"],
-      "required_invariants": ["roles remain distinct", "C cannot alter identity/product", "provider reference-count limits must degrade truthfully"]
+        "preserve": ["exact watch geometry", "logo", "dial text", "camera angle", "composition", "background"],
+        "repair": ["metal highlight shape", "glass reflections", "material roughness", "contact shadow"],
+        "allow_change": ["only defective regions"]
+      }
     },
     {
       "id": "adapter-shot-005",
@@ -91,93 +86,94 @@
       "operation": "prompt_only",
       "shot_spec": {
         "subject": "high-end skincare bottle on pale stone",
-        "lighting": "large soft source from upper-left with controlled specular edge",
-        "camera": "clean commercial still",
-        "materials": "translucent glass, physically plausible liquid, stone roughness",
         "output_intent": "prompt_only"
-      },
-      "hard_locks": ["output_intent=prompt_only"],
-      "required_invariants": ["no provider executes generation", "provider-specific wording/settings may be returned only if verified"]
+      }
     }
   ],
-  "provider_expectations": {
+  "normal_adapter_expectations": {
     "generic": {
-      "allowed_changes": ["serialize all resolved fields into natural language", "translate unsupported controls semantically"],
-      "must_not": ["invent provider parameters", "drop locks", "drop reference roles", "add negative-prompt syntax by assumption"]
+      "allowed": ["serialize resolved intent into natural language", "translate unsupported controls semantically"],
+      "must_not": ["invent provider parameters", "drop professional quality floor", "drop locks/reference roles"]
     },
     "openai": {
-      "allowed_changes": ["use natural-language generation/edit instructions", "use current host-exposed output controls", "use targeted multi-turn edits when image state actually exists"],
-      "must_not": ["invent API fields", "assume prior image state when absent", "replace preservation-safe edit with broad restyle"]
+      "allowed": ["use current host-supported natural-language generation/editing", "use available output controls"],
+      "must_not": ["invent API fields", "replace targeted edit with broad redesign"]
     },
     "gemini": {
-      "allowed_changes": ["use conversational natural-language generation/editing", "encode reference roles in text", "use current aspect/output controls if exposed"],
-      "must_not": ["assume cross-turn image persistence", "claim exact hardware from reference", "let conversational refinement drift accepted regions"]
+      "allowed": ["use conversational generation/editing", "encode reference roles in text"],
+      "must_not": ["assume unavailable image persistence", "claim exact hardware from reference"]
     },
     "seedream": {
-      "allowed_changes": ["use verified reference inputs", "use normalized point/bounding-box editing when live host exposes it", "state unchanged regions explicitly"],
-      "must_not": ["invent coordinates or regional-edit fields", "silently discard preservation-critical references", "make spatial-edit mechanics part of universal shot reasoning"]
+      "allowed": ["use verified reference/spatial controls when live host exposes them"],
+      "must_not": ["invent spatial controls", "discard preservation-critical references"]
     },
     "flux": {
-      "allowed_changes": ["reorder into FLUX-friendly positive natural-language structure", "translate avoidances into positive physical desired states"],
-      "must_not": ["append assumed negative-prompt blocks", "lose avoidances during positive translation", "replace physical camera geometry with prestige keywords"]
-    },
-    "magnific": {
-      "allowed_changes": ["map exact compatible current native controls", "leave unavailable controls Auto/neutral and carry nuance in prompt", "prefer live verified schema over cached enums"],
-      "must_not": ["round unsupported focal length silently", "substitute another lens for a locked unavailable lens", "let compound shotType override field-level geometry", "stack camera/stock/tonal controls into conflicting look"]
-    },
-    "higgsfield_soul_cinema": {
-      "allowed_changes": ["use current public Soul/Cinema Studio semantics where actually exposed", "preserve identity/color systems separately from cinematography", "translate lens character into observable cues when needed"],
-      "must_not": ["treat Soul identity as cinematography", "fabricate current version-specific controls", "claim private prompt-enhancer or lens-profile knowledge", "let provider camera/lens package override target locks"]
+      "allowed": ["use positive natural-language structure", "translate avoidances into desired physical states"],
+      "must_not": ["append assumed negative-prompt syntax", "replace camera geometry with prestige keywords"]
     }
   },
-  "cross_provider_cases": [
+  "competitor_adapter_expectations": {
+    "magnific": {
+      "activation": "explicit user request or controlled benchmark only",
+      "allowed": ["explicit prompt export", "explicit execution when connected", "benchmark translation"],
+      "must_not": ["ordinary auto-routing", "native/local displacement because Magnific appears more cinematic", "provider controls supplying the core look"]
+    },
+    "higgsfield_soul_cinema": {
+      "activation": "explicit user request or controlled benchmark only",
+      "allowed": ["explicit prompt export", "explicit execution when connected", "benchmark translation"],
+      "must_not": ["ordinary auto-routing", "native/local displacement because Soul Cinema appears specialized", "provider enhancer becoming the creative brain"]
+    }
+  },
+  "cases": [
     {
-      "id": "adapter-consistency-001",
+      "id": "adapter-normal-001",
       "shot": "adapter-shot-001",
-      "providers": ["generic", "openai", "gemini", "seedream", "flux", "magnific", "higgsfield_soul_cinema"],
-      "assertions": ["same subject/action/environment", "35mm remains locked", "f/4 remains locked or semantically represented without substitution", "night lighting remains motivated", "no provider adds haze/flare/rim/grain by default"]
+      "providers": ["generic", "openai", "gemini", "seedream", "flux"],
+      "assertions": ["same subject/action/environment", "professional quality floor survives", "35mm/f4 survive", "subtle texture survives unless user/provider-specific clean lock says otherwise", "no effect stacking"]
     },
     {
-      "id": "adapter-consistency-002",
+      "id": "adapter-mobile-001",
       "shot": "adapter-shot-002",
-      "providers": ["generic", "openai", "gemini", "seedream", "flux", "magnific", "higgsfield_soul_cinema"],
-      "assertions": ["14mm lock survives", "rectilinear projection survives", "camera proximity remains cause of near/far exaggeration", "fisheye is not introduced"]
+      "providers": ["generic", "openai", "gemini", "seedream", "flux"],
+      "assertions": ["mobile medium survives", "provider cannot turn selfie into generic cinema-camera shot", "professional mobile finish survives"]
     },
     {
-      "id": "adapter-consistency-003",
+      "id": "adapter-geometry-001",
       "shot": "adapter-shot-003",
-      "providers": ["generic", "openai", "gemini", "seedream", "flux", "magnific", "higgsfield_soul_cinema"],
-      "assertions": ["product geometry/logo/text remain preserved", "repair remains local where provider permits", "providers without verified editing disclose limitation instead of claiming exact edit"]
+      "providers": ["generic", "openai", "gemini", "seedream", "flux"],
+      "assertions": ["14mm/rectilinear/proximity logic survives", "fisheye not introduced"]
     },
     {
-      "id": "adapter-consistency-004",
+      "id": "adapter-repair-001",
       "shot": "adapter-shot-004",
-      "providers": ["generic", "openai", "gemini", "seedream", "flux", "magnific", "higgsfield_soul_cinema"],
-      "assertions": ["identity/product/lighting roles remain separate", "identity and product references retain priority", "reference-count limits trigger role-preserving fallback rather than silent loss"]
+      "providers": ["generic", "openai", "gemini", "seedream", "flux"],
+      "assertions": ["preservation locks survive", "local repair preferred where supported", "unsupported editing degrades truthfully"]
     },
     {
-      "id": "adapter-consistency-005",
+      "id": "adapter-prompt-001",
       "shot": "adapter-shot-005",
       "providers": ["generic", "openai", "gemini", "seedream", "flux", "magnific", "higgsfield_soul_cinema"],
-      "assertions": ["PROMPT ONLY remains absolute", "no execution occurs", "provider-specific syntax is used only when verified"]
+      "assertions": ["PROMPT ONLY remains absolute", "no execution occurs"]
     },
     {
-      "id": "adapter-consistency-006",
-      "scenario": "unknown_or_new_model_version",
-      "providers": ["openai", "gemini", "seedream", "flux", "magnific", "higgsfield_soul_cinema"],
-      "assertions": ["universal shot remains unchanged", "unknown exact controls are not invented", "adapter falls back to provider-family or generic natural language", "material capability loss is disclosed when relevant"]
+      "id": "adapter-competitor-001",
+      "scenario": "ordinary cinematic image request, native image model plus Magnific/Higgsfield tools available",
+      "assertions": ["native/local execution chosen", "Magnific/Higgsfield adapters not activated"]
     },
     {
-      "id": "adapter-consistency-007",
-      "scenario": "provider_tool_not_connected",
-      "providers": ["openai", "gemini", "seedream", "flux", "magnific", "higgsfield_soul_cinema"],
-      "assertions": ["adapter existence does not imply provider access", "image request degrades to prompt/spec when no suitable granted image tool exists", "no false execution claim"]
+      "id": "adapter-competitor-002",
+      "scenario": "user explicitly requests Magnific or Higgsfield prompt/execution",
+      "assertions": ["explicit-target adapter may activate", "user provider lock respected", "provider still cannot redesign universal shot"]
     },
     {
-      "id": "adapter-consistency-008",
-      "scenario": "execution_succeeds_but_output_not_inspectable",
-      "providers": ["openai", "gemini", "seedream", "flux", "magnific", "higgsfield_soul_cinema"],
-      "assertions": ["execution may be V1 confirmed", "visual quality may not be called V2 verified", "Reality Gate visual claims remain pending"]
+      "id": "adapter-drift-001",
+      "scenario": "provider version differs from cached adapter",
+      "assertions": ["universal shot unchanged", "unknown controls not invented", "provider-family/generic natural-language fallback used"]
+    },
+    {
+      "id": "adapter-verification-001",
+      "scenario": "execution succeeds but output is not inspectable",
+      "assertions": ["V1 execution confirmed allowed", "V2 visual-quality claim forbidden"]
     }
   ]
 }

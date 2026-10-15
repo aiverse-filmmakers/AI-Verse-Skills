@@ -1,0 +1,71 @@
+{
+  "schema_version": "1.0.0",
+  "skill": "cinematic-realism-director",
+  "purpose": "Verify deterministic execution priority: explicit provider lock first, otherwise native/local image capability before optional external MCP/plugin/provider routes.",
+  "pass_condition": "Every case must choose the correct execution path before provider adaptation and must not treat adapters or specialized cinematic providers as routing recommendations.",
+  "critical_failures": [
+    "external MCP/provider chosen before an adequate native/local image capability without explicit provider lock or missing material capability",
+    "Magnific or Higgsfield automatically chosen for an ordinary image request",
+    "adapter richness/specialization used as a reason to select a provider",
+    "explicit user provider lock ignored",
+    "PROMPT ONLY executes any provider",
+    "external provider access inferred from adapter presence",
+    "first imperfect native result immediately causes competitor-provider escape instead of focused native correction where practical"
+  ],
+  "cases": [
+    {
+      "id": "exec-native-001",
+      "scenario": "native image generator and Magnific MCP are both available; user says create a cinematic image of a woman in a cafe",
+      "expected": "native/local image generator",
+      "must_not": ["Magnific auto-selection", "provider scan based on cinematic specialization"]
+    },
+    {
+      "id": "exec-native-002",
+      "scenario": "native image generator, generic external generator, and Higgsfield tool are available; user asks for an iPhone mirror selfie",
+      "expected": "native/local image generator",
+      "must_not": ["Higgsfield auto-selection", "cinema-camera conversion"]
+    },
+    {
+      "id": "exec-explicit-001",
+      "scenario": "native image generator exists; user explicitly says use Magnific Cinematic",
+      "expected": "Magnific if actually connected/permitted",
+      "must": ["provider lock respected", "if unavailable report limitation rather than silent swap"]
+    },
+    {
+      "id": "exec-explicit-002",
+      "scenario": "user asks give me the Higgsfield Soul Cinema prompt only",
+      "expected": "Higgsfield adapter for prompt export only",
+      "must": ["no image execution", "explicit-target adapter allowed"]
+    },
+    {
+      "id": "exec-fallback-001",
+      "scenario": "native model can generate but cannot edit; user supplies an image and requires identity-preserving local retouch; permitted external editor exists",
+      "expected": "external targeted edit may be used because native lacks a material required capability",
+      "must": ["smallest suitable external operation", "preservation locks retained"]
+    },
+    {
+      "id": "exec-prompt-001",
+      "scenario": "native and external image tools are available; user says prompt only, do not generate",
+      "expected": "no execution",
+      "must": ["PROMPT ONLY absolute"]
+    },
+    {
+      "id": "exec-adapter-001",
+      "scenario": "Magnific adapter file exists but no Magnific tool/account is connected",
+      "expected": "adapter knowledge does not imply provider access",
+      "must_not": ["external call", "claim Magnific availability"]
+    },
+    {
+      "id": "exec-repair-001",
+      "scenario": "native generation returns an image with one correctable lighting defect; external cinematic providers are also available",
+      "expected": "attempt focused native/local correction where practical",
+      "must_not": ["automatic escape to Magnific/Higgsfield after first imperfect output"]
+    },
+    {
+      "id": "exec-benchmark-001",
+      "scenario": "controlled benchmark explicitly compares native output against Magnific and Higgsfield",
+      "expected": "competitor providers may be invoked because benchmark explicitly names them",
+      "must": ["matched concept/settings discipline", "no implication that competitor providers are normal backends"]
+    }
+  ]
+}

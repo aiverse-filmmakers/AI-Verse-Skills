@@ -1,14 +1,12 @@
-# Cinematic Realism Director - Success Contract and Failure Vocabulary
+# Cinematic Realism Director - Success Contract
 
-Status: FROZEN FOR V1
+Status: RUNTIME CONTRACT
 
-This contract defines what the skill may truthfully call success across generation, editing, analysis, reference matching, prompt-only, and explanation workflows.
+Purpose: define what the skill may truthfully call success across generation, editing, analysis, reference matching, prompt-only, and explanation workflows.
 
 The skill must never confuse a plausible plan, a successful tool invocation, and a visually verified result.
 
 ## Status Vocabulary
-
-Use only these top-level execution states when an explicit status is needed:
 
 ```text
 success
@@ -17,307 +15,238 @@ blocked
 failed
 ```
 
-The status should normally remain concise and user-facing only when useful. Internal orchestration may track more detailed evidence.
+### success
 
-## SUCCESS
+Every material postcondition for the requested operation is satisfied to the strongest level the current host can actually verify.
 
-`success` means every material postcondition for the requested operation is satisfied to the level the current host can actually verify.
+For photographic/cinematic work, success also requires the Professional Quality Floor to be satisfied unless the user explicitly requested a degraded/amateur/raw/technical-clean aesthetic.
 
-Success requires all of the following that apply:
+### partial
 
-- the correct workflow was selected;
-- explicit user locks were preserved;
-- preservation constraints were respected;
-- the shot/prompt/edit was constructed using the cinematic/realism rules;
-- required Reality Gate checks completed at the highest level the host can perform;
-- the requested artifact was actually produced when the host had the required execution capability;
-- provider/tool execution returned without an unresolved blocking error;
-- no material limitation was hidden from the user.
-
-`success` does not mean the image is objectively perfect. It means the requested task reached its defined verified postconditions without a known material defect.
-
-## PARTIAL
-
-`partial` means meaningful progress or a useful deliverable was produced, but at least one material requested postcondition could not be completed or verified.
+A useful result exists but at least one material requested postcondition could not be executed or verified.
 
 Examples:
 
-- the host created an image but cannot inspect the returned output, so execution is confirmed but visual quality is unverified;
-- Reality Repair diagnosis is complete but the host lacks an editing tool, so only the repair prompt/spec can be delivered;
-- a requested provider is unavailable but a generic cinematic prompt was produced;
-- most locks were preserved but one provider limitation prevents exact execution;
-- a reference can be analyzed visually, but exact metadata requested by the user is unknowable;
-- the tool generated an image but one observable lock is wrong and no further edit/regeneration can be executed.
+- image generated but host cannot inspect it;
+- repair diagnosis complete but editing unavailable;
+- explicit provider unavailable and fallback prompt supplied;
+- one hard provider limitation prevents exact execution.
 
-A partial result must identify the unresolved limitation when it matters to the user's next action.
+### blocked
 
-## BLOCKED
-
-`blocked` means the requested task cannot proceed to a meaningful deliverable because a required input, capability, authorization, or compatible execution path is absent.
+A required input/capability/authorization/compatible path is absent and no acceptable deliverable can proceed under the user's constraints.
 
 Examples:
 
-- user requests preservation-sensitive editing but no source image is available and the missing visual information cannot be reconstructed from text;
-- user asks to generate an image but explicitly forbids prompt-only output and no image tool exists;
-- the required image tool exists but the user/runtime has not granted access and no acceptable fallback is allowed;
-- mutually contradictory hard locks cannot be reconciled without user choice and the task cannot reasonably continue under either interpretation;
-- the target provider rejects the task and the user explicitly requires that provider with no fallback.
+- preservation-sensitive edit requested with no source image;
+- user forbids prompt fallback and no image tool exists;
+- explicit provider is unavailable and fallback is forbidden;
+- mutually contradictory hard locks require user choice.
 
-`blocked` is not failure when the skill correctly identifies an external prerequisite that prevents execution.
+### failed
 
-## FAILED
-
-`failed` means the skill attempted an operation that should have been possible but did not satisfy the required postconditions because of an execution or logic failure.
+An operation that should have been possible did not satisfy required postconditions because of an execution or logic failure.
 
 Examples:
 
-- the image tool errors after a valid request and retries/fallback rules are exhausted;
-- the skill violates a hard user lock;
-- an edit unexpectedly changes a preservation-locked product or identity and cannot be corrected;
-- the final prompt contradicts the structured shot specification;
-- the wrong workflow is used and produces an unusable result;
-- the Reality Gate identifies a material defect that remains unresolved while the skill nevertheless would otherwise claim completion.
-
-A failed result should state the material failure, not bury it in optimistic language.
+- hard user lock violated;
+- professional quality floor omitted from a normal AUTO request;
+- requested mobile/candid medium erased;
+- ordinary request auto-routed to Magnific/Higgsfield;
+- native/local image model bypassed by external MCP without justification;
+- preservation-locked identity/product changed and not corrected;
+- Reality Gate identifies an unresolved material defect but completion is claimed.
 
 ## Verification Levels
 
-Track the strongest level actually achieved.
-
-### V0 - Reasoning only
+### V0 - Reasoning / specification
 
 Verified:
 
-- task intent;
-- workflow selection;
+- task intent and medium;
+- professional specialty and quality floor;
+- workflow;
 - locks;
 - structured shot logic;
+- provider/execution routing logic;
 - prompt/spec consistency.
 
-Not verified:
-
-- actual generated pixels.
-
-Typical for text-only hosts.
+Actual generated pixels are not verified.
 
 ### V1 - Execution confirmed
 
 Verified:
 
-- provider/tool accepted and completed the requested operation;
-- an output artifact/reference was returned.
+- tool/provider accepted and completed the operation;
+- output artifact/reference returned.
 
-Not necessarily verified:
+Not verified:
 
-- whether the image visually satisfies the cinematic target.
+- whether the image visually satisfies the target.
 
 ### V2 - Visual inspection completed
 
 Verified:
 
-- returned image was inspected by a vision-capable host;
-- observable locks/preservation constraints were checked where practical;
-- Reality Gate was applied to the actual output.
+- returned image inspected;
+- observable locks/preservation checked where practical;
+- Professional Quality Floor and Reality Gate applied to the actual output.
 
-### V3 - Comparative/iterative acceptance
+### V3 - Comparative / iterative acceptance
 
 Verified:
 
 - V2 completed;
-- material defects were corrected through one or more iterations where tools allow;
-- final inspected output satisfies the task-specific acceptance criteria.
+- material defects corrected through one or more iterations where possible;
+- final inspected output satisfies task-specific acceptance.
 
-V3 is ideal for capable iterative hosts but is not mandatory for every environment.
+## Global Success Requirements
 
-## Operation-Specific Success Contracts
+Where applicable, full success requires:
 
-### AUTO DIRECT / New Image Generation
+1. literal user content preserved;
+2. explicit user/preservation/provider locks preserved;
+3. requested/implicit photographic medium identified correctly;
+4. Professional Quality Floor applied to unspecified decisions;
+5. composition/camera relationship/optics/light/exposure/color/texture/physical realism coherent;
+6. professional finish without unjustified cinematic cliché stacking;
+7. execution path obeys `execution-priority.md`;
+8. Magnific/Higgsfield not auto-selected for ordinary requests;
+9. prompt-only override honored;
+10. execution claims and visual-verification claims remain distinct.
 
-Full success requires:
-
-- minimal input expanded into a coherent cinematic shot without unnecessary questioning;
-- story/subject/environment determine the capture choices;
-- user locks preserved;
-- no unjustified cinematic clichés automatically added;
-- provider-neutral shot intent created before provider adaptation;
-- final prompt/tool request internally consistent;
-- if generation capability exists and image output was requested, image generation executed;
-- if image can be inspected, actual output passes the Reality Gate or is iterated/reported partial.
-
-Text-only success is valid when the user or host can only receive a prompt/specification. In that case success applies to the prompt task, not to nonexistent image generation.
-
-### CINEMATIZE
+## AUTO DIRECT
 
 Full success requires:
 
-- core subject, action, purpose, and requested style preserved;
-- vague quality adjectives replaced or supported with concrete cinematic decisions;
-- photographic/physical coherence improved;
-- no unnecessary redesign of subject or scene;
-- final output suited to the requested/available provider.
+- a sufficient one-line prompt completes without unnecessary technical questions;
+- the correct professional specialty is inferred from the requested medium;
+- the user does not need to add `professional`, `cinematic`, `Hollywood`, `ARRI`, `high quality`, or equivalent words;
+- professional composition, light, exposure, tonal response, color, material realism and finishing are automatically supplied;
+- most normal photographic/cinematic work receives subtle organic filmic texture unless the medium/user calls for pristine/no-grain output;
+- cliché effects remain absent unless justified;
+- provider-neutral image design is complete before provider adaptation;
+- native/local generation is used first when available and adequate.
 
-### REALITY REPAIR
+A merely competent literal rendering is not AUTO DIRECT success.
 
-Full success requires:
+## Mobile / Selfie / Candid Medium Fidelity
 
-- source image actually available to the analyzing/editing host when visual diagnosis is claimed;
-- preserve / repair / allow-change boundaries established;
-- synthetic-looking causes diagnosed at the appropriate confidence level;
-- repair targets only the necessary systems unless user requests broader redesign;
-- preservation locks remain intact;
-- if editing is available and requested, edit is executed;
-- if resulting image is inspectable, compare against source and verify both realism improvement and preservation.
+Professional quality must not erase the requested medium.
 
-If editing is unavailable, a complete diagnosis + edit specification can be `success` for a prompt-only request, but only `partial` when the user requested an executed edit.
+For example:
 
-### REFERENCE MATCH
+- iPhone/selfie success = elite mobile photography/editing while retaining believable phone perspective/processing;
+- candid success = decisive, believable, non-performative professional photography rather than staged cinema posing.
 
-Full success requires:
+## CINEMATIZE
 
-- distinguish observable visual traits from uncertain metadata;
-- derive reusable composition, perspective, light, depth, color, texture, atmosphere, material, and tonal characteristics where visible;
-- never invent exact camera/lens/stock metadata as fact;
-- transfer the visual DNA without needlessly copying irrelevant content;
-- preserve any explicit subject/product/identity constraints in the target.
+Success requires stronger professional visual causality and finishing while preserving the concept and locks. Do not use effect stacking as the definition of `more cinematic`.
 
-### MANUAL CAMERA
+## REALITY REPAIR
 
-Full success requires:
+Success requires:
 
-- all valid explicit user values represented as locks;
+- real target image available when visual diagnosis/edit is claimed;
+- preserve/repair/allow-change boundaries established;
+- causes diagnosed before surface decoration;
+- smallest useful repair scope;
+- preservation locks intact;
+- resulting image inspected when possible.
+
+## REFERENCE MATCH
+
+Success requires:
+
+- observable traits separated from uncertain metadata;
+- composition/perspective/light/depth/color/texture/material/atmosphere transferred where relevant;
+- exact hardware not invented;
+- target subject/product/identity locks preserved.
+
+## MANUAL CAMERA
+
+Success requires:
+
+- all valid explicit values remain locks;
 - unspecified fields remain AUTO;
-- AUTO choices support rather than override the locked package;
-- direct contradictions are handled under `locks.md`;
-- final provider adaptation preserves the intended observable result.
+- Professional Quality Floor completes missing fields without overriding locks;
+- final provider translation preserves the intended observable result.
 
-### PROMPT ONLY
+## PROMPT ONLY
 
-Full success requires:
+Success requires:
 
-- no image generation/editing is invoked;
-- prompt reflects the full cinematic shot intent;
-- user locks are present;
-- provider-specific syntax is used only when known and appropriate;
-- unsupported parameters are expressed semantically rather than fabricated;
-- output is ready to paste/use with minimal additional work.
+- no image execution;
+- prompt already contains professional quality floor and complete image direction;
+- provider-specific syntax used only when requested/known;
+- unsupported parameters expressed semantically rather than fabricated.
 
-### SHOT RECIPE / EXPLAIN
+## Execution Priority and Success
 
-Full success requires:
+Unless a provider is explicitly locked:
 
-- explain actual decisions rather than inventing hidden metadata;
-- separate user-locked choices from AUTO choices when useful;
-- distinguish physical principle, provider-specific behavior, and inference;
-- keep the explanation concise unless detailed analysis is requested.
+```text
+native/local image capability
+> external provider only for missing material capability
+> prompt/spec
+```
+
+Using an external MCP/provider before an adequate native/local path is a contract violation.
+
+Magnific/Higgsfield may be used only for explicit target/export or controlled benchmark requests.
 
 ## Reality Gate and Success
 
-The Reality Gate is a release condition for any workflow that claims a cinematic/photorealistic result.
+Before full success, check all relevant available dimensions:
 
-Before full success, check all relevant dimensions available to the host:
-
-- perspective and camera geometry;
-- depth/focus plausibility;
-- lighting motivation and direction;
-- shadow consistency;
-- exposure and highlight behavior;
-- skin/hair/eye realism where present;
-- material response and roughness;
-- reflections/refractions where present;
-- contact, weight, gravity and environment interaction;
-- texture/grain/halation/bloom restraint;
-- color coherence;
+- professional medium/specialty fit;
+- composition and camera geometry;
+- depth/focus/motion;
+- motivated lighting;
+- exposure/highlight behavior/shadow density;
+- color separation and grade;
+- skin/hair/eye realism;
+- materials/reflections/refractions;
+- contact/weight/gravity/environment;
+- subtle texture vs unjustified visible effects;
 - preservation constraints;
-- user locks;
+- explicit locks;
 - obvious AI artifacts.
-
-For prompt-only hosts, apply the gate to the planned shot and instructions. For vision-capable hosts, apply it to the actual output when available.
 
 ## Tool Success Is Not Visual Success
 
-Never equate:
+Never equate a successful API/tool response with the cinematic/professional target being visually achieved.
 
-```text
-API returned 200
-```
-
-with:
-
-```text
-cinematic target achieved
-```
-
-If the host cannot inspect output, report execution as confirmed but visual verification as unavailable when that distinction matters.
+If output cannot be inspected, report execution as confirmed but visual verification as unavailable when the distinction matters.
 
 ## Confidence and Unknowns
 
-The skill must not convert uncertainty into fake certainty merely to make a result look complete.
+Unknown technical metadata does not need to be invented.
 
 Examples:
 
-- exact lens from a reference: may be unknown;
-- exact film stock: may be unknown;
-- exact key-to-fill ratio from a compressed image: may be approximate;
-- provider's private prompt transformation: unknown unless publicly documented.
+- exact lens from a reference may be unknown;
+- exact stock may be unknown;
+- exact key-to-fill ratio may be approximate;
+- private provider prompt transformation is unknown unless documented.
 
-Unknown technical metadata does not block success when observable visual behavior can be reproduced without it.
+Observable visual behavior may still be reproduced without fake certainty.
 
-## Retry and Iteration Principle
+## Retry / Iteration
 
-Where the host supports repeated generation/editing and inspection:
+When generation/editing and inspection are available:
 
-1. inspect the first output;
-2. identify only material failures;
-3. preserve what already works;
-4. make the smallest useful correction;
-5. re-run the Reality Gate.
+1. inspect output;
+2. identify material failures;
+3. preserve what works;
+4. attempt focused correction through the current native/local path first when practical;
+5. use an external fallback only under execution-priority rules;
+6. re-run Reality Gate.
 
-Do not regenerate endlessly for trivial differences. The detailed retry policy may be refined during eval phases.
+Do not endlessly regenerate for trivial differences.
 
-## User-Facing Result Discipline
+## User-Facing Discipline
 
-Do not flood beginners with internal status machinery.
+Normally deliver the image/prompt directly and mention only material limitations.
 
-Normally:
-
-- deliver the image or prompt directly;
-- mention limitations only when material;
-- expose technical verification/status on request or when partial/blocked/failed.
-
-For agents, tests, structured workflows, or explicit diagnostic requests, the following shape is preferred:
-
-```text
-status: success | partial | blocked | failed
-summary: ...
-verification_level: V0 | V1 | V2 | V3
-locks_preserved: true | false | unverified
-reality_gate: pass | partial | fail | not_applicable
-artifact: ...
-remaining_uncertainty: ...
-```
-
-This is a conceptual result contract. The exact machine-readable schema may be defined later if needed.
-
-## Failure Conditions for This Contract
-
-The skill violates Task 0.5 if it:
-
-- claims success despite a known broken hard lock;
-- claims an image was generated when only a prompt exists;
-- calls an API response visual verification;
-- calls a repair successful without checking preservation when inspection is available;
-- labels missing external authorization as an internal skill failure;
-- treats unknowable reference metadata as a reason the visual match itself must fail;
-- hides material unresolved limitations behind generic positive language;
-- forces verbose status output on every beginner request.
-
-## Task 0.5 Acceptance
-
-Task 0.5 is satisfied when:
-
-- `success`, `partial`, `blocked`, and `failed` have non-overlapping operational meanings;
-- generation, edit, analysis/reference, manual-lock, prompt-only, and explanation tasks each have clear success postconditions;
-- execution confirmation is separated from visual verification;
-- Reality Gate participation is defined;
-- missing capabilities degrade truthfully rather than being reported as completed work;
-- status reporting remains lightweight for normal users and explicit for agent/test contexts.
+Do not flood beginners with internal status machinery unless requested.
