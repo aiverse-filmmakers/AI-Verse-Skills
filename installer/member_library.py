@@ -68,7 +68,7 @@ def _provenance(value=None):
             raise RuntimeError("invalid provenance text")
     for key in ("dependencies", "requested_capabilities"):
         if (not isinstance(value[key], list) or len(value[key]) > 50
-                or any(not isinstance(x, str) or not x or len(x) > 200 for x in value[key])):
+                or any(not isinstance(x, str) or not x or len(x) > 500 for x in value[key])):
             raise RuntimeError("invalid provenance requirements")
     for key in ("requires_connection", "requires_credential"):
         if type(value[key]) is not bool:
@@ -173,6 +173,8 @@ def read_index(root):
                 _provenance(metadata["provenance"])
             if metadata.get("path") != (RELATIVE / "packages" / key / revision).as_posix():
                 raise RuntimeError("member revision path mismatch")
+        if "enabled" in record and type(record["enabled"]) is not bool:
+            raise RuntimeError("invalid member activation state")
         active = record["revisions"][record["active_revision"]]
         if any(record.get(k) != active.get(k) for k in ("name", "description", "visibility")):
             raise RuntimeError("member active metadata mismatch")
@@ -399,6 +401,104 @@ def verify(root):
     return {"contract": CONTRACT, "ok": not errors, "errors": errors}
 
 
+def set_enabled(root, identity, enabled, *, expected_index):
+    if type(enabled) is not bool:
+        raise RuntimeError("member enabled state must be boolean")
+    with _locked(root):
+        index = read_index(root)
+        if index_digest(root) != expected_index:
+            raise RuntimeError("member library changed since preview")
+        record = index["skills"].get(identity)
+        if not record:
+            raise RuntimeError("unknown member identity")
+        if record.get("enabled", True) == enabled:
+            return {"state": "unchanged", "id": identity}
+        record["enabled"] = enabled
+        index["sequence"] += 1
+        index["events"].append({"action": "enable" if enabled else "disable", "id": identity,
+                                "at": datetime.now(timezone.utc).isoformat()})
+        _write(root, index)
+    return {"state": "enabled" if enabled else "disabled", "id": identity}
+
+
+def learning_binding(impl, managed_root):
+    try:
+        from .generation_lifecycle import controller_path
+    except ImportError:
+        from generation_lifecycle import controller_path
+    file = controller_path(Path(managed_root), "learning", "member-library.json")
+    if not file.exists() and not file.is_symlink():
+        return None
+    data = _json_file(file, 8192)
+    if (not isinstance(data, dict) or set(data) != {"contract", "library_root"}
+            or data["contract"] != "aiverse-member-learning-route-v1"
+            or not isinstance(data["library_root"], str) or not Path(data["library_root"]).is_absolute()):
+        raise RuntimeError("invalid member learning route")
+    return _root(data["library_root"])
+
+
+def configure_learning(impl, managed_root, library_root, *, apply=False):
+    try:
+        from .generation_lifecycle import controller_path
+    except ImportError:
+        from generation_lifecycle import controller_path
+    managed_root = Path(managed_root).resolve()
+    library_root = _root(library_root)
+    if managed_root == library_root or managed_root in library_root.parents or library_root in managed_root.parents:
+        raise RuntimeError("managed and member roots must be independent")
+    current = learning_binding(impl, managed_root)
+    if current is not None and current != library_root:
+        raise RuntimeError("member learning route already belongs to another library; explicit reconciliation required")
+    result = {"contract": "aiverse-member-learning-route-v1", "library_root": str(library_root)}
+    if not apply:
+        return {"state": "planned", **result}
+    with impl.lifecycle_lock(managed_root):
+        current = learning_binding(impl, managed_root)
+        if current is not None and current != library_root:
+            raise RuntimeError("member learning route changed")
+        if current is None:
+            file = controller_path(managed_root, "learning", "member-library.json")
+            impl._atomic_json_write(file, result)
+    return {"state": "configured", **result}
+
+
+def apply_learning_proposal(impl, managed_root, proposal, *, approved_by):
+    try:
+        from . import learning as learning_owner
+    except ImportError:
+        import learning as learning_owner
+    library_root = learning_binding(impl, managed_root)
+    if library_root is None or proposal.get("kind") != "create":
+        return None
+    scope = proposal.get("scope", {})
+    source_scope = scope.get("aiverse_scope") or ("workspace:" + scope["workspace_id"] if scope.get("workspace_id") else "operator")
+    portable = proposal.get("portability") == PORTABILITY and all(type(v) is bool for v in (proposal.get("portability") or {}).values())
+    shared = portable and proposal.get("source_ownership") == "agent_learned"
+    if not shared and not source_scope.startswith("workspace:"):
+        raise RuntimeError("learning candidate needs portability review before shared activation; draft retained")
+    visibility = "shared" if shared else source_scope
+    admission = PORTABILITY if shared else {}
+    candidate = Path(managed_root) / ".aiverse/learning/proposals" / proposal["proposal_id"] / "candidate"
+    provenance = {"origin": "learning:" + proposal["proposal_id"], "license": "member-private",
+                  "dependencies": proposal.get("requested_dependencies", []),
+                  "requested_capabilities": proposal.get("requested_capabilities", []),
+                  "requires_connection": proposal.get("requires_connection", False),
+                  "requires_credential": proposal.get("requires_credential", False)}
+    common = {"admission": admission, "source_scope": source_scope, "visibility": visibility, "provenance": provenance}
+    plan = proposal.get("member_import_plan")
+    if plan is None:
+        plan = plan_import(library_root, candidate, **common)
+        proposal["member_import_plan"] = plan
+        learning_owner._save_proposal(impl, managed_root, proposal)
+    result = apply_import(library_root, candidate, plan=plan, **common)
+    proposal.update(state="applied", member_library_root=str(library_root), member_import=result,
+                    approved_by=approved_by or "policy:auto", applied_at=datetime.now(timezone.utc).isoformat())
+    proposal["history"].append({"state": "applied", "at": proposal["applied_at"], "by": proposal["approved_by"]})
+    learning_owner._save_proposal(impl, managed_root, proposal)
+    learning_owner.append_audit(managed_root, "learning.member.applied", {"proposal_id": proposal["proposal_id"], "qualified_id": result["qualified_id"], "revision": result["revision"]})
+    return proposal
+
+
 def apply_member_library(impl):
     """Extend the canonical CLI; --library-root never means managed --root."""
     base_parser = impl.parser
@@ -417,6 +517,14 @@ def apply_member_library(impl):
         for action in ("list", "doctor"):
             command = commands.add_parser(action)
             command.set_defaults(fn=inspect_command)
+        command = commands.add_parser("configure-learning")
+        command.add_argument("--apply", action="store_true")
+        command.set_defaults(fn=lambda args: print(json.dumps(configure_learning(impl, args.root, args.library_root, apply=args.apply))))
+        command = commands.add_parser("set-enabled")
+        command.add_argument("--id", required=True)
+        command.add_argument("--state", required=True, choices=["enabled", "disabled"])
+        command.add_argument("--expected-index", required=True)
+        command.set_defaults(fn=lambda args: print(json.dumps(set_enabled(args.library_root, args.id, args.state == "enabled", expected_index=args.expected_index))))
         command = commands.add_parser("import")
         command.add_argument("--source", required=True, type=Path)
         command.add_argument("--source-scope", default="operator")

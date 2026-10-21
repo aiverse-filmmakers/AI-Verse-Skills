@@ -1,8 +1,9 @@
 # Member skill library v1
 
 Status: step 2 implementation, not yet integrated into an admitted Core release.
-Skills owns the private package lifecycle; OS integration, workspace bindings,
-learning routing and installation-root provisioning are subsequent steps.
+Skills owns the private package lifecycle; OS discovery and workspace bindings are implemented in OS step 3; learning and
+installation-root wiring are implemented locally in step 4. No composed release
+is admitted yet.
 
 ## Purpose and boundaries
 
@@ -135,3 +136,29 @@ It is included in the repository's existing unittest discovery workflow.
 Step 2 does not yet make these packages selectable in the installed OS. It does
 not change learned proposal activation or native runtime discovery. Those are
 steps 3 and 4. Do not manually update member installations to this source.
+
+## Governed learning binding (step 4)
+
+`library --library-root <root> configure-learning` previews the managed owner's
+learning destination; add `--apply` to establish it. A different existing root is
+refused. This stores `aiverse-member-learning-route-v1` in the managed owner's
+`.aiverse/learning/member-library.json` and does not create or move member skills.
+Distribution supplies the same root to OS and Skills through these owner APIs.
+
+New create proposals retain normal proposal/approval and auto-mode evaluation.
+Explicit four-field portability admission plus `agent_learned` permits shared
+placement. `workspace_local` stays private even with portable method. Unknown
+portability remains workspace-restricted or an operator draft, never implicitly
+shared, and cannot bypass the private-auto policy. Brain must bind origin scope.
+Applied proposals record the new member identity and revision with their original
+candidate/provenance retained. They do not publish a new managed generation.
+Legacy repair/update flows retain their existing protected-owner restrictions.
+
+Rollback of an unchanged member create disables that identity, retaining all
+bytes. A newer active revision blocks rollback. Explicit `set-enabled --id <id>
+--state enabled|disabled --expected-index <digest>` is the bounded owner operation;
+it is not deletion. Re-enabling still grants no runtime permission.
+
+Component doctor verifies a configured library, including retained revisions.
+JSON doctor failures now have nonzero exit status, so the composing lifecycle
+cannot mistake a failed integrity check for success.
