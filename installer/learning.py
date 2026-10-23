@@ -551,7 +551,7 @@ def _dedup_report(impl: Any, root: Path, proposal: Mapping[str, Any], candidate:
                 continue
             revision = record["active_revision"]
             package = revision_path(member_root, identity, revision)
-            if _package(package)[2] != revision:
+            if _package(package, record["revisions"][revision].get("security_review"))[2] != revision:
                 raise RuntimeError("member package integrity failure during deduplication")
             score = _similarity(candidate_text, (package / "SKILL.md").read_text(encoding="utf-8"))
             if score >= 0.55:
