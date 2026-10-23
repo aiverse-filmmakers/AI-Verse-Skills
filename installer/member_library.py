@@ -185,7 +185,30 @@ def index_digest(root):
     return hashlib.sha256(_bytes(read_index(root))).hexdigest()
 
 
-def _package(source):
+def _review_receipt(review, revision, scan):
+    if review is None:
+        if scan["status"] != "pass":
+            raise RuntimeError("package admission requires review: " + scan["status"])
+        return
+    if (not isinstance(review, dict) or set(review) != {"source_revision", "findings", "reviewer", "reason"}
+            or review.get("source_revision") != revision or len(_bytes(review)) > 16_384):
+        raise RuntimeError("security review must bind this exact package revision")
+    for key, maximum in (("reviewer", 100), ("reason", 1000)):
+        if not isinstance(review[key], str) or not review[key].strip() or len(review[key]) > maximum or "\x00" in review[key]:
+            raise RuntimeError("security review requires bounded reviewer and reason")
+    findings = scan.get("findings", [])
+    if not findings or any(item.get("severity") != "review" or item.get("code") not in {"environment-harvest", "shell-download-chain", "destructive-shell"} for item in findings):
+        raise RuntimeError("security review cannot waive denied or unknown findings")
+    expected = sorted((item["path"], item["code"]) for item in findings)
+    acknowledged = review["findings"]
+    if (not isinstance(acknowledged, list) or len(acknowledged) > 64
+            or any(not isinstance(item, dict) or set(item) != {"path", "code"}
+                   or not all(isinstance(item[k], str) for k in ("path", "code")) for item in acknowledged)
+            or sorted((item["path"], item["code"]) for item in acknowledged) != expected):
+        raise RuntimeError("security review must acknowledge every exact finding")
+
+
+def _package(source, security_review=None, *, inspect_only=False):
     source = Path(source).expanduser().absolute()
     if _is_symlink_or_reparse(source) or not source.is_dir():
         raise RuntimeError("source must be a real package directory, without symlinks")
@@ -215,16 +238,19 @@ def _package(source):
     if (not metadata.get("name") or not metadata.get("description")
             or len(metadata["name"]) > 100 or len(metadata["description"]) > 1024):
         raise RuntimeError("source package requires bounded skill name and description")
-    scan = scan_package(source)
-    if scan["status"] != "pass":
-        raise RuntimeError("package admission requires review: " + scan["status"])
-    return source, metadata, package_digest_v1(source)
+    scan = scan_package(source, max_text_bytes=8_388_608)
+    revision = package_digest_v1(source)
+    if inspect_only:
+        return {"contract":"aiverse-member-skill-inspection-v1", "source_revision":revision,
+                "scan":scan}
+    _review_receipt(security_review, revision, scan)
+    return source, metadata, revision
 
 
-def plan_import(root, source, *, admission, source_scope="operator", visibility="shared", skill_id=None, provenance=None):
+def plan_import(root, source, *, admission, source_scope="operator", visibility="shared", skill_id=None, provenance=None, security_review=None):
     root = _root(root)
     _validate_scope(source_scope, visibility, admission)
-    source, metadata, revision = _package(source)
+    source, metadata, revision = _package(source, security_review)
     if source == root or root in source.parents or source in root.parents:
         raise RuntimeError("source and member-library roots must be independent")
     provenance = _provenance(provenance)
@@ -232,11 +258,14 @@ def plan_import(root, source, *, admission, source_scope="operator", visibility=
     if skill_id is not None and skill_id not in index["skills"]:
         raise RuntimeError("an update must name an existing member skill identity")
     identity = skill_id or "skill-" + uuid.uuid4().hex
-    return {"contract": PLAN_CONTRACT, "library_root": str(root), "source": str(source),
+    result = {"contract": PLAN_CONTRACT, "library_root": str(root), "source": str(source),
             "source_revision": revision, "expected_index": index_digest(root),
             "id": identity, "source_scope": source_scope, "visibility": visibility,
             "admission": dict(admission), "metadata": metadata, "provenance": provenance,
             "operation": "update" if skill_id else "create"}
+    if security_review is not None:
+        result["security_review"] = json.loads(_bytes(security_review))
+    return result
 
 
 @contextlib.contextmanager
@@ -287,20 +316,22 @@ def _activate(record, revision):
                   description=metadata["description"], visibility=metadata["visibility"])
 
 
-def apply_import(root, source, *, plan, admission, source_scope="operator", visibility="shared", provenance=None):
+def apply_import(root, source, *, plan, admission, source_scope="operator", visibility="shared", provenance=None, security_review=None):
     root = _root(root)
     if not isinstance(plan, dict) or plan.get("contract") != PLAN_CONTRACT:
         raise RuntimeError("a supported import preview is required")
-    if set(plan) != {"contract", "library_root", "source", "source_revision", "expected_index",
+    if set(plan) - {"security_review"} != {"contract", "library_root", "source", "source_revision", "expected_index",
                      "id", "source_scope", "visibility", "admission", "metadata", "provenance", "operation"}:
         raise RuntimeError("invalid import preview fields")
     _validate_scope(source_scope, visibility, admission)
     provenance = _provenance(provenance)
-    source, metadata, revision = _package(source)
+    source, metadata, revision = _package(source, security_review)
     if source == root or root in source.parents or source in root.parents:
         raise RuntimeError("source and member-library roots must be independent")
     if plan.get("source_revision") != revision:
         raise RuntimeError("source changed since preview")
+    if plan.get("security_review") != security_review:
+        raise RuntimeError("security review differs from preview")
     expected = {"library_root": str(root), "source": str(source),
                 "source_scope": source_scope, "visibility": visibility,
                 "admission": admission, "metadata": metadata, "provenance": provenance}
@@ -315,7 +346,7 @@ def apply_import(root, source, *, plan, admission, source_scope="operator", visi
         retry_key = hashlib.sha256(_bytes(plan)).hexdigest()
         if any(event.get("effect_id") == retry_key for event in index["events"]):
             if record and revision in record["revisions"]:
-                if _package(revision_path(root, identity, revision))[2] != revision:
+                if _package(revision_path(root, identity, revision), security_review)[2] != revision:
                     raise RuntimeError("imported revision integrity failure")
                 return {"state": "already-imported", "id": identity, "revision": revision,
                         "qualified_id": "local:" + identity, "source_preserved": True}
@@ -332,13 +363,13 @@ def apply_import(root, source, *, plan, admission, source_scope="operator", visi
         if target.parent.resolve() != target.parent:
             raise RuntimeError("member package parent is redirected")
         if target.exists():
-            if _package(target)[2] != revision:
+            if _package(target, security_review)[2] != revision:
                 raise RuntimeError("existing immutable revision is damaged")
         else:
             stage = Path(tempfile.mkdtemp(prefix=".stage-", dir=target.parent))
             try:
                 shutil.copytree(source, stage, dirs_exist_ok=True)
-                if _package(stage)[2] != revision or _package(source)[2] != revision:
+                if _package(stage, security_review)[2] != revision or _package(source, security_review)[2] != revision:
                     raise RuntimeError("source changed while staging")
                 for path in stage.rglob("*"):
                     if path.is_dir():
@@ -353,6 +384,8 @@ def apply_import(root, source, *, plan, admission, source_scope="operator", visi
                              "visibility": visibility, "source_scope": source_scope,
                              "source": str(source), "admission": dict(admission), "provenance": provenance,
                              "path": target.relative_to(root).as_posix()}
+        if security_review is not None:
+            revision_metadata["security_review"] = json.loads(_bytes(security_review))
         record = record or {"id": identity, "revisions": {}}
         if revision in record["revisions"] and record["revisions"][revision] != revision_metadata:
             raise RuntimeError("revision scope/provenance cannot be changed by content reuse")
@@ -376,7 +409,7 @@ def select_revision(root, identity, revision, *, expected_index):
         record = index["skills"].get(identity)
         if record is None or revision not in record["revisions"]:
             raise RuntimeError("unknown member skill revision")
-        if _package(revision_path(root, identity, revision))[2] != revision:
+        if _package(revision_path(root, identity, revision), record["revisions"][revision].get("security_review"))[2] != revision:
             raise RuntimeError("member revision integrity failure")
         if record["active_revision"] == revision:
             return {"state": "already-selected", "id": identity, "revision": revision}
@@ -394,7 +427,7 @@ def verify(root):
         index = read_index(root)
         for identity, record in index["skills"].items():
             for revision in record["revisions"]:
-                if _package(revision_path(root, identity, revision))[2] != revision:
+                if _package(revision_path(root, identity, revision), record["revisions"][revision].get("security_review"))[2] != revision:
                     errors.append(f"revision digest mismatch: {identity}/{revision}")
     except (RuntimeError, OSError, ValueError) as exc:
         errors.append(str(exc))
@@ -517,6 +550,9 @@ def apply_member_library(impl):
         for action in ("list", "doctor"):
             command = commands.add_parser(action)
             command.set_defaults(fn=inspect_command)
+        command = commands.add_parser("inspect")
+        command.add_argument("--source", type=Path, required=True)
+        command.set_defaults(fn=lambda args: print(json.dumps(_package(args.source, inspect_only=True))))
         command = commands.add_parser("configure-learning")
         command.add_argument("--apply", action="store_true")
         command.set_defaults(fn=lambda args: print(json.dumps(configure_learning(impl, args.root, args.library_root, apply=args.apply))))
@@ -532,13 +568,15 @@ def apply_member_library(impl):
         command.add_argument("--admission-json", required=True, type=Path)
         command.add_argument("--id")
         command.add_argument("--provenance-json", type=Path)
+        command.add_argument("--security-review-json", type=Path)
         command.add_argument("--apply-plan", type=Path)
 
         def import_command(args):
             admission = _json_file(args.admission_json, 8192)
             common = {"admission": admission, "source_scope": args.source_scope,
                       "visibility": args.visibility,
-                      "provenance": _json_file(args.provenance_json, 16_384) if args.provenance_json else None}
+                      "provenance": _json_file(args.provenance_json, 16_384) if args.provenance_json else None,
+                      "security_review": _json_file(args.security_review_json, 16_384) if args.security_review_json else None}
             if args.apply_plan:
                 plan = _json_file(args.apply_plan, 32_768)
                 if args.id is not None and args.id != plan.get("id"):
