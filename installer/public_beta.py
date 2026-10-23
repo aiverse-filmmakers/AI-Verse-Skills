@@ -237,6 +237,16 @@ def doctor_report(impl: Any, root: Path, depth: str = "system") -> Dict[str, Any
             "state": status.get("state"),
             "detail": "System-depth doctor requires completed setup and an enabled healthy provider.",
         }
+    try:
+        try:
+            from .member_library import learning_binding, verify
+        except ImportError:
+            from member_library import learning_binding, verify
+        member_root = learning_binding(impl, root)
+        if member_root is not None:
+            checks["member_library"] = verify(member_root)
+    except (RuntimeError, OSError, ValueError) as exc:
+        checks["member_library"] = {"ok": False, "error": str(exc)}
     ok = all(bool(v.get("ok")) for v in checks.values())
     return {
         "component_id": "ai-verse-skills",
@@ -440,6 +450,8 @@ def apply_public_beta(impl: Any) -> None:
             data = doctor_report(impl, Path(a.root), a.depth)
             if a.json:
                 _print(data, True)
+                if not data["ok"]:
+                    raise SystemExit(1)
             else:
                 if data["ok"]:
                     print(f"AI-Verse-Skills doctor: healthy depth={data['depth']} state={data['state']}")

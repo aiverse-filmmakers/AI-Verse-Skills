@@ -298,6 +298,16 @@ def _validate_envelope(envelope: Mapping[str, Any]) -> Dict[str, Any]:
     for flag in ("requires_connection", "requires_credential"):
         if flag in data and not isinstance(data.get(flag), bool):
             raise RuntimeError(f"{flag} must be boolean")
+    if "portability" in data:
+        try:
+            from .member_library import PORTABILITY
+        except ImportError:
+            from member_library import PORTABILITY
+        value = data["portability"]
+        if not isinstance(value, dict) or set(value) != set(PORTABILITY) or any(type(v) is not bool for v in value.values()):
+            raise RuntimeError("invalid portability declarations")
+        if value["contains_credentials"]:
+            raise RuntimeError("credentials cannot be routed into a skill")
     data["kind"] = kind
     data["risk"] = risk
     data["confidence"] = confidence
@@ -441,6 +451,7 @@ def submit_candidate(
             "requires_connection": env["requires_connection"],
             "requires_credential": env["requires_credential"],
             "source_ownership": env["source_ownership"],
+            "portability": env.get("portability"),
             "target_ownership": target_ownership,
             "protected_target": bool(target_ownership in PROTECTED_OWNERS) if target_ownership else False,
             "base_generation_id": pin.generation_id,
@@ -527,6 +538,24 @@ def _dedup_report(impl: Any, root: Path, proposal: Mapping[str, Any], candidate:
         score = _similarity(candidate_text, skill_md.read_text(encoding="utf-8", errors="replace"))
         if score >= 0.55:
             nearest.append({"id": package.get("id"), "similarity": round(score, 4)})
+    try:
+        from .member_library import learning_binding, read_index, revision_path, _package
+    except ImportError:
+        from member_library import learning_binding, read_index, revision_path, _package
+    member_root = learning_binding(impl, root)
+    scope_data = proposal.get("scope", {})
+    bound_scope = scope_data.get("aiverse_scope") or ("workspace:" + scope_data["workspace_id"] if scope_data.get("workspace_id") else "operator")
+    if member_root is not None:
+        for identity, record in read_index(member_root)["skills"].items():
+            if record.get("enabled", True) is False or record["visibility"] not in {"shared", bound_scope}:
+                continue
+            revision = record["active_revision"]
+            package = revision_path(member_root, identity, revision)
+            if _package(package)[2] != revision:
+                raise RuntimeError("member package integrity failure during deduplication")
+            score = _similarity(candidate_text, (package / "SKILL.md").read_text(encoding="utf-8"))
+            if score >= 0.55:
+                nearest.append({"id": "local:" + identity, "similarity": round(score, 4)})
     nearest.sort(key=lambda x: x["similarity"], reverse=True)
     threshold = float(ensure_learning_state(impl, root)["duplicate_similarity_threshold"])
     return {
@@ -589,6 +618,12 @@ def evaluate_proposal(impl: Any, root: Path, proposal_id: str, *, auto_apply: bo
             proposal["quarantine_reason"] = reason
         else:
             create_owner = proposal.get("source_ownership")
+            try:
+                from .member_library import learning_binding, PORTABILITY
+            except ImportError:
+                from member_library import learning_binding, PORTABILITY
+            if learning_binding(impl, root) is not None and proposal.get("portability") != PORTABILITY:
+                create_owner = "workspace_local"
             create_owner_auto = (
                 create_owner == "agent_learned"
                 or (create_owner == "workspace_local" and config.get("auto_workspace_local") is True)
@@ -740,6 +775,11 @@ def apply_proposal(
                 "create a derived agent_learned Skill instead"
             )
 
+        try:
+            from .member_library import apply_learning_proposal
+        except ImportError:
+            from member_library import apply_learning_proposal
+        # Preserve proposal approval and auto-evaluation generation guards.
         pin = impl.pin_active_generation(root, impl.digest)
         evaluation = proposal.get("evaluation") if isinstance(proposal.get("evaluation"), dict) else {}
         if state == "auto_eligible" and (
@@ -763,6 +803,10 @@ def apply_proposal(
         security = scan_package(candidate)
         if security["status"] == "deny":
             raise RuntimeError("Candidate failed security scan at apply time")
+
+        member = apply_learning_proposal(impl, root, proposal, approved_by=approved_by)
+        if member is not None:
+            return member
 
         stage = _stage_from_active(impl, root, pin)
         try:
@@ -847,6 +891,23 @@ def rollback_learning_change(impl: Any, root: Path, proposal_id: str) -> Dict[st
         proposal = _load_proposal(root, proposal_id)
         if proposal.get("state") != "applied":
             raise RuntimeError("Only applied proposals can be rolled back")
+        if proposal.get("member_import"):
+            try:
+                from .member_library import read_index, index_digest, set_enabled, learning_binding
+            except ImportError:
+                from member_library import read_index, index_digest, set_enabled, learning_binding
+            library_root = learning_binding(impl, root)
+            if library_root is None or str(library_root) != proposal.get("member_library_root"):
+                raise RuntimeError("member learning binding changed before rollback")
+            imported = proposal["member_import"]
+            record = read_index(library_root)["skills"].get(imported["id"])
+            if not record or record["active_revision"] != imported["revision"]:
+                raise RuntimeError("member skill changed after learning; rollback refused")
+            set_enabled(library_root, imported["id"], False, expected_index=index_digest(library_root))
+            proposal["rolled_back_at"] = _utc_now()
+            proposal["history"].append({"state": "rolled_back", "at": _utc_now(), "by": "operator"})
+            _save_proposal(impl, root, proposal)
+            return proposal
         pointer = impl.read_active_pointer(root)
         if pointer.get("generation_id") != proposal.get("applied_generation_id"):
             raise RuntimeError("Refusing rollback because a newer generation is active")

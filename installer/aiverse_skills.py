@@ -13,6 +13,7 @@ try:
     from .admission import apply_admission
     from .public_beta import apply_public_beta
     from .controller_containment import apply_controller_containment
+    from .member_library import apply_member_library
 except ImportError:
     import aiverse_skills_v3 as _impl
     from provider_contract_v1 import apply_provider_contract_v1
@@ -20,12 +21,14 @@ except ImportError:
     from admission import apply_admission
     from public_beta import apply_public_beta
     from controller_containment import apply_controller_containment
+    from member_library import apply_member_library
 
 apply_provider_contract_v1(_impl)
 apply_readiness_v2(_impl)
 apply_admission(_impl)
 apply_public_beta(_impl)
 apply_controller_containment(_impl)
+apply_member_library(_impl)
 
 # Preserve the established import surface for callers that import this module.
 for _name in dir(_impl):

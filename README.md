@@ -10,6 +10,13 @@ The default canonical install root is:
 
 AI-Verse OS, Skills, Memory, Brain, Gateway and Automations remain separate owners. Installing Skills does not grant permissions, credentials, approvals, workspace access, scheduling authority or strategic control.
 
+## Personal member library (development)
+
+The explicit personal package import/revision API is documented in
+[Member skill library v1](docs/MEMBER_SKILL_LIBRARY.md). This is separate from
+the managed distribution root and is not yet integrated into an admitted Core
+release. It never automatically moves existing skills.
+
 ## 1. Install
 
 ### macOS and Linux
