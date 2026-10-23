@@ -162,3 +162,30 @@ it is not deletion. Re-enabling still grants no runtime permission.
 Component doctor verifies a configured library, including retained revisions.
 JSON doctor failures now have nonzero exit status, so the composing lifecycle
 cannot mistake a failed integrity check for success.
+
+## Real package metadata and explicit review
+
+Descriptions may be plain/quoted scalars or indented folded/literal blocks
+(`>`, `>-`, `>+`, `|`, `|-`, `|+`). Only discovery metadata is read; YAML tags
+and constructors are never evaluated. The existing1024-character description,
+1MiB/file and8MiB/package limits still apply. Member admission scans the whole
+bounded package, rather than stopping at the general scanner's2MB default.
+
+`library --library-root ROOT inspect --source PACKAGE` is read-only and reports
+the package revision and finding codes/paths, without executing code or exposing
+matched secret values. Default import still refuses review findings.
+
+After inspecting the entire relevant content, an authorized local maintainer may
+supply `--security-review-json FILE` for these review-only patterns:
+`environment-harvest`, `shell-download-chain`, `destructive-shell`. The record has
+exactly `source_revision`, `findings` (each has `path` and `code`), `reviewer` and
+`reason`. It must acknowledge every finding and bind the exact package digest;
+changed sources or altered/missing acknowledgements refuse. Denied material,
+unreadable/non-UTF8 text, incomplete scans and unknown findings cannot be waived.
+The record is preserved with its immutable revision and checked by doctor and
+revision selection. Existing unreviewed plans remain compatible.
+
+This is a trusted local maintainer's content-review record, not a signature,
+proof of human app approval, license grant, runtime readiness or permission to
+execute commands, read credentials or use connections. Automatic learning does
+not create review acknowledgements. It does not relocate existing member skills.

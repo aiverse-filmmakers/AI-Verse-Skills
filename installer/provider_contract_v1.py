@@ -48,15 +48,40 @@ def _scalar(value: str) -> Optional[str]:
     return value
 
 
-def skill_metadata(skill_md: Path) -> Dict[str, str]:
-    """Read only the simple top-level frontmatter fields needed for discovery."""
+def _description_block(rows: List[str], style: str) -> str:
+    populated = [line for line in rows if line.strip()]
+    if not populated:
+        return ""
+    indent = min(len(line) - len(line.lstrip(" ")) for line in populated)
+    body = [line[indent:] if line.strip() else "" for line in rows]
+    value = body[0]
+    seen = bool(body[0])
+    for left, right in zip(body, body[1:]):
+        separator = "\n"
+        if style.startswith(">"):
+            if left and right and not left.startswith(" ") and not right.startswith(" "):
+                separator = " "
+            elif not left and right and seen:
+                separator = ""
+        value += separator + right
+        seen = seen or bool(right)
+    if style.endswith("-"):
+        return value.rstrip("\n")
+    if style.endswith("+"):
+        return value + "\n"
+    return value.rstrip("\n") + "\n"
 
-    text = Path(skill_md).read_text(encoding="utf-8", errors="replace")
-    lines = text.splitlines()
+
+def skill_metadata(skill_md: Path) -> Dict[str, str]:
+    """Read bounded discovery fields, including literal/folded descriptions; never evaluate YAML tags."""
+    lines = Path(skill_md).read_text(encoding="utf-8", errors="replace").splitlines()
     if not lines or lines[0].strip() != "---":
         return {}
     out: Dict[str, str] = {}
-    for line in lines[1:]:
+    i = 1
+    while i < len(lines):
+        line = lines[i]
+        i += 1
         if line.strip() == "---":
             break
         if not line or line[0].isspace() or ":" not in line:
@@ -65,7 +90,13 @@ def skill_metadata(skill_md: Path) -> Dict[str, str]:
         key = key.strip()
         if key not in {"name", "description", "version"}:
             continue
-        parsed = _scalar(raw)
+        if key == "description" and raw.strip() in {"|", ">", "|-", ">-", "|+", ">+"}:
+            rows = []
+            while i < len(lines) and (not lines[i].strip() or lines[i].startswith(" ")):
+                rows.append(lines[i]); i += 1
+            parsed = _description_block(rows, raw.strip())
+        else:
+            parsed = _scalar(raw)
         if parsed:
             out[key] = parsed
     return out
