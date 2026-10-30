@@ -44,13 +44,27 @@ A completed review either:
 - Freeze head and base SHA when checking tests. If new commits appear, classify previous CI/review as stale for the new head.
 - Preserve accepted roadmap denominators; task counts, green CI and document presence never automatically award milestone points.
 
+## Review Depth (choose before inspecting code)
+
+- **Focused**: docs-only, a narrowly scoped single-file change or less than ~100 changed lines. Review the intended contract, diff, applicable tests, provenance and actual acceptance language. Never claim a code security audit for a docs-only PR.
+- **Standard**: a bounded multi-file feature. Examine changed code plus callers, failure paths, existing abstractions and targeted tests. Apply test, edge-case and owner-contract passes.
+- **Deep**: more than ~500 changed lines, 3+ affected subsystems, permissions, credentials, storage migration, cross-process concurrency or billable model dispatch. First split a huge stacked PR into reviewable dependency-ordered slices, then apply test authenticity, adversarial edge case and owner-contract analysis to **each** slice. Add security, database, performance, UI or concurrency passes based on touched surfaces.
+- **Multiple agent reviewers**: when genuinely separate scoped agent executions exist, their findings may be cross-checked and consolidated. If parallel reviewers are unavailable, use sequential passes and mark them as **one AI reviewer**, never fabricate independently completed agents.
+- **Risk-tiered closure**: low-risk docs may receive an AI-assisted technical clearance; higher-risk changes need their actual OS/Gateway/Data/Connections owner conditions and, where specified, an independently authorized reviewer or human before privileged production use.
+
+Treat thresholds as heuristics, not permission to ignore risk. A small authentication patch can require deep review.
+
+## Finding Validation
+
+Before publishing a finding, inspect the affected actual code and a triggering scenario; try to falsify the finding using guards, callers, tests and history. Separate `introduced by this diff`, `regression`, `pre-existing` and `uncertain`. Require stronger confidence for inline/blocking findings than for a question; drop speculative patterns that fail adversarial checking. Re-review only affected code after a fix, but always verify new-head CI and invariants before clearing blockers.
+
 ## Procedure
 
 1. **Establish identity and boundaries.** Fetch PR/base/head, changed files, commits, reviewer status, review threads, owner/dependency PRs and any repo instructions. Check if the PR is draft, stacked on another branch, or currently merged. Mark the last examined SHA.
-2. **Build a risk-first change map.** Classify changed surfaces: auth, identity, permissions, credentials, money, files/assets, storage, streams, concurrency, UI, deployment and docs. Trace affected caller → host → owner → effect → readback paths. Read both diff **and surrounding implementations**, including unchanged guards whose behavior is relied upon.
+2. **Choose review depth and build a risk-first change map.** Classify changed surfaces: auth, identity, permissions, credentials, money, files/assets, storage, streams, concurrency, UI, deployment and docs. Trace affected caller → host → owner → effect → readback paths. Read both diff **and surrounding implementations**, including unchanged guards whose behavior is relied upon.
 3. **Check correctness, security and policy.** Verify authentication and final-edge authorization, OS/workspace/principal separation, input/schema validation, source-of-truth ownership, stale-response and TOCTOU races, idempotency/retry/cancel/recovery, injection and secret leakage, data integrity, migration compatibility, dependency/provenance and UX accessibility as applicable. Use `references/review-matrix.md` only for relevant risk classes.
 4. **Interrogate tests and CI.** Determine whether the exact head's CI passed, failed, is pending, or was not run. Inspect the tests' assertions and their fixtures; differentiate deterministic isolated owner composition, mocked browser flow, actual provider execution, private Mac checks and independent human assessment. Missing coverage is a concrete risk, not proof of failure.
-5. **Report actionable findings.** For each give `P0/P1/P2/P3`, file/path and line or diff hunk, triggering conditions, user/system impact, evidence and minimum recommended fix/test. Distinguish confirmed defects from questions/unverified hazards. Prioritize blockers before minor suggestions. Provide a concise positive-evidence summary and explicit untouched/unknown scope.
+5. **Validate each proposed finding against competing explanations, then report actionable findings.** For each give `P0/P1/P2/P3`, file/path and line or diff hunk, triggering conditions, user/system impact, evidence and minimum recommended fix/test. Distinguish confirmed defects from questions/unverified hazards. Prioritize blockers before minor suggestions. Provide a concise positive-evidence summary and explicit untouched/unknown scope.
 6. **Set disposition.** `changes-required` for material reproducible/security issues; `blocked-insufficient-evidence` for missing full diff, owner contract, CI or essential review scope; `approve-ready` only if relevant conditions are supported. A review is never itself a grant, merge or production rollout.
 7. **Record and verify.** If authorized, submit a precise GitHub COMMENT or REQUEST_CHANGES review with scope, inspected SHA and findings. Use GitHub APPROVE only with true reviewer authority and the target project's independence rules satisfied. Re-fetch the PR after any write and note that CI on a different SHA may be pending.
 
@@ -73,6 +87,16 @@ Report, in this order:
 4. **Acceptance matrix:** feature or milestone; implemented, tested, review disposition, merge eligibility, owner-local/deployment gate.
 5. **Action taken:** review comments, code changes or PRs and whether a write/readback succeeded.
 6. **Unknowns and next gate:** no invented approvals, merge success or score increments.
+
+## Reference Designs
+
+Review workflow design informed by publicly available methodologies, not copied skill files:
+- [Coder Deep Review](https://github.com/coder/coder/blob/main/.agents/skills/deep-review/SKILL.md): depth triage, specialist review lenses, duplicate/contradiction handling, large PRs.
+- [Google Gemini CLI Code Reviewer](https://github.com/google-gemini/gemini-cli/blob/main/.gemini/skills/code-reviewer/SKILL.md): PR/local target selection, preflight and source inspection.
+- [Flutter iterative Code Review](https://github.com/flutter/agent-plugins/blob/main/.agents/agents/reidbaker-agent/skills/code-review/SKILL.md): iterative critique, concrete changed-line feedback and noise reduction.
+- [Review governance](https://github.com/Quegenx/agent-skills/blob/main/skills/engineering/code-review/SKILL.md): verified findings, risk-based merge gates and rollback.
+
+These projects may have different licenses or environment/tool requirements. This AI-Verse skill is independently authored and does not assume parallel agents, tool permissions or external installation.
 
 ## Pitfalls
 
