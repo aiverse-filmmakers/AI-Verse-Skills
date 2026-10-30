@@ -51,17 +51,30 @@ npm run check:skills | tee "$ARTIFACT_DIR/nate-candidate-skill-mirrors.log"
 echo "== Ensure deterministic browser/runtime =="
 npx hyperframes browser ensure | tee "$ARTIFACT_DIR/browser-ensure.log"
 npx hyperframes doctor --json | tee "$ARTIFACT_DIR/doctor.json"
-node - "$ARTIFACT_DIR/doctor.json" <<'NODE'
+node - "$ARTIFACT_DIR/doctor.json" "$CANDIDATE_VERSION" <<'NODE'
 const fs=require('fs');
 const raw=fs.readFileSync(process.argv[2],'utf8');
+const expected=process.argv[3];
 const start=raw.indexOf('{');
 if(start<0) throw new Error('doctor JSON missing');
 const d=JSON.parse(raw.slice(start));
-const required=['Version','Node.js','CPU','Memory','Disk','FFmpeg','FFprobe','Chrome'];
 const byName=new Map((d.checks||[]).map(x=>[x.name,x]));
-const failed=required.filter(name=>byName.get(name)?.ok !== true);
+const version=byName.get('Version');
+// The candidate is pinned and verified by npm above. A newer upstream release
+// makes doctor flag "Version" as outdated; it does not invalidate this pin.
+if(d._meta?.version!==expected || !version)
+  throw new Error('HyperFrames doctor did not verify the exact pinned version '+expected);
+const expectedUpdateNotice=version.ok===false && d._meta?.updateAvailable===true
+  && typeof version.detail==='string'
+  && version.detail.startsWith(expected+' → ')
+  && version.detail.endsWith(' available');
+if(version.ok!==true && !expectedUpdateNotice)
+  throw new Error('HyperFrames version check failed for a reason other than an upstream update notice');
+const required=['Node.js','CPU','Memory','Disk','FFmpeg','FFprobe','Chrome'];
+const failed=required.filter(name=>byName.get(name)?.ok!==true);
 if(failed.length) throw new Error('required HyperFrames doctor checks failed: '+failed.join(', '));
-const optional=(d.checks||[]).filter(x=>x.ok!==true && !required.includes(x.name)).map(x=>x.name);
+const optional=(d.checks||[]).filter(x=>x.ok!==true && !required.includes(x.name) && x.name!=='Version').map(x=>x.name);
+console.log('pinned_version_verified',expected,'newer_release_notice',expectedUpdateNotice);
 console.log('required_doctor_checks_ok', required);
 console.log('optional_doctor_checks_not_required_for_render_acceptance', optional);
 NODE
