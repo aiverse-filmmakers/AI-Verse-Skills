@@ -3,8 +3,8 @@
   "snapshot": "2026-09-14",
   "counts": {
     "foundation": 20,
-    "employee": 100,
-    "total": 120
+    "employee": 98,
+    "total": 118
   },
   "foundation": [
     {
@@ -266,16 +266,6 @@
       "source": "hermes",
       "repo": "NousResearch/hermes-agent",
       "path": "skills/productivity/airtable",
-      "implementation": "original-upstream",
-      "state": "catalogued"
-    },
-    {
-      "rank": 15,
-      "id": "notion",
-      "category": "universal-office",
-      "source": "hermes",
-      "repo": "NousResearch/hermes-agent",
-      "path": "skills/productivity/notion",
       "implementation": "original-upstream",
       "state": "catalogued"
     },
@@ -988,16 +978,6 @@
       "path": "skills/web-design-guidelines",
       "implementation": "upstream-adapted",
       "state": "vendored"
-    },
-    {
-      "rank": 87,
-      "id": "shadcn",
-      "category": "creative-design",
-      "source": "shadcn-ui",
-      "repo": "shadcn-ui/ui",
-      "path": "skills/shadcn",
-      "implementation": "original-upstream",
-      "state": "catalogued"
     },
     {
       "rank": 88,

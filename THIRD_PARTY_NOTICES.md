@@ -29,7 +29,6 @@ The authoritative package pins are in `registry/packages.json`. The public-beta 
 | UI/UX Pro Max | `nextlevelbuilder/ui-ux-pro-max-skill` | MIT | Exact pinned upstream fetch |
 | Vercel Agent Skills | `vercel-labs/agent-skills` | MIT | Exact pinned upstream fetch; web-design-guidelines has one bounded immutable-rules adaptation |
 | Vercel Web Interface Guidelines | `vercel-labs/web-interface-guidelines` | MIT | Rules snapshot pinned inside the adapted review package |
-| shadcn/ui Skill | `shadcn-ui/ui` | MIT | Exact pinned upstream fetch |
 | Meng To Skills | `MengTo/Skills` | MIT | Exact pinned upstream fetch |
 | Emil Kowalski Skills | `emilkowalski/skills` | MIT | Exact pinned upstream fetch |
 | Scroll Craft | `nateherkai/scroll-craft` | MIT | Exact pinned upstream fetch |

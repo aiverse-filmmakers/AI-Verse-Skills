@@ -3,9 +3,9 @@
   "snapshot": "2026-09-14",
   "counts": {
     "foundation": 20,
-    "employee": 100,
+    "employee": 98,
     "support": 16,
-    "canonical_total": 120
+    "canonical_total": 118
   },
   "policy": {
     "original_first": true,
@@ -154,15 +154,6 @@
           "path": "skills/productivity/airtable",
           "operators": [
             "airtable"
-          ]
-        },
-        {
-          "rank": 15,
-          "id": "notion",
-          "category": "universal-office",
-          "path": "skills/productivity/notion",
-          "operators": [
-            "notion"
           ]
         },
         {
@@ -819,21 +810,6 @@
           "category": "creative-design",
           "vendored": true,
           "path": "skills/web-design-guidelines"
-        }
-      ],
-      "redistribution": "redistributable"
-    },
-    "shadcn-ui": {
-      "repo": "shadcn-ui/ui",
-      "commit": "2b3e6d4f8d9161fe5c19340dc383aade392012dd",
-      "namespace": "shadcn",
-      "license": "MIT",
-      "packages": [
-        {
-          "rank": 87,
-          "id": "shadcn",
-          "category": "creative-design",
-          "path": "skills/shadcn"
         }
       ],
       "redistribution": "redistributable"

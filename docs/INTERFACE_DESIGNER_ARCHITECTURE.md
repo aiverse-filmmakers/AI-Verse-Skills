@@ -209,7 +209,6 @@ Preservation expectations are canonical in:
 |---|---|
 | `react-best-practices` | React/Next performance and engineering guidance |
 | `composition-patterns` | Reusable React component architecture |
-| `shadcn` | shadcn project/component correctness |
 | `web-design-guidelines` | Final web interface quality/accessibility review |
 
 ### Immersive scroll
@@ -234,7 +233,6 @@ These capabilities were not replaced by Interface Designer.
 | `anthropic-frontend` | `anthropics/skills` | `34040c9c568585f6929bedeaad110ad08f079624` |
 | `nextlevelbuilder-ui` | `nextlevelbuilder/ui-ux-pro-max-skill` | `7f69fed6a2717900085f1bc3b263721f8ba025e2` |
 | `vercel-design` | `vercel-labs/agent-skills` | `063bee94c3f4df8453406c830b0a7df0f2860278` |
-| `shadcn-ui` | `shadcn-ui/ui` | `2b3e6d4f8d9161fe5c19340dc383aade392012dd` |
 | `mengto-ui` | `MengTo/Skills` | `321c769739b823de5eb94eb3a52aa1974fe783a2` |
 | `emil-design` | `emilkowalski/skills` | `d23d7f88a2e21c9e4b1418c7abe420f5c1052ba7` |
 | `scroll-craft` | `nateherkai/scroll-craft` | `0b816225945e45380397d6a0487efa3c98916858` |
@@ -246,13 +244,6 @@ Do not replace a commit pin with `main`, `master`, `HEAD`, `latest` or a tag tha
 ### React specialists
 
 Use `react-best-practices` and `composition-patterns` only when the real target is React/Next.
-
-### shadcn
-
-Use `shadcn` only when:
-
-- the project already uses it; or
-- it is intentionally selected.
 
 ### Scroll Craft
 

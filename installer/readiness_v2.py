@@ -33,7 +33,6 @@ ENV_HINTS = {
     "figma": "AI_VERSE_CONNECTION_FIGMA",
     "shopify": "AI_VERSE_CONNECTION_SHOPIFY",
     "airtable": "AI_VERSE_CONNECTION_AIRTABLE",
-    "notion": "AI_VERSE_CONNECTION_NOTION",
 }
 
 CLI_HINTS = {

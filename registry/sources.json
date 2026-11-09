@@ -112,13 +112,6 @@
       "distribution": "original-upstream+bounded-adaptation",
       "license_status": "MIT"
     },
-    "shadcn": {
-      "namespace": "shadcn",
-      "repo": "shadcn-ui/ui",
-      "folder": "skills/imported/shadcn",
-      "distribution": "original-upstream",
-      "license_status": "MIT"
-    },
     "mengto": {
       "namespace": "mengto",
       "repo": "MengTo/Skills",

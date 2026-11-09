@@ -36,7 +36,6 @@ An existing non-React website is not converted to React just because React exper
 
 A project does not need Vercel hosting.
 
-A project does not need shadcn.
 
 A project does not need Figma.
 

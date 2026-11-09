@@ -51,7 +51,6 @@ class InterfaceDesignerContractTests(unittest.TestCase):
             "review-animations",
             "react-best-practices",
             "composition-patterns",
-            "shadcn",
             "scroll-craft",
             "web-design-guidelines",
         ):
@@ -70,7 +69,6 @@ class InterfaceDesignerContractTests(unittest.TestCase):
             "react-best-practices",
             "composition-patterns",
             "web-design-guidelines",
-            "shadcn",
             "design-first-ui-prompting",
             "video-to-superprompt",
             "stitched-full-page-capture",
@@ -85,17 +83,16 @@ class InterfaceDesignerContractTests(unittest.TestCase):
             "scroll-craft",
         }
         self.assertTrue(experts.issubset(ids))
-        self.assertEqual(skills["counts"]["employee"], 100)
-        self.assertEqual(skills["counts"]["total"], 120)
-        self.assertEqual(packages["counts"]["employee"], 100)
-        self.assertEqual(packages["counts"]["canonical_total"], 120)
+        self.assertEqual(skills["counts"]["employee"], 98)
+        self.assertEqual(skills["counts"]["total"], 118)
+        self.assertEqual(packages["counts"]["employee"], 98)
+        self.assertEqual(packages["counts"]["canonical_total"], 118)
         self.assertEqual(packages["counts"]["support"], 16)
 
         expected_pins = {
             "anthropic-frontend": "34040c9c568585f6929bedeaad110ad08f079624",
             "nextlevelbuilder-ui": "7f69fed6a2717900085f1bc3b263721f8ba025e2",
             "vercel-design": "063bee94c3f4df8453406c830b0a7df0f2860278",
-            "shadcn-ui": "2b3e6d4f8d9161fe5c19340dc383aade392012dd",
             "mengto-ui": "321c769739b823de5eb94eb3a52aa1974fe783a2",
             "emil-design": "d23d7f88a2e21c9e4b1418c7abe420f5c1052ba7",
             "scroll-craft": "0b816225945e45380397d6a0487efa3c98916858",
@@ -408,7 +405,6 @@ class InterfaceDesignerContractTests(unittest.TestCase):
             pipeline_stage_capabilities.update(stage.get("capabilities", []))
         self.assertTrue(conditional.isdisjoint(pipeline_stage_capabilities))
         self.assertNotIn("scroll-craft", graph["scope_pipelines"]["FULL_PRODUCT"])
-        self.assertNotIn("shadcn", graph["scope_pipelines"]["FULL_PRODUCT"])
 
         ai_source = packages["sources"]["ai-verse"]
         interface_pkg = next(pkg for pkg in ai_source["packages"] if pkg["id"] == "interface-designer")
@@ -418,7 +414,6 @@ class InterfaceDesignerContractTests(unittest.TestCase):
             "anthropic-frontend",
             "nextlevelbuilder-ui",
             "vercel-design",
-            "shadcn-ui",
             "mengto-ui",
             "emil-design",
             "scroll-craft",
@@ -440,7 +435,7 @@ class InterfaceDesignerContractTests(unittest.TestCase):
         notices = (ROOT / "THIRD_PARTY_NOTICES.md").read_text(encoding="utf-8")
         registered = {item["id"] for item in skills["employee"]}
 
-        self.assertEqual(len(manifest["sources"]), 7)
+        self.assertEqual(len(manifest["sources"]), 6)
         for source in manifest["sources"]:
             registry_source = packages["sources"][source["source_id"]]
             self.assertEqual(registry_source["repo"], source["repo"])
