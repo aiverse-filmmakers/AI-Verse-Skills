@@ -224,10 +224,6 @@
     ]
   },
   "conditional_experts": {
-    "shadcn": {
-      "capability": "shadcn",
-      "when": "components_json_present_or_shadcn_selected"
-    },
     "scroll_craft": {
       "capability": "scroll-craft",
       "when": "scroll_is_primary_storytelling_or_interaction_mechanism"
@@ -417,7 +413,6 @@
   },
   "invariants": [
     "Do not load React specialists unless React or Next is the actual target.",
-    "Do not load shadcn unless the project uses it or it was intentionally selected.",
     "Do not load Scroll Craft for ordinary application screens.",
     "Do not prototype micro changes.",
     "Do not create or rewrite DESIGN.md for a tiny one-off fix.",

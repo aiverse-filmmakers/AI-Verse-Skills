@@ -32,7 +32,6 @@ Load the smallest useful expert subset. These are canonical AI-Verse capability 
 | choose a UI/component dependency | `pick-ui-library` |
 | React/Next performance and implementation quality | `react-best-practices` |
 | React component API/composition architecture | `composition-patterns` |
-| correct shadcn project/component work | `shadcn` |
 | Figma Plugin API operations | `figma-use` |
 | composed Figma screens/views | `figma-generate-design` |
 | Canva production | `canva` |
@@ -64,10 +63,6 @@ Use only when scrolling is itself a storytelling or interaction mechanism. Skip 
 ### React
 
 Load React experts only after source inspection or explicit user choice proves React/Next is the target.
-
-### shadcn
-
-Load only when `components.json` or existing shadcn usage is present, or the user/project intentionally selected shadcn.
 
 ### Video handoff
 

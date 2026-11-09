@@ -92,27 +92,6 @@
       ]
     },
     {
-      "source_id": "shadcn-ui",
-      "repo": "shadcn-ui/ui",
-      "commit": "2b3e6d4f8d9161fe5c19340dc383aade392012dd",
-      "license": "MIT",
-      "redistribution": "redistributable",
-      "packages": [
-        {
-          "id": "shadcn",
-          "path": "skills/shadcn",
-          "expected_files": [
-            "SKILL.md"
-          ],
-          "core_markers": [
-            "components.json",
-            "component registries",
-            "project context"
-          ]
-        }
-      ]
-    },
-    {
       "source_id": "mengto-ui",
       "repo": "MengTo/Skills",
       "commit": "321c769739b823de5eb94eb3a52aa1974fe783a2",

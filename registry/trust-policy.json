@@ -159,14 +159,6 @@
       "vendoring_allowed": true,
       "auto_mutation": false
     },
-    "shadcn-ui/ui": {
-      "license": "MIT",
-      "redistribution": "redistributable",
-      "trust": "reviewed-upstream",
-      "ownership": "curated_upstream",
-      "vendoring_allowed": true,
-      "auto_mutation": false
-    },
     "MengTo/Skills": {
       "license": "MIT",
       "redistribution": "redistributable",

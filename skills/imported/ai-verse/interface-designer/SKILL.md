@@ -1,6 +1,6 @@
 ---
 name: interface-designer
-description: Orchestrate end-to-end interface design for websites, GitHub-hosted HTML artifacts, dashboards, web apps, desktop or native-app UI, prototypes, redesigns, reference recreations, and interaction-heavy or immersive experiences. Classifies scope and the existing delivery target first, then loads only the relevant specialist design, implementation, motion, reference, and QA Skills. Use for broad or multi-stage interface work. Do not use it to force React, Vercel, shadcn, Figma, or any other stack onto a project.
+description: Orchestrate end-to-end interface design for websites, GitHub-hosted HTML artifacts, dashboards, web apps, desktop or native-app UI, prototypes, redesigns, reference recreations, and interaction-heavy or immersive experiences. Classifies scope and the existing delivery target first, then loads only the relevant specialist design, implementation, motion, reference, and QA Skills. Use for broad or multi-stage interface work. Do not use it to force React, Vercel, Figma, or any other stack onto a project.
 version: 1.0.0
 license: MIT
 metadata:
@@ -35,7 +35,7 @@ For a narrow specialist request, route directly when the specialist is obvious. 
 
 The implementation target comes from the user's request and the existing project.
 
-Never migrate a plain HTML/CSS/JavaScript artifact to React merely because React Skills exist. Never require Vercel hosting because a Vercel-authored Skill provides engineering guidance. Never introduce shadcn unless the project already uses it, the user selects it, or a separately justified stack decision chooses it.
+Never migrate a plain HTML/CSS/JavaScript artifact to React merely because React Skills exist. Never require Vercel hosting because a Vercel-authored Skill provides engineering guidance.
 
 Design intelligence is portable. Implementation specialists are conditional.
 
@@ -119,7 +119,6 @@ Do not merge all expert bodies into this context.
 Specialist correctness beats generic taste inside its domain. Examples:
 
 - React experts apply only to React targets.
-- shadcn rules apply only to shadcn projects.
 - Scroll Craft owns its immersive scroll methodology when selected.
 - Apple Design contributes interaction physics; it does not force an Apple visual style.
 - Video-specific HyperFrames/runtime rules outrank generic UI animation advice after a video handoff.
