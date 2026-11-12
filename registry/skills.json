@@ -876,8 +876,8 @@
       "source": "anthropic",
       "repo": "anthropics/knowledge-work-plugins",
       "path": null,
-      "implementation": "original-upstream",
-      "state": "catalogued"
+      "implementation": "upstream-adapted",
+      "state": "vendored"
     },
     {
       "rank": 77,

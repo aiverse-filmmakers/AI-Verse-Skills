@@ -399,7 +399,8 @@
           "rank": 76,
           "id": "roadmap-update",
           "category": "product-people-legal-ops",
-          "path": "product-management/skills/roadmap-update"
+          "path": "product-management/skills/roadmap-update",
+          "vendored": true
         },
         {
           "rank": 77,
