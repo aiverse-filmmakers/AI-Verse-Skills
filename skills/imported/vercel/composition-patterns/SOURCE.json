@@ -1,0 +1,14 @@
+{
+  "source_namespace": "vercel",
+  "upstream_repo": "vercel-labs/agent-skills",
+  "upstream_path": "skills/composition-patterns",
+  "upstream_commit": "063bee94c3f4df8453406c830b0a7df0f2860278",
+  "license": "MIT",
+  "import_type": "original-vendored-adapted",
+  "modified": true,
+  "adaptation": {
+    "reason": "Kept as an AI-Verse owned copy and tidied to the AI-Verse skill build standard (plan D26).",
+    "change": "Inner name changed from vercel-composition-patterns to composition-patterns to match the folder. Removed the duplicate compiled AGENTS.md, README.md, metadata.json and the two authoring files in rules/. Fixed an undefined name in one example (state-decouple-implementation). Added a React version check line. All eight rules otherwise unchanged."
+  },
+  "imported_at": "2026-11-12"
+}

@@ -296,25 +296,28 @@
       "repo": "anthropics/knowledge-work-plugins",
       "commit": "34e1eae3e1cca0be18bc85067cc6dd78d1f5d4e5",
       "namespace": "anthropic",
-      "license": "upstream-controlled",
+      "license": "Apache-2.0",
       "packages": [
         {
           "rank": 23,
           "id": "product-brainstorming",
           "category": "judgment-strategy",
-          "path": "product-management/skills/product-brainstorming"
+          "path": "product-management/skills/product-brainstorming",
+          "vendored": true
         },
         {
           "rank": 24,
           "id": "business-pulse",
           "category": "judgment-strategy",
-          "path": "small-business/skills/business-pulse"
+          "path": "small-business/skills/business-pulse",
+          "vendored": true
         },
         {
           "rank": 57,
           "id": "account-research",
           "category": "sales-customer",
-          "path": "sales/skills/account-research"
+          "path": "sales/skills/account-research",
+          "vendored": true
         },
         {
           "rank": 58,
@@ -326,7 +329,8 @@
           "rank": 59,
           "id": "draft-outreach",
           "category": "sales-customer",
-          "path": "sales/skills/draft-outreach"
+          "path": "sales/skills/draft-outreach",
+          "vendored": true
         },
         {
           "rank": 60,
@@ -338,7 +342,8 @@
           "rank": 63,
           "id": "draft-response",
           "category": "sales-customer",
-          "path": "customer-support/skills/draft-response"
+          "path": "customer-support/skills/draft-response",
+          "vendored": true
         },
         {
           "rank": 64,
@@ -350,7 +355,8 @@
           "rank": 67,
           "id": "cash-flow-snapshot",
           "category": "finance-accounting",
-          "path": "small-business/skills/cash-flow-snapshot"
+          "path": "small-business/skills/cash-flow-snapshot",
+          "vendored": true
         },
         {
           "rank": 68,
@@ -386,7 +392,8 @@
           "rank": 75,
           "id": "write-spec",
           "category": "product-people-legal-ops",
-          "path": "product-management/skills/write-spec"
+          "path": "product-management/skills/write-spec",
+          "vendored": true
         },
         {
           "rank": 76,
@@ -398,13 +405,15 @@
           "rank": 77,
           "id": "job-post-builder",
           "category": "product-people-legal-ops",
-          "path": "small-business/skills/job-post-builder"
+          "path": "small-business/skills/job-post-builder",
+          "vendored": true
         },
         {
           "rank": 78,
           "id": "review-contract",
           "category": "product-people-legal-ops",
-          "path": "legal/skills/review-contract"
+          "path": "legal/skills/review-contract",
+          "vendored": true
         },
         {
           "rank": 79,
@@ -419,7 +428,7 @@
           "path": "legal/skills/vendor-check"
         }
       ],
-      "redistribution": "fetch-only"
+      "redistribution": "redistributable"
     },
     "figma": {
       "repo": "figma/mcp-server-guide",
@@ -802,7 +811,8 @@
           "rank": 85,
           "id": "composition-patterns",
           "category": "creative-design",
-          "path": "skills/composition-patterns"
+          "path": "skills/composition-patterns",
+          "vendored": true
         },
         {
           "rank": 86,
@@ -875,7 +885,8 @@
           "rank": 95,
           "id": "pick-ui-library",
           "category": "creative-design",
-          "path": "skills/pick-ui-library"
+          "path": "skills/pick-ui-library",
+          "vendored": true
         },
         {
           "rank": 96,

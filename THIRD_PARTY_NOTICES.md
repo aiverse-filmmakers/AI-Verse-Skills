@@ -15,7 +15,7 @@ The authoritative package pins are in `registry/packages.json`. The public-beta 
 | FFmpeg Skill | `kajisho5/ffmpeg-skill` | MIT | Fetch-only in the public-beta distribution |
 | ByteDance DeerFlow | `bytedance/deer-flow` | Upstream-controlled | Fetch-only |
 | Anthropic Skills | `anthropics/skills` | Upstream-controlled | Fetch-only |
-| Anthropic Knowledge Work Plugins | `anthropics/knowledge-work-plugins` | Upstream-controlled | Fetch-only |
+| Anthropic Knowledge Work Plugins | `anthropics/knowledge-work-plugins` | Apache-2.0 | Redistributable; nine skills are vendored and adapted, each with a `LICENSE` copy and a `SOURCE.json` change note. The rest stay fetch-only |
 | Figma MCP Server Guide | `figma/mcp-server-guide` | Upstream-controlled | Fetch-only |
 | Social Media Skills | `social-media-skills/skills` | Upstream-controlled | Fetch-only |
 | NovoAds Agent Skills | `novoads/agent-skills` | Upstream-controlled | Fetch-only |

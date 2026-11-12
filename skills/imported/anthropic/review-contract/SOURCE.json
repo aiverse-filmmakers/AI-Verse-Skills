@@ -1,0 +1,14 @@
+{
+  "source_namespace": "anthropic",
+  "upstream_repo": "anthropics/knowledge-work-plugins",
+  "upstream_path": "legal/skills/review-contract",
+  "upstream_commit": "34e1eae3e1cca0be18bc85067cc6dd78d1f5d4e5",
+  "license": "Apache-2.0",
+  "import_type": "original-vendored-adapted",
+  "modified": true,
+  "adaptation": {
+    "reason": "Kept as an AI-Verse owned copy and tidied to the AI-Verse skill build standard (plan D26).",
+    "change": "Removed typed command leftovers and the link to a help file that is not shipped. The playbook now comes from project adjustments. Detailed clause guidance moved to references/clauses.md. The legal-risk-assessment skill from the same source was folded in as references/risk-scoring.md. One worked redline example added. Description widened to cover risk rating."
+  },
+  "imported_at": "2026-11-12"
+}

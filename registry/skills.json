@@ -346,8 +346,8 @@
       "source": "anthropic",
       "repo": "anthropics/knowledge-work-plugins",
       "path": null,
-      "implementation": "original-upstream",
-      "state": "catalogued"
+      "implementation": "upstream-adapted",
+      "state": "vendored"
     },
     {
       "rank": 24,
@@ -356,8 +356,8 @@
       "source": "anthropic",
       "repo": "anthropics/knowledge-work-plugins",
       "path": null,
-      "implementation": "original-upstream",
-      "state": "catalogued"
+      "implementation": "upstream-adapted",
+      "state": "vendored"
     },
     {
       "rank": 25,
@@ -686,8 +686,8 @@
       "source": "anthropic",
       "repo": "anthropics/knowledge-work-plugins",
       "path": null,
-      "implementation": "original-upstream",
-      "state": "catalogued"
+      "implementation": "upstream-adapted",
+      "state": "vendored"
     },
     {
       "rank": 58,
@@ -706,8 +706,8 @@
       "source": "anthropic",
       "repo": "anthropics/knowledge-work-plugins",
       "path": null,
-      "implementation": "original-upstream",
-      "state": "catalogued"
+      "implementation": "upstream-adapted",
+      "state": "vendored"
     },
     {
       "rank": 60,
@@ -746,8 +746,8 @@
       "source": "anthropic",
       "repo": "anthropics/knowledge-work-plugins",
       "path": null,
-      "implementation": "original-upstream",
-      "state": "catalogued"
+      "implementation": "upstream-adapted",
+      "state": "vendored"
     },
     {
       "rank": 64,
@@ -786,8 +786,8 @@
       "source": "anthropic",
       "repo": "anthropics/knowledge-work-plugins",
       "path": null,
-      "implementation": "original-upstream",
-      "state": "catalogued"
+      "implementation": "upstream-adapted",
+      "state": "vendored"
     },
     {
       "rank": 68,
@@ -866,8 +866,8 @@
       "source": "anthropic",
       "repo": "anthropics/knowledge-work-plugins",
       "path": null,
-      "implementation": "original-upstream",
-      "state": "catalogued"
+      "implementation": "upstream-adapted",
+      "state": "vendored"
     },
     {
       "rank": 76,
@@ -886,8 +886,8 @@
       "source": "anthropic",
       "repo": "anthropics/knowledge-work-plugins",
       "path": null,
-      "implementation": "original-upstream",
-      "state": "catalogued"
+      "implementation": "upstream-adapted",
+      "state": "vendored"
     },
     {
       "rank": 78,
@@ -896,8 +896,8 @@
       "source": "anthropic",
       "repo": "anthropics/knowledge-work-plugins",
       "path": null,
-      "implementation": "original-upstream",
-      "state": "catalogued"
+      "implementation": "upstream-adapted",
+      "state": "vendored"
     },
     {
       "rank": 79,
@@ -966,8 +966,8 @@
       "source": "vercel-design",
       "repo": "vercel-labs/agent-skills",
       "path": "skills/composition-patterns",
-      "implementation": "original-upstream",
-      "state": "catalogued"
+      "implementation": "upstream-adapted",
+      "state": "vendored"
     },
     {
       "rank": 86,
@@ -1056,8 +1056,8 @@
       "source": "emil-design",
       "repo": "emilkowalski/skills",
       "path": "skills/pick-ui-library",
-      "implementation": "original-upstream",
-      "state": "catalogued"
+      "implementation": "upstream-adapted",
+      "state": "vendored"
     },
     {
       "rank": 96,

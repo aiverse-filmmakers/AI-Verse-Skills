@@ -4,16 +4,16 @@ Use the sections relevant to the changed code; this is a question set, **not** a
 
 | Area | Review questions | Minimum useful evidence |
 | --- | --- | --- |
-| Identity and scope | Is principal/system/workspace derived from trusted host or arbitrary client text? Does retarget/rebind revoke leases? | Negative different-principal, different-workspace, root swap checks |
-| Authorization/effects | Is owner grant checked at the final effect edge? Can an untrusted user or agent approve their own action? | Deny-before-write, revoke-before-dispatch, forged grant tests |
-| API contracts | Does owner actually expose the route at the target revision? Are schema and error states versioned? | Owner source pin, valid/invalid shape checks, no phantom routes |
-| Credentials/network | Could token, secret handle, OAuth state, private URL or raw upstream errors leak to browser/logs? | Redaction, origin/redirect, payload-bound, malicious error tests |
-| Persistence | Are CAS revision, atomicity, idempotency and backup/rollback truthful? | Retry, stale version, process restart and crash recovery tests |
-| Async/stream | Can old events/results cross pane/workspace? Are duplicate SSE or uncertain POSTs handled? | A→B→A, replay, terminal reconciliation, cancel races |
-| Files and media | Are MIME, digest, size, path, symlink, remote URL and modality verified by actual owner? | Hostile uploads, unauthorized asset ID and revoked receipt tests |
-| Model/provider costs | Can any model ID trigger unapproved paid inference? Is unknown cost displayed as unknown? | Gateway final-dispatch model admission, Token receipt provenance |
-| Browser and UX | Is focus, accessibility, feedback, empty state and error/recovery real, not decorative? | Playwright browser actions and explicit failures |
-| Dependency/release | Are draft owner PRs accidentally treated as released main? Is provenance/licensing valid? | Target-base comparison, pinned CI, review and deploy gates |
+| Identity and scope | Is the user, account or workspace taken from a trusted server side source, or from text the client sent? Does switching account drop old access? | Tests where a different user and a different workspace are refused |
+| Permissions and effects | Is permission checked at the final point where the change happens? Can someone approve their own action? | Refused before write, refused after access is withdrawn, forged approval rejected |
+| API contracts | Does the API really exist at the target revision? Are the shapes and error states versioned? | The source pinned, valid and invalid shapes tested, no calls to routes that do not exist |
+| Credentials and network | Could a token, a secret, sign in state, a private address or a raw upstream error reach the browser or the logs? | Redaction, redirect and origin checks, hostile error tests |
+| Stored data | Are writes atomic and safe to repeat? Are stale versions rejected? Do backup and rollback really work? | Retry, stale version, restart and crash recovery tests |
+| Async and streams | Can an old result arrive in the wrong view or workspace? Are duplicate events and uncertain sends handled? | Switch away and back, replay, cancel races |
+| Files and media | Are type, size, path, links and remote addresses checked on the server? | Hostile uploads, a file id the user does not own |
+| Paid calls | Can any request trigger a paid call without approval? Is an unknown cost shown as unknown? | Refusal at the final dispatch point, cost shown with its source |
+| Browser and UX | Are focus, accessibility, feedback, empty and error states real, not decorative? | Real browser actions, including the failures |
+| Dependencies and release | Is something from an unmerged draft treated as released? Are provenance and licence valid? | Comparison with the target branch, pinned CI, review and deploy gates |
 
 ## Acceptance decision
 
@@ -26,4 +26,14 @@ Review scope can be **partial**. A `no findings` verdict on a subcomponent never
 
 ### GitHub status distinction
 
-`draft`, `ready for review`, `CI green`, `AI-assessed`, `GitHub approved`, `merged`, `formally accepted` and `deployed` are separate states. For a stacked PR, record both its current base and the intended ultimate target. Never use a role-played agent, own second account or a self-authored skill to fake independent reviewer status.
+`draft`, `ready for review`, `CI green`, `AI-assessed`, `GitHub approved`, `merged`, `formally accepted` and `deployed` are separate states. For a stacked PR, record both its current base and the intended ultimate target. A second prompt, persona or account run by the same author is not an independent reviewer.
+
+## Credits
+
+Review workflow design informed by publicly available methodologies, not copied skill files:
+- [Coder Deep Review](https://github.com/coder/coder/blob/main/.agents/skills/deep-review/SKILL.md): depth triage, specialist review lenses, duplicate/contradiction handling, large PRs.
+- [Google Gemini CLI Code Reviewer](https://github.com/google-gemini/gemini-cli/blob/main/.gemini/skills/code-reviewer/SKILL.md): PR/local target selection, preflight and source inspection.
+- [Flutter iterative Code Review](https://github.com/flutter/agent-plugins/blob/main/.agents/agents/reidbaker-agent/skills/code-review/SKILL.md): iterative critique, concrete changed-line feedback and noise reduction.
+- [Review governance](https://github.com/Quegenx/agent-skills/blob/main/skills/engineering/code-review/SKILL.md): verified findings, risk-based merge gates and rollback.
+
+These projects may have different licenses or environment/tool requirements. This AI-Verse skill is independently authored and does not assume parallel agents, tool permissions or external installation.

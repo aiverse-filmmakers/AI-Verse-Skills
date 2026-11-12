@@ -1,0 +1,14 @@
+{
+  "source_namespace": "emil",
+  "upstream_repo": "emilkowalski/skills",
+  "upstream_path": "skills/pick-ui-library",
+  "upstream_commit": "d23d7f88a2e21c9e4b1418c7abe420f5c1052ba7",
+  "license": "MIT",
+  "import_type": "original-vendored-adapted",
+  "modified": true,
+  "adaptation": {
+    "reason": "Kept as an AI-Verse owned copy and tidied to the AI-Verse skill build standard (plan D26).",
+    "change": "Added licence and source lines to the header and one step about stale picks. Every pick is unchanged. The disable-model-invocation line is the author's own and is kept on purpose, although it is outside the AI-Verse header standard."
+  },
+  "imported_at": "2026-11-12"
+}

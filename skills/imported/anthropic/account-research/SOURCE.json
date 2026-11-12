@@ -1,0 +1,14 @@
+{
+  "source_namespace": "anthropic",
+  "upstream_repo": "anthropics/knowledge-work-plugins",
+  "upstream_path": "sales/skills/account-research",
+  "upstream_commit": "34e1eae3e1cca0be18bc85067cc6dd78d1f5d4e5",
+  "license": "Apache-2.0",
+  "import_type": "original-vendored-adapted",
+  "modified": true,
+  "adaptation": {
+    "reason": "Kept as an AI-Verse owned copy and tidied to the AI-Verse skill build standard (plan D26).",
+    "change": "SKILL.md rewritten as instructions to the AI (the original read as a sales page for the user). Added hard rules: every fact linked and dated, 'Not found' instead of estimates, public professional information only. Output template moved to references/research-template.md. The call-prep skill from the same source was folded in as references/call-brief.md. Pointers to skills that are not shipped removed. Project adjustments section added."
+  },
+  "imported_at": "2026-11-12"
+}
