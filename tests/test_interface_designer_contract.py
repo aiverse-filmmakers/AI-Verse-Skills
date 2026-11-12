@@ -83,10 +83,10 @@ class InterfaceDesignerContractTests(unittest.TestCase):
             "scroll-craft",
         }
         self.assertTrue(experts.issubset(ids))
-        self.assertEqual(skills["counts"]["employee"], 98)
-        self.assertEqual(skills["counts"]["total"], 118)
-        self.assertEqual(packages["counts"]["employee"], 98)
-        self.assertEqual(packages["counts"]["canonical_total"], 118)
+        self.assertEqual(skills["counts"]["employee"], 60)
+        self.assertEqual(skills["counts"]["total"], 69)
+        self.assertEqual(packages["counts"]["employee"], 60)
+        self.assertEqual(packages["counts"]["canonical_total"], 69)
         self.assertEqual(packages["counts"]["support"], 16)
 
         expected_pins = {
@@ -493,14 +493,8 @@ class InterfaceDesignerContractTests(unittest.TestCase):
         self.assertEqual(compatibility["replacement_aliases"], [])
 
         expected_preserved = {
-            "brand-guidelines",
             "canvas-design",
-            "theme-factory",
-            "figma-use",
-            "figma-generate-design",
             "canva",
-            "design-and-templates",
-            "baoyu-article-illustrator",
         }
         recorded = {item["id"] for item in compatibility["preserved_capabilities"]}
         self.assertEqual(recorded, expected_preserved)

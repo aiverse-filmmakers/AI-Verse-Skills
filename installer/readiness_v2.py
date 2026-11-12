@@ -31,8 +31,6 @@ ENV_HINTS = {
     "hubspot": "AI_VERSE_CONNECTION_HUBSPOT",
     "canva": "AI_VERSE_CONNECTION_CANVA",
     "figma": "AI_VERSE_CONNECTION_FIGMA",
-    "shopify": "AI_VERSE_CONNECTION_SHOPIFY",
-    "airtable": "AI_VERSE_CONNECTION_AIRTABLE",
 }
 
 CLI_HINTS = {

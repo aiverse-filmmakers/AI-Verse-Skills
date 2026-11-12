@@ -2,17 +2,11 @@
   "schema_version": 1,
   "snapshot": "2026-09-14",
   "counts": {
-    "foundation": 20,
-    "employee": 98,
-    "total": 118
+    "foundation": 9,
+    "employee": 60,
+    "total": 69
   },
   "foundation": [
-    {
-      "id": "semantic-codebase-sweep",
-      "tier": "foundation",
-      "source": "ai-verse",
-      "state": "specified"
-    },
     {
       "id": "root-cause-debugger",
       "tier": "foundation",
@@ -38,12 +32,6 @@
       "state": "specified"
     },
     {
-      "id": "browser-workflow-operator",
-      "tier": "foundation",
-      "source": "ai-verse",
-      "state": "specified"
-    },
-    {
       "id": "api-integration-engineer",
       "tier": "foundation",
       "source": "ai-verse",
@@ -62,43 +50,7 @@
       "state": "specified"
     },
     {
-      "id": "environment-doctor",
-      "tier": "foundation",
-      "source": "ai-verse",
-      "state": "specified"
-    },
-    {
-      "id": "database-migration-guardian",
-      "tier": "foundation",
-      "source": "ai-verse",
-      "state": "specified"
-    },
-    {
-      "id": "incident-forensics",
-      "tier": "foundation",
-      "source": "ai-verse",
-      "state": "specified"
-    },
-    {
       "id": "structured-ingestion-normalization",
-      "tier": "foundation",
-      "source": "ai-verse",
-      "state": "specified"
-    },
-    {
-      "id": "knowledge-writeback",
-      "tier": "foundation",
-      "source": "ai-verse",
-      "state": "specified"
-    },
-    {
-      "id": "delegation-orchestrator",
-      "tier": "foundation",
-      "source": "ai-verse",
-      "state": "specified"
-    },
-    {
-      "id": "release-deploy-guard",
       "tier": "foundation",
       "source": "ai-verse",
       "state": "specified"
@@ -108,67 +60,9 @@
       "tier": "foundation",
       "source": "ai-verse",
       "state": "specified"
-    },
-    {
-      "id": "configuration-contract-doctor",
-      "tier": "foundation",
-      "source": "ai-verse",
-      "state": "specified"
-    },
-    {
-      "id": "skill-forge",
-      "tier": "foundation",
-      "source": "ai-verse",
-      "state": "specified"
-    },
-    {
-      "id": "skill-miner",
-      "tier": "foundation",
-      "source": "ai-verse",
-      "state": "specified"
     }
   ],
   "employee": [
-    {
-      "rank": 1,
-      "id": "persona-exec-assistant",
-      "category": "universal-office",
-      "source": "google",
-      "repo": "googleworkspace/cli",
-      "path": "skills/persona-exec-assistant",
-      "implementation": "original-upstream",
-      "state": "vendored"
-    },
-    {
-      "rank": 2,
-      "id": "persona-project-manager",
-      "category": "universal-office",
-      "source": "google",
-      "repo": "googleworkspace/cli",
-      "path": "skills/persona-project-manager",
-      "implementation": "original-upstream",
-      "state": "catalogued"
-    },
-    {
-      "rank": 3,
-      "id": "persona-hr-coordinator",
-      "category": "universal-office",
-      "source": "google",
-      "repo": "googleworkspace/cli",
-      "path": "skills/persona-hr-coordinator",
-      "implementation": "original-upstream",
-      "state": "catalogued"
-    },
-    {
-      "rank": 4,
-      "id": "persona-event-coordinator",
-      "category": "universal-office",
-      "source": "google",
-      "repo": "googleworkspace/cli",
-      "path": "skills/persona-event-coordinator",
-      "implementation": "original-upstream",
-      "state": "catalogued"
-    },
     {
       "rank": 5,
       "id": "email-inbox-triage",
@@ -230,66 +124,6 @@
       "state": "catalogued"
     },
     {
-      "rank": 11,
-      "id": "xlsx",
-      "category": "universal-office",
-      "source": "hermes",
-      "repo": "NousResearch/hermes-agent",
-      "path": "skills/productivity/xlsx",
-      "implementation": "original-upstream",
-      "state": "catalogued"
-    },
-    {
-      "rank": 12,
-      "id": "docx",
-      "category": "universal-office",
-      "source": "hermes",
-      "repo": "NousResearch/hermes-agent",
-      "path": "skills/productivity/docx",
-      "implementation": "original-upstream",
-      "state": "catalogued"
-    },
-    {
-      "rank": 13,
-      "id": "ppt-generation",
-      "category": "universal-office",
-      "source": "others",
-      "repo": "bytedance/deer-flow",
-      "path": null,
-      "implementation": "original-upstream",
-      "state": "catalogued"
-    },
-    {
-      "rank": 14,
-      "id": "airtable",
-      "category": "universal-office",
-      "source": "hermes",
-      "repo": "NousResearch/hermes-agent",
-      "path": "skills/productivity/airtable",
-      "implementation": "original-upstream",
-      "state": "catalogued"
-    },
-    {
-      "rank": 16,
-      "id": "internal-comms",
-      "category": "universal-office",
-      "source": "anthropic",
-      "repo": "anthropics/skills",
-      "path": null,
-      "implementation": "original-upstream",
-      "state": "catalogued"
-    },
-    {
-      "rank": 17,
-      "id": "Council",
-      "category": "judgment-strategy",
-      "source": "lifeos",
-      "repo": "danielmiessler/LifeOS",
-      "path": "LifeOS/install/skills/Council",
-      "implementation": "original-upstream",
-      "state": "vendored"
-    },
-    {
       "rank": 18,
       "id": "RedTeam",
       "category": "judgment-strategy",
@@ -306,26 +140,6 @@
       "source": "lifeos",
       "repo": "danielmiessler/LifeOS",
       "path": "LifeOS/install/skills/ExtractWisdom",
-      "implementation": "original-upstream",
-      "state": "catalogued"
-    },
-    {
-      "rank": 20,
-      "id": "Ideate",
-      "category": "judgment-strategy",
-      "source": "lifeos",
-      "repo": "danielmiessler/LifeOS",
-      "path": "LifeOS/install/skills/Ideate",
-      "implementation": "original-upstream",
-      "state": "catalogued"
-    },
-    {
-      "rank": 21,
-      "id": "Fabric",
-      "category": "judgment-strategy",
-      "source": "lifeos",
-      "repo": "danielmiessler/LifeOS",
-      "path": "LifeOS/install/skills/Fabric",
       "implementation": "original-upstream",
       "state": "catalogued"
     },
@@ -360,16 +174,6 @@
       "state": "vendored"
     },
     {
-      "rank": 25,
-      "id": "brand-guidelines",
-      "category": "creative-design",
-      "source": "anthropic",
-      "repo": "anthropics/skills",
-      "path": null,
-      "implementation": "original-upstream",
-      "state": "catalogued"
-    },
-    {
       "rank": 26,
       "id": "canvas-design",
       "category": "creative-design",
@@ -380,61 +184,11 @@
       "state": "catalogued"
     },
     {
-      "rank": 27,
-      "id": "figma-use",
-      "category": "creative-design",
-      "source": "others",
-      "repo": "figma/mcp-server-guide",
-      "path": null,
-      "implementation": "original-upstream",
-      "state": "catalogued"
-    },
-    {
-      "rank": 28,
-      "id": "figma-generate-design",
-      "category": "creative-design",
-      "source": "others",
-      "repo": "figma/mcp-server-guide",
-      "path": null,
-      "implementation": "original-upstream",
-      "state": "catalogued"
-    },
-    {
       "rank": 29,
       "id": "canva",
       "category": "creative-design",
       "source": "social-media-skills",
       "repo": "social-media-skills/skills",
-      "path": null,
-      "implementation": "original-upstream",
-      "state": "catalogued"
-    },
-    {
-      "rank": 30,
-      "id": "design-and-templates",
-      "category": "creative-design",
-      "source": "social-media-skills",
-      "repo": "social-media-skills/skills",
-      "path": null,
-      "implementation": "original-upstream",
-      "state": "catalogued"
-    },
-    {
-      "rank": 31,
-      "id": "baoyu-article-illustrator",
-      "category": "creative-design",
-      "source": "hermes",
-      "repo": "NousResearch/hermes-agent",
-      "path": "optional-skills/creative/baoyu-article-illustrator",
-      "implementation": "original-upstream",
-      "state": "catalogued"
-    },
-    {
-      "rank": 32,
-      "id": "theme-factory",
-      "category": "creative-design",
-      "source": "anthropic",
-      "repo": "anthropics/skills",
       "path": null,
       "implementation": "original-upstream",
       "state": "catalogued"
@@ -520,16 +274,6 @@
       "state": "catalogued"
     },
     {
-      "rank": 41,
-      "id": "analytics",
-      "category": "marketing-social",
-      "source": "corey-haines",
-      "repo": "coreyhaines31/marketingskills",
-      "path": null,
-      "implementation": "original-upstream",
-      "state": "catalogued"
-    },
-    {
       "rank": 42,
       "id": "launch-strategy",
       "category": "marketing-social",
@@ -545,16 +289,6 @@
       "category": "marketing-social",
       "source": "corey-haines",
       "repo": "coreyhaines31/marketingskills",
-      "path": null,
-      "implementation": "original-upstream",
-      "state": "catalogued"
-    },
-    {
-      "rank": 44,
-      "id": "scheduling-and-queue",
-      "category": "marketing-social",
-      "source": "social-media-skills",
-      "repo": "social-media-skills/skills",
       "path": null,
       "implementation": "original-upstream",
       "state": "catalogued"
@@ -640,32 +374,12 @@
       "state": "catalogued"
     },
     {
-      "rank": 53,
-      "id": "premiere-agent",
-      "category": "film-media",
-      "source": "film",
-      "repo": "Kemerd/premiere-agent",
-      "path": null,
-      "implementation": "original-upstream",
-      "state": "catalogued"
-    },
-    {
       "rank": 54,
       "id": "after-effects-assistant",
       "category": "film-media",
       "source": "adobe",
       "repo": "aedev-tools/adobe-agent-skills",
       "path": null,
-      "implementation": "original-upstream",
-      "state": "catalogued"
-    },
-    {
-      "rank": 55,
-      "id": "kanban-video-orchestrator",
-      "category": "film-media",
-      "source": "hermes",
-      "repo": "NousResearch/hermes-agent",
-      "path": "optional-skills/creative/kanban-video-orchestrator",
       "implementation": "original-upstream",
       "state": "catalogued"
     },
@@ -690,16 +404,6 @@
       "state": "vendored"
     },
     {
-      "rank": 58,
-      "id": "call-prep",
-      "category": "sales-customer",
-      "source": "anthropic",
-      "repo": "anthropics/knowledge-work-plugins",
-      "path": null,
-      "implementation": "original-upstream",
-      "state": "catalogued"
-    },
-    {
       "rank": 59,
       "id": "draft-outreach",
       "category": "sales-customer",
@@ -708,36 +412,6 @@
       "path": null,
       "implementation": "upstream-adapted",
       "state": "vendored"
-    },
-    {
-      "rank": 60,
-      "id": "pipeline-review",
-      "category": "sales-customer",
-      "source": "anthropic",
-      "repo": "anthropics/knowledge-work-plugins",
-      "path": null,
-      "implementation": "original-upstream",
-      "state": "catalogued"
-    },
-    {
-      "rank": 61,
-      "id": "deal-management",
-      "category": "sales-customer",
-      "source": "hubspot",
-      "repo": "hubspot/agent-cli-skills",
-      "path": null,
-      "implementation": "original-upstream",
-      "state": "catalogued"
-    },
-    {
-      "rank": 62,
-      "id": "sales-execution",
-      "category": "sales-customer",
-      "source": "hubspot",
-      "repo": "hubspot/agent-cli-skills",
-      "path": null,
-      "implementation": "original-upstream",
-      "state": "catalogued"
     },
     {
       "rank": 63,
@@ -750,36 +424,6 @@
       "state": "vendored"
     },
     {
-      "rank": 64,
-      "id": "ticket-triage",
-      "category": "sales-customer",
-      "source": "anthropic",
-      "repo": "anthropics/knowledge-work-plugins",
-      "path": null,
-      "implementation": "original-upstream",
-      "state": "catalogued"
-    },
-    {
-      "rank": 65,
-      "id": "customer-retention",
-      "category": "sales-customer",
-      "source": "hubspot",
-      "repo": "hubspot/agent-cli-skills",
-      "path": null,
-      "implementation": "original-upstream",
-      "state": "catalogued"
-    },
-    {
-      "rank": 66,
-      "id": "shopify",
-      "category": "sales-customer",
-      "source": "hermes",
-      "repo": "NousResearch/hermes-agent",
-      "path": "optional-skills/productivity/shopify",
-      "implementation": "original-upstream",
-      "state": "catalogued"
-    },
-    {
       "rank": 67,
       "id": "cash-flow-snapshot",
       "category": "finance-accounting",
@@ -788,76 +432,6 @@
       "path": null,
       "implementation": "upstream-adapted",
       "state": "vendored"
-    },
-    {
-      "rank": 68,
-      "id": "financial-statements",
-      "category": "finance-accounting",
-      "source": "anthropic",
-      "repo": "anthropics/knowledge-work-plugins",
-      "path": null,
-      "implementation": "original-upstream",
-      "state": "catalogued"
-    },
-    {
-      "rank": 69,
-      "id": "variance-analysis",
-      "category": "finance-accounting",
-      "source": "anthropic",
-      "repo": "anthropics/knowledge-work-plugins",
-      "path": null,
-      "implementation": "original-upstream",
-      "state": "catalogued"
-    },
-    {
-      "rank": 70,
-      "id": "reconciliation",
-      "category": "finance-accounting",
-      "source": "anthropic",
-      "repo": "anthropics/knowledge-work-plugins",
-      "path": null,
-      "implementation": "original-upstream",
-      "state": "catalogued"
-    },
-    {
-      "rank": 71,
-      "id": "close-management",
-      "category": "finance-accounting",
-      "source": "anthropic",
-      "repo": "anthropics/knowledge-work-plugins",
-      "path": null,
-      "implementation": "original-upstream",
-      "state": "catalogued"
-    },
-    {
-      "rank": 72,
-      "id": "journal-entry-prep",
-      "category": "finance-accounting",
-      "source": "anthropic",
-      "repo": "anthropics/knowledge-work-plugins",
-      "path": null,
-      "implementation": "original-upstream",
-      "state": "catalogued"
-    },
-    {
-      "rank": 73,
-      "id": "excel-author",
-      "category": "finance-accounting",
-      "source": "hermes",
-      "repo": "NousResearch/hermes-agent",
-      "path": "optional-skills/finance/excel-author",
-      "implementation": "original-upstream",
-      "state": "catalogued"
-    },
-    {
-      "rank": 74,
-      "id": "3-statement-model",
-      "category": "finance-accounting",
-      "source": "hermes",
-      "repo": "NousResearch/hermes-agent",
-      "path": "optional-skills/finance/3-statement-model",
-      "implementation": "original-upstream",
-      "state": "catalogued"
     },
     {
       "rank": 75,
@@ -898,26 +472,6 @@
       "path": null,
       "implementation": "upstream-adapted",
       "state": "vendored"
-    },
-    {
-      "rank": 79,
-      "id": "legal-risk-assessment",
-      "category": "product-people-legal-ops",
-      "source": "anthropic",
-      "repo": "anthropics/knowledge-work-plugins",
-      "path": null,
-      "implementation": "original-upstream",
-      "state": "catalogued"
-    },
-    {
-      "rank": 80,
-      "id": "vendor-check",
-      "category": "product-people-legal-ops",
-      "source": "anthropic",
-      "repo": "anthropics/knowledge-work-plugins",
-      "path": null,
-      "implementation": "original-upstream",
-      "state": "catalogued"
     },
     {
       "rank": 81,

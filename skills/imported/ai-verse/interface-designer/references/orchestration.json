@@ -453,5 +453,23 @@
         "final media acceptance"
       ]
     }
+  },
+  "future_dependencies": {
+    "figma-use": {
+      "status": "planned_not_registered",
+      "behavior_when_unavailable": "BLOCK_AND_REPORT_UNAVAILABLE",
+      "required_for_targets": [
+        "FIGMA"
+      ],
+      "note": "Removed from the AI-Verse library on 12 November 2026. Use the runtime's own Figma skills or connection when available."
+    },
+    "figma-generate-design": {
+      "status": "planned_not_registered",
+      "behavior_when_unavailable": "BLOCK_AND_REPORT_UNAVAILABLE",
+      "required_for_targets": [
+        "FIGMA"
+      ],
+      "note": "Removed from the AI-Verse library on 12 November 2026. Use the runtime's own Figma skills or connection when available."
+    }
   }
 }

@@ -2,10 +2,10 @@
   "schema_version": 3,
   "snapshot": "2026-09-14",
   "counts": {
-    "foundation": 20,
-    "employee": 98,
+    "foundation": 9,
+    "employee": 60,
     "support": 16,
-    "canonical_total": 118
+    "canonical_total": 69
   },
   "policy": {
     "original_first": true,
@@ -19,74 +19,7 @@
       "commit": "a3768d0e82ad83cca2da97724e46bea4ff0e6dbd",
       "namespace": "google",
       "license": "Apache-2.0",
-      "packages": [
-        {
-          "rank": 1,
-          "id": "persona-exec-assistant",
-          "category": "universal-office",
-          "vendored": true,
-          "path": "skills/persona-exec-assistant",
-          "deps": [
-            "gws-gmail",
-            "gws-calendar",
-            "gws-drive",
-            "gws-chat"
-          ],
-          "operators": [
-            "google-workspace"
-          ]
-        },
-        {
-          "rank": 2,
-          "id": "persona-project-manager",
-          "category": "universal-office",
-          "vendored": true,
-          "path": "skills/persona-project-manager",
-          "deps": [
-            "gws-gmail",
-            "gws-calendar",
-            "gws-drive",
-            "gws-chat",
-            "gws-sheets"
-          ],
-          "operators": [
-            "google-workspace"
-          ]
-        },
-        {
-          "rank": 3,
-          "id": "persona-hr-coordinator",
-          "category": "universal-office",
-          "vendored": true,
-          "path": "skills/persona-hr-coordinator",
-          "deps": [
-            "gws-gmail",
-            "gws-calendar",
-            "gws-drive",
-            "gws-chat"
-          ],
-          "operators": [
-            "google-workspace"
-          ]
-        },
-        {
-          "rank": 4,
-          "id": "persona-event-coordinator",
-          "category": "universal-office",
-          "vendored": true,
-          "path": "skills/persona-event-coordinator",
-          "deps": [
-            "gws-gmail",
-            "gws-calendar",
-            "gws-drive",
-            "gws-chat",
-            "gws-sheets"
-          ],
-          "operators": [
-            "google-workspace"
-          ]
-        }
-      ],
+      "packages": [],
       "redistribution": "redistributable"
     },
     "hermes": {
@@ -136,70 +69,16 @@
           ]
         },
         {
-          "rank": 11,
-          "id": "xlsx",
-          "category": "universal-office",
-          "path": "skills/productivity/xlsx"
-        },
-        {
-          "rank": 12,
-          "id": "docx",
-          "category": "universal-office",
-          "path": "skills/productivity/docx"
-        },
-        {
-          "rank": 14,
-          "id": "airtable",
-          "category": "universal-office",
-          "path": "skills/productivity/airtable",
-          "operators": [
-            "airtable"
-          ]
-        },
-        {
           "rank": 22,
           "id": "decision-questionnaire",
           "category": "judgment-strategy",
           "path": "optional-skills/productivity/decision-questionnaire"
         },
         {
-          "rank": 31,
-          "id": "baoyu-article-illustrator",
-          "category": "creative-design",
-          "path": "optional-skills/creative/baoyu-article-illustrator"
-        },
-        {
-          "rank": 55,
-          "id": "kanban-video-orchestrator",
-          "category": "film-media",
-          "path": "optional-skills/creative/kanban-video-orchestrator"
-        },
-        {
           "rank": 56,
           "id": "whisper",
           "category": "film-media",
           "path": "optional-skills/mlops/whisper"
-        },
-        {
-          "rank": 66,
-          "id": "shopify",
-          "category": "sales-customer",
-          "path": "optional-skills/productivity/shopify",
-          "operators": [
-            "shopify"
-          ]
-        },
-        {
-          "rank": 73,
-          "id": "excel-author",
-          "category": "finance-accounting",
-          "path": "optional-skills/finance/excel-author"
-        },
-        {
-          "rank": 74,
-          "id": "3-statement-model",
-          "category": "finance-accounting",
-          "path": "optional-skills/finance/3-statement-model"
         }
       ],
       "redistribution": "redistributable"
@@ -209,14 +88,7 @@
       "commit": "3c7d3303d3ef9335b6d91b49acff1a6f6609936c",
       "namespace": "others",
       "license": "upstream-controlled",
-      "packages": [
-        {
-          "rank": 13,
-          "id": "ppt-generation",
-          "category": "universal-office",
-          "path": "skills/public/ppt-generation"
-        }
-      ],
+      "packages": [],
       "redistribution": "fetch-only"
     },
     "anthropic-skills": {
@@ -226,28 +98,10 @@
       "license": "upstream-controlled",
       "packages": [
         {
-          "rank": 16,
-          "id": "internal-comms",
-          "category": "universal-office",
-          "path": "skills/internal-comms"
-        },
-        {
-          "rank": 25,
-          "id": "brand-guidelines",
-          "category": "creative-design",
-          "path": "skills/brand-guidelines"
-        },
-        {
           "rank": 26,
           "id": "canvas-design",
           "category": "creative-design",
           "path": "skills/canvas-design"
-        },
-        {
-          "rank": 32,
-          "id": "theme-factory",
-          "category": "creative-design",
-          "path": "skills/theme-factory"
         }
       ],
       "redistribution": "fetch-only"
@@ -259,13 +113,6 @@
       "license": "MIT",
       "packages": [
         {
-          "rank": 17,
-          "id": "Council",
-          "category": "judgment-strategy",
-          "vendored": true,
-          "path": "LifeOS/install/skills/Council"
-        },
-        {
           "rank": 18,
           "id": "RedTeam",
           "category": "judgment-strategy",
@@ -276,18 +123,6 @@
           "id": "ExtractWisdom",
           "category": "judgment-strategy",
           "path": "LifeOS/install/skills/ExtractWisdom"
-        },
-        {
-          "rank": 20,
-          "id": "Ideate",
-          "category": "judgment-strategy",
-          "path": "LifeOS/install/skills/Ideate"
-        },
-        {
-          "rank": 21,
-          "id": "Fabric",
-          "category": "judgment-strategy",
-          "path": "LifeOS/install/skills/Fabric"
         }
       ],
       "redistribution": "redistributable"
@@ -320,23 +155,11 @@
           "vendored": true
         },
         {
-          "rank": 58,
-          "id": "call-prep",
-          "category": "sales-customer",
-          "path": "sales/skills/call-prep"
-        },
-        {
           "rank": 59,
           "id": "draft-outreach",
           "category": "sales-customer",
           "path": "sales/skills/draft-outreach",
           "vendored": true
-        },
-        {
-          "rank": 60,
-          "id": "pipeline-review",
-          "category": "sales-customer",
-          "path": "sales/skills/pipeline-review"
         },
         {
           "rank": 63,
@@ -346,47 +169,11 @@
           "vendored": true
         },
         {
-          "rank": 64,
-          "id": "ticket-triage",
-          "category": "sales-customer",
-          "path": "customer-support/skills/ticket-triage"
-        },
-        {
           "rank": 67,
           "id": "cash-flow-snapshot",
           "category": "finance-accounting",
           "path": "small-business/skills/cash-flow-snapshot",
           "vendored": true
-        },
-        {
-          "rank": 68,
-          "id": "financial-statements",
-          "category": "finance-accounting",
-          "path": "finance/skills/financial-statements"
-        },
-        {
-          "rank": 69,
-          "id": "variance-analysis",
-          "category": "finance-accounting",
-          "path": "finance/skills/variance-analysis"
-        },
-        {
-          "rank": 70,
-          "id": "reconciliation",
-          "category": "finance-accounting",
-          "path": "finance/skills/reconciliation"
-        },
-        {
-          "rank": 71,
-          "id": "close-management",
-          "category": "finance-accounting",
-          "path": "finance/skills/close-management"
-        },
-        {
-          "rank": 72,
-          "id": "journal-entry-prep",
-          "category": "finance-accounting",
-          "path": "finance/skills/journal-entry-prep"
         },
         {
           "rank": 75,
@@ -415,18 +202,6 @@
           "category": "product-people-legal-ops",
           "path": "legal/skills/review-contract",
           "vendored": true
-        },
-        {
-          "rank": 79,
-          "id": "legal-risk-assessment",
-          "category": "product-people-legal-ops",
-          "path": "legal/skills/legal-risk-assessment"
-        },
-        {
-          "rank": 80,
-          "id": "vendor-check",
-          "category": "product-people-legal-ops",
-          "path": "legal/skills/vendor-check"
         }
       ],
       "redistribution": "redistributable"
@@ -436,26 +211,7 @@
       "commit": "f74a51c9aaec87a2e65c9121753b63fb42203d96",
       "namespace": "others",
       "license": "upstream-controlled",
-      "packages": [
-        {
-          "rank": 27,
-          "id": "figma-use",
-          "category": "creative-design",
-          "path": "skills/figma-use",
-          "operators": [
-            "figma"
-          ]
-        },
-        {
-          "rank": 28,
-          "id": "figma-generate-design",
-          "category": "creative-design",
-          "path": "skills/figma-generate-design",
-          "operators": [
-            "figma"
-          ]
-        }
-      ],
+      "packages": [],
       "redistribution": "fetch-only"
     },
     "social-media-skills": {
@@ -472,18 +228,6 @@
           "operators": [
             "canva"
           ]
-        },
-        {
-          "rank": 30,
-          "id": "design-and-templates",
-          "category": "creative-design",
-          "path": "skills/design-and-templates"
-        },
-        {
-          "rank": 44,
-          "id": "scheduling-and-queue",
-          "category": "marketing-social",
-          "path": "skills/scheduling-and-queue"
         },
         {
           "rank": 45,
@@ -547,12 +291,6 @@
           "id": "seo-audit",
           "category": "marketing-social",
           "path": "skills/seo-audit"
-        },
-        {
-          "rank": 41,
-          "id": "analytics",
-          "category": "marketing-social",
-          "path": "skills/analytics"
         },
         {
           "rank": 42,
@@ -663,17 +401,7 @@
       "commit": "77ed50f4bff14b67b054a64d26aedd7ec217b701",
       "namespace": "film",
       "license": "upstream-controlled",
-      "packages": [
-        {
-          "rank": 53,
-          "id": "premiere-agent",
-          "category": "film-media",
-          "root": true,
-          "operators": [
-            "premiere-pro"
-          ]
-        }
-      ],
+      "packages": [],
       "redistribution": "fetch-only"
     },
     "adobe": {
@@ -699,35 +427,7 @@
       "commit": "71f2bdefcc0247b1f378cb98186800dc57b6f6b1",
       "namespace": "hubspot",
       "license": "upstream-controlled",
-      "packages": [
-        {
-          "rank": 61,
-          "id": "deal-management",
-          "category": "sales-customer",
-          "path": "deal-management",
-          "operators": [
-            "hubspot"
-          ]
-        },
-        {
-          "rank": 62,
-          "id": "sales-execution",
-          "category": "sales-customer",
-          "path": "sales-execution",
-          "operators": [
-            "hubspot"
-          ]
-        },
-        {
-          "rank": 65,
-          "id": "customer-retention",
-          "category": "sales-customer",
-          "path": "customer-retention",
-          "operators": [
-            "hubspot"
-          ]
-        }
-      ],
+      "packages": [],
       "redistribution": "fetch-only"
     },
     "ai-verse": {

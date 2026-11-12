@@ -32,8 +32,7 @@ Load the smallest useful expert subset. These are canonical AI-Verse capability 
 | choose a UI/component dependency | `pick-ui-library` |
 | React/Next performance and implementation quality | `react-best-practices` |
 | React component API/composition architecture | `composition-patterns` |
-| Figma Plugin API operations | `figma-use` |
-| composed Figma screens/views | `figma-generate-design` |
+| Figma work | Not in the AI-Verse library. Use the runtime's own Figma skills or connection; otherwise report unavailable |
 | Canva production | `canva` |
 
 ## Final review

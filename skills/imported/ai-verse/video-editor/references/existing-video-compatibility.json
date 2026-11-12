@@ -36,19 +36,9 @@
       "reason": "Deterministic media operations remain useful below/alongside Video Editor."
     },
     {
-      "id": "premiere-agent",
-      "disposition": "retained-optional-nle-backend",
-      "reason": "Editable NLE/Premiere/Resolve/FCP workflows remain distinct optional backends."
-    },
-    {
       "id": "after-effects-assistant",
       "disposition": "retained-optional-motion-backend",
       "reason": "AE-native compositing/motion remains distinct from HyperFrames."
-    },
-    {
-      "id": "kanban-video-orchestrator",
-      "disposition": "retained-production-orchestrator",
-      "reason": "Multi-agent production coordination is not the canonical raw-footage editor."
     },
     {
       "id": "whisper",
@@ -66,5 +56,9 @@
     "Do not remove a public capability only because Video Editor can call an overlapping low-level operation.",
     "Migrate unique behavior and prove compatibility before any future removal.",
     "Keep exactly one canonical HyperFrames provider family."
+  ],
+  "removed_from_library_2026_11_12": [
+    "premiere-agent",
+    "kanban-video-orchestrator"
   ]
 }

@@ -190,10 +190,10 @@ class CinematicRealismDirectorContractTests(unittest.TestCase):
         packages = json.loads((ROOT / "registry" / "packages.json").read_text(encoding="utf-8"))
         profiles = json.loads((ROOT / "registry" / "profiles.json").read_text(encoding="utf-8"))
 
-        self.assertEqual(skills["counts"], {"foundation": 20, "employee": 98, "total": 118})
-        self.assertEqual(packages["counts"]["foundation"], 20)
-        self.assertEqual(packages["counts"]["employee"], 98)
-        self.assertEqual(packages["counts"]["canonical_total"], 118)
+        self.assertEqual(skills["counts"], {"foundation": 9, "employee": 60, "total": 69})
+        self.assertEqual(packages["counts"]["foundation"], 9)
+        self.assertEqual(packages["counts"]["employee"], 60)
+        self.assertEqual(packages["counts"]["canonical_total"], 69)
 
         employee_ids = {item["id"] for item in skills["employee"]}
         package_ids = {

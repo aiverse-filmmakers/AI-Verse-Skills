@@ -541,8 +541,6 @@ def operator_status(op):
     env_map = {
         "canva": "AI_VERSE_CONNECTION_CANVA",
         "figma": "AI_VERSE_CONNECTION_FIGMA",
-        "shopify": "AI_VERSE_CONNECTION_SHOPIFY",
-        "airtable": "AI_VERSE_CONNECTION_AIRTABLE",
     }
     if oid in env_map:
         return "ready" if env_ready(env_map[oid]) else "needs-connection"
