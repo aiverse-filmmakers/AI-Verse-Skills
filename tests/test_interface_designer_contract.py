@@ -79,10 +79,10 @@ class InterfaceDesignerContractTests(unittest.TestCase):
             "scroll-craft",
         }
         self.assertTrue(experts.issubset(ids))
-        self.assertEqual(skills["counts"]["employee"], 51)
-        self.assertEqual(skills["counts"]["total"], 60)
-        self.assertEqual(packages["counts"]["employee"], 51)
-        self.assertEqual(packages["counts"]["canonical_total"], 60)
+        self.assertEqual(skills["counts"]["employee"], 50)
+        self.assertEqual(skills["counts"]["total"], 59)
+        self.assertEqual(packages["counts"]["employee"], 50)
+        self.assertEqual(packages["counts"]["canonical_total"], 59)
         self.assertEqual(packages["counts"]["support"], 16)
 
         expected_pins = {

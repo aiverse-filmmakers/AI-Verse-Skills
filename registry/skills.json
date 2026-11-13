@@ -3,8 +3,8 @@
   "snapshot": "2026-09-14",
   "counts": {
     "foundation": 9,
-    "employee": 51,
-    "total": 60
+    "employee": 50,
+    "total": 59
   },
   "foundation": [
     {
@@ -70,28 +70,18 @@
       "source": "hermes",
       "repo": "NousResearch/hermes-agent",
       "path": "skills/email/email-inbox-triage",
-      "implementation": "original-upstream",
+      "implementation": "upstream-adapted",
       "state": "vendored"
     },
     {
       "rank": 6,
-      "id": "meeting-action-items",
+      "id": "action-items",
       "category": "universal-office",
       "source": "hermes",
       "repo": "NousResearch/hermes-agent",
       "path": "skills/productivity/meeting-action-items",
-      "implementation": "original-upstream",
-      "state": "catalogued"
-    },
-    {
-      "rank": 7,
-      "id": "document-to-action-items",
-      "category": "universal-office",
-      "source": "hermes",
-      "repo": "NousResearch/hermes-agent",
-      "path": "skills/productivity/document-to-action-items",
-      "implementation": "original-upstream",
-      "state": "catalogued"
+      "implementation": "upstream-adapted",
+      "state": "vendored"
     },
     {
       "rank": 8,
@@ -100,8 +90,8 @@
       "source": "hermes",
       "repo": "NousResearch/hermes-agent",
       "path": "skills/productivity/weekly-review-planning",
-      "implementation": "original-upstream",
-      "state": "catalogued"
+      "implementation": "upstream-adapted",
+      "state": "vendored"
     },
     {
       "rank": 9,
@@ -110,8 +100,8 @@
       "source": "hermes",
       "repo": "NousResearch/hermes-agent",
       "path": "optional-skills/communication/one-three-one-rule",
-      "implementation": "original-upstream",
-      "state": "catalogued"
+      "implementation": "upstream-adapted",
+      "state": "vendored"
     },
     {
       "rank": 10,
@@ -270,8 +260,8 @@
       "source": "others",
       "repo": "novoads",
       "path": null,
-      "implementation": "original-upstream",
-      "state": "catalogued"
+      "implementation": "upstream-adapted",
+      "state": "vendored"
     },
     {
       "rank": 47,
@@ -310,8 +300,8 @@
       "source": "film",
       "repo": "kajisho5/ffmpeg-skill",
       "path": null,
-      "implementation": "original-upstream",
-      "state": "catalogued"
+      "implementation": "upstream-adapted",
+      "state": "vendored"
     },
     {
       "rank": 54,
@@ -320,8 +310,8 @@
       "source": "adobe",
       "repo": "aedev-tools/adobe-agent-skills",
       "path": null,
-      "implementation": "original-upstream",
-      "state": "catalogued"
+      "implementation": "upstream-adapted",
+      "state": "vendored"
     },
     {
       "rank": 56,
@@ -470,8 +460,8 @@
       "source": "mengto-ui",
       "repo": "MengTo/Skills",
       "path": "agent-skills/codex/video-to-superprompt",
-      "implementation": "original-upstream",
-      "state": "catalogued"
+      "implementation": "upstream-adapted",
+      "state": "vendored"
     },
     {
       "rank": 91,

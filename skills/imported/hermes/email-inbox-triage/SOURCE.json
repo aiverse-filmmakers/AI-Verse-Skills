@@ -3,10 +3,13 @@
   "upstream_repo": "NousResearch/hermes-agent",
   "upstream_path": "skills/email/email-inbox-triage",
   "upstream_commit": "7dc796463d543a57270779b7f71f37f18b6faa5e",
-  "upstream_blob_sha": "f35cb4e4e8e18508c22e2701b753aef6042f89de",
   "license": "MIT",
-  "license_basis": "SKILL.md frontmatter",
-  "import_type": "original-vendored",
-  "modified": false,
-  "imported_at": "2026-09-09"
+  "import_type": "original-vendored-adapted",
+  "modified": true,
+  "adaptation": {
+    "reason": "Kept as an AI-Verse owned copy (plan D26, D33 Group C) so problems that would trip up a member could be fixed.",
+    "change": "Description now says when to use it. Tool names that only exist in Hermes (himalaya, google-workspace connector skills) replaced with plain wording. Hermes only header fields (version, platforms, tags, related_skills) removed. Procedure, dispositions and verification checks are unchanged."
+  },
+  "upstream_blob_sha": "f35cb4e4e8e18508c22e2701b753aef6042f89de",
+  "imported_at": "2026-11-13"
 }

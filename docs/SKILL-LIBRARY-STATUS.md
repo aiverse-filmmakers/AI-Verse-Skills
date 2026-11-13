@@ -1,19 +1,19 @@
 # Skill library status
 
-The single record of the 2026 library cleanup. Last updated 13 November 2026 (Group B marketing tidy added).
+The single record of the 2026 library cleanup. Last updated 13 November 2026 (Group B marketing tidy and Group C small fixes added).
 Starting point: 118 catalogue skills (main at `bab2834`).
 
 | Status | Count |
 |---|---|
 | Removed in this change | 58 |
-| Kept and improved (owned by AI-Verse) | 33 |
+| Kept and improved (owned by AI-Verse) | 41 |
 | Kept as they are | 3 |
-| Still to review | 24 |
-| **Catalogue after this change** | **60** (36 kept + 24 to review) |
+| Still to review | 15 |
+| **Catalogue after this change** | **59** (44 kept + 15 to review) |
 
 `notion` and `shadcn` were removed earlier (pull request #28) and are not counted here.
 
-## Kept and improved (33)
+## Kept and improved (41)
 
 None of these has been tested with and without the skill yet. Scores are estimates.
 
@@ -24,6 +24,11 @@ None of these has been tested with and without the skill yet. Scores are estimat
 - Vercel, MIT: `composition-patterns`
 - Emil Kowalski, MIT: `pick-ui-library`, and from 13 November `review-animations`, `improve-animations`, `find-animation-opportunities`, `apple-design` (kept by decision; structure fixes only, the author's rules, values and tone are untouched)
 - Corey Haines, MIT: `social-content` (13 November; inner name fixed, repurposing references added), and from the 13 November marketing tidy `copywriting`, `ad-creative`, `content-strategy`, `customer-research`, `email-sequence` (inner name was `emails`), `seo-audit`, `community-marketing` (pointers to skills and tools not in the library removed; the marketing advice is unchanged; the lines that read `.agents/product-marketing.md` are left on purpose until per project adjustments replace `product-marketing-context`)
+- Hermes, MIT (13 November, Group C): `email-inbox-triage`, `weekly-review-planning`, `one-three-one-rule` (everyday example instead of a coding one), and `action-items`, which merges `meeting-action-items` and `document-to-action-items` into one skill (the two old names are gone, so the catalogue is 59). Each got a plain "use when" description and Hermes only tool names replaced with plain wording
+- Meng To, MIT: `video-to-superprompt` (description now says it rebuilds a site or app from a screen recording)
+- Adobe skills author, Apache 2.0: `after-effects-assistant` (inner name fixed; the fixed folder path replaced with the folder the skill is loaded from)
+- Novoads, MIT: `meta-ad-builder` (the Novoads requirement removed; it needs only Meta credentials)
+- kajisho5, MIT: `ffmpeg-skill` (only the skill itself kept: 49 files instead of 124)
 
 ## Kept as they are (3)
 
@@ -42,28 +47,24 @@ None of these has been tested with and without the skill yet. Scores are estimat
 
 `interface-designer` no longer routes to the removed Figma skills: its Figma target now reports "unavailable" unless the runtime has its own Figma skills. The same now applies to Canva. The interface designer does the UI and UX reasoning and the design specification itself, since `ui-ux-pro-max` and `design-first-ui-prompting` are gone.
 
-## Still to review (24)
+## Still to review (15)
 
-Decided 13 November: keep all of them. Group A (nine skills) is left as it is, Group B (marketing, seven skills) is done above, Groups C and D are still to do. See entry D33 of the skills plan.
+Decided 13 November: keep all of them. Group A (nine skills) is left as it is, Group B (marketing, seven skills) is done above, Group C (small fixes, nine skills) is done above, Group D is still to do. See entry D33 of the skills plan.
 
 Scores from a first read on 12 November (usefulness to members / craft, out of 10), with the recommended action. A second read of every skill in full gave different scores and recommendations for several of these; that review is entry D31 of the skills plan in the AI-Verse OS development workspace. Decided on 13 November: `product-marketing-context` will be replaced by per project adjustments once those exist. The four animation and Apple skills that review recommended removing were kept by decision on 13 November.
 
-### Film and video (7)
+### Film and video (4)
 | Skill | Use | Craft | Recommendation |
 |---|---|---|---|
 | `video-editor` | 9 | 8 | Keep |
 | `director-agent` | 9 | 7 | Keep. Clean up the mixed Chinese terms |
-| `video-to-superprompt` | 8 | 7 | Keep |
-| `ffmpeg-skill` | 8 | 8 | Keep. Strip the author's 12 stray `.claude/skills` files |
 | `produce-ai-video` | 8 | 6 | Keep. Make it work outside Codex |
 | `ai-storyboard-director` | 8 | 6 | Translate to English (it never triggers on English requests) |
-| `after-effects-assistant` | 6 | 7 | Keep. Fix the inner name (`after-effects`) |
 
-### Marketing (2)
+### Marketing (1)
 | Skill | Use | Craft | Recommendation |
 |---|---|---|---|
 | `product-marketing-context` | 7 | 8 | Decided 13 November: to be replaced by per project adjustments. It stays until those exist (skills plan, Phase 1). Then it is removed and the marketing skills read the current project's adjustments instead. Reason: it saves one file for the whole OS folder, so every project would share one brand |
-| `meta-ad-builder` | 6 | 7 | Keep (needs Meta API keys) |
 
 ### Web and interface design (6), recommended as one optional pack
 | Skill | Use | Craft |
@@ -75,20 +76,15 @@ Scores from a first read on 12 November (usefulness to members / craft, out of 1
 | `animate` | 4 | 9 |
 | `prototype` | 4 | 9 |
 
-### Office (5)
+### Office (1)
 | Skill | Use | Craft | Recommendation |
 |---|---|---|---|
 | `whisper` | 7 | 5 | Keep. Trim the GitHub star padding |
-| `meeting-action-items` | 6 | 6 | Merge with `document-to-action-items`. Remove Hermes only tool names |
-| `document-to-action-items` | 6 | 6 | As above |
-| `email-inbox-triage` | 6 | 6 | Keep. Remove Hermes only tool names |
-| `weekly-review-planning` | 6 | 6 | Keep. Remove Hermes only tool names |
 
-### Thinking (3)
+### Thinking (2)
 | Skill | Use | Craft | Recommendation |
 |---|---|---|---|
 | `ExtractWisdom` | 7 | 4 | Rewrite: remove the author's private voice server and folders, lowercase the name |
-| `one-three-one-rule` | 5 | 7 | Keep |
 | `decision-questionnaire` | 5 | 7 | Keep |
 
 ### Visual design (1)

@@ -1,0 +1,14 @@
+{
+  "source_namespace": "others",
+  "upstream_repo": "novoads/agent-skills",
+  "upstream_path": "shared/skills/meta-ad-builder",
+  "upstream_commit": "2f5e03f9c625fd719a1bc5cddaf7f7fe1a6f9e44",
+  "license": "MIT",
+  "import_type": "original-vendored-adapted",
+  "modified": true,
+  "adaptation": {
+    "reason": "Kept as an AI-Verse owned copy (plan D26, D33 Group C) so problems that would trip up a member could be fixed.",
+    "change": "The Novoads requirement removed: the Novoads API key block, the Novoads MCP warning and the Novoads pack version note are gone, and the skill now needs only the Meta credentials it always needed. Pointers to Novoads generation skills (pixar-ad, claymation-ad and similar) and to the author's workspace removed. The author's own eval files (evals.md, routing-eval.jsonl) are not carried over. Scripts are unchanged except one comment."
+  },
+  "imported_at": "2026-11-13"
+}

@@ -49,10 +49,10 @@
     },
     "kajisho5/ffmpeg-skill": {
       "license": "MIT",
-      "redistribution": "fetch-only",
+      "redistribution": "redistributable",
       "trust": "reviewed-upstream",
       "ownership": "curated_upstream",
-      "vendoring_allowed": false,
+      "vendoring_allowed": true,
       "auto_mutation": false
     },
     "bytedance/deer-flow": {
@@ -96,11 +96,11 @@
       "auto_mutation": false
     },
     "novoads/agent-skills": {
-      "license": "upstream-controlled",
-      "redistribution": "fetch-only",
+      "license": "MIT",
+      "redistribution": "redistributable",
       "trust": "external",
       "ownership": "external",
-      "vendoring_allowed": false,
+      "vendoring_allowed": true,
       "auto_mutation": false
     },
     "62656456/ai-film-skills": {
@@ -128,11 +128,11 @@
       "auto_mutation": false
     },
     "aedev-tools/adobe-agent-skills": {
-      "license": "upstream-controlled",
-      "redistribution": "fetch-only",
+      "license": "Apache-2.0",
+      "redistribution": "redistributable",
       "trust": "external",
       "ownership": "external",
-      "vendoring_allowed": false,
+      "vendoring_allowed": true,
       "auto_mutation": false
     },
     "HubSpot/agent-cli-skills": {

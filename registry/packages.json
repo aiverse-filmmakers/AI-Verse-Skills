@@ -3,9 +3,9 @@
   "snapshot": "2026-09-14",
   "counts": {
     "foundation": 9,
-    "employee": 51,
+    "employee": 50,
     "support": 16,
-    "canonical_total": 60
+    "canonical_total": 59
   },
   "policy": {
     "original_first": true,
@@ -37,27 +37,24 @@
         },
         {
           "rank": 6,
-          "id": "meeting-action-items",
+          "id": "action-items",
           "category": "universal-office",
-          "path": "skills/productivity/meeting-action-items"
-        },
-        {
-          "rank": 7,
-          "id": "document-to-action-items",
-          "category": "universal-office",
-          "path": "skills/productivity/document-to-action-items"
+          "path": "skills/productivity/meeting-action-items",
+          "vendored": true
         },
         {
           "rank": 8,
           "id": "weekly-review-planning",
           "category": "universal-office",
-          "path": "skills/productivity/weekly-review-planning"
+          "path": "skills/productivity/weekly-review-planning",
+          "vendored": true
         },
         {
           "rank": 9,
           "id": "one-three-one-rule",
           "category": "universal-office",
-          "path": "optional-skills/communication/one-three-one-rule"
+          "path": "optional-skills/communication/one-three-one-rule",
+          "vendored": true
         },
         {
           "rank": 10,
@@ -291,16 +288,17 @@
       "repo": "novoads/agent-skills",
       "commit": "2f5e03f9c625fd719a1bc5cddaf7f7fe1a6f9e44",
       "namespace": "others",
-      "license": "upstream-controlled",
+      "license": "MIT",
       "packages": [
         {
           "rank": 46,
           "id": "meta-ad-builder",
           "category": "marketing-social",
-          "path": "shared/skills/meta-ad-builder"
+          "path": "shared/skills/meta-ad-builder",
+          "vendored": true
         }
       ],
-      "redistribution": "fetch-only"
+      "redistribution": "redistributable"
     },
     "ai-film": {
       "repo": "62656456/ai-film-skills",
@@ -348,12 +346,13 @@
           "id": "ffmpeg-skill",
           "category": "film-media",
           "root": true,
+          "vendored": true,
           "operators": [
             "ffmpeg"
           ]
         }
       ],
-      "redistribution": "fetch-only"
+      "redistribution": "redistributable"
     },
     "premiere": {
       "repo": "Kemerd/premiere-agent",
@@ -367,7 +366,7 @@
       "repo": "aedev-tools/adobe-agent-skills",
       "commit": "00f131ee5481cd597e6f63f997d92c6fe26586a0",
       "namespace": "adobe",
-      "license": "upstream-controlled",
+      "license": "Apache-2.0",
       "packages": [
         {
           "rank": 54,
@@ -376,10 +375,11 @@
           "path": "skills/after-effects",
           "operators": [
             "after-effects"
-          ]
+          ],
+          "vendored": true
         }
       ],
-      "redistribution": "fetch-only"
+      "redistribution": "redistributable"
     },
     "hubspot": {
       "repo": "HubSpot/agent-cli-skills",
@@ -487,7 +487,8 @@
           "rank": 89,
           "id": "video-to-superprompt",
           "category": "creative-design",
-          "path": "agent-skills/codex/video-to-superprompt"
+          "path": "agent-skills/codex/video-to-superprompt",
+          "vendored": true
         }
       ],
       "redistribution": "redistributable"

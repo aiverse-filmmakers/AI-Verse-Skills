@@ -9,27 +9,27 @@ The authoritative package pins are in `registry/packages.json`. The public-beta 
 | Source | Repository | License decision | Public-beta handling |
 |---|---|---|---|
 | Google Workspace CLI | `googleworkspace/cli` | Apache-2.0 | Redistributable where recorded; selected proof packages may be vendored |
-| Hermes Agent | `NousResearch/hermes-agent` | MIT | Redistributable where recorded; selected proof package may be vendored |
+| Hermes Agent | `NousResearch/hermes-agent` | MIT | Redistributable. Vendored and adapted, each with a `LICENSE` copy and a `SOURCE.json` change note: `email-inbox-triage`, `weekly-review-planning`, `one-three-one-rule`, and `action-items` (a merge of `meeting-action-items` and `document-to-action-items`). The rest are fetched at the pinned commit |
 | LifeOS | `danielmiessler/LifeOS` | MIT | Redistributable where recorded; selected proof package may be vendored |
 | Marketing Skills | `coreyhaines31/marketingskills` | MIT | Redistributable; eight skills are vendored and adapted (`social-content`, `copywriting`, `ad-creative`, `content-strategy`, `customer-research`, `email-sequence`, `seo-audit`, `community-marketing`), each with a `LICENSE` copy and a `SOURCE.json` change note. The rest (`product-marketing-context`) is fetched at the pinned commit |
-| FFmpeg Skill | `kajisho5/ffmpeg-skill` | MIT | Fetch-only in the public-beta distribution |
+| FFmpeg Skill | `kajisho5/ffmpeg-skill` | MIT | Redistributable. `ffmpeg-skill` is vendored with only the skill itself (`SKILL.md`, `scripts/`, `references/`, `docs/contract.md`), a `LICENSE` copy and a `SOURCE.json` change note |
 | ByteDance DeerFlow | `bytedance/deer-flow` | Upstream-controlled | Fetch-only |
 | Anthropic Skills | `anthropics/skills` | Upstream-controlled | Fetch-only |
 | Anthropic Knowledge Work Plugins | `anthropics/knowledge-work-plugins` | Apache-2.0 | Redistributable; ten skills are vendored and adapted, each with a `LICENSE` copy and a `SOURCE.json` change note. The rest stay fetch-only |
 | Figma MCP Server Guide | `figma/mcp-server-guide` | Upstream-controlled | Fetch-only |
 | Social Media Skills | `social-media-skills/skills` | MIT | No skills left in the catalogue. Four reference files are reused, adapted, inside `social-content`, with the licence copied there |
-| NovoAds Agent Skills | `novoads/agent-skills` | Upstream-controlled | Fetch-only |
+| NovoAds Agent Skills | `novoads/agent-skills` | MIT | Redistributable. `meta-ad-builder` is vendored and adapted (Novoads requirement removed), with a `LICENSE` copy and a `SOURCE.json` change note |
 | AI Film Skills | `62656456/ai-film-skills` | Upstream-controlled | Fetch-only |
 | Film Production Skills | `zhangzhangco/film-production-skills` | Upstream-controlled | Fetch-only |
 | Premiere Agent | `Kemerd/premiere-agent` | Upstream-controlled | Fetch-only |
-| Adobe Agent Skills | `aedev-tools/adobe-agent-skills` | Upstream-controlled | Fetch-only |
+| Adobe Agent Skills | `aedev-tools/adobe-agent-skills` | Apache-2.0 | Redistributable. `after-effects-assistant` is vendored and adapted, with a `LICENSE` copy and a `SOURCE.json` change note |
 | HubSpot Agent CLI Skills | `HubSpot/agent-cli-skills` | Upstream-controlled | Fetch-only |
 
 | Anthropic Frontend Design | `anthropics/skills` | Package-level Apache-2.0 verified; repository policy remains conservative | Exact pinned upstream fetch |
 | UI/UX Pro Max | `nextlevelbuilder/ui-ux-pro-max-skill` | MIT | Exact pinned upstream fetch |
 | Vercel Agent Skills | `vercel-labs/agent-skills` | MIT | Exact pinned upstream fetch; web-design-guidelines has one bounded immutable-rules adaptation |
 | Vercel Web Interface Guidelines | `vercel-labs/web-interface-guidelines` | MIT | Rules snapshot pinned inside the adapted review package |
-| Meng To Skills | `MengTo/Skills` | MIT | Exact pinned upstream fetch |
+| Meng To Skills | `MengTo/Skills` | MIT | Redistributable. `video-to-superprompt` is vendored and adapted, with a `LICENSE` copy and a `SOURCE.json` change note |
 | Emil Kowalski Skills | `emilkowalski/skills` | MIT | Redistributable; `pick-ui-library`, `review-animations`, `improve-animations`, `find-animation-opportunities` and `apple-design` are vendored and adapted, each with a `LICENSE` copy and a `SOURCE.json` change note. The others are fetched at the pinned commit |
 | Scroll Craft | `nateherkai/scroll-craft` | MIT | Exact pinned upstream fetch |
 | Nate Herk HyperFrames Student Kit | `nateherkai/hyperframes-student-kit` | MIT | Bounded vendored editorial adaptations from the exact pinned source; package-local provenance and license retained; demonstration/AIS brand assets excluded |

@@ -1,0 +1,14 @@
+{
+  "source_namespace": "adobe",
+  "upstream_repo": "aedev-tools/adobe-agent-skills",
+  "upstream_path": "skills/after-effects",
+  "upstream_commit": "00f131ee5481cd597e6f63f997d92c6fe26586a0",
+  "license": "Apache-2.0",
+  "import_type": "original-vendored-adapted",
+  "modified": true,
+  "adaptation": {
+    "reason": "Kept as an AI-Verse owned copy (plan D26, D33 Group C) so problems that would trip up a member could be fixed.",
+    "change": "Inner name changed from after-effects to after-effects-assistant to match the catalogue. The fixed path ~/.claude/skills/after-effects-assistant, which broke when the skill lived anywhere else, replaced with a step that uses the folder the skill was loaded from and resolves symlinks with pwd -P. Everything else (scripts, rules, references) is unchanged."
+  },
+  "imported_at": "2026-11-13"
+}
