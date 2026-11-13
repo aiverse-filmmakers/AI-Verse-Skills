@@ -44,7 +44,7 @@ None of these has been tested with and without the skill yet. Scores are estimat
 
 ## Still to review (31)
 
-Scores from a first read on 12 November (usefulness to members / craft, out of 10), with the recommended action. A second read of every skill in full gave different scores and recommendations for several of these; that review is entry D31 of the skills plan in the AI-Verse OS development workspace. Recommended there but not decided: replace `product-marketing-context` with per project adjustments. The four animation and Apple skills that review recommended removing were kept by decision on 13 November.
+Scores from a first read on 12 November (usefulness to members / craft, out of 10), with the recommended action. A second read of every skill in full gave different scores and recommendations for several of these; that review is entry D31 of the skills plan in the AI-Verse OS development workspace. Decided on 13 November: `product-marketing-context` will be replaced by per project adjustments once those exist. The four animation and Apple skills that review recommended removing were kept by decision on 13 November.
 
 ### Film and video (7)
 | Skill | Use | Craft | Recommendation |
@@ -62,7 +62,7 @@ Scores from a first read on 12 November (usefulness to members / craft, out of 1
 |---|---|---|---|
 | `community-marketing` | 8 | 8 | Keep |
 | `copywriting` | 8 | 8 | Keep |
-| `product-marketing-context` | 7 | 8 | Keep. Fix the inner name (`product-marketing`) |
+| `product-marketing-context` | 7 | 8 | Decided 13 November: to be replaced by per project adjustments. It stays until those exist (skills plan, Phase 1). Then it is removed and the marketing skills read the current project's adjustments instead. Reason: it saves one file for the whole OS folder, so every project would share one brand |
 | `ad-creative` | 7 | 8 | Keep |
 | `content-strategy` | 7 | 8 | Keep |
 | `meta-ad-builder` | 6 | 7 | Keep (needs Meta API keys) |
