@@ -10,6 +10,9 @@ from pathlib import Path
 
 from installer.aiverse_skills_v3 import (
     digest,
+    expose_to_chat_folders,
+    load_chat_folders,
+    parse_expose,
     listing_problems,
     materialize_adapter,
     read_skill_listing,
@@ -159,6 +162,39 @@ class ExposeEveryNewSkill(unittest.TestCase):
             errors = verify_adapter_target(root, target, require_complete=True)
             self.assertTrue(any(e.startswith("beta:") for e in errors))
             self.assertFalse(any(e.startswith("alpha:") for e in errors))
+
+
+class UpdateKeepsChatFoldersListed(ExposeEveryNewSkill):
+    def test_parse_expose_reads_pairs_and_defaults(self):
+        self.assertEqual(parse_expose(["claude=/a", "codex=/b"], False), {"claude": "/a", "codex": "/b"})
+        defaults = parse_expose([], True)
+        self.assertEqual(set(defaults), {"claude", "codex"})
+        self.assertEqual(parse_expose(["claude=/mine"], True)["claude"], "/mine")
+        with self.assertRaises(SystemExit):
+            parse_expose(["no-equals-sign"], False)
+
+    def test_folders_are_remembered_and_a_later_update_relists_new_skills(self):
+        with tempfile.TemporaryDirectory() as temp:
+            base, root, target = self._setup(temp)
+            _commit(root, base, "gen-1", {"alpha": GOOD.format(x="alpha")})
+            self.assertEqual(expose_to_chat_folders(root, {"claude": str(target)}), [])
+            self.assertEqual(load_chat_folders(root), {"claude": str(target)})
+            _commit(root, base, "gen-2", {"alpha": GOOD.format(x="alpha"), "beta": GOOD.format(x="beta")})
+            self.assertEqual(expose_to_chat_folders(root, load_chat_folders(root)), [])
+            self.assertTrue((target / "beta" / "SKILL.md").is_file())
+
+    def test_a_badly_described_skill_is_reported_as_a_problem(self):
+        with tempfile.TemporaryDirectory() as temp:
+            base, root, target = self._setup(temp)
+            _commit(root, base, "gen-1", {"alpha": GOOD.format(x="alpha"), "beta": "A tool."})
+            problems = expose_to_chat_folders(root, {"claude": str(target)})
+            self.assertTrue(any("beta" in p for p in problems))
+
+    def test_no_folders_means_nothing_happens(self):
+        with tempfile.TemporaryDirectory() as temp:
+            base, root, target = self._setup(temp)
+            self.assertEqual(expose_to_chat_folders(root, {}), [])
+            self.assertEqual(load_chat_folders(root), {})
 
 
 if __name__ == "__main__":

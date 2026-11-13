@@ -630,6 +630,70 @@ def _print_install_result(verb, root, installed, previous, legacy_backup, genera
         print("Legacy migration backup:", legacy_backup)
 
 
+CHAT_FOLDERS_FILE = "chat-folders.json"
+DEFAULT_CHAT_FOLDERS = {"claude": "~/.claude/skills", "codex": "~/.agents/skills"}
+
+
+def _chat_folders_path(root):
+    return Path(root).expanduser() / ".aiverse" / CHAT_FOLDERS_FILE
+
+
+def parse_expose(specs, use_default):
+    """Turn --expose RUNTIME=PATH entries (and --expose-default) into {runtime: path}."""
+    folders = dict(DEFAULT_CHAT_FOLDERS) if use_default else {}
+    for spec in specs or []:
+        runtime, sep, path = str(spec).partition("=")
+        if not sep or not runtime.strip() or not path.strip():
+            raise SystemExit(f"--expose needs RUNTIME=FOLDER, got: {spec}")
+        folders[runtime.strip()] = path.strip()
+    return folders
+
+
+def load_chat_folders(root):
+    path = _chat_folders_path(root)
+    if not path.is_file():
+        return {}
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return {}
+    folders = data.get("folders") if isinstance(data, dict) else None
+    return dict(folders) if isinstance(folders, dict) else {}
+
+
+def expose_to_chat_folders(root, folders):
+    """Sync every skill into each chat folder, remember the folders, and verify they are complete.
+
+    Returns a list of problems (empty when every skill is listed in every folder).
+    """
+    root = Path(root).expanduser()
+    if not folders:
+        return []
+    problems = []
+    for runtime, target in sorted(folders.items()):
+        manifest = materialize_adapter(root, target, runtime, sync=True)
+        print(f"Listed {len(manifest['packages'])} skills for {runtime} in {Path(target).expanduser()}")
+        if manifest.get("pruned"):
+            print("  removed skills the catalogue no longer has:", ", ".join(manifest["pruned"]))
+        for c in manifest.get("skipped_collisions", []):
+            print(f"  WARNING not listed, a different skill named {c['id']} already exists at {c['path']}")
+        problems.extend(f"{runtime}: {e}" for e in verify_adapter_target(root, target, require_complete=True))
+    path = _chat_folders_path(root)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    _atomic_json_write(path, {"schema_version": 1, "folders": dict(folders)})
+    return problems
+
+
+def _finish_with_chat_folders(a, root):
+    folders = load_chat_folders(root)
+    folders.update(parse_expose(getattr(a, "expose", None), getattr(a, "expose_default", False)))
+    problems = expose_to_chat_folders(root, folders)
+    if problems:
+        for e in problems:
+            print("ERROR", e)
+        raise SystemExit(1)
+
+
 def cmd_install(a):
     root = Path(a.root).expanduser()
     cache = Path(a.cache).expanduser()
@@ -640,6 +704,7 @@ def cmd_install(a):
         return
     installed, previous, legacy_backup, generation_id = transactional_install(a.profile, root, cache, a.offline)
     _print_install_result("Installed", root, installed, previous, legacy_backup, generation_id)
+    _finish_with_chat_folders(a, root)
 
 
 def cmd_update(a):
@@ -650,6 +715,7 @@ def cmd_update(a):
         profile, root, Path(a.cache).expanduser(), a.offline
     )
     _print_install_result("Updated", root, installed, previous, legacy_backup, generation_id)
+    _finish_with_chat_folders(a, root)
 
 
 def cmd_rollback(a):
@@ -1040,11 +1106,15 @@ def parser():
     q.add_argument("--profile", default="full")
     q.add_argument("--offline", action="store_true")
     q.add_argument("--dry-run", action="store_true")
+    q.add_argument("--expose", action="append", metavar="RUNTIME=FOLDER", help="also list every skill in this chat skills folder (repeatable, remembered for later updates)")
+    q.add_argument("--expose-default", action="store_true", help="list every skill for Claude (~/.claude/skills) and Codex (~/.agents/skills)")
     q.set_defaults(fn=cmd_install)
 
     q = sub.add_parser("update")
     q.add_argument("--profile")
     q.add_argument("--offline", action="store_true")
+    q.add_argument("--expose", action="append", metavar="RUNTIME=FOLDER", help="also list every skill in this chat skills folder (repeatable, remembered for later updates)")
+    q.add_argument("--expose-default", action="store_true", help="list every skill for Claude (~/.claude/skills) and Codex (~/.agents/skills)")
     q.set_defaults(fn=cmd_update)
 
     q = sub.add_parser("rollback")
