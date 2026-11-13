@@ -1,6 +1,6 @@
 ---
 name: interface-designer
-description: Orchestrate end-to-end interface design for websites, GitHub-hosted HTML artifacts, dashboards, web apps, desktop or native-app UI, prototypes, redesigns, reference recreations, and interaction-heavy or immersive experiences. Classifies scope and the existing delivery target first, then loads only the relevant specialist design, implementation, motion, reference, and QA Skills. Use for broad or multi-stage interface work. Do not use it to force React, Vercel, Figma, or any other stack onto a project.
+description: "Use for broad or multi-stage interface work. Orchestrate end-to-end interface design for websites, GitHub-hosted HTML artifacts, dashboards, web apps, desktop or native-app UI, prototypes, redesigns, reference recreations, and interaction-heavy or immersive experiences. Classifies scope and the existing delivery target first, then loads only the relevant specialist design, implementation, motion, reference, and QA Skills. Do not use it to force React, Vercel, Figma, or any other stack onto a project."
 version: 1.0.0
 license: MIT
 metadata:

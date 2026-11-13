@@ -1,6 +1,6 @@
 ---
 name: video-editor
-description: Orchestrate real video editing from footage, transcript, script, URL, or reference through transcript truth, silence and mistake passes, EDLs, short-form or long-form editorial structure, visual beats, captions/B-roll, HyperFrames assembly, media QA, and final render. Use for full edits and multi-stage video-post workflows. Route narrow requests such as silence removal directly to the relevant internal specialist. Do not use Interface Designer as the editorial authority.
+description: "Use for full edits and multi-stage video-post workflows. Orchestrate real video editing from footage, transcript, script, URL, or reference through transcript truth, silence and mistake passes, EDLs, short-form or long-form editorial structure, visual beats, captions/B-roll, HyperFrames assembly, media QA, and final render. Route narrow requests such as silence removal directly to the relevant internal specialist. Do not use Interface Designer as the editorial authority."
 version: 1.0.0
 license: MIT
 metadata:

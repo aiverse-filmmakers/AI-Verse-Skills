@@ -1,6 +1,6 @@
 ---
 name: ai-video-director
-description: Direct AI video from an existing story, script, brief or approved creative plan. Use for shot design, storyboards, AI video prompts, continuity, or producing a finished AI video when suitable tools are available. For screenplay creation or diagnosis use a screenplay specialist if available; for editing supplied footage use a video editor when appropriate.
+description: Direct AI video from an existing story, script, brief or approved creative plan. Use for shot design, storyboards, AI video prompts, continuity, or producing a finished AI video when suitable tools are available. For screenplay creation or diagnosis use a screenplay specialist if available; for editing supplied footage use a video editor when appropriate. Replaces the retired produce-ai-video and ai-storyboard-director skills, so use it when either old name is asked for.
 license: Apache-2.0
 ---
 

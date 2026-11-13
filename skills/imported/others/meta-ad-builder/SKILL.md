@@ -3,16 +3,7 @@ name: meta-ad-builder
 license: MIT
 metadata:
   source: "Adapted by AI-Verse from novoads/agent-skills (MIT). Modified; see SOURCE.json."
-description: >-
-  Publish finished creatives as live Meta (Facebook/Instagram) ads via the Meta
-  Marketing API, plus research and ad-copy support. Uploads an image or video,
-  builds a multi-variant creative (5 bodies / 5 titles / 3 descriptions in an
-  asset feed), and creates a PAUSED ad in an
-  existing ad set. Also pulls top-performing ads (ranked by ROAS) and competitor
-  ads from the Ad Library to inform copy. Use when the user asks to deploy /
-  publish / launch a creative as a Meta or Facebook ad, build a Meta ad, push a
-  video or image into an ad set, pull their top ads, or research competitor ads.
-  Not for generating creative.
+description: "Use when the user asks to deploy / publish / launch a creative as a Meta or Facebook ad, build a Meta ad, push a video or image into an ad set, pull their top ads, or research competitor ads. Publish finished creatives as live Meta (Facebook/Instagram) ads via the Meta Marketing API, plus research and ad-copy support. Uploads an image or video, builds a multi-variant creative (5 bodies / 5 titles / 3 descriptions in an asset feed), and creates a PAUSED ad in an existing ad set. Also pulls top-performing ads (ranked by ROAS) and competitor ads from the Ad Library to inform copy. Not for generating creative."
 ---
 
 # Meta ad builder

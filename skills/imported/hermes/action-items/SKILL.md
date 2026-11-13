@@ -1,6 +1,6 @@
 ---
 name: action-items
-description: "Turn meeting notes, transcripts or documents into cited decisions, obligations, owners, deadlines and proposed tasks. Use when the user asks to extract action items from a meeting, to say what was decided and who owns what, to pull deadlines and obligations from a contract or report, to turn a document into tasks, or to draft the follow-up."
+description: "Turn meeting notes, transcripts or documents into cited decisions, obligations, owners, deadlines and proposed tasks. Use when the user asks to extract action items from a meeting, to say what was decided and who owns what, to pull deadlines and obligations from a contract or report, to turn a document into tasks, or to draft the follow-up. Replaces the retired meeting-action-items and document-to-action-items skills."
 author: Ben Barclay (benbarclay), Hermes Agent
 license: MIT
 metadata:
