@@ -3,8 +3,8 @@
   "snapshot": "2026-09-14",
   "counts": {
     "foundation": 9,
-    "employee": 50,
-    "total": 59
+    "employee": 49,
+    "total": 58
   },
   "foundation": [
     {
@@ -149,16 +149,6 @@
       "category": "creative-design",
       "source": "anthropic",
       "repo": "anthropics/skills",
-      "path": null,
-      "implementation": "original-upstream",
-      "state": "catalogued"
-    },
-    {
-      "rank": 33,
-      "id": "product-marketing-context",
-      "category": "marketing-social",
-      "source": "corey-haines",
-      "repo": "coreyhaines31/marketingskills",
       "path": null,
       "implementation": "original-upstream",
       "state": "catalogued"

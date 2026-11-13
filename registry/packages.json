@@ -3,9 +3,9 @@
   "snapshot": "2026-09-14",
   "counts": {
     "foundation": 9,
-    "employee": 50,
+    "employee": 49,
     "support": 11,
-    "canonical_total": 59
+    "canonical_total": 58
   },
   "policy": {
     "original_first": true,
@@ -212,12 +212,6 @@
       "namespace": "corey-haines",
       "license": "MIT",
       "packages": [
-        {
-          "rank": 33,
-          "id": "product-marketing-context",
-          "category": "marketing-social",
-          "path": "skills/product-marketing"
-        },
         {
           "rank": 34,
           "id": "customer-research",

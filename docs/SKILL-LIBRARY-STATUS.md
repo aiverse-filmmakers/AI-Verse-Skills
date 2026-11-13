@@ -5,13 +5,13 @@ Starting point: 118 catalogue skills (main at `bab2834`).
 
 | Status | Count |
 |---|---|
-| Removed outright | 59 |
+| Removed outright | 60 |
 | Old filmmaking entries combined into one | 2 |
 | Kept and improved (owned by AI-Verse) | 45 |
 | Kept as they are | 2 |
-| Still to review | 10 |
+| Still to review | 9 |
 | Added 13 November (new, owned by AI-Verse) | 2 |
-| **Catalogue after this change** | **59** (49 kept + 10 to review) |
+| **Catalogue after this change** | **58** (49 kept + 9 to review) |
 
 `notion` and `shadcn` were removed earlier (pull request #28) and are not counted here.
 
@@ -29,7 +29,7 @@ Approved 13 November: `whisper` and `ExtractWisdom` are kept as adapted copies. 
 - Anthropic, Apache 2.0: `review-contract` (now includes legal risk scoring), `account-research` (now includes call briefs), `cash-flow-snapshot`, `job-post-builder`, `business-pulse`, `draft-response`, `draft-outreach`, `write-spec`, `product-brainstorming`, `roadmap-update`
 - Vercel, MIT: `composition-patterns`
 - Emil Kowalski, MIT: `pick-ui-library`, and from 13 November `review-animations`, `improve-animations`, `find-animation-opportunities`, `apple-design` (kept by decision; structure fixes only, the author's rules, values and tone are untouched)
-- Corey Haines, MIT: `social-content` (13 November; inner name fixed, repurposing references added), and from the 13 November marketing tidy `copywriting`, `ad-creative`, `content-strategy`, `customer-research`, `email-sequence` (inner name was `emails`), `seo-audit`, `community-marketing` (pointers to skills and tools not in the library removed; the marketing advice is unchanged; the lines that read `.agents/product-marketing.md` are left on purpose until per project adjustments replace `product-marketing-context`)
+- Corey Haines, MIT: `social-content` (13 November; inner name fixed, repurposing references added), and from the 13 November marketing tidy `copywriting`, `ad-creative`, `content-strategy`, `customer-research`, `email-sequence` (inner name was `emails`), `seo-audit`, `community-marketing` (pointers to skills and tools not in the library removed; the marketing advice is unchanged; the lines that read the shared brand file now read the current project's marketing notes)
 - Hermes, MIT (13 November, Group C): `email-inbox-triage`, `weekly-review-planning`, `one-three-one-rule` (everyday example instead of a coding one), and `action-items`, which merges `meeting-action-items` and `document-to-action-items` into one skill (the two old names are gone, so the catalogue is 59). Each got a plain "use when" description and Hermes only tool names replaced with plain wording
 - Meng To, MIT: `video-to-superprompt` (description now says it rebuilds a site or app from a screen recording)
 - Adobe skills author, Apache 2.0: `after-effects-assistant` (inner name fixed; the fixed folder path replaced with the folder the skill is loaded from)
@@ -46,7 +46,7 @@ Retired names now redirect: `ai-storyboard-director` and `produce-ai-video` to `
 
 `react-best-practices` (Vercel) and `animate-expo` (Emil Kowalski).
 
-## Removed (59)
+## Removed (60)
 
 - **Accounting (7):** `journal-entry-prep`, `reconciliation`, `close-management`, `3-statement-model`, `excel-author`, `financial-statements`, `variance-analysis`
 - **Sales and support systems (6):** `customer-retention`, `deal-management`, `sales-execution`, `pipeline-review`, `ticket-triage`, `vendor-check`
@@ -55,12 +55,13 @@ Retired names now redirect: `ai-storyboard-director` and `produce-ai-video` to `
 - **Developer stubs (6):** `skill-forge` (replaced by `/skill`), `skill-miner` (moving into `/learn`), `knowledge-writeback`, `delegation-orchestrator`, `database-migration-guardian`, plus `browser-workflow-operator`
 - **Folded into kept skills (7):** `environment-doctor`, `configuration-contract-doctor`, `incident-forensics` (into `root-cause-debugger`), `semantic-codebase-sweep` (into `transactional-refactor`), `release-deploy-guard` (into `git-change-lifecycle`), `legal-risk-assessment` (into `review-contract`), `call-prep` (into `account-research`)
 - **Second review (12):** `premiere-agent` (overlaps `video-editor`), `kanban-video-orchestrator` (Hermes only), `analytics`, `scheduling-and-queue` (WoopSocial only), `docx`, `xlsx`, `ppt-generation` (Claude and Codex have their own), `Council`, `Ideate` (broken outside the author's setup), `design-and-templates`, `baoyu-article-illustrator`, `theme-factory`
+- **Replaced 13 November (1):** `product-marketing-context`. Each project now keeps its own marketing notes (the `marketing` adjustments); the setup interview moved into `copywriting/references/marketing-project-setup.md`, and the eight marketing skills read the current project's notes instead of one shared file. The old name redirects to `copywriting`.
 - **Decided 13 November (1):** `google-workspace` (Claude and ChatGPT have their own Google connections; the five `gws-*` helper packages went with it. The connection readiness entry stays for now).
 - **Third review, 13 November (9):** `structure-screenplay`, `plan-camera-shots` (built for an outside software pipeline; `director-agent` and `ai-storyboard-director` cover the same jobs), `cross-platform-repurposing` (mostly pointers to skills not in the library; `social-content` covers repurposing, and its reference files are to be reused there), `launch-strategy` (software product launches), `canva` (mostly pointers to WoopSocial and missing skills; Canva's own connection does the work), `RedTeam` (32 agents per run, outside voice server and folders; a small replacement is to be built), `ui-ux-pro-max` (commands fail outside a Claude plugin, 3.6 MB), `design-first-ui-prompting` (a thin image prompt template), `stitched-full-page-capture` (tied to its author's own article workflow)
 
 `interface-designer` no longer routes to the removed Figma skills: its Figma target now reports "unavailable" unless the runtime has its own Figma skills. The same now applies to Canva. The interface designer does the UI and UX reasoning and the design specification itself, since `ui-ux-pro-max` and `design-first-ui-prompting` are gone.
 
-## Still to review (10)
+## Still to review (9)
 
 Decided 13 November: keep all of them. Group A (nine skills) is left as it is, Group B (marketing, seven skills) is done above, Group C (small fixes, nine skills) is done above, Group D is complete in the current branch; project adjustments and the replacement red team remain separate work. See entry D33 of the skills plan.
 
@@ -70,11 +71,6 @@ Scores from a first read on 12 November (usefulness to members / craft, out of 1
 | Skill | Use | Craft | Recommendation |
 |---|---|---|---|
 | `video-editor` | 9 | 8 | Keep |
-
-### Marketing (1)
-| Skill | Use | Craft | Recommendation |
-|---|---|---|---|
-| `product-marketing-context` | 7 | 8 | Decided 13 November: to be replaced by per project adjustments. It stays until those exist (skills plan, Phase 1). Then it is removed and the marketing skills read the current project's adjustments instead. Reason: it saves one file for the whole OS folder, so every project would share one brand |
 
 ### Web and interface design (6), recommended as one optional pack
 | Skill | Use | Craft |

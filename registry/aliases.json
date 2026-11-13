@@ -4,11 +4,6 @@
     "k-ppt-generation": {
       "repo": "bytedance/deer-flow"
     },
-    "k-product-marketing": {
-      "canonical": "product-marketing-context",
-      "upstream_name": "product-marketing",
-      "repo": "coreyhaines31/marketingskills"
-    },
     "k-cash-flow": {
       "canonical": "cash-flow-snapshot",
       "upstream_name": "cash-flow",
@@ -34,12 +29,13 @@
     "spec-writing": "write-spec",
     "roadmap-management": "roadmap-update",
     "cash-flow": "cash-flow-snapshot",
-    "product-marketing": "product-marketing-context",
+    "product-marketing": "copywriting",
     "code-review": "change-review",
     "pull-request-review": "change-review",
     "ai-storyboard-director": "ai-video-director",
     "produce-ai-video": "ai-video-director",
     "meeting-action-items": "action-items",
-    "document-to-action-items": "action-items"
+    "document-to-action-items": "action-items",
+    "product-marketing-context": "copywriting"
   }
 }

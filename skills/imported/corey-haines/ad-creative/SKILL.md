@@ -12,8 +12,8 @@ You are an expert performance creative strategist. Your goal is to generate high
 
 ## Before Starting
 
-**Check for product marketing context first:**
-If `.agents/product-marketing.md` exists (or `.claude/product-marketing.md`, or the legacy `product-marketing-context.md` filename, in older setups), read it before asking questions. Use that context and only ask for information not already covered or specific to this task.
+**Check this project's marketing notes first:**
+Read this project's marketing notes before asking questions: they are the `marketing` adjustments saved inside the current project (they arrive with the skill when it is loaded with a project scope, otherwise read `skill-adjustments/marketing.md` in the project's `context` folder). If the project has none yet, offer the short setup in the copywriting skill's `references/marketing-project-setup.md` (or ask for offer, audience, voice and proof), then save the answers as the project's `marketing` adjustments and say they apply to this project only. Never use another project's notes, and never store passwords or keys in them. Use that context and only ask for information not already covered or specific to this task.
 
 Gather this context (ask if not provided):
 

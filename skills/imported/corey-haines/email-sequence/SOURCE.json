@@ -8,7 +8,7 @@
   "modified": true,
   "adaptation": {
     "reason": "Kept as an AI-Verse owned copy (plan D26, D33 Group B) so pointers to skills and tools that are not in the library could be removed.",
-    "change": "Inner name changed from emails to email-sequence to match the catalogue. Pointers to skills that are not in the library removed or marked \"if installed\". Links to tools and integration guides from the upstream repo removed. The upstream evals folder is not carried over. The lines that read .agents/product-marketing.md are unchanged on purpose: they are re-pointed once per project adjustments replace product-marketing-context (plan D33). Everything else is unchanged from upstream."
+    "change": "Inner name changed from emails to email-sequence to match the catalogue. Pointers to skills that are not in the library removed or marked \"if installed\". Links to tools and integration guides from the upstream repo removed. The upstream evals folder is not carried over. The lines that read .agents/product-marketing.md are unchanged on purpose: they are re-pointed once per project adjustments replace product-marketing-context (plan D33). Everything else is unchanged from upstream. On 13 November the lines that read the shared brand file were re-pointed to the current project's marketing adjustments."
   },
   "imported_at": "2026-11-13"
 }

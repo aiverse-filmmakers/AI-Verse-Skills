@@ -69,7 +69,7 @@ tier is *brand-first*: each style is defined by *slots*, so any company's tokens
 in and the output reads as that brand's own design system.
 
 **The brand slots contract.** Before generating, resolve these from the brand's
-guidelines (or `.agents/product-marketing.md`):
+guidelines (or this project's marketing adjustments):
 
 - `FIELD` — the neutral ground (brand white/off-white, or brand dark)
 - `INK` — the drawing/type color (brand gray/charcoal, near-black)
