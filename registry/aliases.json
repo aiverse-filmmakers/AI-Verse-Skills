@@ -36,6 +36,10 @@
     "cash-flow": "cash-flow-snapshot",
     "product-marketing": "product-marketing-context",
     "code-review": "change-review",
-    "pull-request-review": "change-review"
+    "pull-request-review": "change-review",
+    "ai-storyboard-director": "ai-video-director",
+    "produce-ai-video": "ai-video-director",
+    "meeting-action-items": "action-items",
+    "document-to-action-items": "action-items"
   }
 }

@@ -832,8 +832,23 @@ def cmd_adapter_verify(a):
     print("Adapter verified against its immutable generation")
 
 
+def resolve_package_alias(name):
+    """Map a retired skill name to the skill that replaced it (registry/aliases.json)."""
+    if not name:
+        return name
+    try:
+        aliases = load("registry/aliases.json").get("legacy_user_aliases", {})
+    except (OSError, ValueError):
+        return name
+    return aliases.get(name, name)
+
+
 def cmd_pin(a):
     root = Path(a.root).expanduser().resolve()
+    requested = a.package
+    a.package = resolve_package_alias(requested)
+    if requested and a.package != requested:
+        print(f"note: {requested} was replaced by {a.package}", file=sys.stderr)
     owner_pid = a.lease_owner_pid if a.lease_owner_pid is not None else os.getppid()
     lease = acquire_generation_lease(
         root,

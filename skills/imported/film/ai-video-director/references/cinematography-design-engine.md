@@ -8,7 +8,7 @@ Together with script interpretation, the production contract, and the delivery g
 
 ## 2. How to treat examples
 
-The user may mention a Spielberg shot, a camera move named “Xixikeli” in transliteration (the intended term is unverified), fisheye, push-rise-pan, or another specific name. By default, these are illustrative evidence that the user wants broader, more proactive and creative direction. They are not a fixed four-item list, whole-film style, scope limit, or automatic override of locked story, characters, space, and shots.
+The user may mention a Spielberg shot, a named camera move (for example the Hitchcock dolly zoom), fisheye, push-rise-pan, or another specific name. By default, these are illustrative evidence that the user wants broader, more proactive and creative direction. They are not a fixed four-item list, whole-film style, scope limit, or automatic override of locked story, characters, space, and shots.
 
 Only when the user explicitly says to use or lock that shot or apply it throughout the film does an example become a chosen requirement. If a name is ambiguous, do not silently replace it with another term. Work from the visible effect the user supplied or the current scene design; when necessary ask only one question that changes the plan.
 
