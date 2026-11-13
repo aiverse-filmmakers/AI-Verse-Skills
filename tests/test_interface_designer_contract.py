@@ -83,7 +83,7 @@ class InterfaceDesignerContractTests(unittest.TestCase):
         self.assertEqual(skills["counts"]["total"], 59)
         self.assertEqual(packages["counts"]["employee"], 50)
         self.assertEqual(packages["counts"]["canonical_total"], 59)
-        self.assertEqual(packages["counts"]["support"], 16)
+        self.assertEqual(packages["counts"]["support"], 11)
 
         expected_pins = {
             "anthropic-frontend": "34040c9c568585f6929bedeaad110ad08f079624",
