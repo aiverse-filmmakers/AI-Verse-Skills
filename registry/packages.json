@@ -306,7 +306,7 @@
       "repo": "62656456/ai-film-skills",
       "commit": "678edc06d3318c1516f6eb73503f740427fdd831",
       "namespace": "film",
-      "license": "upstream-controlled",
+      "license": "Apache-2.0",
       "packages": [
         {
           "rank": 47,
@@ -324,10 +324,11 @@
           "rank": 49,
           "id": "produce-ai-video",
           "category": "film-media",
-          "path": "skills/produce-ai-video"
+          "path": "skills/produce-ai-video",
+          "vendored": true
         }
       ],
-      "redistribution": "fetch-only"
+      "redistribution": "redistributable"
     },
     "film-production": {
       "repo": "zhangzhangco/film-production-skills",

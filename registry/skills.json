@@ -290,8 +290,8 @@
       "source": "film",
       "repo": "62656456/ai-film-skills",
       "path": null,
-      "implementation": "original-upstream",
-      "state": "catalogued"
+      "implementation": "upstream-adapted",
+      "state": "vendored"
     },
     {
       "rank": 52,

@@ -60,7 +60,7 @@ Scores from a first read on 12 November (usefulness to members / craft, out of 1
 |---|---|---|---|
 | `video-editor` | 9 | 8 | Keep |
 | `director-agent` | 9 | 7 | Keep. Clean up the mixed Chinese terms |
-| `produce-ai-video` | 8 | 6 | Keep. Make it work outside Codex |
+| `produce-ai-video` | 8 | 6 | English translation is vendored. Still review overlap and Codex-specific wording before the final keep or merge decision. No live filmmaking test has been run. |
 | `ai-storyboard-director` | 8 | 6 | Translate to English (it never triggers on English requests) |
 
 ### Marketing (1)

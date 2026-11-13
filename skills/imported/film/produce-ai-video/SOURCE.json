@@ -1,0 +1,14 @@
+{
+  "source_namespace": "film",
+  "upstream_repo": "62656456/ai-film-skills",
+  "upstream_path": "skills/produce-ai-video",
+  "upstream_commit": "678edc06d3318c1516f6eb73503f740427fdd831",
+  "license": "Apache-2.0",
+  "import_type": "original-vendored-adapted",
+  "modified": true,
+  "adaptation": {
+    "reason": "Translate the complete package to English for the AI-Verse library.",
+    "change": "Translated Chinese prose and interface labels into English while retaining the production workflow and acceptance rules. No video generation or live workflow testing performed."
+  },
+  "imported_at": "2026-11-13"
+}

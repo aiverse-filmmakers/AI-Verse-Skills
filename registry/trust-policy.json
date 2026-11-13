@@ -104,11 +104,11 @@
       "auto_mutation": false
     },
     "62656456/ai-film-skills": {
-      "license": "upstream-controlled",
-      "redistribution": "fetch-only",
+      "license": "Apache-2.0",
+      "redistribution": "redistributable",
       "trust": "external",
       "ownership": "external",
-      "vendoring_allowed": false,
+      "vendoring_allowed": true,
       "auto_mutation": false
     },
     "zhangzhangco/film-production-skills": {
