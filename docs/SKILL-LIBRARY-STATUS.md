@@ -99,7 +99,7 @@ Scores from a first read on 12 November (usefulness to members / craft, out of 1
 
 1. No skill in this change has been tested with and without the skill in fresh chats. The English filmmaking translations have not had an independent full accuracy audit.
 2. Six AI-Verse specific rules taken out of `change-review` should become AI-Verse OS project adjustments for that skill.
-3. The tool that copies every skill into `.claude/skills` and `.agents/skills` is built here (`adapt --sync`, checked by `doctor --target`). It is not yet run by the AI-Verse OS update, so until it is, Claude and Codex still cannot trigger library skills by themselves. This is the main reason the library has barely been used.
+3. Done 14 November: `install` and `update` with `--expose-default` list every skill in `~/.claude/skills` and `~/.agents/skills`, and the AI-Verse OS setup guidance points to it. Tested in fresh Claude Code and Codex chats on 14 November: all 59 skills were visible in both, with no cut off.
 4. A usage counter (count and last used date per skill) does not exist yet.
 
 ## Every skill is stored in this repository (13 November)

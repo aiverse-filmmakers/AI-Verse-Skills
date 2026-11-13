@@ -684,9 +684,51 @@ def expose_to_chat_folders(root, folders):
     return problems
 
 
-def _finish_with_chat_folders(a, root):
+def check_chat_folders(folders):
+    """Refuse unknown chat runtimes and unusable folders before anything is installed."""
+    runtimes = {x["id"] for x in load("registry/runtime-adapters.json")["adapters"]} - {"aiverse-os"}
+    for runtime, target in sorted(folders.items()):
+        if runtime not in runtimes:
+            raise RuntimeError(f"unknown chat runtime '{runtime}'; use one of: {', '.join(sorted(runtimes))}")
+        path = Path(target).expanduser()
+        if path.exists() and not path.is_dir():
+            raise RuntimeError(f"the {runtime} skills folder {path} is a file, not a folder")
+        probe = path
+        while not probe.exists() and probe.parent != probe:
+            probe = probe.parent
+        if not os.access(probe, os.W_OK | os.X_OK):
+            raise RuntimeError(f"cannot write to the {runtime} skills folder {path}; check its permissions")
+
+
+def _wanted_chat_folders(a, root):
     folders = load_chat_folders(root)
     folders.update(parse_expose(getattr(a, "expose", None), getattr(a, "expose_default", False)))
+    check_chat_folders(folders)
+    return folders
+
+
+def unexpose_chat_folders(root):
+    """Remove the skill copies this adapter put in each remembered chat folder. Foreign folders stay."""
+    removed = {}
+    for runtime, target in sorted(load_chat_folders(root).items()):
+        folder = Path(target).expanduser()
+        ids = _previous_adapter_ids(folder) if folder.is_dir() else set()
+        gone = []
+        for skill_id in sorted(ids):
+            entry = folder / skill_id
+            if entry.parent == folder and (entry.exists() or entry.is_symlink()):
+                _remove_adapter_entry(entry)
+                gone.append(skill_id)
+        for name in (".aiverse-adapter.json", ADAPTER_PENDING):
+            (folder / name).unlink(missing_ok=True)
+        removed[runtime] = gone
+        print(f"Removed {len(gone)} listed skills for {runtime} from {folder}")
+    return removed
+
+
+def _finish_with_chat_folders(a, root, folders=None):
+    if folders is None:
+        folders = _wanted_chat_folders(a, root)
     problems = expose_to_chat_folders(root, folders)
     if problems:
         for e in problems:
@@ -702,20 +744,22 @@ def cmd_install(a):
             origin = str(src) if src else f"{p['repo']}@{p['commit']}::{p['selector']}"
             print(f"{kind:10} {cid:32} -> <new-generation>/{dst.relative_to(root)} [{origin}]")
         return
+    folders = _wanted_chat_folders(a, root)
     installed, previous, legacy_backup, generation_id = transactional_install(a.profile, root, cache, a.offline)
     _print_install_result("Installed", root, installed, previous, legacy_backup, generation_id)
-    _finish_with_chat_folders(a, root)
+    _finish_with_chat_folders(a, root, folders)
 
 
 def cmd_update(a):
     root = Path(a.root).expanduser()
     existing = load_manifest(root)
     profile = a.profile or existing.get("profile", "full")
+    folders = _wanted_chat_folders(a, root)
     installed, previous, legacy_backup, generation_id = transactional_install(
         profile, root, Path(a.cache).expanduser(), a.offline
     )
     _print_install_result("Updated", root, installed, previous, legacy_backup, generation_id)
-    _finish_with_chat_folders(a, root)
+    _finish_with_chat_folders(a, root, folders)
 
 
 def cmd_rollback(a):
@@ -729,6 +773,10 @@ def cmd_rollback(a):
             raise RuntimeError(f"No immutable generation lifecycle found at {root}")
         pin = rollback_active_generation(root, digest)
     print("Rolled back to immutable generation", pin.generation_id)
+    # Bring the remembered chat folders back in line with the generation that is now active.
+    folders = load_chat_folders(root)
+    if folders:
+        _finish_with_chat_folders(a, root, folders)
 
 
 def cmd_doctor(a):
@@ -795,6 +843,7 @@ def cmd_uninstall(a):
         pointer = read_active_pointer(root)
         generation_id = str(pointer["generation_id"])
         mark_uninstalled(root)
+    unexpose_chat_folders(root)
     print("Uninstalled", root)
     print("Recoverable immutable generation:", generation_id)
     if legacy_backup:
@@ -1208,6 +1257,16 @@ def main():
         a.fn(a)
     except RuntimeError as e:
         print("ERROR:", e, file=sys.stderr)
+        raise SystemExit(2)
+    except PermissionError as e:
+        where = Path(e.filename).parent if e.filename else "the target folder"
+        print(f"ERROR: no permission to write in {where}; check that folder's permissions", file=sys.stderr)
+        raise SystemExit(2)
+    except (FileExistsError, NotADirectoryError) as e:
+        print(f"ERROR: {e.filename} is a file where a folder is needed", file=sys.stderr)
+        raise SystemExit(2)
+    except OSError as e:
+        print(f"ERROR: could not use {e.filename or 'a file'}: {e.strerror or e}", file=sys.stderr)
         raise SystemExit(2)
 
 

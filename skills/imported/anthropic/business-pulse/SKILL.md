@@ -1,6 +1,6 @@
 ---
 name: business-pulse
-description: "Produces a one-page business snapshot for a small business owner: cash position, sales trend, pipeline movement, this week's commitments, urgent watch-list items, and the single most important thing needing attention today. Pulls from whatever is connected (accounting, payments, CRM, calendar, email, chat) and from uploaded exports when nothing is. Use when the user asks how the business is doing, wants a snapshot, a weekly summary or a Monday brief, or says \"what am I missing\" or \"catch me up on the business\"."
+description: "Use when the user asks how the business is doing, wants a snapshot, a weekly summary or a Monday brief, or says \"what am I missing\" or \"catch me up on the business\". Produces a one-page business snapshot for a small business owner: cash position, sales trend, pipeline movement, this week's commitments, urgent watch-list items, and the single most important thing needing attention today. Pulls from whatever is connected (accounting, payments, CRM, calendar, email, chat) and from uploaded exports when nothing is."
 license: Apache-2.0
 compatibility: "Best with connected accounting, payments, CRM, calendar, email and chat tools. Works in a reduced form from uploaded or pasted exports."
 metadata:
