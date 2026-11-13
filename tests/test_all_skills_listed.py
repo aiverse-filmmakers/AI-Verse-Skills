@@ -154,6 +154,41 @@ class ExposeEveryNewSkill(unittest.TestCase):
             errors = verify_adapter_target(root, target, require_complete=True)
             self.assertTrue(any("alpha" in e and "same name" in e for e in errors))
 
+    def test_an_interrupted_first_sync_is_finished_by_the_next_run(self):
+        from unittest import mock
+        from installer import aiverse_skills_v3 as v3
+        with tempfile.TemporaryDirectory() as temp:
+            base, root, target = self._setup(temp)
+            foreign = target / "delta"
+            foreign.mkdir(parents=True)
+            (foreign / "SKILL.md").write_text("somebody else's delta", encoding="utf-8")
+            skills = {x: GOOD.format(x=x) for x in ("alpha", "beta", "gamma", "delta")}
+            _commit(root, base, "gen-1", skills)
+            real = v3._replace_adapter_package
+            calls = []
+
+            def dies_on_second_copy(src, dst, force, prefer_copy=False):
+                calls.append(dst)
+                if len(calls) == 2:
+                    # Leave a half written stage folder, as a killed process would.
+                    (Path(dst).parent / f".{Path(dst).name}.aiverse-stage-dead0001").mkdir()
+                    raise KeyboardInterrupt
+                return real(src, dst, force, prefer_copy=prefer_copy)
+
+            with mock.patch.object(v3, "_replace_adapter_package", dies_on_second_copy):
+                with self.assertRaises(KeyboardInterrupt):
+                    materialize_adapter(root, target, "claude", sync=True)
+            self.assertFalse((target / ".aiverse-adapter.json").exists())
+
+            m = materialize_adapter(root, target, "claude", sync=True)
+            self.assertEqual({p["id"] for p in m["packages"]}, {"alpha", "beta", "gamma"})
+            self.assertEqual([c["id"] for c in m["skipped_collisions"]], ["delta"])
+            self.assertEqual((foreign / "SKILL.md").read_text(encoding="utf-8"), "somebody else's delta")
+            leftovers = [e.name for e in target.iterdir() if "aiverse-stage" in e.name or "pending" in e.name]
+            self.assertEqual(leftovers, [])
+            errors = verify_adapter_target(root, target, require_complete=True)
+            self.assertEqual([e for e in errors if not e.startswith("delta")], [])
+
     def test_doctor_style_check_flags_a_skill_with_no_usable_description(self):
         with tempfile.TemporaryDirectory() as temp:
             base, root, target = self._setup(temp)

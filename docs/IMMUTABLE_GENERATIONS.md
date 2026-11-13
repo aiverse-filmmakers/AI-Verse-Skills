@@ -202,16 +202,6 @@ For diagnostics only, this verifies internal consistency without claiming curren
 A stale adapter may still be internally valid for its old generation, but a runtime must not claim it represents the current active Skills distribution.
 
 ### Keeping every skill listed in a chat folder (update path)
-### One step install and update
-
-`install` and `update` can do the listing themselves, so nobody runs `adapt` by hand:
-
-```bash
-python3 installer/aiverse_skills_v3.py update --expose-default
-python3 installer/aiverse_skills_v3.py update --expose claude=~/.claude/skills --expose codex=~/.agents/skills
-```
-
-`--expose-default` lists every skill for Claude (`~/.claude/skills`) and Codex (`~/.agents/skills`). The folders are remembered in `<root>/.aiverse/chat-folders.json`, so a later plain `update` lists new skills in the same folders. After listing, the command checks that every skill is present with a usable description and exits with an error if not. A folder it did not create is never replaced.
 
 Claude and Codex only trigger skills they can see in their skill folders. After every install or update, run:
 
@@ -228,6 +218,19 @@ To check the result, including that every catalogue skill is present and has a d
 ./aiverse-skills doctor --target <claude-skills-folder> --target <codex-skills-folder>
 ./aiverse-skills adapter-verify --target <runtime-skill-root> --complete
 ```
+
+If a listing run is interrupted, the next run finishes it. Before copying, the run writes `.aiverse-adapter-pending.json` in the folder with the skills it is about to place, so the next run recognises half copied skills as its own, replaces them and clears leftover temporary folders. The file is removed when the run completes.
+
+### One step install and update
+
+`install` and `update` can do the listing themselves, so nobody runs `adapt` by hand:
+
+```bash
+python3 installer/aiverse_skills_v3.py update --expose-default
+python3 installer/aiverse_skills_v3.py update --expose claude=~/.claude/skills --expose codex=~/.agents/skills
+```
+
+`--expose-default` lists every skill for Claude (`~/.claude/skills`) and Codex (`~/.agents/skills`). The folders are remembered in `<root>/.aiverse/chat-folders.json`, so a later plain `update` lists new skills in the same folders. After listing, the command checks that every skill is present with a usable description and exits with an error if not. A folder it did not create is never replaced.
 
 ## Failure invariants
 

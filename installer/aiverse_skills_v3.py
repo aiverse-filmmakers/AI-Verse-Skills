@@ -849,14 +849,37 @@ def _remove_adapter_entry(path):
         shutil.rmtree(path)
 
 
+ADAPTER_PENDING = ".aiverse-adapter-pending.json"
+
+
 def _previous_adapter_ids(target):
-    """Skill ids this adapter exposed last time. Only these may ever be replaced or removed."""
+    """Skill ids this adapter exposed last time. Only these may ever be replaced or removed.
+
+    Includes ids from an unfinished run (the pending journal), so folders a crashed or interrupted
+    run already copied are recognised as this adapter's own and repaired, not treated as foreign."""
+    ids = set()
     mf = Path(target) / ".aiverse-adapter.json"
     try:
         data = json.loads(mf.read_text(encoding="utf-8"))
+        ids |= {str(x.get("id")) for x in data.get("packages", []) if isinstance(x, dict) and x.get("id")}
     except (OSError, ValueError):
-        return set()
-    return {str(x.get("id")) for x in data.get("packages", []) if isinstance(x, dict) and x.get("id")}
+        pass
+    try:
+        pending = json.loads((Path(target) / ADAPTER_PENDING).read_text(encoding="utf-8"))
+        ids |= {str(x) for x in pending.get("ids", []) if isinstance(x, str) and x}
+    except (OSError, ValueError, AttributeError):
+        pass
+    return ids
+
+
+def _clear_adapter_leftovers(target, owned_ids):
+    """Remove temporary folders an interrupted run left behind, only for skills this adapter owns."""
+    for entry in Path(target).iterdir():
+        name = entry.name
+        for marker in (".aiverse-stage-", ".aiverse-old-"):
+            if name.startswith(".") and marker in name and name[1:name.index(marker)] in owned_ids:
+                _remove_adapter_entry(entry)
+                break
 
 
 def materialize_adapter(root, target, runtime, *, force=False, prefer_copy=False, sync=False):
@@ -875,15 +898,24 @@ def materialize_adapter(root, target, runtime, *, force=False, prefer_copy=False
     previous = _previous_adapter_ids(target) if sync else set()
     if sync:
         prefer_copy = True
-    index, collisions = [], []
+    index, collisions, planned = [], [], []
     for p in pin.manifest["packages"]:
         if p["kind"] == "support":
             continue
-        src = pin.generation_path / p["path"]
         dst = target / p["id"]
         if sync and (dst.exists() or dst.is_symlink()) and p["id"] not in previous:
             collisions.append({"id": p["id"], "path": str(dst)})
             continue
+        planned.append(p)
+    if sync:
+        # Journal what this run is about to place before copying anything, so an interrupted run
+        # can be finished by the next one instead of leaving folders that look foreign.
+        owned = previous | {p["id"] for p in planned}
+        _atomic_json_write(target / ADAPTER_PENDING, {"ids": sorted(owned)})
+        _clear_adapter_leftovers(target, owned)
+    for p in planned:
+        src = pin.generation_path / p["path"]
+        dst = target / p["id"]
         mode = _replace_adapter_package(src, dst, force or sync, prefer_copy=prefer_copy)
         index.append({
             "id": p["id"],
@@ -912,6 +944,8 @@ def materialize_adapter(root, target, runtime, *, force=False, prefer_copy=False
         "pruned": pruned,
     }
     _atomic_json_write(target / ".aiverse-adapter.json", adapter_manifest)
+    if sync:
+        (target / ADAPTER_PENDING).unlink(missing_ok=True)
     return adapter_manifest
 
 
