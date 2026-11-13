@@ -495,7 +495,8 @@
           "rank": 91,
           "id": "apple-design",
           "category": "creative-design",
-          "path": "skills/apple-design"
+          "path": "skills/apple-design",
+          "vendored": true
         },
         {
           "rank": 92,
@@ -513,7 +514,8 @@
           "rank": 94,
           "id": "review-animations",
           "category": "creative-design",
-          "path": "skills/review-animations"
+          "path": "skills/review-animations",
+          "vendored": true
         },
         {
           "rank": 95,
@@ -526,13 +528,15 @@
           "rank": 96,
           "id": "improve-animations",
           "category": "creative-design",
-          "path": "skills/improve-animations"
+          "path": "skills/improve-animations",
+          "vendored": true
         },
         {
           "rank": 97,
           "id": "find-animation-opportunities",
           "category": "creative-design",
-          "path": "skills/find-animation-opportunities"
+          "path": "skills/find-animation-opportunities",
+          "vendored": true
         },
         {
           "rank": 98,

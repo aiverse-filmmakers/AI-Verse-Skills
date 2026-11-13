@@ -480,8 +480,8 @@
       "source": "emil-design",
       "repo": "emilkowalski/skills",
       "path": "skills/apple-design",
-      "implementation": "original-upstream",
-      "state": "catalogued"
+      "implementation": "upstream-adapted",
+      "state": "vendored"
     },
     {
       "rank": 92,
@@ -510,8 +510,8 @@
       "source": "emil-design",
       "repo": "emilkowalski/skills",
       "path": "skills/review-animations",
-      "implementation": "original-upstream",
-      "state": "catalogued"
+      "implementation": "upstream-adapted",
+      "state": "vendored"
     },
     {
       "rank": 95,
@@ -530,8 +530,8 @@
       "source": "emil-design",
       "repo": "emilkowalski/skills",
       "path": "skills/improve-animations",
-      "implementation": "original-upstream",
-      "state": "catalogued"
+      "implementation": "upstream-adapted",
+      "state": "vendored"
     },
     {
       "rank": 97,
@@ -540,8 +540,8 @@
       "source": "emil-design",
       "repo": "emilkowalski/skills",
       "path": "skills/find-animation-opportunities",
-      "implementation": "original-upstream",
-      "state": "catalogued"
+      "implementation": "upstream-adapted",
+      "state": "vendored"
     },
     {
       "rank": 98,

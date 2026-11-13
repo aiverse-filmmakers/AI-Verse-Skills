@@ -6,23 +6,24 @@ Starting point: 118 catalogue skills (main at `bab2834`).
 | Status | Count |
 |---|---|
 | Removed in this change | 58 |
-| Kept and improved (owned by AI-Verse) | 21 |
+| Kept and improved (owned by AI-Verse) | 26 |
 | Kept as they are | 3 |
-| Still to review | 36 |
-| **Catalogue after this change** | **60** (24 kept + 36 to review) |
+| Still to review | 31 |
+| **Catalogue after this change** | **60** (29 kept + 31 to review) |
 
 `notion` and `shadcn` were removed earlier (pull request #28) and are not counted here.
 
-## Kept and improved (21)
+## Kept and improved (26)
 
 None of these has been tested with and without the skill yet. Scores are estimates.
 
 **Developer, rebuilt (9):** `root-cause-debugger` (now also covers environment, configuration and incident timelines), `deep-research-synthesis`, `structured-ingestion-normalization`, `api-integration-engineer`, `dependency-supply-chain-audit`, `change-review`, `verification-harness`, `transactional-refactor` (now also covers codebase mapping), `git-change-lifecycle` (now also covers the release checklist)
 
-**Outside skills, now owned copies with `LICENSE` and `SOURCE.json` (12):**
+**Outside skills, now owned copies with `LICENSE` and `SOURCE.json` (17):**
 - Anthropic, Apache 2.0: `review-contract` (now includes legal risk scoring), `account-research` (now includes call briefs), `cash-flow-snapshot`, `job-post-builder`, `business-pulse`, `draft-response`, `draft-outreach`, `write-spec`, `product-brainstorming`, `roadmap-update`
 - Vercel, MIT: `composition-patterns`
-- Emil Kowalski, MIT: `pick-ui-library`
+- Emil Kowalski, MIT: `pick-ui-library`, and from 13 November `review-animations`, `improve-animations`, `find-animation-opportunities`, `apple-design` (kept by decision; structure fixes only, the author's rules, values and tone are untouched)
+- Corey Haines, MIT: `social-content` (13 November; inner name fixed, repurposing references added)
 
 ## Kept as they are (3)
 
@@ -41,9 +42,9 @@ None of these has been tested with and without the skill yet. Scores are estimat
 
 `interface-designer` no longer routes to the removed Figma skills: its Figma target now reports "unavailable" unless the runtime has its own Figma skills. The same now applies to Canva. The interface designer does the UI and UX reasoning and the design specification itself, since `ui-ux-pro-max` and `design-first-ui-prompting` are gone.
 
-## Still to review (36)
+## Still to review (31)
 
-Scores from a first read on 12 November (usefulness to members / craft, out of 10), with the recommended action. A second read of every skill in full gave different scores and recommendations for several of these; that review is entry D31 of the skills plan in the AI-Verse OS development workspace. Recommended there but not decided: also remove `review-animations`, `improve-animations`, `find-animation-opportunities` and `apple-design`, and replace `product-marketing-context` with per project adjustments.
+Scores from a first read on 12 November (usefulness to members / craft, out of 10), with the recommended action. A second read of every skill in full gave different scores and recommendations for several of these; that review is entry D31 of the skills plan in the AI-Verse OS development workspace. Recommended there but not decided: replace `product-marketing-context` with per project adjustments. The four animation and Apple skills that review recommended removing were kept by decision on 13 November.
 
 ### Film and video (7)
 | Skill | Use | Craft | Recommendation |
@@ -56,12 +57,11 @@ Scores from a first read on 12 November (usefulness to members / craft, out of 1
 | `ai-storyboard-director` | 8 | 6 | Translate to English (it never triggers on English requests) |
 | `after-effects-assistant` | 6 | 7 | Keep. Fix the inner name (`after-effects`) |
 
-### Marketing (10)
+### Marketing (9)
 | Skill | Use | Craft | Recommendation |
 |---|---|---|---|
 | `community-marketing` | 8 | 8 | Keep |
 | `copywriting` | 8 | 8 | Keep |
-| `social-content` | 8 | 8 | Now an owned copy (13 November): inner name fixed, pointers to missing skills removed, and the four repurposing reference files from the removed `cross-platform-repurposing` added. Untested |
 | `product-marketing-context` | 7 | 8 | Keep. Fix the inner name (`product-marketing`) |
 | `ad-creative` | 7 | 8 | Keep |
 | `content-strategy` | 7 | 8 | Keep |
@@ -70,7 +70,7 @@ Scores from a first read on 12 November (usefulness to members / craft, out of 1
 | `email-sequence` | 6 | 8 | Keep. Fix the inner name (`emails`) |
 | `seo-audit` | 4 | 8 | Optional |
 
-### Web and interface design (10), recommended as one optional pack
+### Web and interface design (6), recommended as one optional pack
 | Skill | Use | Craft |
 |---|---|---|
 | `interface-designer` | 7 | 7 |
@@ -79,10 +79,6 @@ Scores from a first read on 12 November (usefulness to members / craft, out of 1
 | `web-design-guidelines` | 5 | 7 |
 | `animate` | 4 | 9 |
 | `prototype` | 4 | 9 |
-| `apple-design` | 3 | 8 |
-| `review-animations` | 3 | 9 |
-| `improve-animations` | 2 | 8 |
-| `find-animation-opportunities` | 2 | 8 |
 
 ### Office (5)
 | Skill | Use | Craft | Recommendation |

@@ -30,7 +30,7 @@ The authoritative package pins are in `registry/packages.json`. The public-beta 
 | Vercel Agent Skills | `vercel-labs/agent-skills` | MIT | Exact pinned upstream fetch; web-design-guidelines has one bounded immutable-rules adaptation |
 | Vercel Web Interface Guidelines | `vercel-labs/web-interface-guidelines` | MIT | Rules snapshot pinned inside the adapted review package |
 | Meng To Skills | `MengTo/Skills` | MIT | Exact pinned upstream fetch |
-| Emil Kowalski Skills | `emilkowalski/skills` | MIT | Exact pinned upstream fetch |
+| Emil Kowalski Skills | `emilkowalski/skills` | MIT | Redistributable; `pick-ui-library`, `review-animations`, `improve-animations`, `find-animation-opportunities` and `apple-design` are vendored and adapted, each with a `LICENSE` copy and a `SOURCE.json` change note. The others are fetched at the pinned commit |
 | Scroll Craft | `nateherkai/scroll-craft` | MIT | Exact pinned upstream fetch |
 | Nate Herk HyperFrames Student Kit | `nateherkai/hyperframes-student-kit` | MIT | Bounded vendored editorial adaptations from the exact pinned source; package-local provenance and license retained; demonstration/AIS brand assets excluded |
 | HyperFrames | `heygen-com/hyperframes` | Apache-2.0 | Exact pinned fetch-only provider support for Video Editor; provider packages are internal dependencies, not member-facing duplicate Skills |
