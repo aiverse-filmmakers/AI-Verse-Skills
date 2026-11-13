@@ -232,13 +232,15 @@
           "rank": 34,
           "id": "customer-research",
           "category": "marketing-social",
-          "path": "skills/customer-research"
+          "path": "skills/customer-research",
+          "vendored": true
         },
         {
           "rank": 35,
           "id": "content-strategy",
           "category": "marketing-social",
-          "path": "skills/content-strategy"
+          "path": "skills/content-strategy",
+          "vendored": true
         },
         {
           "rank": 36,
@@ -251,31 +253,36 @@
           "rank": 37,
           "id": "copywriting",
           "category": "marketing-social",
-          "path": "skills/copywriting"
+          "path": "skills/copywriting",
+          "vendored": true
         },
         {
           "rank": 38,
           "id": "ad-creative",
           "category": "marketing-social",
-          "path": "skills/ad-creative"
+          "path": "skills/ad-creative",
+          "vendored": true
         },
         {
           "rank": 39,
           "id": "email-sequence",
           "category": "marketing-social",
-          "path": "skills/emails"
+          "path": "skills/emails",
+          "vendored": true
         },
         {
           "rank": 40,
           "id": "seo-audit",
           "category": "marketing-social",
-          "path": "skills/seo-audit"
+          "path": "skills/seo-audit",
+          "vendored": true
         },
         {
           "rank": 43,
           "id": "community-marketing",
           "category": "marketing-social",
-          "path": "skills/community-marketing"
+          "path": "skills/community-marketing",
+          "vendored": true
         }
       ],
       "redistribution": "redistributable"

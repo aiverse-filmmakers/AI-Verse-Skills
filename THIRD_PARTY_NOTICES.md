@@ -11,7 +11,7 @@ The authoritative package pins are in `registry/packages.json`. The public-beta 
 | Google Workspace CLI | `googleworkspace/cli` | Apache-2.0 | Redistributable where recorded; selected proof packages may be vendored |
 | Hermes Agent | `NousResearch/hermes-agent` | MIT | Redistributable where recorded; selected proof package may be vendored |
 | LifeOS | `danielmiessler/LifeOS` | MIT | Redistributable where recorded; selected proof package may be vendored |
-| Marketing Skills | `coreyhaines31/marketingskills` | MIT | Redistributable; `social-content` is vendored and adapted, with a `LICENSE` copy and a `SOURCE.json` change note. The other skills are fetched at the pinned commit |
+| Marketing Skills | `coreyhaines31/marketingskills` | MIT | Redistributable; eight skills are vendored and adapted (`social-content`, `copywriting`, `ad-creative`, `content-strategy`, `customer-research`, `email-sequence`, `seo-audit`, `community-marketing`), each with a `LICENSE` copy and a `SOURCE.json` change note. The rest (`product-marketing-context`) is fetched at the pinned commit |
 | FFmpeg Skill | `kajisho5/ffmpeg-skill` | MIT | Fetch-only in the public-beta distribution |
 | ByteDance DeerFlow | `bytedance/deer-flow` | Upstream-controlled | Fetch-only |
 | Anthropic Skills | `anthropics/skills` | Upstream-controlled | Fetch-only |

@@ -1,19 +1,19 @@
 # Skill library status
 
-The single record of the 2026 library cleanup. Last updated 13 November 2026.
+The single record of the 2026 library cleanup. Last updated 13 November 2026 (Group B marketing tidy added).
 Starting point: 118 catalogue skills (main at `bab2834`).
 
 | Status | Count |
 |---|---|
 | Removed in this change | 58 |
-| Kept and improved (owned by AI-Verse) | 26 |
+| Kept and improved (owned by AI-Verse) | 33 |
 | Kept as they are | 3 |
-| Still to review | 31 |
-| **Catalogue after this change** | **60** (29 kept + 31 to review) |
+| Still to review | 24 |
+| **Catalogue after this change** | **60** (36 kept + 24 to review) |
 
 `notion` and `shadcn` were removed earlier (pull request #28) and are not counted here.
 
-## Kept and improved (26)
+## Kept and improved (33)
 
 None of these has been tested with and without the skill yet. Scores are estimates.
 
@@ -23,7 +23,7 @@ None of these has been tested with and without the skill yet. Scores are estimat
 - Anthropic, Apache 2.0: `review-contract` (now includes legal risk scoring), `account-research` (now includes call briefs), `cash-flow-snapshot`, `job-post-builder`, `business-pulse`, `draft-response`, `draft-outreach`, `write-spec`, `product-brainstorming`, `roadmap-update`
 - Vercel, MIT: `composition-patterns`
 - Emil Kowalski, MIT: `pick-ui-library`, and from 13 November `review-animations`, `improve-animations`, `find-animation-opportunities`, `apple-design` (kept by decision; structure fixes only, the author's rules, values and tone are untouched)
-- Corey Haines, MIT: `social-content` (13 November; inner name fixed, repurposing references added)
+- Corey Haines, MIT: `social-content` (13 November; inner name fixed, repurposing references added), and from the 13 November marketing tidy `copywriting`, `ad-creative`, `content-strategy`, `customer-research`, `email-sequence` (inner name was `emails`), `seo-audit`, `community-marketing` (pointers to skills and tools not in the library removed; the marketing advice is unchanged; the lines that read `.agents/product-marketing.md` are left on purpose until per project adjustments replace `product-marketing-context`)
 
 ## Kept as they are (3)
 
@@ -42,7 +42,9 @@ None of these has been tested with and without the skill yet. Scores are estimat
 
 `interface-designer` no longer routes to the removed Figma skills: its Figma target now reports "unavailable" unless the runtime has its own Figma skills. The same now applies to Canva. The interface designer does the UI and UX reasoning and the design specification itself, since `ui-ux-pro-max` and `design-first-ui-prompting` are gone.
 
-## Still to review (31)
+## Still to review (24)
+
+Decided 13 November: keep all of them. Group A (nine skills) is left as it is, Group B (marketing, seven skills) is done above, Groups C and D are still to do. See entry D33 of the skills plan.
 
 Scores from a first read on 12 November (usefulness to members / craft, out of 10), with the recommended action. A second read of every skill in full gave different scores and recommendations for several of these; that review is entry D31 of the skills plan in the AI-Verse OS development workspace. Decided on 13 November: `product-marketing-context` will be replaced by per project adjustments once those exist. The four animation and Apple skills that review recommended removing were kept by decision on 13 November.
 
@@ -57,18 +59,11 @@ Scores from a first read on 12 November (usefulness to members / craft, out of 1
 | `ai-storyboard-director` | 8 | 6 | Translate to English (it never triggers on English requests) |
 | `after-effects-assistant` | 6 | 7 | Keep. Fix the inner name (`after-effects`) |
 
-### Marketing (9)
+### Marketing (2)
 | Skill | Use | Craft | Recommendation |
 |---|---|---|---|
-| `community-marketing` | 8 | 8 | Keep |
-| `copywriting` | 8 | 8 | Keep |
 | `product-marketing-context` | 7 | 8 | Decided 13 November: to be replaced by per project adjustments. It stays until those exist (skills plan, Phase 1). Then it is removed and the marketing skills read the current project's adjustments instead. Reason: it saves one file for the whole OS folder, so every project would share one brand |
-| `ad-creative` | 7 | 8 | Keep |
-| `content-strategy` | 7 | 8 | Keep |
 | `meta-ad-builder` | 6 | 7 | Keep (needs Meta API keys) |
-| `customer-research` | 6 | 8 | Keep |
-| `email-sequence` | 6 | 8 | Keep. Fix the inner name (`emails`) |
-| `seo-audit` | 4 | 8 | Optional |
 
 ### Web and interface design (6), recommended as one optional pack
 | Skill | Use | Craft |
