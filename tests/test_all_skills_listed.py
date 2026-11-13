@@ -225,6 +225,44 @@ class UpdateKeepsChatFoldersListed(ExposeEveryNewSkill):
             problems = expose_to_chat_folders(root, {"claude": str(target)})
             self.assertTrue(any("beta" in p for p in problems))
 
+    def test_bad_chat_folders_are_refused_before_anything_is_installed(self):
+        from installer.aiverse_skills_v3 import check_chat_folders
+        with tempfile.TemporaryDirectory() as temp:
+            a_file = Path(temp) / "afile"
+            a_file.write_text("x", encoding="utf-8")
+            with self.assertRaisesRegex(RuntimeError, "unknown chat runtime"):
+                check_chat_folders({"foo": str(Path(temp) / "x")})
+            with self.assertRaisesRegex(RuntimeError, "is a file, not a folder"):
+                check_chat_folders({"claude": str(a_file)})
+            check_chat_folders({"claude": str(Path(temp) / "new" / "skills")})
+
+    def test_uninstall_removes_only_the_listed_copies(self):
+        from installer.aiverse_skills_v3 import unexpose_chat_folders
+        with tempfile.TemporaryDirectory() as temp:
+            base, root, target = self._setup(temp)
+            mine = target / "my-own-skill"
+            mine.mkdir(parents=True)
+            (mine / "SKILL.md").write_text("mine", encoding="utf-8")
+            _commit(root, base, "gen-1", {"alpha": GOOD.format(x="alpha"), "beta": GOOD.format(x="beta")})
+            expose_to_chat_folders(root, {"claude": str(target)})
+            removed = unexpose_chat_folders(root)
+            self.assertEqual(removed, {"claude": ["alpha", "beta"]})
+            self.assertEqual(sorted(e.name for e in target.iterdir()), ["my-own-skill"])
+
+    def test_rollback_relists_the_chat_folders(self):
+        from types import SimpleNamespace
+        from installer.aiverse_skills_v3 import cmd_rollback
+        with tempfile.TemporaryDirectory() as temp:
+            base, root, target = self._setup(temp)
+            _commit(root, base, "gen-1", {"alpha": GOOD.format(x="alpha")})
+            expose_to_chat_folders(root, {"claude": str(target)})
+            _commit(root, base, "gen-2", {"alpha": GOOD.format(x="alpha"), "beta": GOOD.format(x="beta")})
+            expose_to_chat_folders(root, load_chat_folders(root))
+            self.assertTrue((target / "beta").is_dir())
+            cmd_rollback(SimpleNamespace(root=str(root)))
+            self.assertFalse((target / "beta").exists())
+            self.assertEqual(verify_adapter_target(root, target, require_complete=True), [])
+
     def test_no_folders_means_nothing_happens(self):
         with tempfile.TemporaryDirectory() as temp:
             base, root, target = self._setup(temp)
