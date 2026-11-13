@@ -7,8 +7,8 @@
       "source_id": "anthropic-frontend",
       "repo": "anthropics/skills",
       "commit": "34040c9c568585f6929bedeaad110ad08f079624",
-      "license": "upstream-controlled",
-      "redistribution": "fetch-only",
+      "license": "Apache-2.0",
+      "redistribution": "redistributable",
       "packages": [
         {
           "id": "frontend-design",
@@ -20,27 +20,6 @@
             "distinctive, intentional visual design",
             "distinct visual identity",
             "typography"
-          ]
-        }
-      ]
-    },
-    {
-      "source_id": "nextlevelbuilder-ui",
-      "repo": "nextlevelbuilder/ui-ux-pro-max-skill",
-      "commit": "7f69fed6a2717900085f1bc3b263721f8ba025e2",
-      "license": "MIT",
-      "redistribution": "redistributable",
-      "packages": [
-        {
-          "id": "ui-ux-pro-max",
-          "path": ".claude/skills/ui-ux-pro-max",
-          "expected_files": [
-            "SKILL.md"
-          ],
-          "core_markers": [
-            "UI/UX design intelligence",
-            "79 searchable styles",
-            "119 UX guidelines"
           ]
         }
       ]
@@ -99,17 +78,6 @@
       "redistribution": "redistributable",
       "packages": [
         {
-          "id": "design-first-ui-prompting",
-          "path": "agent-skills/ui/design-first-ui-prompting",
-          "expected_files": [
-            "SKILL.md"
-          ],
-          "core_markers": [
-            "design-first prompting",
-            "Prompt like a design system"
-          ]
-        },
-        {
           "id": "video-to-superprompt",
           "path": "agent-skills/codex/video-to-superprompt",
           "expected_files": [
@@ -119,18 +87,6 @@
             "reference video",
             "animations",
             "transitions"
-          ]
-        },
-        {
-          "id": "stitched-full-page-capture",
-          "path": "agent-skills/codex/stitched-full-page-capture",
-          "expected_files": [
-            "SKILL.md"
-          ],
-          "core_markers": [
-            "full-page screenshots",
-            "lazy-loaded",
-            "scroll-animated"
           ]
         }
       ]

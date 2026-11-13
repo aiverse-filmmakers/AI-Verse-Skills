@@ -1,0 +1,22 @@
+{
+  "source_namespace": "corey-haines",
+  "upstream_repo": "coreyhaines31/marketingskills",
+  "upstream_path": "skills/social",
+  "upstream_commit": "5b2c0007766c6a1cf1d53fd8fc73e979e0821022",
+  "license": "MIT",
+  "import_type": "original-vendored-adapted",
+  "modified": true,
+  "adaptation": {
+    "reason": "Kept as an AI-Verse owned copy (plan D26) so the repurposing references from the removed cross-platform-repurposing skill have a home.",
+    "change": "Inner name changed from social to social-content to match the catalogue. Pointers to skills that are not in the library removed. Four repurposing reference files added, adapted from social-media-skills/skills at commit 6e30eeb2f6736bda8683b6bbaa674af3641d7945 (MIT, skills/cross-platform-repurposing/references), with their pointers to missing skills removed. A short repurposing rule and links to those files added to the Content Repurposing System section. The upstream evals folder is not carried over. Everything else is unchanged from upstream. On 13 November the lines that read the shared brand file were re-pointed to the current project's marketing adjustments."
+  },
+  "additional_sources": [
+    {
+      "upstream_repo": "social-media-skills/skills",
+      "upstream_path": "skills/cross-platform-repurposing/references",
+      "upstream_commit": "6e30eeb2f6736bda8683b6bbaa674af3641d7945",
+      "license": "MIT"
+    }
+  ],
+  "imported_at": "2026-11-13"
+}

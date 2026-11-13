@@ -1,0 +1,13 @@
+{
+  "source_namespace": "film",
+  "upstream_repo": "62656456/ai-film-skills",
+  "upstream_commit": "678edc06d3318c1516f6eb73503f740427fdd831",
+  "license": "Apache-2.0",
+  "import_type": "merged-vendored-adapted",
+  "modified": true,
+  "upstream_paths": [
+    "skills/ai-storyboard-director",
+    "skills/produce-ai-video"
+  ],
+  "adaptation": "Translated into English, combined shot direction and actual video production into a single capability, consolidated storyboard and prompt rules, removed mandatory minimum shot count and mandatory six-module format, made the original project memory helper optional, and added a conditional video editor handoff. No live filmmaking workflow has been tested."
+}

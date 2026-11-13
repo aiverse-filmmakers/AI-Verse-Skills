@@ -1,0 +1,14 @@
+{
+  "source_namespace": "anthropic",
+  "upstream_repo": "anthropics/knowledge-work-plugins",
+  "upstream_path": "sales/skills/draft-outreach",
+  "upstream_commit": "34e1eae3e1cca0be18bc85067cc6dd78d1f5d4e5",
+  "license": "Apache-2.0",
+  "import_type": "original-vendored-adapted",
+  "modified": true,
+  "adaptation": {
+    "reason": "Kept as an AI-Verse owned copy and tidied to the AI-Verse skill build standard (plan D26).",
+    "change": "Added hard rules, above all never invent a customer, result or number. The blank company form became the project adjustments section. Templates moved to references/templates.md. The example now uses a made up company and person. Pointers to a skill that is not shipped and tool placeholders removed. The 'what not to do' list and hook order are unchanged."
+  },
+  "imported_at": "2026-11-12"
+}

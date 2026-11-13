@@ -1,0 +1,14 @@
+{
+  "source_namespace": "anthropic",
+  "upstream_repo": "anthropics/knowledge-work-plugins",
+  "upstream_path": "product-management/skills/product-brainstorming",
+  "upstream_commit": "34e1eae3e1cca0be18bc85067cc6dd78d1f5d4e5",
+  "license": "Apache-2.0",
+  "import_type": "original-vendored-adapted",
+  "modified": true,
+  "adaptation": {
+    "reason": "Kept as an AI-Verse owned copy and tidied to the AI-Verse skill build standard (plan D26).",
+    "change": "Framework catalogue moved to references/frameworks.md. Added one short example of the intended posture and a fixed closing summary. Opening rewritten from a persona statement to an instruction. Project adjustments section added. The thinking partner do and do not lists and the anti-patterns are unchanged."
+  },
+  "imported_at": "2026-11-12"
+}

@@ -2,10 +2,10 @@
   "schema_version": 3,
   "snapshot": "2026-09-14",
   "counts": {
-    "foundation": 20,
-    "employee": 98,
-    "support": 16,
-    "canonical_total": 118
+    "foundation": 9,
+    "employee": 50,
+    "support": 11,
+    "canonical_total": 59
   },
   "policy": {
     "original_first": true,
@@ -19,74 +19,7 @@
       "commit": "a3768d0e82ad83cca2da97724e46bea4ff0e6dbd",
       "namespace": "google",
       "license": "Apache-2.0",
-      "packages": [
-        {
-          "rank": 1,
-          "id": "persona-exec-assistant",
-          "category": "universal-office",
-          "vendored": true,
-          "path": "skills/persona-exec-assistant",
-          "deps": [
-            "gws-gmail",
-            "gws-calendar",
-            "gws-drive",
-            "gws-chat"
-          ],
-          "operators": [
-            "google-workspace"
-          ]
-        },
-        {
-          "rank": 2,
-          "id": "persona-project-manager",
-          "category": "universal-office",
-          "vendored": true,
-          "path": "skills/persona-project-manager",
-          "deps": [
-            "gws-gmail",
-            "gws-calendar",
-            "gws-drive",
-            "gws-chat",
-            "gws-sheets"
-          ],
-          "operators": [
-            "google-workspace"
-          ]
-        },
-        {
-          "rank": 3,
-          "id": "persona-hr-coordinator",
-          "category": "universal-office",
-          "vendored": true,
-          "path": "skills/persona-hr-coordinator",
-          "deps": [
-            "gws-gmail",
-            "gws-calendar",
-            "gws-drive",
-            "gws-chat"
-          ],
-          "operators": [
-            "google-workspace"
-          ]
-        },
-        {
-          "rank": 4,
-          "id": "persona-event-coordinator",
-          "category": "universal-office",
-          "vendored": true,
-          "path": "skills/persona-event-coordinator",
-          "deps": [
-            "gws-gmail",
-            "gws-calendar",
-            "gws-drive",
-            "gws-chat",
-            "gws-sheets"
-          ],
-          "operators": [
-            "google-workspace"
-          ]
-        }
-      ],
+      "packages": [],
       "redistribution": "redistributable"
     },
     "hermes": {
@@ -104,102 +37,38 @@
         },
         {
           "rank": 6,
-          "id": "meeting-action-items",
+          "id": "action-items",
           "category": "universal-office",
-          "path": "skills/productivity/meeting-action-items"
-        },
-        {
-          "rank": 7,
-          "id": "document-to-action-items",
-          "category": "universal-office",
-          "path": "skills/productivity/document-to-action-items"
+          "path": "skills/productivity/meeting-action-items",
+          "vendored": true
         },
         {
           "rank": 8,
           "id": "weekly-review-planning",
           "category": "universal-office",
-          "path": "skills/productivity/weekly-review-planning"
+          "path": "skills/productivity/weekly-review-planning",
+          "vendored": true
         },
         {
           "rank": 9,
           "id": "one-three-one-rule",
           "category": "universal-office",
-          "path": "optional-skills/communication/one-three-one-rule"
-        },
-        {
-          "rank": 10,
-          "id": "google-workspace",
-          "category": "universal-office",
-          "path": "skills/productivity/google-workspace",
-          "operators": [
-            "google-workspace"
-          ]
-        },
-        {
-          "rank": 11,
-          "id": "xlsx",
-          "category": "universal-office",
-          "path": "skills/productivity/xlsx"
-        },
-        {
-          "rank": 12,
-          "id": "docx",
-          "category": "universal-office",
-          "path": "skills/productivity/docx"
-        },
-        {
-          "rank": 14,
-          "id": "airtable",
-          "category": "universal-office",
-          "path": "skills/productivity/airtable",
-          "operators": [
-            "airtable"
-          ]
+          "path": "optional-skills/communication/one-three-one-rule",
+          "vendored": true
         },
         {
           "rank": 22,
           "id": "decision-questionnaire",
           "category": "judgment-strategy",
-          "path": "optional-skills/productivity/decision-questionnaire"
-        },
-        {
-          "rank": 31,
-          "id": "baoyu-article-illustrator",
-          "category": "creative-design",
-          "path": "optional-skills/creative/baoyu-article-illustrator"
-        },
-        {
-          "rank": 55,
-          "id": "kanban-video-orchestrator",
-          "category": "film-media",
-          "path": "optional-skills/creative/kanban-video-orchestrator"
+          "path": "optional-skills/productivity/decision-questionnaire",
+          "vendored": true
         },
         {
           "rank": 56,
           "id": "whisper",
           "category": "film-media",
-          "path": "optional-skills/mlops/whisper"
-        },
-        {
-          "rank": 66,
-          "id": "shopify",
-          "category": "sales-customer",
-          "path": "optional-skills/productivity/shopify",
-          "operators": [
-            "shopify"
-          ]
-        },
-        {
-          "rank": 73,
-          "id": "excel-author",
-          "category": "finance-accounting",
-          "path": "optional-skills/finance/excel-author"
-        },
-        {
-          "rank": 74,
-          "id": "3-statement-model",
-          "category": "finance-accounting",
-          "path": "optional-skills/finance/3-statement-model"
+          "path": "optional-skills/mlops/whisper",
+          "vendored": true
         }
       ],
       "redistribution": "redistributable"
@@ -209,48 +78,24 @@
       "commit": "3c7d3303d3ef9335b6d91b49acff1a6f6609936c",
       "namespace": "others",
       "license": "upstream-controlled",
-      "packages": [
-        {
-          "rank": 13,
-          "id": "ppt-generation",
-          "category": "universal-office",
-          "path": "skills/public/ppt-generation"
-        }
-      ],
+      "packages": [],
       "redistribution": "fetch-only"
     },
     "anthropic-skills": {
       "repo": "anthropics/skills",
       "commit": "41bbe19d1a1a7eaab5e7bb9050a417e5c6cffc8f",
       "namespace": "anthropic",
-      "license": "upstream-controlled",
+      "license": "Apache-2.0",
       "packages": [
-        {
-          "rank": 16,
-          "id": "internal-comms",
-          "category": "universal-office",
-          "path": "skills/internal-comms"
-        },
-        {
-          "rank": 25,
-          "id": "brand-guidelines",
-          "category": "creative-design",
-          "path": "skills/brand-guidelines"
-        },
         {
           "rank": 26,
           "id": "canvas-design",
           "category": "creative-design",
-          "path": "skills/canvas-design"
-        },
-        {
-          "rank": 32,
-          "id": "theme-factory",
-          "category": "creative-design",
-          "path": "skills/theme-factory"
+          "path": "skills/canvas-design",
+          "vendored": true
         }
       ],
-      "redistribution": "fetch-only"
+      "redistribution": "redistributable"
     },
     "lifeos": {
       "repo": "danielmiessler/LifeOS",
@@ -259,35 +104,11 @@
       "license": "MIT",
       "packages": [
         {
-          "rank": 17,
-          "id": "Council",
-          "category": "judgment-strategy",
-          "vendored": true,
-          "path": "LifeOS/install/skills/Council"
-        },
-        {
-          "rank": 18,
-          "id": "RedTeam",
-          "category": "judgment-strategy",
-          "path": "LifeOS/install/skills/RedTeam"
-        },
-        {
           "rank": 19,
           "id": "ExtractWisdom",
           "category": "judgment-strategy",
-          "path": "LifeOS/install/skills/ExtractWisdom"
-        },
-        {
-          "rank": 20,
-          "id": "Ideate",
-          "category": "judgment-strategy",
-          "path": "LifeOS/install/skills/Ideate"
-        },
-        {
-          "rank": 21,
-          "id": "Fabric",
-          "category": "judgment-strategy",
-          "path": "LifeOS/install/skills/Fabric"
+          "path": "LifeOS/install/skills/ExtractWisdom",
+          "vendored": true
         }
       ],
       "redistribution": "redistributable"
@@ -296,192 +117,95 @@
       "repo": "anthropics/knowledge-work-plugins",
       "commit": "34e1eae3e1cca0be18bc85067cc6dd78d1f5d4e5",
       "namespace": "anthropic",
-      "license": "upstream-controlled",
+      "license": "Apache-2.0",
       "packages": [
         {
           "rank": 23,
           "id": "product-brainstorming",
           "category": "judgment-strategy",
-          "path": "product-management/skills/product-brainstorming"
+          "path": "product-management/skills/product-brainstorming",
+          "vendored": true
         },
         {
           "rank": 24,
           "id": "business-pulse",
           "category": "judgment-strategy",
-          "path": "small-business/skills/business-pulse"
+          "path": "small-business/skills/business-pulse",
+          "vendored": true
         },
         {
           "rank": 57,
           "id": "account-research",
           "category": "sales-customer",
-          "path": "sales/skills/account-research"
-        },
-        {
-          "rank": 58,
-          "id": "call-prep",
-          "category": "sales-customer",
-          "path": "sales/skills/call-prep"
+          "path": "sales/skills/account-research",
+          "vendored": true
         },
         {
           "rank": 59,
           "id": "draft-outreach",
           "category": "sales-customer",
-          "path": "sales/skills/draft-outreach"
-        },
-        {
-          "rank": 60,
-          "id": "pipeline-review",
-          "category": "sales-customer",
-          "path": "sales/skills/pipeline-review"
+          "path": "sales/skills/draft-outreach",
+          "vendored": true
         },
         {
           "rank": 63,
           "id": "draft-response",
           "category": "sales-customer",
-          "path": "customer-support/skills/draft-response"
-        },
-        {
-          "rank": 64,
-          "id": "ticket-triage",
-          "category": "sales-customer",
-          "path": "customer-support/skills/ticket-triage"
+          "path": "customer-support/skills/draft-response",
+          "vendored": true
         },
         {
           "rank": 67,
           "id": "cash-flow-snapshot",
           "category": "finance-accounting",
-          "path": "small-business/skills/cash-flow-snapshot"
-        },
-        {
-          "rank": 68,
-          "id": "financial-statements",
-          "category": "finance-accounting",
-          "path": "finance/skills/financial-statements"
-        },
-        {
-          "rank": 69,
-          "id": "variance-analysis",
-          "category": "finance-accounting",
-          "path": "finance/skills/variance-analysis"
-        },
-        {
-          "rank": 70,
-          "id": "reconciliation",
-          "category": "finance-accounting",
-          "path": "finance/skills/reconciliation"
-        },
-        {
-          "rank": 71,
-          "id": "close-management",
-          "category": "finance-accounting",
-          "path": "finance/skills/close-management"
-        },
-        {
-          "rank": 72,
-          "id": "journal-entry-prep",
-          "category": "finance-accounting",
-          "path": "finance/skills/journal-entry-prep"
+          "path": "small-business/skills/cash-flow-snapshot",
+          "vendored": true
         },
         {
           "rank": 75,
           "id": "write-spec",
           "category": "product-people-legal-ops",
-          "path": "product-management/skills/write-spec"
+          "path": "product-management/skills/write-spec",
+          "vendored": true
         },
         {
           "rank": 76,
           "id": "roadmap-update",
           "category": "product-people-legal-ops",
-          "path": "product-management/skills/roadmap-update"
+          "path": "product-management/skills/roadmap-update",
+          "vendored": true
         },
         {
           "rank": 77,
           "id": "job-post-builder",
           "category": "product-people-legal-ops",
-          "path": "small-business/skills/job-post-builder"
+          "path": "small-business/skills/job-post-builder",
+          "vendored": true
         },
         {
           "rank": 78,
           "id": "review-contract",
           "category": "product-people-legal-ops",
-          "path": "legal/skills/review-contract"
-        },
-        {
-          "rank": 79,
-          "id": "legal-risk-assessment",
-          "category": "product-people-legal-ops",
-          "path": "legal/skills/legal-risk-assessment"
-        },
-        {
-          "rank": 80,
-          "id": "vendor-check",
-          "category": "product-people-legal-ops",
-          "path": "legal/skills/vendor-check"
+          "path": "legal/skills/review-contract",
+          "vendored": true
         }
       ],
-      "redistribution": "fetch-only"
+      "redistribution": "redistributable"
     },
     "figma": {
       "repo": "figma/mcp-server-guide",
       "commit": "f74a51c9aaec87a2e65c9121753b63fb42203d96",
       "namespace": "others",
       "license": "upstream-controlled",
-      "packages": [
-        {
-          "rank": 27,
-          "id": "figma-use",
-          "category": "creative-design",
-          "path": "skills/figma-use",
-          "operators": [
-            "figma"
-          ]
-        },
-        {
-          "rank": 28,
-          "id": "figma-generate-design",
-          "category": "creative-design",
-          "path": "skills/figma-generate-design",
-          "operators": [
-            "figma"
-          ]
-        }
-      ],
+      "packages": [],
       "redistribution": "fetch-only"
     },
     "social-media-skills": {
       "repo": "social-media-skills/skills",
       "commit": "6e30eeb2f6736bda8683b6bbaa674af3641d7945",
       "namespace": "social-media-skills",
-      "license": "upstream-controlled",
-      "packages": [
-        {
-          "rank": 29,
-          "id": "canva",
-          "category": "creative-design",
-          "path": "skills/canva",
-          "operators": [
-            "canva"
-          ]
-        },
-        {
-          "rank": 30,
-          "id": "design-and-templates",
-          "category": "creative-design",
-          "path": "skills/design-and-templates"
-        },
-        {
-          "rank": 44,
-          "id": "scheduling-and-queue",
-          "category": "marketing-social",
-          "path": "skills/scheduling-and-queue"
-        },
-        {
-          "rank": 45,
-          "id": "cross-platform-repurposing",
-          "category": "marketing-social",
-          "path": "skills/cross-platform-repurposing"
-        }
-      ],
+      "license": "MIT",
+      "packages": [],
       "redistribution": "fetch-only"
     },
     "corey-haines": {
@@ -491,143 +215,109 @@
       "license": "MIT",
       "packages": [
         {
-          "rank": 33,
-          "id": "product-marketing-context",
-          "category": "marketing-social",
-          "path": "skills/product-marketing"
-        },
-        {
           "rank": 34,
           "id": "customer-research",
           "category": "marketing-social",
-          "path": "skills/customer-research"
+          "path": "skills/customer-research",
+          "vendored": true
         },
         {
           "rank": 35,
           "id": "content-strategy",
           "category": "marketing-social",
-          "path": "skills/content-strategy"
+          "path": "skills/content-strategy",
+          "vendored": true
         },
         {
           "rank": 36,
           "id": "social-content",
           "category": "marketing-social",
-          "path": "skills/social"
+          "path": "skills/social",
+          "vendored": true
         },
         {
           "rank": 37,
           "id": "copywriting",
           "category": "marketing-social",
-          "path": "skills/copywriting"
+          "path": "skills/copywriting",
+          "vendored": true
         },
         {
           "rank": 38,
           "id": "ad-creative",
           "category": "marketing-social",
-          "path": "skills/ad-creative"
+          "path": "skills/ad-creative",
+          "vendored": true
         },
         {
           "rank": 39,
           "id": "email-sequence",
           "category": "marketing-social",
-          "path": "skills/emails"
+          "path": "skills/emails",
+          "vendored": true
         },
         {
           "rank": 40,
           "id": "seo-audit",
           "category": "marketing-social",
-          "path": "skills/seo-audit"
-        },
-        {
-          "rank": 41,
-          "id": "analytics",
-          "category": "marketing-social",
-          "path": "skills/analytics"
-        },
-        {
-          "rank": 42,
-          "id": "launch-strategy",
-          "category": "marketing-social",
-          "path": "skills/launch"
+          "path": "skills/seo-audit",
+          "vendored": true
         },
         {
           "rank": 43,
           "id": "community-marketing",
           "category": "marketing-social",
-          "path": "skills/community-marketing"
+          "path": "skills/community-marketing",
+          "vendored": true
         }
       ],
-      "redistribution": "fetch-only"
+      "redistribution": "redistributable"
     },
     "novoads": {
       "repo": "novoads/agent-skills",
       "commit": "2f5e03f9c625fd719a1bc5cddaf7f7fe1a6f9e44",
       "namespace": "others",
-      "license": "upstream-controlled",
+      "license": "MIT",
       "packages": [
         {
           "rank": 46,
           "id": "meta-ad-builder",
           "category": "marketing-social",
-          "path": "shared/skills/meta-ad-builder"
+          "path": "shared/skills/meta-ad-builder",
+          "vendored": true
         }
       ],
-      "redistribution": "fetch-only"
+      "redistribution": "redistributable"
     },
     "ai-film": {
       "repo": "62656456/ai-film-skills",
       "commit": "678edc06d3318c1516f6eb73503f740427fdd831",
       "namespace": "film",
-      "license": "upstream-controlled",
+      "license": "Apache-2.0",
       "packages": [
         {
           "rank": 47,
           "id": "director-agent",
           "category": "film-media",
-          "path": "skills/director-agent"
+          "path": "skills/director-agent",
+          "vendored": true
         },
         {
           "rank": 48,
-          "id": "ai-storyboard-director",
+          "id": "ai-video-director",
           "category": "film-media",
-          "path": "skills/ai-storyboard-director"
-        },
-        {
-          "rank": 49,
-          "id": "produce-ai-video",
-          "category": "film-media",
-          "path": "skills/produce-ai-video"
+          "path": "skills/ai-storyboard-director",
+          "vendored": true
         }
       ],
-      "redistribution": "fetch-only"
+      "redistribution": "redistributable"
     },
     "film-production": {
       "repo": "zhangzhangco/film-production-skills",
       "commit": "47b2a6a432235e716fa2aa0d08eefae76fdb34fd",
       "namespace": "film",
       "license": "upstream-controlled",
-      "packages": [
-        {
-          "rank": 50,
-          "id": "structure-screenplay",
-          "category": "film-media",
-          "name": "structure-screenplay",
-          "roots": [
-            "skills",
-            "."
-          ]
-        },
-        {
-          "rank": 51,
-          "id": "plan-camera-shots",
-          "category": "film-media",
-          "name": "plan-camera-shots",
-          "roots": [
-            "skills",
-            "."
-          ]
-        }
-      ],
+      "packages": [],
       "redistribution": "fetch-only"
     },
     "ffmpeg": {
@@ -641,36 +331,27 @@
           "id": "ffmpeg-skill",
           "category": "film-media",
           "root": true,
+          "vendored": true,
           "operators": [
             "ffmpeg"
           ]
         }
       ],
-      "redistribution": "fetch-only"
+      "redistribution": "redistributable"
     },
     "premiere": {
       "repo": "Kemerd/premiere-agent",
       "commit": "77ed50f4bff14b67b054a64d26aedd7ec217b701",
       "namespace": "film",
       "license": "upstream-controlled",
-      "packages": [
-        {
-          "rank": 53,
-          "id": "premiere-agent",
-          "category": "film-media",
-          "root": true,
-          "operators": [
-            "premiere-pro"
-          ]
-        }
-      ],
+      "packages": [],
       "redistribution": "fetch-only"
     },
     "adobe": {
       "repo": "aedev-tools/adobe-agent-skills",
       "commit": "00f131ee5481cd597e6f63f997d92c6fe26586a0",
       "namespace": "adobe",
-      "license": "upstream-controlled",
+      "license": "Apache-2.0",
       "packages": [
         {
           "rank": 54,
@@ -679,45 +360,18 @@
           "path": "skills/after-effects",
           "operators": [
             "after-effects"
-          ]
+          ],
+          "vendored": true
         }
       ],
-      "redistribution": "fetch-only"
+      "redistribution": "redistributable"
     },
     "hubspot": {
       "repo": "HubSpot/agent-cli-skills",
       "commit": "71f2bdefcc0247b1f378cb98186800dc57b6f6b1",
       "namespace": "hubspot",
       "license": "upstream-controlled",
-      "packages": [
-        {
-          "rank": 61,
-          "id": "deal-management",
-          "category": "sales-customer",
-          "path": "deal-management",
-          "operators": [
-            "hubspot"
-          ]
-        },
-        {
-          "rank": 62,
-          "id": "sales-execution",
-          "category": "sales-customer",
-          "path": "sales-execution",
-          "operators": [
-            "hubspot"
-          ]
-        },
-        {
-          "rank": 65,
-          "id": "customer-retention",
-          "category": "sales-customer",
-          "path": "customer-retention",
-          "operators": [
-            "hubspot"
-          ]
-        }
-      ],
+      "packages": [],
       "redistribution": "fetch-only"
     },
     "ai-verse": {
@@ -752,6 +406,27 @@
             "general-video",
             "embedded-captions"
           ]
+        },
+        {
+          "rank": 101,
+          "id": "ai-realism",
+          "category": "film-media",
+          "vendored": true,
+          "path": "skills/imported/ai-verse/ai-realism"
+        },
+        {
+          "rank": 102,
+          "id": "higgsfield-acting",
+          "category": "film-media",
+          "vendored": true,
+          "path": "skills/imported/ai-verse/higgsfield-acting"
+        },
+        {
+          "rank": 103,
+          "id": "cinematic-realism-director",
+          "category": "film-media",
+          "vendored": true,
+          "path": "skills/imported/ai-verse/cinematic-realism-director"
         }
       ],
       "redistribution": "redistributable"
@@ -760,30 +435,24 @@
       "repo": "anthropics/skills",
       "commit": "34040c9c568585f6929bedeaad110ad08f079624",
       "namespace": "anthropic",
-      "license": "upstream-controlled",
+      "license": "Apache-2.0",
       "packages": [
         {
           "rank": 82,
           "id": "frontend-design",
           "category": "creative-design",
-          "path": "skills/frontend-design"
+          "path": "skills/frontend-design",
+          "vendored": true
         }
       ],
-      "redistribution": "fetch-only"
+      "redistribution": "redistributable"
     },
     "nextlevelbuilder-ui": {
       "repo": "nextlevelbuilder/ui-ux-pro-max-skill",
       "commit": "7f69fed6a2717900085f1bc3b263721f8ba025e2",
       "namespace": "nextlevelbuilder",
       "license": "MIT",
-      "packages": [
-        {
-          "rank": 83,
-          "id": "ui-ux-pro-max",
-          "category": "creative-design",
-          "path": ".claude/skills/ui-ux-pro-max"
-        }
-      ],
+      "packages": [],
       "redistribution": "redistributable"
     },
     "vercel-design": {
@@ -796,13 +465,15 @@
           "rank": 84,
           "id": "react-best-practices",
           "category": "creative-design",
-          "path": "skills/react-best-practices"
+          "path": "skills/react-best-practices",
+          "vendored": true
         },
         {
           "rank": 85,
           "id": "composition-patterns",
           "category": "creative-design",
-          "path": "skills/composition-patterns"
+          "path": "skills/composition-patterns",
+          "vendored": true
         },
         {
           "rank": 86,
@@ -821,22 +492,11 @@
       "license": "MIT",
       "packages": [
         {
-          "rank": 88,
-          "id": "design-first-ui-prompting",
-          "category": "creative-design",
-          "path": "agent-skills/ui/design-first-ui-prompting"
-        },
-        {
           "rank": 89,
           "id": "video-to-superprompt",
           "category": "creative-design",
-          "path": "agent-skills/codex/video-to-superprompt"
-        },
-        {
-          "rank": 90,
-          "id": "stitched-full-page-capture",
-          "category": "creative-design",
-          "path": "agent-skills/codex/stitched-full-page-capture"
+          "path": "agent-skills/codex/video-to-superprompt",
+          "vendored": true
         }
       ],
       "redistribution": "redistributable"
@@ -851,49 +511,57 @@
           "rank": 91,
           "id": "apple-design",
           "category": "creative-design",
-          "path": "skills/apple-design"
+          "path": "skills/apple-design",
+          "vendored": true
         },
         {
           "rank": 92,
           "id": "animate",
           "category": "creative-design",
-          "path": "skills/animate"
+          "path": "skills/animate",
+          "vendored": true
         },
         {
           "rank": 93,
           "id": "prototype",
           "category": "creative-design",
-          "path": "skills/prototype"
+          "path": "skills/prototype",
+          "vendored": true
         },
         {
           "rank": 94,
           "id": "review-animations",
           "category": "creative-design",
-          "path": "skills/review-animations"
+          "path": "skills/review-animations",
+          "vendored": true
         },
         {
           "rank": 95,
           "id": "pick-ui-library",
           "category": "creative-design",
-          "path": "skills/pick-ui-library"
+          "path": "skills/pick-ui-library",
+          "vendored": true
         },
         {
           "rank": 96,
           "id": "improve-animations",
           "category": "creative-design",
-          "path": "skills/improve-animations"
+          "path": "skills/improve-animations",
+          "vendored": true
         },
         {
           "rank": 97,
           "id": "find-animation-opportunities",
           "category": "creative-design",
-          "path": "skills/find-animation-opportunities"
+          "path": "skills/find-animation-opportunities",
+          "vendored": true
         },
         {
           "rank": 98,
           "id": "animate-expo",
           "category": "creative-design",
-          "path": "skills/animate-expo"
+          "path": "skills/animate-expo",
+          "vendored": true
         }
       ],
       "redistribution": "redistributable"
@@ -908,7 +576,8 @@
           "rank": 99,
           "id": "scroll-craft",
           "category": "creative-design",
-          "path": "plugins/nateherk-design/skills/scroll-craft"
+          "path": "plugins/nateherk-design/skills/scroll-craft",
+          "vendored": true
         }
       ],
       "redistribution": "redistributable"
@@ -923,31 +592,6 @@
     }
   },
   "support": [
-    {
-      "id": "gws-gmail",
-      "source": "google",
-      "path": "skills/gws-gmail"
-    },
-    {
-      "id": "gws-calendar",
-      "source": "google",
-      "path": "skills/gws-calendar"
-    },
-    {
-      "id": "gws-drive",
-      "source": "google",
-      "path": "skills/gws-drive"
-    },
-    {
-      "id": "gws-chat",
-      "source": "google",
-      "path": "skills/gws-chat"
-    },
-    {
-      "id": "gws-sheets",
-      "source": "google",
-      "path": "skills/gws-sheets"
-    },
     {
       "id": "hyperframes",
       "source": "hyperframes-v0840",

@@ -1,0 +1,14 @@
+{
+  "source_namespace": "vercel",
+  "upstream_repo": "vercel-labs/agent-skills",
+  "upstream_path": "skills/react-best-practices",
+  "upstream_commit": "063bee94c3f4df8453406c830b0a7df0f2860278",
+  "license": "MIT",
+  "import_type": "original-vendored-adapted",
+  "modified": true,
+  "adaptation": {
+    "reason": "Kept as an AI-Verse owned copy (plan D26, decision of 13 November 2026 to keep this skill). Copied from the pinned upstream commit so it installs without any download.",
+    "change": "Inner name changed from vercel-react-best-practices to react-best-practices to match the folder. Removed AGENTS.md (duplicate or authoring file). Removed README.md (duplicate or authoring file). Removed metadata.json (duplicate or authoring file). Removed rules/_template.md (duplicate or authoring file). Removed rules/_sections.md (duplicate or authoring file). The pointer to the removed AGENTS.md now points to the rules folder."
+  },
+  "imported_at": "2026-11-13"
+}

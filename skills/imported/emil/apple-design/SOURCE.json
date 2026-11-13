@@ -1,0 +1,14 @@
+{
+  "source_namespace": "emil",
+  "upstream_repo": "emilkowalski/skills",
+  "upstream_path": "skills/apple-design",
+  "upstream_commit": "d23d7f88a2e21c9e4b1418c7abe420f5c1052ba7",
+  "license": "MIT",
+  "import_type": "original-vendored-adapted",
+  "modified": true,
+  "adaptation": {
+    "reason": "Kept as an AI-Verse owned copy (plan D26, decision of 13 November 2026 to keep this skill) with structure fixes only. The author's taste is left alone.",
+    "change": "Licence, needs and source lines added to the header. The body is unchanged."
+  },
+  "imported_at": "2026-11-13"
+}

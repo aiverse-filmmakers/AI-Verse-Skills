@@ -1,0 +1,14 @@
+{
+  "source_namespace": "film",
+  "upstream_repo": "62656456/ai-film-skills",
+  "upstream_path": "skills/director-agent",
+  "upstream_commit": "678edc06d3318c1516f6eb73503f740427fdd831",
+  "license": "Apache-2.0",
+  "import_type": "original-vendored-adapted",
+  "modified": true,
+  "adaptation": {
+    "reason": "Translate and retain screenplay and directing expertise while removing duplicate storyboard authority.",
+    "change": "Translated Chinese text to English; storyboard and prompt output is handed to ai-video-director when available. Removed the duplicate production storyboard compiler."
+  },
+  "imported_at": "2026-11-13"
+}

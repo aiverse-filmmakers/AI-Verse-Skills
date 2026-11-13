@@ -1,0 +1,14 @@
+{
+  "source_namespace": "anthropic",
+  "upstream_repo": "anthropics/knowledge-work-plugins",
+  "upstream_path": "small-business/skills/cash-flow-snapshot",
+  "upstream_commit": "34e1eae3e1cca0be18bc85067cc6dd78d1f5d4e5",
+  "license": "Apache-2.0",
+  "import_type": "original-vendored-adapted",
+  "modified": true,
+  "adaptation": {
+    "reason": "Kept as an AI-Verse owned copy and tidied to the AI-Verse skill build standard (plan D26).",
+    "change": "Band formula corrected so it applies to money coming in, and moved into scripts/cash_forecast.py so the same input always gives the same numbers. Worked example rebuilt from the script's real output (the original contradicted its own formula and dates). Folder renamed reference to references. CSV fallback when no xlsx skill. Header tidied. Project adjustments section added."
+  },
+  "imported_at": "2026-11-12"
+}

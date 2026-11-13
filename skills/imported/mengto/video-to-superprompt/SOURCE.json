@@ -1,0 +1,14 @@
+{
+  "source_namespace": "mengto",
+  "upstream_repo": "MengTo/Skills",
+  "upstream_path": "agent-skills/codex/video-to-superprompt",
+  "upstream_commit": "321c769739b823de5eb94eb3a52aa1974fe783a2",
+  "license": "MIT",
+  "import_type": "original-vendored-adapted",
+  "modified": true,
+  "adaptation": {
+    "reason": "Kept as an AI-Verse owned copy (plan D26, D33 Group C) so problems that would trip up a member could be fixed.",
+    "change": "Description rewritten to say what the skill does: it turns a screen recording of a site or app into a prompt that rebuilds it. The fixed /tmp frames folder replaced with the system temp folder. Author workspace wording (repo article conventions, commit rules) replaced with plain wording. The demo folder is not carried over. The method is unchanged."
+  },
+  "imported_at": "2026-11-13"
+}

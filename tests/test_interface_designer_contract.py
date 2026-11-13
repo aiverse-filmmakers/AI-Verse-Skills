@@ -44,7 +44,6 @@ class InterfaceDesignerContractTests(unittest.TestCase):
         routing = (ROOT / "skills/imported/ai-verse/interface-designer/references/routing.md").read_text(encoding="utf-8")
         for capability in (
             "frontend-design",
-            "ui-ux-pro-max",
             "prototype",
             "apple-design",
             "animate",
@@ -65,13 +64,10 @@ class InterfaceDesignerContractTests(unittest.TestCase):
         ids = {item["id"] for item in skills["employee"]}
         experts = {
             "frontend-design",
-            "ui-ux-pro-max",
             "react-best-practices",
             "composition-patterns",
             "web-design-guidelines",
-            "design-first-ui-prompting",
             "video-to-superprompt",
-            "stitched-full-page-capture",
             "apple-design",
             "animate",
             "prototype",
@@ -83,15 +79,14 @@ class InterfaceDesignerContractTests(unittest.TestCase):
             "scroll-craft",
         }
         self.assertTrue(experts.issubset(ids))
-        self.assertEqual(skills["counts"]["employee"], 98)
-        self.assertEqual(skills["counts"]["total"], 118)
-        self.assertEqual(packages["counts"]["employee"], 98)
-        self.assertEqual(packages["counts"]["canonical_total"], 118)
-        self.assertEqual(packages["counts"]["support"], 16)
+        self.assertEqual(skills["counts"]["employee"], 50)
+        self.assertEqual(skills["counts"]["total"], 59)
+        self.assertEqual(packages["counts"]["employee"], 50)
+        self.assertEqual(packages["counts"]["canonical_total"], 59)
+        self.assertEqual(packages["counts"]["support"], 11)
 
         expected_pins = {
             "anthropic-frontend": "34040c9c568585f6929bedeaad110ad08f079624",
-            "nextlevelbuilder-ui": "7f69fed6a2717900085f1bc3b263721f8ba025e2",
             "vercel-design": "063bee94c3f4df8453406c830b0a7df0f2860278",
             "mengto-ui": "321c769739b823de5eb94eb3a52aa1974fe783a2",
             "emil-design": "d23d7f88a2e21c9e4b1418c7abe420f5c1052ba7",
@@ -380,7 +375,6 @@ class InterfaceDesignerContractTests(unittest.TestCase):
         self.assertLessEqual(len(graph["scope_pipelines"]["MICRO_CHANGE"]), 5)
         for forbidden in (
             "frontend-design",
-            "ui-ux-pro-max",
             "prototype",
             "scroll-craft",
             "react-best-practices",
@@ -412,7 +406,6 @@ class InterfaceDesignerContractTests(unittest.TestCase):
 
         expert_sources = {
             "anthropic-frontend",
-            "nextlevelbuilder-ui",
             "vercel-design",
             "mengto-ui",
             "emil-design",
@@ -435,7 +428,7 @@ class InterfaceDesignerContractTests(unittest.TestCase):
         notices = (ROOT / "THIRD_PARTY_NOTICES.md").read_text(encoding="utf-8")
         registered = {item["id"] for item in skills["employee"]}
 
-        self.assertEqual(len(manifest["sources"]), 6)
+        self.assertEqual(len(manifest["sources"]), 5)
         for source in manifest["sources"]:
             registry_source = packages["sources"][source["source_id"]]
             self.assertEqual(registry_source["repo"], source["repo"])
@@ -473,8 +466,10 @@ class InterfaceDesignerContractTests(unittest.TestCase):
                     )
 
         anthropic = next(s for s in manifest["sources"] if s["source_id"] == "anthropic-frontend")
-        self.assertEqual(anthropic["redistribution"], "fetch-only")
-        self.assertFalse(trust["sources"][anthropic["repo"]]["vendoring_allowed"])
+        # frontend-design is now an owned copy: its own LICENSE.txt is Apache-2.0 at the pinned commit.
+        self.assertEqual(anthropic["redistribution"], "redistributable")
+        self.assertTrue(trust["sources"][anthropic["repo"]]["vendoring_allowed"])
+        self.assertTrue((ROOT / "skills/imported/anthropic/frontend-design/LICENSE.txt").is_file())
 
     def test_existing_design_capabilities_remain_compatible_with_zero_removals(self):
         refs = ROOT / "skills/imported/ai-verse/interface-designer/references"
@@ -493,14 +488,7 @@ class InterfaceDesignerContractTests(unittest.TestCase):
         self.assertEqual(compatibility["replacement_aliases"], [])
 
         expected_preserved = {
-            "brand-guidelines",
             "canvas-design",
-            "theme-factory",
-            "figma-use",
-            "figma-generate-design",
-            "canva",
-            "design-and-templates",
-            "baoyu-article-illustrator",
         }
         recorded = {item["id"] for item in compatibility["preserved_capabilities"]}
         self.assertEqual(recorded, expected_preserved)

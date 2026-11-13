@@ -41,18 +41,18 @@
     },
     "coreyhaines31/marketingskills": {
       "license": "MIT",
-      "redistribution": "fetch-only",
+      "redistribution": "redistributable",
       "trust": "reviewed-upstream",
       "ownership": "curated_upstream",
-      "vendoring_allowed": false,
+      "vendoring_allowed": true,
       "auto_mutation": false
     },
     "kajisho5/ffmpeg-skill": {
       "license": "MIT",
-      "redistribution": "fetch-only",
+      "redistribution": "redistributable",
       "trust": "reviewed-upstream",
       "ownership": "curated_upstream",
-      "vendoring_allowed": false,
+      "vendoring_allowed": true,
       "auto_mutation": false
     },
     "bytedance/deer-flow": {
@@ -64,19 +64,20 @@
       "auto_mutation": false
     },
     "anthropics/skills": {
-      "license": "upstream-controlled",
-      "redistribution": "fetch-only",
+      "license": "Apache-2.0",
+      "redistribution": "redistributable",
       "trust": "external",
       "ownership": "external",
-      "vendoring_allowed": false,
-      "auto_mutation": false
+      "vendoring_allowed": true,
+      "auto_mutation": false,
+      "scope_note": "Applies only to canvas-design and frontend-design, whose own LICENSE.txt is Apache-2.0 at the pinned commits. Other skills in this repository, such as the document skills, are not covered and must not be vendored."
     },
     "anthropics/knowledge-work-plugins": {
-      "license": "upstream-controlled",
-      "redistribution": "fetch-only",
+      "license": "Apache-2.0",
+      "redistribution": "redistributable",
       "trust": "external",
       "ownership": "external",
-      "vendoring_allowed": false,
+      "vendoring_allowed": true,
       "auto_mutation": false
     },
     "figma/mcp-server-guide": {
@@ -88,7 +89,7 @@
       "auto_mutation": false
     },
     "social-media-skills/skills": {
-      "license": "upstream-controlled",
+      "license": "MIT",
       "redistribution": "fetch-only",
       "trust": "external",
       "ownership": "external",
@@ -96,19 +97,19 @@
       "auto_mutation": false
     },
     "novoads/agent-skills": {
-      "license": "upstream-controlled",
-      "redistribution": "fetch-only",
+      "license": "MIT",
+      "redistribution": "redistributable",
       "trust": "external",
       "ownership": "external",
-      "vendoring_allowed": false,
+      "vendoring_allowed": true,
       "auto_mutation": false
     },
     "62656456/ai-film-skills": {
-      "license": "upstream-controlled",
-      "redistribution": "fetch-only",
+      "license": "Apache-2.0",
+      "redistribution": "redistributable",
       "trust": "external",
       "ownership": "external",
-      "vendoring_allowed": false,
+      "vendoring_allowed": true,
       "auto_mutation": false
     },
     "zhangzhangco/film-production-skills": {
@@ -128,11 +129,11 @@
       "auto_mutation": false
     },
     "aedev-tools/adobe-agent-skills": {
-      "license": "upstream-controlled",
-      "redistribution": "fetch-only",
+      "license": "Apache-2.0",
+      "redistribution": "redistributable",
       "trust": "external",
       "ownership": "external",
-      "vendoring_allowed": false,
+      "vendoring_allowed": true,
       "auto_mutation": false
     },
     "HubSpot/agent-cli-skills": {

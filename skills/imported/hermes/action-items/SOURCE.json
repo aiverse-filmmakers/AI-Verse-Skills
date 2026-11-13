@@ -1,0 +1,22 @@
+{
+  "source_namespace": "hermes",
+  "upstream_repo": "NousResearch/hermes-agent",
+  "upstream_path": "skills/productivity/meeting-action-items",
+  "upstream_commit": "7dc796463d543a57270779b7f71f37f18b6faa5e",
+  "license": "MIT",
+  "import_type": "original-vendored-adapted",
+  "modified": true,
+  "adaptation": {
+    "reason": "Kept as an AI-Verse owned copy (plan D26, D33 Group C) so problems that would trip up a member could be fixed.",
+    "change": "Merge of meeting-action-items and document-to-action-items into one skill called action-items, because both do the same job on different sources. Steps combined into one eight step procedure (evidence, provenance, evidence types, validation, normalised actions, reconcile, approval package, apply and verify). Hermes tool names (read_file, web_extract, teams-meeting-pipeline, notion, pdf, docx, xlsx) replaced with plain wording. Description now says when to use it. Hermes only header fields removed."
+  },
+  "additional_sources": [
+    {
+      "upstream_repo": "NousResearch/hermes-agent",
+      "upstream_path": "skills/productivity/document-to-action-items",
+      "upstream_commit": "7dc796463d543a57270779b7f71f37f18b6faa5e",
+      "license": "MIT"
+    }
+  ],
+  "imported_at": "2026-11-13"
+}

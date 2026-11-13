@@ -7,10 +7,9 @@ Load the smallest useful expert subset. These are canonical AI-Verse capability 
 | Need | Capability |
 |---|---|
 | distinctive visual direction, anti-generic art direction | `frontend-design` |
-| product UI/UX intelligence, palettes, typography, layout, accessibility | `ui-ux-pro-max` |
-| turn a vague UI idea into a builder-ready design specification | `design-first-ui-prompting` |
+| product UI/UX intelligence, palettes, typography, layout, accessibility | Done by the orchestrator itself, with `frontend-design` for visual direction |
+| turn a vague UI idea into a builder-ready design specification | Done by the orchestrator itself |
 | analyze a reference video for interface recreation | `video-to-superprompt` |
-| reliable full-page evidence for lazy/animated/WebGL reference sites | `stitched-full-page-capture` |
 | explore materially different UI directions | `prototype` |
 
 ## Interaction and motion
@@ -32,9 +31,8 @@ Load the smallest useful expert subset. These are canonical AI-Verse capability 
 | choose a UI/component dependency | `pick-ui-library` |
 | React/Next performance and implementation quality | `react-best-practices` |
 | React component API/composition architecture | `composition-patterns` |
-| Figma Plugin API operations | `figma-use` |
-| composed Figma screens/views | `figma-generate-design` |
-| Canva production | `canva` |
+| Figma work | Not in the AI-Verse library. Use the runtime's own Figma skills or connection; otherwise report unavailable |
+| Canva work | Not in the AI-Verse library. Use the runtime's own Canva skills or connection; otherwise report unavailable |
 
 ## Final review
 

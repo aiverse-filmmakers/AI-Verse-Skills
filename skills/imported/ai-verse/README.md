@@ -15,4 +15,4 @@ Current first-party packages in this namespace include:
 - `video-editor`
 - `cinematic-realism-director`
 
-Presence in this namespace means AI-Verse first-party ownership. It does not by itself change the fixed ranked employee registry, grant runtime authority, or imply external provider access. Ranked-catalog promotion remains a separate explicit registry decision.
+Presence in this namespace means AI-Verse first-party ownership. It does not by itself change the fixed ranked employee registry, grant runtime authority, or imply external provider access. Ranked-catalog promotion remains a separate explicit registry decision. `cinematic-realism-director` was promoted to the ranked catalogue on 14 November 2026 by explicit decision.

@@ -1,0 +1,14 @@
+{
+  "source_namespace": "hermes",
+  "upstream_repo": "NousResearch/hermes-agent",
+  "upstream_path": "optional-skills/communication/one-three-one-rule",
+  "upstream_commit": "7dc796463d543a57270779b7f71f37f18b6faa5e",
+  "license": "MIT",
+  "import_type": "original-vendored-adapted",
+  "modified": true,
+  "adaptation": {
+    "reason": "Kept as an AI-Verse owned copy (plan D26, D33 Group C) so problems that would trip up a member could be fixed.",
+    "change": "The coding example (adding retry logic to an API client) replaced with an everyday example about a late client video. Description now says when to use it; \"technical decision\" wording made general. Hermes only header fields removed. The 1-3-1 method itself is unchanged."
+  },
+  "imported_at": "2026-11-13"
+}

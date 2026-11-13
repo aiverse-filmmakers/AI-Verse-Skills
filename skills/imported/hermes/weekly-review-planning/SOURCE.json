@@ -1,0 +1,14 @@
+{
+  "source_namespace": "hermes",
+  "upstream_repo": "NousResearch/hermes-agent",
+  "upstream_path": "skills/productivity/weekly-review-planning",
+  "upstream_commit": "7dc796463d543a57270779b7f71f37f18b6faa5e",
+  "license": "MIT",
+  "import_type": "original-vendored-adapted",
+  "modified": true,
+  "adaptation": {
+    "reason": "Kept as an AI-Verse owned copy (plan D26, D33 Group C) so problems that would trip up a member could be fixed.",
+    "change": "Description now says when to use it. Mentions of the Hermes cron Automation Blueprint and Hermes tool names (obsidian, notion, airtable, google-workspace) replaced with plain wording. Hermes only header fields removed. Steps and verification checks are unchanged."
+  },
+  "imported_at": "2026-11-13"
+}

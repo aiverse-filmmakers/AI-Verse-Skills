@@ -148,10 +148,6 @@
       "capability": "ffmpeg-skill",
       "state": "conditional-existing"
     },
-    "premiere": {
-      "capability": "premiere-agent",
-      "state": "optional-existing"
-    },
     "after_effects": {
       "capability": "after-effects-assistant",
       "state": "optional-existing"

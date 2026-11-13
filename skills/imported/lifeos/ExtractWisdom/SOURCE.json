@@ -1,0 +1,14 @@
+{
+  "source_namespace": "lifeos",
+  "upstream_repo": "danielmiessler/LifeOS",
+  "upstream_path": "LifeOS/install/skills/ExtractWisdom",
+  "upstream_commit": "5e2f2e8c0abde612da0e99c16c0d07d4ec21b88c",
+  "license": "MIT",
+  "import_type": "original-vendored-adapted",
+  "modified": true,
+  "adaptation": {
+    "reason": "Provide a portable member workflow.",
+    "change": "Replaced tool specific assumptions and rigid formatting with an evidence based procedure."
+  },
+  "imported_at": "2026-11-13"
+}

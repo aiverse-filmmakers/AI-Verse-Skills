@@ -1,0 +1,14 @@
+{
+  "source_namespace": "film",
+  "upstream_repo": "kajisho5/ffmpeg-skill",
+  "upstream_path": ".",
+  "upstream_commit": "0055f7b295ab4d5ef4dc30af76638775eccd0667",
+  "license": "MIT",
+  "import_type": "original-vendored-adapted",
+  "modified": true,
+  "adaptation": {
+    "reason": "Kept as an AI-Verse owned copy (plan D26, D33 Group C) so problems that would trip up a member could be fixed.",
+    "change": "Only the skill itself is carried over: SKILL.md, scripts/, references/ and docs/contract.md. The author's own project files are not: the .claude/skills folder (12 skills for developing that repo), .github, tests, evals, mcp, bin, examples, assets, CHANGELOG, CONTRIBUTING, package files and the README. No script was changed."
+  },
+  "imported_at": "2026-11-13"
+}

@@ -2,14 +2,7 @@
   "schema_version": 1,
   "canonical_to_upstream": {
     "k-ppt-generation": {
-      "canonical": "ppt-generation",
-      "upstream_name": "ppt-generation",
       "repo": "bytedance/deer-flow"
-    },
-    "k-product-marketing": {
-      "canonical": "product-marketing-context",
-      "upstream_name": "product-marketing",
-      "repo": "coreyhaines31/marketingskills"
     },
     "k-cash-flow": {
       "canonical": "cash-flow-snapshot",
@@ -33,16 +26,16 @@
     }
   },
   "legacy_user_aliases": {
-    "executive-assistant": "persona-exec-assistant",
-    "project-manager": "persona-project-manager",
-    "hr-coordinator": "persona-hr-coordinator",
-    "event-coordinator": "persona-event-coordinator",
-    "pptx": "ppt-generation",
     "spec-writing": "write-spec",
     "roadmap-management": "roadmap-update",
     "cash-flow": "cash-flow-snapshot",
-    "product-marketing": "product-marketing-context",
+    "product-marketing": "copywriting",
     "code-review": "change-review",
-    "pull-request-review": "change-review"
+    "pull-request-review": "change-review",
+    "ai-storyboard-director": "ai-video-director",
+    "produce-ai-video": "ai-video-director",
+    "meeting-action-items": "action-items",
+    "document-to-action-items": "action-items",
+    "product-marketing-context": "copywriting"
   }
 }

@@ -1,0 +1,14 @@
+{
+  "source_namespace": "nateherk",
+  "upstream_repo": "nateherkai/scroll-craft",
+  "upstream_path": "plugins/nateherk-design/skills/scroll-craft",
+  "upstream_commit": "0b816225945e45380397d6a0487efa3c98916858",
+  "license": "MIT",
+  "import_type": "original-vendored",
+  "modified": false,
+  "adaptation": {
+    "reason": "Kept as an AI-Verse owned copy (plan D26, decision of 13 November 2026 to keep this skill). Copied from the pinned upstream commit so it installs without any download.",
+    "change": "None. Copied unchanged."
+  },
+  "imported_at": "2026-11-13"
+}

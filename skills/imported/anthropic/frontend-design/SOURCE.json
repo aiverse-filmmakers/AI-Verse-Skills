@@ -1,0 +1,14 @@
+{
+  "source_namespace": "anthropic",
+  "upstream_repo": "anthropics/skills",
+  "upstream_path": "skills/frontend-design",
+  "upstream_commit": "34040c9c568585f6929bedeaad110ad08f079624",
+  "license": "Apache-2.0",
+  "import_type": "original-vendored",
+  "modified": false,
+  "adaptation": {
+    "reason": "Kept as an AI-Verse owned copy (plan D26, decision of 13 November 2026 to keep this skill). Copied from the pinned upstream commit so it installs without any download.",
+    "change": "None. Copied unchanged."
+  },
+  "imported_at": "2026-11-13"
+}

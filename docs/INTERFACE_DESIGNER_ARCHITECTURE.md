@@ -180,15 +180,12 @@ Preservation expectations are canonical in:
 | Capability | Source role |
 |---|---|
 | `frontend-design` | Distinctive frontend visual/art direction |
-| `ui-ux-pro-max` | Broad UI/UX intelligence, patterns, palette/type/product reasoning |
 
 ### Reference analysis
 
 | Capability | Source role |
 |---|---|
-| `design-first-ui-prompting` | Turns fuzzy UI intent into design-first specification |
 | `video-to-superprompt` | Extracts interface/motion system from reference video |
-| `stitched-full-page-capture` | Reliable capture for lazy/animated/WebGL/reference pages |
 
 ### Interaction and motion
 
@@ -222,7 +219,7 @@ Preservation expectations are canonical in:
 | Target | Existing AI-Verse capabilities |
 |---|---|
 | Figma | `figma-use`, `figma-generate-design` |
-| Canva/static design | `canva` |
+| Canva/static design | Removed from the library on 13 November 2026. The runtime's own Canva skills or connection are used when available |
 
 These capabilities were not replaced by Interface Designer.
 
@@ -231,7 +228,6 @@ These capabilities were not replaced by Interface Designer.
 | Source ID | Repository | Commit |
 |---|---|---|
 | `anthropic-frontend` | `anthropics/skills` | `34040c9c568585f6929bedeaad110ad08f079624` |
-| `nextlevelbuilder-ui` | `nextlevelbuilder/ui-ux-pro-max-skill` | `7f69fed6a2717900085f1bc3b263721f8ba025e2` |
 | `vercel-design` | `vercel-labs/agent-skills` | `063bee94c3f4df8453406c830b0a7df0f2860278` |
 | `mengto-ui` | `MengTo/Skills` | `321c769739b823de5eb94eb3a52aa1974fe783a2` |
 | `emil-design` | `emilkowalski/skills` | `d23d7f88a2e21c9e4b1418c7abe420f5c1052ba7` |

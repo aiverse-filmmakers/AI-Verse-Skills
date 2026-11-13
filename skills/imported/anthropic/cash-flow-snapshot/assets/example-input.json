@@ -1,0 +1,17 @@
+{
+  "as_of": "2026-04-22",
+  "opening_cash": 19200,
+  "receivables": [
+    {"name": "Acme Corp INV-112", "amount": 8400, "due": "2026-04-10", "mean_lag_days": 18, "stddev_days": 4, "payments_on_record": 11},
+    {"name": "BlueSky LLC INV-108", "amount": 14200, "due": "2026-04-22", "mean_lag_days": 7, "stddev_days": 2, "payments_on_record": 8},
+    {"name": "Crestwood Inc INV-115", "amount": 6000, "due": "2026-05-05", "mean_lag_days": 12, "stddev_days": 5, "payments_on_record": 6}
+  ],
+  "payables": [
+    {"name": "Payroll", "amount": 22000, "due": "2026-04-25"},
+    {"name": "Rent", "amount": 3200, "due": "2026-05-01"},
+    {"name": "Software subscriptions", "amount": 480, "due": "2026-05-01"},
+    {"name": "Payroll", "amount": 22000, "due": "2026-05-25"},
+    {"name": "Rent", "amount": 3200, "due": "2026-06-01"},
+    {"name": "Software subscriptions", "amount": 480, "due": "2026-06-01"}
+  ]
+}

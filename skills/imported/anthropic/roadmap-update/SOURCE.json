@@ -1,0 +1,14 @@
+{
+  "source_namespace": "anthropic",
+  "upstream_repo": "anthropics/knowledge-work-plugins",
+  "upstream_path": "product-management/skills/roadmap-update",
+  "upstream_commit": "34e1eae3e1cca0be18bc85067cc6dd78d1f5d4e5",
+  "license": "Apache-2.0",
+  "import_type": "original-vendored-adapted",
+  "modified": true,
+  "adaptation": {
+    "reason": "Kept as an AI-Verse owned copy and tidied to the AI-Verse skill build standard (plan D26).",
+    "change": "Added a saved roadmap file with a change log, so updates persist between chats, plus hard rules and a file template. Removed typed command leftovers and the link to a help file that is not shipped. Framework, dependency, capacity and communication guidance moved to references/frameworks.md. Project adjustments section added."
+  },
+  "imported_at": "2026-11-12"
+}

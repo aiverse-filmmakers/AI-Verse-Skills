@@ -1,0 +1,6 @@
+interface:
+  display_name: "AI Video Director"
+  short_description: "Direct shots, prompts, and AI video production"
+  default_prompt: "Use $ai-video-director to develop a shot plan from my script."
+policy:
+  allow_implicit_invocation: true

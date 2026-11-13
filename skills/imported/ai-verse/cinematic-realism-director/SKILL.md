@@ -1,6 +1,6 @@
 ---
 name: cinematic-realism-director
-description: Direct, generate, edit, diagnose, and adapt professional cinematic or photographic still images from minimal or expert input. Automatically applies the best professional execution appropriate to the requested medium, preserves explicit camera/style locks, uses the host-native/local image model before optional external providers, and keeps Magnific/Higgsfield as explicit-target or benchmark adapters rather than default backends.
+description: Direct, generate, edit, diagnose and adapt cinematic or photographic still images. Use when the user wants a still frame, photo, poster, key art or image prompt that should look like real photography or a film still, or wants an existing image made more realistic. Applies professional execution suited to the medium, preserves explicit camera and style locks, uses the host's own image model before optional external providers, and keeps Magnific and Higgsfield as explicit-target or benchmark adapters rather than default backends. For Seedance video prompts use ai-realism.
 version: 1.1.0
 license: MIT
 compatibility: Portable Agent Skill. Works in text-only mode; image generation/editing and provider-specific execution are optional host capabilities.
@@ -51,7 +51,7 @@ Use for:
 Do not use as the primary skill for:
 
 - timeline editing, cuts, captions, B-roll placement, EDLs, rendering, or temporal continuity;
-- video motion choreography, duration, or lip-sync except where a still-frame choice depends on motion/shutter appearance;
+- video motion choreography, duration, or lip-sync except where a still-frame choice depends on motion/shutter appearance (Seedance video prompts belong to `ai-realism`);
 - website/app/dashboard/product UI design;
 - unrelated charts/diagrams/logos/icons;
 - pure equipment-shopping questions with no image-direction task.
@@ -151,7 +151,7 @@ MCP is transport, not creative authority.
 
 Use them only when:
 
-- the user explicitly requests that provider/export; or
+- the user explicitly requests that provider/export, or says they are working in Higgsfield or names Soul Cinema for this task; or
 - a controlled benchmark explicitly names it.
 
 Do not route ordinary image requests to either provider.
