@@ -10,5 +10,9 @@
     "reason": "Kept as an AI-Verse owned copy (plan D26, decision of 13 November 2026 to keep this skill). Copied from the pinned upstream commit so it installs without any download.",
     "change": "None. Copied unchanged."
   },
-  "imported_at": "2026-11-13"
+  "imported_at": "2026-11-13",
+  "added_files": {
+    "canvas-fonts/IBMPlexSerif-OFL.txt": "OFL 1.1 text from google/fonts ofl/ibmplexserif/OFL.txt, added 2026-11-14 because upstream ships these fonts without their licence file",
+    "canvas-fonts/InstrumentSerif-OFL.txt": "OFL 1.1 text from google/fonts ofl/instrumentserif/OFL.txt, added 2026-11-14 for the same reason"
+  }
 }
