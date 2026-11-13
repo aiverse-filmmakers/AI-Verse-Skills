@@ -3,8 +3,8 @@
   "snapshot": "2026-09-14",
   "counts": {
     "foundation": 9,
-    "employee": 60,
-    "total": 69
+    "employee": 51,
+    "total": 60
   },
   "foundation": [
     {
@@ -124,16 +124,6 @@
       "state": "catalogued"
     },
     {
-      "rank": 18,
-      "id": "RedTeam",
-      "category": "judgment-strategy",
-      "source": "lifeos",
-      "repo": "danielmiessler/LifeOS",
-      "path": "LifeOS/install/skills/RedTeam",
-      "implementation": "original-upstream",
-      "state": "catalogued"
-    },
-    {
       "rank": 19,
       "id": "ExtractWisdom",
       "category": "judgment-strategy",
@@ -179,16 +169,6 @@
       "category": "creative-design",
       "source": "anthropic",
       "repo": "anthropics/skills",
-      "path": null,
-      "implementation": "original-upstream",
-      "state": "catalogued"
-    },
-    {
-      "rank": 29,
-      "id": "canva",
-      "category": "creative-design",
-      "source": "social-media-skills",
-      "repo": "social-media-skills/skills",
       "path": null,
       "implementation": "original-upstream",
       "state": "catalogued"
@@ -274,31 +254,11 @@
       "state": "catalogued"
     },
     {
-      "rank": 42,
-      "id": "launch-strategy",
-      "category": "marketing-social",
-      "source": "corey-haines",
-      "repo": "coreyhaines31/marketingskills",
-      "path": null,
-      "implementation": "original-upstream",
-      "state": "catalogued"
-    },
-    {
       "rank": 43,
       "id": "community-marketing",
       "category": "marketing-social",
       "source": "corey-haines",
       "repo": "coreyhaines31/marketingskills",
-      "path": null,
-      "implementation": "original-upstream",
-      "state": "catalogued"
-    },
-    {
-      "rank": 45,
-      "id": "cross-platform-repurposing",
-      "category": "marketing-social",
-      "source": "social-media-skills",
-      "repo": "social-media-skills/skills",
       "path": null,
       "implementation": "original-upstream",
       "state": "catalogued"
@@ -339,26 +299,6 @@
       "category": "film-media",
       "source": "film",
       "repo": "62656456/ai-film-skills",
-      "path": null,
-      "implementation": "original-upstream",
-      "state": "catalogued"
-    },
-    {
-      "rank": 50,
-      "id": "structure-screenplay",
-      "category": "film-media",
-      "source": "film",
-      "repo": "zhangzhangco/film-production-skills",
-      "path": null,
-      "implementation": "original-upstream",
-      "state": "catalogued"
-    },
-    {
-      "rank": 51,
-      "id": "plan-camera-shots",
-      "category": "film-media",
-      "source": "film",
-      "repo": "zhangzhangco/film-production-skills",
       "path": null,
       "implementation": "original-upstream",
       "state": "catalogued"
@@ -494,16 +434,6 @@
       "state": "catalogued"
     },
     {
-      "rank": 83,
-      "id": "ui-ux-pro-max",
-      "category": "creative-design",
-      "source": "nextlevelbuilder-ui",
-      "repo": "nextlevelbuilder/ui-ux-pro-max-skill",
-      "path": ".claude/skills/ui-ux-pro-max",
-      "implementation": "original-upstream",
-      "state": "catalogued"
-    },
-    {
       "rank": 84,
       "id": "react-best-practices",
       "category": "creative-design",
@@ -534,32 +464,12 @@
       "state": "vendored"
     },
     {
-      "rank": 88,
-      "id": "design-first-ui-prompting",
-      "category": "creative-design",
-      "source": "mengto-ui",
-      "repo": "MengTo/Skills",
-      "path": "agent-skills/ui/design-first-ui-prompting",
-      "implementation": "original-upstream",
-      "state": "catalogued"
-    },
-    {
       "rank": 89,
       "id": "video-to-superprompt",
       "category": "creative-design",
       "source": "mengto-ui",
       "repo": "MengTo/Skills",
       "path": "agent-skills/codex/video-to-superprompt",
-      "implementation": "original-upstream",
-      "state": "catalogued"
-    },
-    {
-      "rank": 90,
-      "id": "stitched-full-page-capture",
-      "category": "creative-design",
-      "source": "mengto-ui",
-      "repo": "MengTo/Skills",
-      "path": "agent-skills/codex/stitched-full-page-capture",
       "implementation": "original-upstream",
       "state": "catalogued"
     },

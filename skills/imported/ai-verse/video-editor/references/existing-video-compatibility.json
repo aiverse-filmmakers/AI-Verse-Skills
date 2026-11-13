@@ -21,16 +21,6 @@
       "reason": "AI video generation is distinct from editing supplied footage."
     },
     {
-      "id": "structure-screenplay",
-      "disposition": "retained-preproduction",
-      "reason": "Screenplay structure is not a post-production editor replacement."
-    },
-    {
-      "id": "plan-camera-shots",
-      "disposition": "retained-preproduction",
-      "reason": "Camera planning remains a production-planning capability."
-    },
-    {
       "id": "ffmpeg-skill",
       "disposition": "retained-specialist-backend",
       "reason": "Deterministic media operations remain useful below/alongside Video Editor."
@@ -60,5 +50,9 @@
   "removed_from_library_2026_11_12": [
     "premiere-agent",
     "kanban-video-orchestrator"
+  ],
+  "removed_from_library_2026_11_13": [
+    "structure-screenplay",
+    "plan-camera-shots"
   ]
 }

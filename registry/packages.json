@@ -3,9 +3,9 @@
   "snapshot": "2026-09-14",
   "counts": {
     "foundation": 9,
-    "employee": 60,
+    "employee": 51,
     "support": 16,
-    "canonical_total": 69
+    "canonical_total": 60
   },
   "policy": {
     "original_first": true,
@@ -113,12 +113,6 @@
       "license": "MIT",
       "packages": [
         {
-          "rank": 18,
-          "id": "RedTeam",
-          "category": "judgment-strategy",
-          "path": "LifeOS/install/skills/RedTeam"
-        },
-        {
           "rank": 19,
           "id": "ExtractWisdom",
           "category": "judgment-strategy",
@@ -219,23 +213,7 @@
       "commit": "6e30eeb2f6736bda8683b6bbaa674af3641d7945",
       "namespace": "social-media-skills",
       "license": "upstream-controlled",
-      "packages": [
-        {
-          "rank": 29,
-          "id": "canva",
-          "category": "creative-design",
-          "path": "skills/canva",
-          "operators": [
-            "canva"
-          ]
-        },
-        {
-          "rank": 45,
-          "id": "cross-platform-repurposing",
-          "category": "marketing-social",
-          "path": "skills/cross-platform-repurposing"
-        }
-      ],
+      "packages": [],
       "redistribution": "fetch-only"
     },
     "corey-haines": {
@@ -293,12 +271,6 @@
           "path": "skills/seo-audit"
         },
         {
-          "rank": 42,
-          "id": "launch-strategy",
-          "category": "marketing-social",
-          "path": "skills/launch"
-        },
-        {
           "rank": 43,
           "id": "community-marketing",
           "category": "marketing-social",
@@ -354,28 +326,7 @@
       "commit": "47b2a6a432235e716fa2aa0d08eefae76fdb34fd",
       "namespace": "film",
       "license": "upstream-controlled",
-      "packages": [
-        {
-          "rank": 50,
-          "id": "structure-screenplay",
-          "category": "film-media",
-          "name": "structure-screenplay",
-          "roots": [
-            "skills",
-            "."
-          ]
-        },
-        {
-          "rank": 51,
-          "id": "plan-camera-shots",
-          "category": "film-media",
-          "name": "plan-camera-shots",
-          "roots": [
-            "skills",
-            "."
-          ]
-        }
-      ],
+      "packages": [],
       "redistribution": "fetch-only"
     },
     "ffmpeg": {
@@ -486,14 +437,7 @@
       "commit": "7f69fed6a2717900085f1bc3b263721f8ba025e2",
       "namespace": "nextlevelbuilder",
       "license": "MIT",
-      "packages": [
-        {
-          "rank": 83,
-          "id": "ui-ux-pro-max",
-          "category": "creative-design",
-          "path": ".claude/skills/ui-ux-pro-max"
-        }
-      ],
+      "packages": [],
       "redistribution": "redistributable"
     },
     "vercel-design": {
@@ -532,22 +476,10 @@
       "license": "MIT",
       "packages": [
         {
-          "rank": 88,
-          "id": "design-first-ui-prompting",
-          "category": "creative-design",
-          "path": "agent-skills/ui/design-first-ui-prompting"
-        },
-        {
           "rank": 89,
           "id": "video-to-superprompt",
           "category": "creative-design",
           "path": "agent-skills/codex/video-to-superprompt"
-        },
-        {
-          "rank": 90,
-          "id": "stitched-full-page-capture",
-          "category": "creative-design",
-          "path": "agent-skills/codex/stitched-full-page-capture"
         }
       ],
       "redistribution": "redistributable"

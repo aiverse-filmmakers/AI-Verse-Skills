@@ -7,11 +7,6 @@
       "id": "canvas-design",
       "classification": "KEEP",
       "reason": "Static PNG/PDF/poster design is a different deliverable class."
-    },
-    {
-      "id": "canva",
-      "classification": "KEEP",
-      "reason": "Canva social/creator workflow is a distinct design surface."
     }
   ],
   "removed_capabilities": [],
@@ -29,5 +24,11 @@
     "figma-generate-design",
     "design-and-templates",
     "baoyu-article-illustrator"
+  ],
+  "removed_from_library_2026_11_13": [
+    "canva",
+    "ui-ux-pro-max",
+    "design-first-ui-prompting",
+    "stitched-full-page-capture"
   ]
 }
