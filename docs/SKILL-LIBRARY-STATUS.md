@@ -61,7 +61,7 @@ Scores from a first read on 12 November (usefulness to members / craft, out of 1
 |---|---|---|---|
 | `community-marketing` | 8 | 8 | Keep |
 | `copywriting` | 8 | 8 | Keep |
-| `social-content` | 8 | 8 | Keep. Fix the inner name (`social`) |
+| `social-content` | 8 | 8 | Now an owned copy (13 November): inner name fixed, pointers to missing skills removed, and the four repurposing reference files from the removed `cross-platform-repurposing` added. Untested |
 | `product-marketing-context` | 7 | 8 | Keep. Fix the inner name (`product-marketing`) |
 | `ad-creative` | 7 | 8 | Keep |
 | `content-strategy` | 7 | 8 | Keep |

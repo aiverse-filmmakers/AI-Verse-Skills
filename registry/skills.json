@@ -210,8 +210,8 @@
       "source": "corey-haines",
       "repo": "coreyhaines31/marketingskills",
       "path": null,
-      "implementation": "original-upstream",
-      "state": "catalogued"
+      "implementation": "upstream-adapted",
+      "state": "vendored"
     },
     {
       "rank": 37,

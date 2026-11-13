@@ -11,13 +11,13 @@ The authoritative package pins are in `registry/packages.json`. The public-beta 
 | Google Workspace CLI | `googleworkspace/cli` | Apache-2.0 | Redistributable where recorded; selected proof packages may be vendored |
 | Hermes Agent | `NousResearch/hermes-agent` | MIT | Redistributable where recorded; selected proof package may be vendored |
 | LifeOS | `danielmiessler/LifeOS` | MIT | Redistributable where recorded; selected proof package may be vendored |
-| Marketing Skills | `coreyhaines31/marketingskills` | MIT | Fetch-only in the public-beta distribution |
+| Marketing Skills | `coreyhaines31/marketingskills` | MIT | Redistributable; `social-content` is vendored and adapted, with a `LICENSE` copy and a `SOURCE.json` change note. The other skills are fetched at the pinned commit |
 | FFmpeg Skill | `kajisho5/ffmpeg-skill` | MIT | Fetch-only in the public-beta distribution |
 | ByteDance DeerFlow | `bytedance/deer-flow` | Upstream-controlled | Fetch-only |
 | Anthropic Skills | `anthropics/skills` | Upstream-controlled | Fetch-only |
 | Anthropic Knowledge Work Plugins | `anthropics/knowledge-work-plugins` | Apache-2.0 | Redistributable; ten skills are vendored and adapted, each with a `LICENSE` copy and a `SOURCE.json` change note. The rest stay fetch-only |
 | Figma MCP Server Guide | `figma/mcp-server-guide` | Upstream-controlled | Fetch-only |
-| Social Media Skills | `social-media-skills/skills` | Upstream-controlled | Fetch-only |
+| Social Media Skills | `social-media-skills/skills` | MIT | No skills left in the catalogue. Four reference files are reused, adapted, inside `social-content`, with the licence copied there |
 | NovoAds Agent Skills | `novoads/agent-skills` | Upstream-controlled | Fetch-only |
 | AI Film Skills | `62656456/ai-film-skills` | Upstream-controlled | Fetch-only |
 | Film Production Skills | `zhangzhangco/film-production-skills` | Upstream-controlled | Fetch-only |

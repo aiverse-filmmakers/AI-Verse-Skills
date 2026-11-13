@@ -212,7 +212,7 @@
       "repo": "social-media-skills/skills",
       "commit": "6e30eeb2f6736bda8683b6bbaa674af3641d7945",
       "namespace": "social-media-skills",
-      "license": "upstream-controlled",
+      "license": "MIT",
       "packages": [],
       "redistribution": "fetch-only"
     },
@@ -244,7 +244,8 @@
           "rank": 36,
           "id": "social-content",
           "category": "marketing-social",
-          "path": "skills/social"
+          "path": "skills/social",
+          "vendored": true
         },
         {
           "rank": 37,
@@ -277,7 +278,7 @@
           "path": "skills/community-marketing"
         }
       ],
-      "redistribution": "fetch-only"
+      "redistribution": "redistributable"
     },
     "novoads": {
       "repo": "novoads/agent-skills",

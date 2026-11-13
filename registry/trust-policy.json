@@ -41,10 +41,10 @@
     },
     "coreyhaines31/marketingskills": {
       "license": "MIT",
-      "redistribution": "fetch-only",
+      "redistribution": "redistributable",
       "trust": "reviewed-upstream",
       "ownership": "curated_upstream",
-      "vendoring_allowed": false,
+      "vendoring_allowed": true,
       "auto_mutation": false
     },
     "kajisho5/ffmpeg-skill": {
@@ -88,7 +88,7 @@
       "auto_mutation": false
     },
     "social-media-skills/skills": {
-      "license": "upstream-controlled",
+      "license": "MIT",
       "redistribution": "fetch-only",
       "trust": "external",
       "ownership": "external",
