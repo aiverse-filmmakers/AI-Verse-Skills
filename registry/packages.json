@@ -3,9 +3,9 @@
   "snapshot": "2026-09-14",
   "counts": {
     "foundation": 9,
-    "employee": 51,
-    "support": 16,
-    "canonical_total": 60
+    "employee": 50,
+    "support": 11,
+    "canonical_total": 59
   },
   "policy": {
     "original_first": true,
@@ -55,15 +55,6 @@
           "category": "universal-office",
           "path": "optional-skills/communication/one-three-one-rule",
           "vendored": true
-        },
-        {
-          "rank": 10,
-          "id": "google-workspace",
-          "category": "universal-office",
-          "path": "skills/productivity/google-workspace",
-          "operators": [
-            "google-workspace"
-          ]
         },
         {
           "rank": 22,
@@ -592,31 +583,6 @@
     }
   },
   "support": [
-    {
-      "id": "gws-gmail",
-      "source": "google",
-      "path": "skills/gws-gmail"
-    },
-    {
-      "id": "gws-calendar",
-      "source": "google",
-      "path": "skills/gws-calendar"
-    },
-    {
-      "id": "gws-drive",
-      "source": "google",
-      "path": "skills/gws-drive"
-    },
-    {
-      "id": "gws-chat",
-      "source": "google",
-      "path": "skills/gws-chat"
-    },
-    {
-      "id": "gws-sheets",
-      "source": "google",
-      "path": "skills/gws-sheets"
-    },
     {
       "id": "hyperframes",
       "source": "hyperframes-v0840",

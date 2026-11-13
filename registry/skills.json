@@ -3,8 +3,8 @@
   "snapshot": "2026-09-14",
   "counts": {
     "foundation": 9,
-    "employee": 51,
-    "total": 60
+    "employee": 50,
+    "total": 59
   },
   "foundation": [
     {
@@ -102,16 +102,6 @@
       "path": "optional-skills/communication/one-three-one-rule",
       "implementation": "upstream-adapted",
       "state": "vendored"
-    },
-    {
-      "rank": 10,
-      "id": "google-workspace",
-      "category": "universal-office",
-      "source": "hermes",
-      "repo": "NousResearch/hermes-agent",
-      "path": "skills/productivity/google-workspace",
-      "implementation": "original-upstream",
-      "state": "catalogued"
     },
     {
       "rank": 19,

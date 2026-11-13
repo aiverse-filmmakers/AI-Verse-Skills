@@ -5,13 +5,13 @@ Starting point: 118 catalogue skills (main at `bab2834`).
 
 | Status | Count |
 |---|---|
-| Removed outright | 58 |
+| Removed outright | 59 |
 | Old filmmaking entries combined into one | 2 |
 | Kept and improved (owned by AI-Verse) | 45 |
-| Kept as they are | 3 |
+| Kept as they are | 2 |
 | Still to review | 10 |
 | Added 13 November (new, owned by AI-Verse) | 2 |
-| **Catalogue after this change** | **60** (50 kept + 10 to review) |
+| **Catalogue after this change** | **59** (49 kept + 10 to review) |
 
 `notion` and `shadcn` were removed earlier (pull request #28) and are not counted here.
 
@@ -42,11 +42,11 @@ Approved 13 November: `whisper` and `ExtractWisdom` are kept as adapted copies. 
 
 Retired names now redirect: `ai-storyboard-director` and `produce-ai-video` to `ai-video-director`, `meeting-action-items` and `document-to-action-items` to `action-items`.
 
-## Kept as they are (3)
+## Kept as they are (2)
 
-`react-best-practices` (Vercel), `animate-expo` (Emil Kowalski), `google-workspace` (Hermes; still to decide between porting it properly or relying on Claude's and ChatGPT's own Google connections).
+`react-best-practices` (Vercel) and `animate-expo` (Emil Kowalski).
 
-## Removed (58)
+## Removed (59)
 
 - **Accounting (7):** `journal-entry-prep`, `reconciliation`, `close-management`, `3-statement-model`, `excel-author`, `financial-statements`, `variance-analysis`
 - **Sales and support systems (6):** `customer-retention`, `deal-management`, `sales-execution`, `pipeline-review`, `ticket-triage`, `vendor-check`
@@ -55,6 +55,7 @@ Retired names now redirect: `ai-storyboard-director` and `produce-ai-video` to `
 - **Developer stubs (6):** `skill-forge` (replaced by `/skill`), `skill-miner` (moving into `/learn`), `knowledge-writeback`, `delegation-orchestrator`, `database-migration-guardian`, plus `browser-workflow-operator`
 - **Folded into kept skills (7):** `environment-doctor`, `configuration-contract-doctor`, `incident-forensics` (into `root-cause-debugger`), `semantic-codebase-sweep` (into `transactional-refactor`), `release-deploy-guard` (into `git-change-lifecycle`), `legal-risk-assessment` (into `review-contract`), `call-prep` (into `account-research`)
 - **Second review (12):** `premiere-agent` (overlaps `video-editor`), `kanban-video-orchestrator` (Hermes only), `analytics`, `scheduling-and-queue` (WoopSocial only), `docx`, `xlsx`, `ppt-generation` (Claude and Codex have their own), `Council`, `Ideate` (broken outside the author's setup), `design-and-templates`, `baoyu-article-illustrator`, `theme-factory`
+- **Decided 13 November (1):** `google-workspace` (Claude and ChatGPT have their own Google connections; the five `gws-*` helper packages went with it. The connection readiness entry stays for now).
 - **Third review, 13 November (9):** `structure-screenplay`, `plan-camera-shots` (built for an outside software pipeline; `director-agent` and `ai-storyboard-director` cover the same jobs), `cross-platform-repurposing` (mostly pointers to skills not in the library; `social-content` covers repurposing, and its reference files are to be reused there), `launch-strategy` (software product launches), `canva` (mostly pointers to WoopSocial and missing skills; Canva's own connection does the work), `RedTeam` (32 agents per run, outside voice server and folders; a small replacement is to be built), `ui-ux-pro-max` (commands fail outside a Claude plugin, 3.6 MB), `design-first-ui-prompting` (a thin image prompt template), `stitched-full-page-capture` (tied to its author's own article workflow)
 
 `interface-designer` no longer routes to the removed Figma skills: its Figma target now reports "unavailable" unless the runtime has its own Figma skills. The same now applies to Canva. The interface designer does the UI and UX reasoning and the design specification itself, since `ui-ux-pro-max` and `design-first-ui-prompting` are gone.
