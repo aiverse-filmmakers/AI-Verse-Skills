@@ -1,0 +1,37 @@
+contract: aiverse-skill-v1
+
+skill:
+  name: ai-realism
+  version: 1.0.0
+  category: film-media
+  risk: low
+
+runtime:
+  posture: read-only
+  headless_safe: true
+  idempotency: safe
+  supports_dry_run: true
+  supports_resume: true
+  supports_rollback: true
+  safe_for_scheduled_execution: false
+  platforms:
+    - linux
+    - macos
+    - windows
+
+requires:
+  toolpacks: []
+  effects:
+    - workspace.read
+  optional_effects: []
+  network: none
+  allowed_domains: []
+  secrets: []
+
+verification:
+  required: false
+  mode: explicit-postconditions
+
+ownership:
+  class: human
+  autonomous_mutation: false

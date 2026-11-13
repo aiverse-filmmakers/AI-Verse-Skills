@@ -3,9 +3,9 @@
   "snapshot": "2026-09-14",
   "counts": {
     "foundation": 9,
-    "employee": 49,
+    "employee": 51,
     "support": 16,
-    "canonical_total": 58
+    "canonical_total": 60
   },
   "policy": {
     "original_first": true,
@@ -419,6 +419,20 @@
             "general-video",
             "embedded-captions"
           ]
+        },
+        {
+          "rank": 101,
+          "id": "ai-realism",
+          "category": "film-media",
+          "vendored": true,
+          "path": "skills/imported/ai-verse/ai-realism"
+        },
+        {
+          "rank": 102,
+          "id": "higgsfield-acting",
+          "category": "film-media",
+          "vendored": true,
+          "path": "skills/imported/ai-verse/higgsfield-acting"
         }
       ],
       "redistribution": "redistributable"

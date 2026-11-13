@@ -3,8 +3,8 @@
   "snapshot": "2026-09-14",
   "counts": {
     "foundation": 9,
-    "employee": 49,
-    "total": 58
+    "employee": 51,
+    "total": 60
   },
   "foundation": [
     {
@@ -550,6 +550,26 @@
       "source": "ai-verse",
       "repo": "aiverse-filmmakers/AI-Verse-Skills",
       "path": "skills/imported/ai-verse/video-editor",
+      "implementation": "ai-verse-native",
+      "state": "vendored"
+    },
+    {
+      "rank": 101,
+      "id": "ai-realism",
+      "category": "film-media",
+      "source": "ai-verse",
+      "repo": "aiverse-filmmakers/AI-Verse-Skills",
+      "path": "skills/imported/ai-verse/ai-realism",
+      "implementation": "ai-verse-native",
+      "state": "vendored"
+    },
+    {
+      "rank": 102,
+      "id": "higgsfield-acting",
+      "category": "film-media",
+      "source": "ai-verse",
+      "repo": "aiverse-filmmakers/AI-Verse-Skills",
+      "path": "skills/imported/ai-verse/higgsfield-acting",
       "implementation": "ai-verse-native",
       "state": "vendored"
     }

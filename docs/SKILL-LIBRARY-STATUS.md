@@ -10,7 +10,8 @@ Starting point: 118 catalogue skills (main at `bab2834`).
 | Kept and improved (owned by AI-Verse) | 45 |
 | Kept as they are | 3 |
 | Still to review | 10 |
-| **Catalogue after this change** | **58** (48 kept + 10 to review) |
+| Added 13 November (new, owned by AI-Verse) | 2 |
+| **Catalogue after this change** | **60** (50 kept + 10 to review) |
 
 `notion` and `shadcn` were removed earlier (pull request #28) and are not counted here.
 
@@ -34,6 +35,12 @@ Approved 13 November: `whisper` and `ExtractWisdom` are kept as adapted copies. 
 - Adobe skills author, Apache 2.0: `after-effects-assistant` (inner name fixed; the fixed folder path replaced with the folder the skill is loaded from)
 - Novoads, MIT: `meta-ad-builder` (the Novoads requirement removed; it needs only Meta credentials)
 - kajisho5, MIT: `ffmpeg-skill` (only the skill itself kept: 49 files instead of 124)
+
+## Added 13 November (2)
+
+`ai-realism` (Seedance 2.5 prompt writing) and `higgsfield-acting` (performance direction for AI video). Both are written for AI-Verse and registered for the full, creator and filmmaker profiles and the ai-filmmaker role. They work in a fixed chain with `director-agent`, `ai-video-director` and `cinematic-realism-director`: the creative brief outranks locked references, which outrank acting, which outranks prompt structure, which outranks platform limits. Triggering in a fresh Claude or Codex chat has not been verified; library skills are not yet copied into `.claude/skills` and `.agents/skills` (open item 3).
+
+Retired names now redirect: `ai-storyboard-director` and `produce-ai-video` to `ai-video-director`, `meeting-action-items` and `document-to-action-items` to `action-items`.
 
 ## Kept as they are (3)
 

@@ -51,7 +51,7 @@ Use for:
 Do not use as the primary skill for:
 
 - timeline editing, cuts, captions, B-roll placement, EDLs, rendering, or temporal continuity;
-- video motion choreography, duration, or lip-sync except where a still-frame choice depends on motion/shutter appearance;
+- video motion choreography, duration, or lip-sync except where a still-frame choice depends on motion/shutter appearance (Seedance video prompts belong to `ai-realism`);
 - website/app/dashboard/product UI design;
 - unrelated charts/diagrams/logos/icons;
 - pure equipment-shopping questions with no image-direction task.
@@ -151,7 +151,7 @@ MCP is transport, not creative authority.
 
 Use them only when:
 
-- the user explicitly requests that provider/export; or
+- the user explicitly requests that provider/export, or says they are working in Higgsfield or names Soul Cinema for this task; or
 - a controlled benchmark explicitly names it.
 
 Do not route ordinary image requests to either provider.

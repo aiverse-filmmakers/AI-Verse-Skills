@@ -226,6 +226,8 @@ Failing test: if a generic TV director could produce the same plan from the plot
 
 Never direct actors with emotional labels alone.
 
+When the performance will go into an AI video prompt, pass each character's objective, action verb and reaction to `higgsfield-acting` when it is available. It writes the prompt level performance, and `ai-realism` places it in the final Seedance prompt. Do not duplicate that work here.
+
 Convert emotion into playable action:
 
 - "angry" -> attack, corner, punish, expose, force an answer.

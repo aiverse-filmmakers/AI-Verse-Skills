@@ -53,7 +53,9 @@
         "find-animation-opportunities",
         "animate-expo",
         "scroll-craft",
-        "video-editor"
+        "video-editor",
+        "ai-realism",
+        "higgsfield-acting"
       ]
     },
     "universal": {
@@ -106,7 +108,9 @@
         "improve-animations",
         "find-animation-opportunities",
         "animate-expo",
-        "scroll-craft"
+        "scroll-craft",
+        "ai-realism",
+        "higgsfield-acting"
       ]
     },
     "business": {
@@ -162,7 +166,9 @@
         "improve-animations",
         "find-animation-opportunities",
         "animate-expo",
-        "scroll-craft"
+        "scroll-craft",
+        "ai-realism",
+        "higgsfield-acting"
       ]
     },
     "marketing": {

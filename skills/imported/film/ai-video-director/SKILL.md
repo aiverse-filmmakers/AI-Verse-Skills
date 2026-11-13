@@ -8,6 +8,10 @@ license: Apache-2.0
 
 Turn the user's story or approved creative direction into the requested shot design, video prompts, or playable video. A storyboard request, prompt request, limited revision, and finished film are different jobs. Deliver the requested outcome; planning artifacts do not substitute for a finished video.
 
+## Where this skill sits in the filmmaking chain
+
+When a story is not settled, `director-agent` plans it first, including each character's objective, action verb and reaction. This skill then decides the deliverable and designs the shots. For any shot with a character, hand the performance to `higgsfield-acting` when it is available. For a Seedance prompt, `ai-realism` assembles the final prompt in its fixed block order and formats each prompt in a code block. `video-editor` owns editing of real footage. Do not skip a step that applies; if a named skill is not installed, say so and do that step plainly yourself. The user's creative brief and locked references outrank all of them.
+
 ## First choose the task
 
 - **Shot design or storyboard**: create an understandable, actionable shot plan. Provide prompts only when requested or clearly needed for the intended generation workflow.

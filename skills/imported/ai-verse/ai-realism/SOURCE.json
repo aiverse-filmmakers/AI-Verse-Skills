@@ -1,0 +1,7 @@
+{
+  "source_namespace": "ai-verse",
+  "import_type": "ai-verse-native",
+  "modified": true,
+  "summary": "Written for AI-Verse as an original skill for Seedance 2.5 prompts. Prompt structure, tables, rules and wording are AI-Verse's own. Platform numbers are labelled 'verify' because they change with the model. No third-party text is redistributed.",
+  "created": "2026-11-13"
+}

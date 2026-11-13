@@ -2,7 +2,7 @@
 
 Status: OPTIONAL EXPLICIT-TARGET / BENCHMARK ADAPTER
 
-Purpose: translate an already-resolved Cinematic Shot Spec into Higgsfield Soul Cinema/Soul-aware instructions **only when the user explicitly requests Higgsfield output/execution or a controlled benchmark names Higgsfield**.
+Purpose: translate an already-resolved Cinematic Shot Spec into Higgsfield Soul Cinema/Soul-aware instructions **only when the user explicitly requests Higgsfield output/execution, says they are working in Higgsfield or names Soul Cinema for the task, or a controlled benchmark names Higgsfield**.
 
 ## Non-Negotiable Boundary
 
@@ -44,7 +44,7 @@ Do not outsource core direction to an opaque provider enhancer.
 
 Use this adapter only when:
 
-1. the user explicitly requests Higgsfield/Soul Cinema; or
+1. the user explicitly requests Higgsfield/Soul Cinema, or says they are working in Higgsfield for this task; or
 2. a benchmark/evaluation explicitly specifies Higgsfield.
 
 If neither is true, do not use Higgsfield for ordinary generation.
