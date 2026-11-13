@@ -5,17 +5,20 @@ Starting point: 118 catalogue skills (main at `bab2834`).
 
 | Status | Count |
 |---|---|
-| Removed in this change | 58 |
-| Kept and improved (owned by AI-Verse) | 43 |
+| Removed outright | 58 |
+| Old filmmaking entries combined into one | 2 |
+| Kept and improved (owned by AI-Verse) | 45 |
 | Kept as they are | 3 |
-| Still to review | 13 |
-| **Catalogue after this change** | **59** (46 kept + 13 to review) |
+| Still to review | 10 |
+| **Catalogue after this change** | **58** (48 kept + 10 to review) |
 
 `notion` and `shadcn` were removed earlier (pull request #28) and are not counted here.
 
-## Kept and improved (43)
+## Kept and improved (45)
 
 None of these has been tested with and without the skill yet. Scores are estimates.
+
+Approved 13 November: `director-agent` is an English adapted copy. `ai-storyboard-director` and `produce-ai-video` are merged into `ai-video-director`, with a shared storyboard process and no fixed minimum shot count. Old explicit identifiers are no longer in the catalogue; runtime alias compatibility is not established. These filmmaking skills have not been tested in a live filmmaking workflow. `after-effects-assistant` is kept, with its version detection corrected.
 
 Approved 13 November: `whisper` and `ExtractWisdom` are kept as adapted copies. Both retain their existing identifiers for compatibility. Whisper now provides a practical transcription workflow; ExtractWisdom uses available source tools and preserves attribution and uncertainty. Neither has been tested in a live member workflow.
 
@@ -49,19 +52,16 @@ Approved 13 November: `whisper` and `ExtractWisdom` are kept as adapted copies. 
 
 `interface-designer` no longer routes to the removed Figma skills: its Figma target now reports "unavailable" unless the runtime has its own Figma skills. The same now applies to Canva. The interface designer does the UI and UX reasoning and the design specification itself, since `ui-ux-pro-max` and `design-first-ui-prompting` are gone.
 
-## Still to review (13)
+## Still to review (10)
 
-Decided 13 November: keep all of them. Group A (nine skills) is left as it is, Group B (marketing, seven skills) is done above, Group C (small fixes, nine skills) is done above, Group D is still to do. See entry D33 of the skills plan.
+Decided 13 November: keep all of them. Group A (nine skills) is left as it is, Group B (marketing, seven skills) is done above, Group C (small fixes, nine skills) is done above, Group D is complete in the current branch; project adjustments and the replacement red team remain separate work. See entry D33 of the skills plan.
 
 Scores from a first read on 12 November (usefulness to members / craft, out of 10), with the recommended action. A second read of every skill in full gave different scores and recommendations for several of these; that review is entry D31 of the skills plan in the AI-Verse OS development workspace. Decided on 13 November: `product-marketing-context` will be replaced by per project adjustments once those exist. The four animation and Apple skills that review recommended removing were kept by decision on 13 November.
 
-### Film and video (4)
+### Film and video (1)
 | Skill | Use | Craft | Recommendation |
 |---|---|---|---|
 | `video-editor` | 9 | 8 | Keep |
-| `director-agent` | 9 | 7 | Keep. Clean up the mixed Chinese terms |
-| `produce-ai-video` | 8 | 6 | English translation is vendored. Still review overlap and Codex-specific wording before the final keep or merge decision. No live filmmaking test has been run. |
-| `ai-storyboard-director` | 8 | 6 | Translate to English (it never triggers on English requests) |
 
 ### Marketing (1)
 | Skill | Use | Craft | Recommendation |
@@ -90,7 +90,7 @@ Scores from a first read on 12 November (usefulness to members / craft, out of 1
 
 ## Open items
 
-1. No skill in this change has been tested with and without the skill in fresh chats.
+1. No skill in this change has been tested with and without the skill in fresh chats. The English filmmaking translations have not had an independent full accuracy audit.
 2. Six AI-Verse specific rules taken out of `change-review` should become AI-Verse OS project adjustments for that skill.
 3. Library skills are not yet copied into `.claude/skills` and `.agents/skills`, so Claude and Codex cannot trigger them by themselves. This is the main reason the library has barely been used.
 4. A usage counter (count and last used date per skill) does not exist yet.

@@ -8,7 +8,7 @@
   "modified": true,
   "adaptation": {
     "reason": "Kept as an AI-Verse owned copy (plan D26, D33 Group C) so problems that would trip up a member could be fixed.",
-    "change": "Inner name changed from after-effects to after-effects-assistant to match the catalogue. The fixed path ~/.claude/skills/after-effects-assistant, which broke when the skill lived anywhere else, replaced with a step that uses the folder the skill was loaded from and resolves symlinks with pwd -P. Everything else (scripts, rules, references) is unchanged."
+    "change": "Inner name changed from after-effects to after-effects-assistant to match the catalogue. The fixed path ~/.claude/skills/after-effects-assistant, which broke when the skill lived anywhere else, replaced with a step that uses the folder the skill was loaded from and resolves symlinks with pwd -P. Everything else (scripts, rules, references) is unchanged. Fixed runner version detection to preserve spaces in application names and correctly handle no, one, or multiple installations."
   },
   "imported_at": "2026-11-13"
 }

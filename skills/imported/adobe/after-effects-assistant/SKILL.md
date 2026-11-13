@@ -20,7 +20,7 @@ This skill automates After Effects by generating ExtendScript (.jsx) and executi
 ## First-Time Setup
 
 1. Run `scripts/runner.sh` with any query script to detect the AE version
-2. If multiple AE versions are installed, the user must choose one — runner.sh will prompt
+2. If multiple AE versions are installed, the runner lists them and stops; ask the user which one to use and follow its setup instructions
 3. Ensure AE Preferences > Scripting & Expressions > "Allow Scripts to Write Files and Access Network" is enabled
 
 ## Workflow

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Director Agent"
+  short_description: "Handles screenplay creation and revision, causality and dialogue, AI execution layers, and pre-storyboard directing decisions."
+  default_prompt: "Use $director-agent to create, revise, or diagnose a screenplay, or complete a director treatment before storyboarding."

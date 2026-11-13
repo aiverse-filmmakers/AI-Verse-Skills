@@ -63,21 +63,23 @@ set_cached_version() {
 }
 
 detect_ae_versions() {
-    local versions=()
-    for dir in /Applications/Adobe\ After\ Effects*/; do
+    # Preserve spaces within application names and allow the search root to be
+    # supplied by callers that verify discovery using an isolated directory.
+    local applications_dir="${1:-/Applications}"
+    local dir name
+    VERSIONS=()
+    for dir in "$applications_dir"/Adobe\ After\ Effects*/; do
         if [[ -d "$dir" ]]; then
-            local name
-            name=$(basename "$dir")
-            versions+=("$name")
+            name="${dir%/}"
+            VERSIONS+=("${name##*/}")
         fi
     done
-    echo "${versions[@]}"
 }
 
 AE_APP=$(get_cached_version)
 
 if [[ -z "$AE_APP" ]]; then
-    IFS=' ' read -ra VERSIONS <<< "$(detect_ae_versions)"
+    detect_ae_versions
 
     if [[ ${#VERSIONS[@]} -eq 0 ]]; then
         log "ERROR: No AE installation found"

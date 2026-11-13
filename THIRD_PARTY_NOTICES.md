@@ -19,7 +19,7 @@ The authoritative package pins are in `registry/packages.json`. The public-beta 
 | Figma MCP Server Guide | `figma/mcp-server-guide` | Upstream-controlled | Fetch-only |
 | Social Media Skills | `social-media-skills/skills` | MIT | No skills left in the catalogue. Four reference files are reused, adapted, inside `social-content`, with the licence copied there |
 | NovoAds Agent Skills | `novoads/agent-skills` | MIT | Redistributable. `meta-ad-builder` is vendored and adapted (Novoads requirement removed), with a `LICENSE` copy and a `SOURCE.json` change note |
-| AI Film Skills | `62656456/ai-film-skills` | Apache-2.0 | `produce-ai-video` vendored with English translation, licence and source record; remaining skills fetched at the pinned commit |
+| AI Film Skills | `62656456/ai-film-skills` | Apache-2.0 | `director-agent` and the merged `ai-video-director` are vendored and adapted in English, with licence and source records |
 | Film Production Skills | `zhangzhangco/film-production-skills` | Upstream-controlled | Fetch-only |
 | Premiere Agent | `Kemerd/premiere-agent` | Upstream-controlled | Fetch-only |
 | Adobe Agent Skills | `aedev-tools/adobe-agent-skills` | Apache-2.0 | Redistributable. `after-effects-assistant` is vendored and adapted, with a `LICENSE` copy and a `SOURCE.json` change note |

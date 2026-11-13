@@ -3,8 +3,8 @@
   "snapshot": "2026-09-14",
   "counts": {
     "foundation": 9,
-    "employee": 50,
-    "total": 59
+    "employee": 49,
+    "total": 58
   },
   "foundation": [
     {
@@ -270,22 +270,12 @@
       "source": "film",
       "repo": "62656456/ai-film-skills",
       "path": null,
-      "implementation": "original-upstream",
-      "state": "catalogued"
+      "implementation": "upstream-adapted",
+      "state": "vendored"
     },
     {
       "rank": 48,
-      "id": "ai-storyboard-director",
-      "category": "film-media",
-      "source": "film",
-      "repo": "62656456/ai-film-skills",
-      "path": null,
-      "implementation": "original-upstream",
-      "state": "catalogued"
-    },
-    {
-      "rank": 49,
-      "id": "produce-ai-video",
+      "id": "ai-video-director",
       "category": "film-media",
       "source": "film",
       "repo": "62656456/ai-film-skills",

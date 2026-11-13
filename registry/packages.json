@@ -3,9 +3,9 @@
   "snapshot": "2026-09-14",
   "counts": {
     "foundation": 9,
-    "employee": 50,
+    "employee": 49,
     "support": 16,
-    "canonical_total": 59
+    "canonical_total": 58
   },
   "policy": {
     "original_first": true,
@@ -312,19 +312,14 @@
           "rank": 47,
           "id": "director-agent",
           "category": "film-media",
-          "path": "skills/director-agent"
+          "path": "skills/director-agent",
+          "vendored": true
         },
         {
           "rank": 48,
-          "id": "ai-storyboard-director",
+          "id": "ai-video-director",
           "category": "film-media",
-          "path": "skills/ai-storyboard-director"
-        },
-        {
-          "rank": 49,
-          "id": "produce-ai-video",
-          "category": "film-media",
-          "path": "skills/produce-ai-video",
+          "path": "skills/ai-storyboard-director",
           "vendored": true
         }
       ],

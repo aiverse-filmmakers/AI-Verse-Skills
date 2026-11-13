@@ -2,7 +2,7 @@
   "schema_version": 1,
   "profiles": {
     "full": {
-      "description": "All 60 current canonical capabilities plus required support packages.",
+      "description": "All 58 current canonical capabilities plus required support packages.",
       "include_foundation": true,
       "employee_skills": [
         "email-inbox-triage",
@@ -26,8 +26,7 @@
         "community-marketing",
         "meta-ad-builder",
         "director-agent",
-        "ai-storyboard-director",
-        "produce-ai-video",
+        "ai-video-director",
         "ffmpeg-skill",
         "after-effects-assistant",
         "whisper",
@@ -90,8 +89,7 @@
         "community-marketing",
         "meta-ad-builder",
         "director-agent",
-        "ai-storyboard-director",
-        "produce-ai-video",
+        "ai-video-director",
         "ffmpeg-skill",
         "after-effects-assistant",
         "whisper",
@@ -141,8 +139,7 @@
         "interface-designer",
         "video-editor",
         "director-agent",
-        "ai-storyboard-director",
-        "produce-ai-video",
+        "ai-video-director",
         "ffmpeg-skill",
         "after-effects-assistant",
         "whisper",

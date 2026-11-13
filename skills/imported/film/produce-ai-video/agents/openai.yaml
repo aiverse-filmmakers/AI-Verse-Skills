@@ -1,6 +1,0 @@
-interface:
-  display_name: "Autonomous AI Video Director"
-  short_description: "Complete autonomous workflow from script interpretation and directing through generation, editing, and qualified video delivery"
-  default_prompt: "Use $produce-ai-video to turn this script into a qualified, watchable final video."
-policy:
-  allow_implicit_invocation: true
