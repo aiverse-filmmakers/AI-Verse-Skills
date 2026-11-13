@@ -185,15 +185,15 @@ class CinematicRealismDirectorContractTests(unittest.TestCase):
         for expected in ("reg-023", "reg-024", "reg-025", "reg-026", "reg-027"):
             self.assertIn(expected, regression_ids)
 
-    def test_ranked_registry_remains_explicit_and_unchanged(self):
+    def test_ranked_registry_lists_the_skill_explicitly(self):
         skills = json.loads((ROOT / "registry" / "skills.json").read_text(encoding="utf-8"))
         packages = json.loads((ROOT / "registry" / "packages.json").read_text(encoding="utf-8"))
         profiles = json.loads((ROOT / "registry" / "profiles.json").read_text(encoding="utf-8"))
 
-        self.assertEqual(skills["counts"], {"foundation": 9, "employee": 49, "total": 58})
+        self.assertEqual(skills["counts"], {"foundation": 9, "employee": 50, "total": 59})
         self.assertEqual(packages["counts"]["foundation"], 9)
-        self.assertEqual(packages["counts"]["employee"], 49)
-        self.assertEqual(packages["counts"]["canonical_total"], 58)
+        self.assertEqual(packages["counts"]["employee"], 50)
+        self.assertEqual(packages["counts"]["canonical_total"], 59)
 
         employee_ids = {item["id"] for item in skills["employee"]}
         package_ids = {
@@ -201,9 +201,9 @@ class CinematicRealismDirectorContractTests(unittest.TestCase):
             for source in packages["sources"].values()
             for item in source.get("packages", [])
         }
-        self.assertNotIn("cinematic-realism-director", employee_ids)
-        self.assertNotIn("cinematic-realism-director", package_ids)
-        self.assertNotIn("cinematic-realism-director", profiles["profiles"]["full"]["employee_skills"])
+        self.assertIn("cinematic-realism-director", employee_ids)
+        self.assertIn("cinematic-realism-director", package_ids)
+        self.assertIn("cinematic-realism-director", profiles["profiles"]["full"]["employee_skills"])
 
         namespace_readme = (
             ROOT / "skills" / "imported" / "ai-verse" / "README.md"

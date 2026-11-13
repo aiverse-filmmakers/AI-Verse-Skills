@@ -3,8 +3,8 @@
   "snapshot": "2026-09-14",
   "counts": {
     "foundation": 9,
-    "employee": 49,
-    "total": 58
+    "employee": 50,
+    "total": 59
   },
   "foundation": [
     {
@@ -550,6 +550,16 @@
       "source": "ai-verse",
       "repo": "aiverse-filmmakers/AI-Verse-Skills",
       "path": "skills/imported/ai-verse/higgsfield-acting",
+      "implementation": "ai-verse-native",
+      "state": "vendored"
+    },
+    {
+      "rank": 103,
+      "id": "cinematic-realism-director",
+      "category": "film-media",
+      "source": "ai-verse",
+      "repo": "aiverse-filmmakers/AI-Verse-Skills",
+      "path": "skills/imported/ai-verse/cinematic-realism-director",
       "implementation": "ai-verse-native",
       "state": "vendored"
     }

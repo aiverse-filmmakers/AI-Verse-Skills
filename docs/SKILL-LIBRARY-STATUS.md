@@ -11,7 +11,8 @@ Starting point: 118 catalogue skills (main at `bab2834`).
 | Kept as they are | 2 |
 | Still to review | 9 |
 | Added 13 November (new, owned by AI-Verse) | 2 |
-| **Catalogue after this change** | **58** (49 kept + 9 to review) |
+| Added to the catalogue 14 November (already owned by AI-Verse) | 1 |
+| **Catalogue after this change** | **59** (49 kept + 9 to review + `cinematic-realism-director`) |
 
 `notion` and `shadcn` were removed earlier (pull request #28) and are not counted here.
 
@@ -38,7 +39,9 @@ Approved 13 November: `whisper` and `ExtractWisdom` are kept as adapted copies. 
 
 ## Added 13 November (2)
 
-`ai-realism` (Seedance 2.5 prompt writing) and `higgsfield-acting` (performance direction for AI video). Both are written for AI-Verse and registered for the full, creator and filmmaker profiles and the ai-filmmaker role. They work in a fixed chain with `director-agent`, `ai-video-director` and `cinematic-realism-director`: the creative brief outranks locked references, which outrank acting, which outranks prompt structure, which outranks platform limits. Triggering in a fresh Claude or Codex chat has not been verified; library skills are not yet copied into `.claude/skills` and `.agents/skills` (open item 3).
+`ai-realism` (Seedance 2.5 prompt writing) and `higgsfield-acting` (performance direction for AI video). Both are written for AI-Verse and registered for the full, creator and filmmaker profiles and the ai-filmmaker role. They work in a fixed chain with `director-agent`, `ai-video-director` and `cinematic-realism-director`: the creative brief outranks locked references, which outrank acting, which outranks prompt structure, which outranks platform limits. Triggering in a fresh Claude or Codex chat has not been verified.
+
+Added to the catalogue 14 November: `cinematic-realism-director` (still images). It was already an AI-Verse owned skill in this repository, but it sat outside the catalogue, so it never reached members even though `ai-realism` and the chain send still image work to it. It is now skill 59, in the full, creator and filmmaker profiles and the ai-filmmaker role. Its description now says when to use it.
 
 Retired names now redirect: `ai-storyboard-director` and `produce-ai-video` to `ai-video-director`, `meeting-action-items` and `document-to-action-items` to `action-items`.
 

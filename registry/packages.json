@@ -3,9 +3,9 @@
   "snapshot": "2026-09-14",
   "counts": {
     "foundation": 9,
-    "employee": 49,
+    "employee": 50,
     "support": 11,
-    "canonical_total": 58
+    "canonical_total": 59
   },
   "policy": {
     "original_first": true,
@@ -420,6 +420,13 @@
           "category": "film-media",
           "vendored": true,
           "path": "skills/imported/ai-verse/higgsfield-acting"
+        },
+        {
+          "rank": 103,
+          "id": "cinematic-realism-director",
+          "category": "film-media",
+          "vendored": true,
+          "path": "skills/imported/ai-verse/cinematic-realism-director"
         }
       ],
       "redistribution": "redistributable"

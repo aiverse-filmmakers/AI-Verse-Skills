@@ -2,7 +2,7 @@
   "schema_version": 1,
   "profiles": {
     "full": {
-      "description": "All 58 current canonical capabilities plus required support packages.",
+      "description": "All 59 current canonical capabilities plus required support packages.",
       "include_foundation": true,
       "employee_skills": [
         "email-inbox-triage",
@@ -53,7 +53,8 @@
         "scroll-craft",
         "video-editor",
         "ai-realism",
-        "higgsfield-acting"
+        "higgsfield-acting",
+        "cinematic-realism-director"
       ]
     },
     "universal": {
@@ -106,7 +107,8 @@
         "animate-expo",
         "scroll-craft",
         "ai-realism",
-        "higgsfield-acting"
+        "higgsfield-acting",
+        "cinematic-realism-director"
       ]
     },
     "business": {
@@ -162,7 +164,8 @@
         "animate-expo",
         "scroll-craft",
         "ai-realism",
-        "higgsfield-acting"
+        "higgsfield-acting",
+        "cinematic-realism-director"
       ]
     },
     "marketing": {
