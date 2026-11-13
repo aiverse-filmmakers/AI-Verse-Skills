@@ -121,7 +121,7 @@
       "repo": "NousResearch/hermes-agent",
       "path": "optional-skills/productivity/decision-questionnaire",
       "implementation": "original-upstream",
-      "state": "catalogued"
+      "state": "vendored"
     },
     {
       "rank": 23,
@@ -151,7 +151,7 @@
       "repo": "anthropics/skills",
       "path": null,
       "implementation": "original-upstream",
-      "state": "catalogued"
+      "state": "vendored"
     },
     {
       "rank": 34,
@@ -391,7 +391,7 @@
       "repo": "anthropics/skills",
       "path": "skills/frontend-design",
       "implementation": "original-upstream",
-      "state": "catalogued"
+      "state": "vendored"
     },
     {
       "rank": 84,
@@ -400,8 +400,8 @@
       "source": "vercel-design",
       "repo": "vercel-labs/agent-skills",
       "path": "skills/react-best-practices",
-      "implementation": "original-upstream",
-      "state": "catalogued"
+      "implementation": "upstream-adapted",
+      "state": "vendored"
     },
     {
       "rank": 85,
@@ -451,7 +451,7 @@
       "repo": "emilkowalski/skills",
       "path": "skills/animate",
       "implementation": "original-upstream",
-      "state": "catalogued"
+      "state": "vendored"
     },
     {
       "rank": 93,
@@ -461,7 +461,7 @@
       "repo": "emilkowalski/skills",
       "path": "skills/prototype",
       "implementation": "original-upstream",
-      "state": "catalogued"
+      "state": "vendored"
     },
     {
       "rank": 94,
@@ -511,7 +511,7 @@
       "repo": "emilkowalski/skills",
       "path": "skills/animate-expo",
       "implementation": "original-upstream",
-      "state": "catalogued"
+      "state": "vendored"
     },
     {
       "rank": 99,
@@ -521,7 +521,7 @@
       "repo": "nateherkai/scroll-craft",
       "path": "plugins/nateherk-design/skills/scroll-craft",
       "implementation": "original-upstream",
-      "state": "catalogued"
+      "state": "vendored"
     },
     {
       "rank": 100,

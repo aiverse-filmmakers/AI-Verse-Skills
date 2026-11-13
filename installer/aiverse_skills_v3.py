@@ -124,6 +124,57 @@ def front_name(skill_md):
     return m.group(1).strip() if m else None
 
 
+SKILL_NAME_OK = re.compile(r"^[A-Za-z0-9]+(-[A-Za-z0-9]+)*$")  # ExtractWisdom keeps its identifier by decision of 13 November
+DESCRIPTION_MAX = 1024  # Agent Skills limit for the description line
+USE_CUE = re.compile(r"\b(use|used|using|when|whenever|trigger|triggers|asks?|ask for|run when)\b", re.I)
+
+
+def read_skill_listing(skill_md):
+    """Return (name, description) from a SKILL.md header, the two lines a chat sees in its skill list.
+
+    Handles plain, quoted and folded or literal block descriptions without needing a YAML library."""
+    text = Path(skill_md).read_text(encoding="utf-8", errors="replace")
+    if not text.startswith("---"):
+        return None, ""
+    end = text.find("\n---", 3)
+    header = text[3 : end if end >= 0 else len(text)].strip("\n").split("\n")
+    name, desc, i = None, "", 0
+    while i < len(header):
+        line = header[i]
+        m = re.match(r"^(name|description):\s*(.*)$", line)
+        if m and m.group(1) == "name":
+            name = m.group(2).strip().strip("\"'")
+        elif m:
+            value = m.group(2).strip()
+            if value[:1] in (">", "|"):
+                block = []
+                while i + 1 < len(header) and (header[i + 1].startswith((" ", "\t")) or not header[i + 1].strip()):
+                    i += 1
+                    block.append(header[i].strip())
+                desc = " ".join(b for b in block if b)
+            else:
+                desc = value.strip("\"'")
+        i += 1
+    return name, re.sub(r"\s+", " ", desc).strip()
+
+
+def listing_problems(skill_md, package_id):
+    """Why a skill would be listed badly in a chat. Empty list means it is fine."""
+    name, desc = read_skill_listing(skill_md)
+    problems = []
+    if name != package_id:
+        problems.append(f"{package_id}: name in SKILL.md is {name!r}, expected {package_id!r}")
+    if not SKILL_NAME_OK.match(package_id) or len(package_id) > 64:
+        problems.append(f"{package_id}: skill name must be letters, numbers and single hyphens, at most 64 characters")
+    if not desc:
+        problems.append(f"{package_id}: description is empty, so a chat cannot know when to use it")
+    elif len(desc) > DESCRIPTION_MAX:
+        problems.append(f"{package_id}: description is {len(desc)} characters, the limit is {DESCRIPTION_MAX}")
+    elif len(desc) < 60 or not USE_CUE.search(desc):
+        problems.append(f"{package_id}: description does not say when to use the skill, so it will rarely trigger")
+    return problems
+
+
 def resolve(root, selector, cid):
     typ = selector["type"]
     if typ == "path":
@@ -626,6 +677,13 @@ def cmd_doctor(a):
     else:
         pin = pin_active_generation(root, digest)
         print(f"AI-Verse-Skills doctor: healthy generation={pin.generation_id}")
+    for target in getattr(a, "target", None) or []:
+        problems = verify_adapter_target(root, target, require_complete=True)
+        if problems:
+            for e in problems:
+                print("ERROR", e)
+            raise SystemExit(1)
+        print(f"Every catalogue skill is listed in {Path(target).expanduser()} with a usable description")
     if a.readiness:
         r = readiness(root)
         print(f"Skills immediately ready: {len(r['skills']['ready'])}")
@@ -717,7 +775,30 @@ def _replace_adapter_package(src, dst, force, prefer_copy=False):
                 tmp.unlink(missing_ok=True)
 
 
-def materialize_adapter(root, target, runtime, *, force=False, prefer_copy=False):
+def _remove_adapter_entry(path):
+    path = Path(path)
+    if path.is_symlink() or path.is_file():
+        path.unlink()
+    elif path.is_dir():
+        shutil.rmtree(path)
+
+
+def _previous_adapter_ids(target):
+    """Skill ids this adapter exposed last time. Only these may ever be replaced or removed."""
+    mf = Path(target) / ".aiverse-adapter.json"
+    try:
+        data = json.loads(mf.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return set()
+    return {str(x.get("id")) for x in data.get("packages", []) if isinstance(x, dict) and x.get("id")}
+
+
+def materialize_adapter(root, target, runtime, *, force=False, prefer_copy=False, sync=False):
+    """Expose every installed skill to a runtime folder.
+
+    sync=True is the update path: it writes copies, replaces only skills this adapter put there before,
+    removes skills the catalogue no longer has, and never touches a folder it did not create
+    (a same name skill that is already there is reported as a collision and left alone)."""
     root = Path(root).expanduser().resolve()
     target = Path(target).expanduser().resolve()
     pin = pin_active_generation(root, digest)
@@ -725,13 +806,19 @@ def materialize_adapter(root, target, runtime, *, force=False, prefer_copy=False
     if runtime not in runtimes or runtime == "aiverse-os":
         raise RuntimeError("AI-Verse OS uses the external library directly; do not materialize skills into the OS repo")
     target.mkdir(parents=True, exist_ok=True)
-    index = []
+    previous = _previous_adapter_ids(target) if sync else set()
+    if sync:
+        prefer_copy = True
+    index, collisions = [], []
     for p in pin.manifest["packages"]:
         if p["kind"] == "support":
             continue
         src = pin.generation_path / p["path"]
         dst = target / p["id"]
-        mode = _replace_adapter_package(src, dst, force, prefer_copy=prefer_copy)
+        if sync and (dst.exists() or dst.is_symlink()) and p["id"] not in previous:
+            collisions.append({"id": p["id"], "path": str(dst)})
+            continue
+        mode = _replace_adapter_package(src, dst, force or sync, prefer_copy=prefer_copy)
         index.append({
             "id": p["id"],
             "source": str(src),
@@ -739,6 +826,14 @@ def materialize_adapter(root, target, runtime, *, force=False, prefer_copy=False
             "mode": mode,
             "digest_sha256": p["digest_sha256"],
         })
+    pruned = []
+    if sync:
+        keep = {x["id"] for x in index}
+        for old_id in sorted(previous - keep):
+            old_path = target / old_id
+            if old_path.parent == target and (old_path.exists() or old_path.is_symlink()):
+                _remove_adapter_entry(old_path)
+                pruned.append(old_id)
     adapter_manifest = {
         "schema_version": ADAPTER_SCHEMA_VERSION,
         "runtime": runtime,
@@ -747,12 +842,14 @@ def materialize_adapter(root, target, runtime, *, force=False, prefer_copy=False
         "generation_digest_sha256": pin.generation_digest_sha256,
         "created_at": dt.datetime.now(dt.timezone.utc).isoformat(),
         "packages": index,
+        "skipped_collisions": collisions,
+        "pruned": pruned,
     }
     _atomic_json_write(target / ".aiverse-adapter.json", adapter_manifest)
     return adapter_manifest
 
 
-def verify_adapter_target(root, target, *, require_active=True):
+def verify_adapter_target(root, target, *, require_active=True, require_complete=False):
     root = Path(root).expanduser().resolve()
     target = Path(target).expanduser().resolve()
     mf = target / ".aiverse-adapter.json"
@@ -812,19 +909,42 @@ def verify_adapter_target(root, target, *, require_active=True):
                 errors.append(f"{package_id}: copied adapter content changed")
         else:
             errors.append(f"{package_id}: unknown adapter mode {item.get('mode')!r}")
+    if require_complete:
+        exposed = {str(i.get("id")) for i in data.get("packages", [])}
+        blocked = {str(c.get("id")) for c in data.get("skipped_collisions", [])}
+        for pid, package in sorted(package_by_id.items()):
+            if package.get("kind") == "support":
+                continue
+            if pid in blocked:
+                errors.append(f"{pid}: not listed, a different skill with the same name already sits in this folder")
+            elif pid not in exposed:
+                errors.append(f"{pid}: not listed in this folder, so chats cannot trigger it")
+            else:
+                skill_md = generation_root / package["path"] / "SKILL.md"
+                if skill_md.is_file():
+                    errors.extend(listing_problems(skill_md, pid))
+                else:
+                    errors.append(f"{pid}: SKILL.md missing in the generation")
     return errors
 
 
 def cmd_adapt(a):
     manifest = materialize_adapter(
-        a.root, a.target, a.runtime, force=a.force, prefer_copy=getattr(a, "copy", False)
+        a.root, a.target, a.runtime, force=a.force, prefer_copy=getattr(a, "copy", False),
+        sync=getattr(a, "sync", False),
     )
     print(f"Exposed {len(manifest['packages'])} packages to {Path(a.target).expanduser()}")
+    if manifest.get("pruned"):
+        print("Removed skills the catalogue no longer has:", ", ".join(manifest["pruned"]))
+    for c in manifest.get("skipped_collisions", []):
+        print(f"WARNING not exposed, a different skill named {c['id']} already exists at {c['path']}")
     print("Pinned adapter generation:", manifest["generation_id"])
 
 
 def cmd_adapter_verify(a):
-    errors = verify_adapter_target(a.root, a.target, require_active=not a.allow_stale)
+    errors = verify_adapter_target(
+        a.root, a.target, require_active=not a.allow_stale, require_complete=getattr(a, "complete", False)
+    )
     if errors:
         for error in errors:
             print("ERROR", error)
@@ -932,6 +1052,7 @@ def parser():
 
     q = sub.add_parser("doctor")
     q.add_argument("--readiness", action="store_true")
+    q.add_argument("--target", action="append", help="a chat skills folder to check (repeat for each); fails if any catalogue skill is missing or badly described")
     q.set_defaults(fn=cmd_doctor)
 
     q = sub.add_parser("readiness")
@@ -949,11 +1070,13 @@ def parser():
     q.add_argument("--target", required=True)
     q.add_argument("--force", action="store_true")
     q.add_argument("--copy", action="store_true", help="materialize generation-pinned copies instead of symlinks")
+    q.add_argument("--sync", action="store_true", help="update path: copies, replace only what this adapter added before, remove retired skills, leave foreign folders alone")
     q.set_defaults(fn=cmd_adapt)
 
     q = sub.add_parser("adapter-verify")
     q.add_argument("--target", required=True)
     q.add_argument("--allow-stale", action="store_true", help="verify generation integrity without requiring it to be active")
+    q.add_argument("--complete", action="store_true", help="also require every catalogue skill to be listed here with a usable description")
     q.set_defaults(fn=cmd_adapter_verify)
 
     q = sub.add_parser("pin")

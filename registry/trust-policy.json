@@ -64,12 +64,13 @@
       "auto_mutation": false
     },
     "anthropics/skills": {
-      "license": "upstream-controlled",
-      "redistribution": "fetch-only",
+      "license": "Apache-2.0",
+      "redistribution": "redistributable",
       "trust": "external",
       "ownership": "external",
-      "vendoring_allowed": false,
-      "auto_mutation": false
+      "vendoring_allowed": true,
+      "auto_mutation": false,
+      "scope_note": "Applies only to canvas-design and frontend-design, whose own LICENSE.txt is Apache-2.0 at the pinned commits. Other skills in this repository, such as the document skills, are not covered and must not be vendored."
     },
     "anthropics/knowledge-work-plugins": {
       "license": "Apache-2.0",

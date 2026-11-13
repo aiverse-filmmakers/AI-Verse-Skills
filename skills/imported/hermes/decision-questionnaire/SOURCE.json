@@ -1,0 +1,14 @@
+{
+  "source_namespace": "hermes",
+  "upstream_repo": "NousResearch/hermes-agent",
+  "upstream_path": "optional-skills/productivity/decision-questionnaire",
+  "upstream_commit": "7dc796463d543a57270779b7f71f37f18b6faa5e",
+  "license": "MIT",
+  "import_type": "original-vendored-adapted",
+  "modified": true,
+  "adaptation": {
+    "reason": "Kept as an AI-Verse owned copy (plan D26, decision of 13 November 2026 to keep this skill). Copied from the pinned upstream commit so it installs without any download.",
+    "change": "Description rewritten so a chat can tell when to use the skill (the original was one short line with no trigger). Body unchanged."
+  },
+  "imported_at": "2026-11-13"
+}

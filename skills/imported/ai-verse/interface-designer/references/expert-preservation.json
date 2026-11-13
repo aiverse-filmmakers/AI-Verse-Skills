@@ -7,8 +7,8 @@
       "source_id": "anthropic-frontend",
       "repo": "anthropics/skills",
       "commit": "34040c9c568585f6929bedeaad110ad08f079624",
-      "license": "upstream-controlled",
-      "redistribution": "fetch-only",
+      "license": "Apache-2.0",
+      "redistribution": "redistributable",
       "packages": [
         {
           "id": "frontend-design",

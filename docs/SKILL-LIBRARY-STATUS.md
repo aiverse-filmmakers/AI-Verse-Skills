@@ -96,5 +96,11 @@ Scores from a first read on 12 November (usefulness to members / craft, out of 1
 
 1. No skill in this change has been tested with and without the skill in fresh chats. The English filmmaking translations have not had an independent full accuracy audit.
 2. Six AI-Verse specific rules taken out of `change-review` should become AI-Verse OS project adjustments for that skill.
-3. Library skills are not yet copied into `.claude/skills` and `.agents/skills`, so Claude and Codex cannot trigger them by themselves. This is the main reason the library has barely been used.
+3. The tool that copies every skill into `.claude/skills` and `.agents/skills` is built here (`adapt --sync`, checked by `doctor --target`). It is not yet run by the AI-Verse OS update, so until it is, Claude and Codex still cannot trigger library skills by themselves. This is the main reason the library has barely been used.
 4. A usage counter (count and last used date per skill) does not exist yet.
+
+## Every skill is stored in this repository (13 November)
+
+Eight catalogue skills used to be fetched from outside at install, so a member's install held fewer skills than the catalogue listed. They are now owned copies stored here, each with its licence and a `SOURCE.json` record: `decision-questionnaire`, `canvas-design`, `frontend-design`, `react-best-practices`, `animate`, `prototype`, `animate-expo` and `scroll-craft`. A new test fails if any catalogue skill is not stored in the repo, or has no description that tells a chat when to use it.
+
+Changes made to them: `decision-questionnaire` has a new description (the original had no trigger). `react-best-practices` has its inner name matched to the folder and its duplicate compiled file removed. The rest are unchanged copies. `canvas-design` ships 5.5 MB of fonts with their own licence files. `scroll-craft` includes eight helper scripts that call an outside image service (kie.ai) with the member's own key.

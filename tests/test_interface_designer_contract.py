@@ -466,8 +466,10 @@ class InterfaceDesignerContractTests(unittest.TestCase):
                     )
 
         anthropic = next(s for s in manifest["sources"] if s["source_id"] == "anthropic-frontend")
-        self.assertEqual(anthropic["redistribution"], "fetch-only")
-        self.assertFalse(trust["sources"][anthropic["repo"]]["vendoring_allowed"])
+        # frontend-design is now an owned copy: its own LICENSE.txt is Apache-2.0 at the pinned commit.
+        self.assertEqual(anthropic["redistribution"], "redistributable")
+        self.assertTrue(trust["sources"][anthropic["repo"]]["vendoring_allowed"])
+        self.assertTrue((ROOT / "skills/imported/anthropic/frontend-design/LICENSE.txt").is_file())
 
     def test_existing_design_capabilities_remain_compatible_with_zero_removals(self):
         refs = ROOT / "skills/imported/ai-verse/interface-designer/references"

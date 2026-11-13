@@ -60,7 +60,8 @@
           "rank": 22,
           "id": "decision-questionnaire",
           "category": "judgment-strategy",
-          "path": "optional-skills/productivity/decision-questionnaire"
+          "path": "optional-skills/productivity/decision-questionnaire",
+          "vendored": true
         },
         {
           "rank": 56,
@@ -84,16 +85,17 @@
       "repo": "anthropics/skills",
       "commit": "41bbe19d1a1a7eaab5e7bb9050a417e5c6cffc8f",
       "namespace": "anthropic",
-      "license": "upstream-controlled",
+      "license": "Apache-2.0",
       "packages": [
         {
           "rank": 26,
           "id": "canvas-design",
           "category": "creative-design",
-          "path": "skills/canvas-design"
+          "path": "skills/canvas-design",
+          "vendored": true
         }
       ],
-      "redistribution": "fetch-only"
+      "redistribution": "redistributable"
     },
     "lifeos": {
       "repo": "danielmiessler/LifeOS",
@@ -426,16 +428,17 @@
       "repo": "anthropics/skills",
       "commit": "34040c9c568585f6929bedeaad110ad08f079624",
       "namespace": "anthropic",
-      "license": "upstream-controlled",
+      "license": "Apache-2.0",
       "packages": [
         {
           "rank": 82,
           "id": "frontend-design",
           "category": "creative-design",
-          "path": "skills/frontend-design"
+          "path": "skills/frontend-design",
+          "vendored": true
         }
       ],
-      "redistribution": "fetch-only"
+      "redistribution": "redistributable"
     },
     "nextlevelbuilder-ui": {
       "repo": "nextlevelbuilder/ui-ux-pro-max-skill",
@@ -455,7 +458,8 @@
           "rank": 84,
           "id": "react-best-practices",
           "category": "creative-design",
-          "path": "skills/react-best-practices"
+          "path": "skills/react-best-practices",
+          "vendored": true
         },
         {
           "rank": 85,
@@ -507,13 +511,15 @@
           "rank": 92,
           "id": "animate",
           "category": "creative-design",
-          "path": "skills/animate"
+          "path": "skills/animate",
+          "vendored": true
         },
         {
           "rank": 93,
           "id": "prototype",
           "category": "creative-design",
-          "path": "skills/prototype"
+          "path": "skills/prototype",
+          "vendored": true
         },
         {
           "rank": 94,
@@ -547,7 +553,8 @@
           "rank": 98,
           "id": "animate-expo",
           "category": "creative-design",
-          "path": "skills/animate-expo"
+          "path": "skills/animate-expo",
+          "vendored": true
         }
       ],
       "redistribution": "redistributable"
@@ -562,7 +569,8 @@
           "rank": 99,
           "id": "scroll-craft",
           "category": "creative-design",
-          "path": "plugins/nateherk-design/skills/scroll-craft"
+          "path": "plugins/nateherk-design/skills/scroll-craft",
+          "vendored": true
         }
       ],
       "redistribution": "redistributable"
