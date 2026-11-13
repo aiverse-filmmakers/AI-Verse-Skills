@@ -75,7 +75,8 @@
           "rank": 56,
           "id": "whisper",
           "category": "film-media",
-          "path": "optional-skills/mlops/whisper"
+          "path": "optional-skills/mlops/whisper",
+          "vendored": true
         }
       ],
       "redistribution": "redistributable"
@@ -113,7 +114,8 @@
           "rank": 19,
           "id": "ExtractWisdom",
           "category": "judgment-strategy",
-          "path": "LifeOS/install/skills/ExtractWisdom"
+          "path": "LifeOS/install/skills/ExtractWisdom",
+          "vendored": true
         }
       ],
       "redistribution": "redistributable"

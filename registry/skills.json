@@ -120,8 +120,8 @@
       "source": "lifeos",
       "repo": "danielmiessler/LifeOS",
       "path": "LifeOS/install/skills/ExtractWisdom",
-      "implementation": "original-upstream",
-      "state": "catalogued"
+      "implementation": "upstream-adapted",
+      "state": "vendored"
     },
     {
       "rank": 22,
@@ -320,8 +320,8 @@
       "source": "hermes",
       "repo": "NousResearch/hermes-agent",
       "path": "optional-skills/mlops/whisper",
-      "implementation": "original-upstream",
-      "state": "catalogued"
+      "implementation": "upstream-adapted",
+      "state": "vendored"
     },
     {
       "rank": 57,

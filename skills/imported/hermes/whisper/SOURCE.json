@@ -1,0 +1,14 @@
+{
+  "source_namespace": "hermes",
+  "upstream_repo": "NousResearch/hermes-agent",
+  "upstream_path": "optional-skills/mlops/whisper",
+  "upstream_commit": "7dc796463d543a57270779b7f71f37f18b6faa5e",
+  "license": "MIT",
+  "import_type": "original-vendored-adapted",
+  "modified": true,
+  "adaptation": {
+    "reason": "Provide a portable member workflow.",
+    "change": "Replaced tool specific assumptions and rigid formatting with an evidence based procedure."
+  },
+  "imported_at": "2026-11-13"
+}

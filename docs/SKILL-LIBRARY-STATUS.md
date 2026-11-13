@@ -6,16 +6,18 @@ Starting point: 118 catalogue skills (main at `bab2834`).
 | Status | Count |
 |---|---|
 | Removed in this change | 58 |
-| Kept and improved (owned by AI-Verse) | 41 |
+| Kept and improved (owned by AI-Verse) | 43 |
 | Kept as they are | 3 |
-| Still to review | 15 |
-| **Catalogue after this change** | **59** (44 kept + 15 to review) |
+| Still to review | 13 |
+| **Catalogue after this change** | **59** (46 kept + 13 to review) |
 
 `notion` and `shadcn` were removed earlier (pull request #28) and are not counted here.
 
-## Kept and improved (41)
+## Kept and improved (43)
 
 None of these has been tested with and without the skill yet. Scores are estimates.
+
+Approved 13 November: `whisper` and `ExtractWisdom` are kept as adapted copies. Both retain their existing identifiers for compatibility. Whisper now provides a practical transcription workflow; ExtractWisdom uses available source tools and preserves attribution and uncertainty. Neither has been tested in a live member workflow.
 
 **Developer, rebuilt (9):** `root-cause-debugger` (now also covers environment, configuration and incident timelines), `deep-research-synthesis`, `structured-ingestion-normalization`, `api-integration-engineer`, `dependency-supply-chain-audit`, `change-review`, `verification-harness`, `transactional-refactor` (now also covers codebase mapping), `git-change-lifecycle` (now also covers the release checklist)
 
@@ -47,7 +49,7 @@ None of these has been tested with and without the skill yet. Scores are estimat
 
 `interface-designer` no longer routes to the removed Figma skills: its Figma target now reports "unavailable" unless the runtime has its own Figma skills. The same now applies to Canva. The interface designer does the UI and UX reasoning and the design specification itself, since `ui-ux-pro-max` and `design-first-ui-prompting` are gone.
 
-## Still to review (15)
+## Still to review (13)
 
 Decided 13 November: keep all of them. Group A (nine skills) is left as it is, Group B (marketing, seven skills) is done above, Group C (small fixes, nine skills) is done above, Group D is still to do. See entry D33 of the skills plan.
 
@@ -76,15 +78,9 @@ Scores from a first read on 12 November (usefulness to members / craft, out of 1
 | `animate` | 4 | 9 |
 | `prototype` | 4 | 9 |
 
-### Office (1)
+### Thinking (1)
 | Skill | Use | Craft | Recommendation |
 |---|---|---|---|
-| `whisper` | 7 | 5 | Keep. Trim the GitHub star padding |
-
-### Thinking (2)
-| Skill | Use | Craft | Recommendation |
-|---|---|---|---|
-| `ExtractWisdom` | 7 | 4 | Rewrite: remove the author's private voice server and folders, lowercase the name |
 | `decision-questionnaire` | 5 | 7 | Keep |
 
 ### Visual design (1)

@@ -9,8 +9,8 @@ The authoritative package pins are in `registry/packages.json`. The public-beta 
 | Source | Repository | License decision | Public-beta handling |
 |---|---|---|---|
 | Google Workspace CLI | `googleworkspace/cli` | Apache-2.0 | Redistributable where recorded; selected proof packages may be vendored |
-| Hermes Agent | `NousResearch/hermes-agent` | MIT | Redistributable. Vendored and adapted, each with a `LICENSE` copy and a `SOURCE.json` change note: `email-inbox-triage`, `weekly-review-planning`, `one-three-one-rule`, and `action-items` (a merge of `meeting-action-items` and `document-to-action-items`). The rest are fetched at the pinned commit |
-| LifeOS | `danielmiessler/LifeOS` | MIT | Redistributable where recorded; selected proof package may be vendored |
+| Hermes Agent | `NousResearch/hermes-agent` | MIT | Redistributable. Vendored and adapted, each with a `LICENSE` copy and a `SOURCE.json` change note: `email-inbox-triage`, `weekly-review-planning`, `one-three-one-rule`, `whisper`, and `action-items` (a merge of `meeting-action-items` and `document-to-action-items`). The rest are fetched at the pinned commit |
+| LifeOS | `danielmiessler/LifeOS` | MIT | Redistributable; `ExtractWisdom` is vendored and adapted with a licence and source record |
 | Marketing Skills | `coreyhaines31/marketingskills` | MIT | Redistributable; eight skills are vendored and adapted (`social-content`, `copywriting`, `ad-creative`, `content-strategy`, `customer-research`, `email-sequence`, `seo-audit`, `community-marketing`), each with a `LICENSE` copy and a `SOURCE.json` change note. The rest (`product-marketing-context`) is fetched at the pinned commit |
 | FFmpeg Skill | `kajisho5/ffmpeg-skill` | MIT | Redistributable. `ffmpeg-skill` is vendored with only the skill itself (`SKILL.md`, `scripts/`, `references/`, `docs/contract.md`), a `LICENSE` copy and a `SOURCE.json` change note |
 | ByteDance DeerFlow | `bytedance/deer-flow` | Upstream-controlled | Fetch-only |
