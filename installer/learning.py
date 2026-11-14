@@ -948,6 +948,27 @@ def record_usage(impl: Any, root: Path, skill_id: str, *, success: Optional[bool
         return item
 
 
+def usage_report(impl: Any, root: Path) -> Dict[str, Any]:
+    """Every skill in the active library with its use count and last use, most used first."""
+    root = Path(root).expanduser().resolve()
+    usage = _read_json(_paths(root)["usage"], {}) if _paths(root)["usage"].exists() else {}
+    try:
+        active = [str(p.get("id")) for p in impl.pin_active_generation(root, impl.digest).manifest.get("packages", [])]
+    except Exception:
+        active = []
+    rows = []
+    for skill_id in sorted(set(active) | set(usage)):
+        item = usage.get(skill_id, {})
+        rows.append({
+            "skill_id": skill_id,
+            "used": int(item.get("selected_count", 0)),
+            "last_used": item.get("last_selected"),
+            "in_library": skill_id in active,
+        })
+    rows.sort(key=lambda r: (-r["used"], r["skill_id"]))
+    return {"skills": rows, "never_used": [r["skill_id"] for r in rows if r["used"] == 0 and r["in_library"]]}
+
+
 def _archive_record_path(root: Path, skill_id: str) -> Path:
     return _paths(root)["archive"] / skill_id / "archive.json"
 
