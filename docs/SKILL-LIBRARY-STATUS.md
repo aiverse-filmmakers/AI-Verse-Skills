@@ -45,6 +45,8 @@ Added to the catalogue 14 November: `cinematic-realism-director` (still images).
 
 Retired names now redirect: `ai-storyboard-director` and `produce-ai-video` to `ai-video-director`, `meeting-action-items` and `document-to-action-items` to `action-items`.
 
+Added 14 November: `red-team`, the small replacement for the removed `RedTeam`. It attacks a plan, claim, document, prompt or code from four angles (assumptions, adversary and edge cases, evidence and logic, second order effects), keeps only supported weaknesses, ranks them by impact and likelihood and suggests the smallest fix. No outside tools; at most four helper agents when the host offers them and the user agreed. In the full, universal, business and creator packs. Catalogue: 60.
+
 ## Kept as they are (2)
 
 `react-best-practices` (Vercel) and `animate-expo` (Emil Kowalski).

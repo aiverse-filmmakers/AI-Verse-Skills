@@ -2,7 +2,7 @@
   "schema_version": 1,
   "profiles": {
     "full": {
-      "description": "All 59 current canonical capabilities plus required support packages.",
+      "description": "All 60 current canonical capabilities plus required support packages.",
       "include_foundation": true,
       "employee_skills": [
         "email-inbox-triage",
@@ -54,7 +54,8 @@
         "video-editor",
         "ai-realism",
         "higgsfield-acting",
-        "cinematic-realism-director"
+        "cinematic-realism-director",
+        "red-team"
       ]
     },
     "universal": {
@@ -68,7 +69,8 @@
         "ExtractWisdom",
         "decision-questionnaire",
         "product-brainstorming",
-        "business-pulse"
+        "business-pulse",
+        "red-team"
       ]
     },
     "creator": {
@@ -108,7 +110,8 @@
         "scroll-craft",
         "ai-realism",
         "higgsfield-acting",
-        "cinematic-realism-director"
+        "cinematic-realism-director",
+        "red-team"
       ]
     },
     "business": {
@@ -130,7 +133,8 @@
         "write-spec",
         "roadmap-update",
         "job-post-builder",
-        "review-contract"
+        "review-contract",
+        "red-team"
       ]
     },
     "filmmaker": {
