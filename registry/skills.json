@@ -3,8 +3,8 @@
   "snapshot": "2026-09-14",
   "counts": {
     "foundation": 9,
-    "employee": 50,
-    "total": 59
+    "employee": 51,
+    "total": 60
   },
   "foundation": [
     {
@@ -560,6 +560,16 @@
       "source": "ai-verse",
       "repo": "aiverse-filmmakers/AI-Verse-Skills",
       "path": "skills/imported/ai-verse/cinematic-realism-director",
+      "implementation": "ai-verse-native",
+      "state": "vendored"
+    },
+    {
+      "rank": 104,
+      "id": "red-team",
+      "category": "thinking",
+      "source": "ai-verse",
+      "repo": "aiverse-filmmakers/AI-Verse-Skills",
+      "path": "skills/imported/ai-verse/red-team",
       "implementation": "ai-verse-native",
       "state": "vendored"
     }

@@ -3,9 +3,9 @@
   "snapshot": "2026-09-14",
   "counts": {
     "foundation": 9,
-    "employee": 50,
+    "employee": 51,
     "support": 11,
-    "canonical_total": 59
+    "canonical_total": 60
   },
   "policy": {
     "original_first": true,
@@ -427,6 +427,13 @@
           "category": "film-media",
           "vendored": true,
           "path": "skills/imported/ai-verse/cinematic-realism-director"
+        },
+        {
+          "rank": 104,
+          "id": "red-team",
+          "category": "thinking",
+          "vendored": true,
+          "path": "skills/imported/ai-verse/red-team"
         }
       ],
       "redistribution": "redistributable"

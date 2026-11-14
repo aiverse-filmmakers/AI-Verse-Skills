@@ -1,0 +1,7 @@
+{
+  "source_namespace": "ai-verse",
+  "import_type": "ai-verse-native",
+  "modified": false,
+  "summary": "Written for AI-Verse as the small replacement for the removed RedTeam skill (which needed 32 agents and an outside voice server). The four angle method (assumptions, adversary, evidence, second order effects) is a common review practice; the wording and structure are AI-Verse's own. No third-party text is redistributed.",
+  "created": "2026-11-14"
+}
