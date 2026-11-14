@@ -263,9 +263,17 @@ def verify_admission_generation(impl: Any, generation_root: Path, expected_gener
         before = stored_by_id.get(package_id)
         if not before:
             continue
-        for key in ("ownership", "protected", "license", "redistribution", "admission", "trust", "trusted"):
+        # Licence, ownership and trust classification are a snapshot of the catalogue
+        # policy that admitted this immutable generation. A newer catalogue may classify
+        # the same bytes differently (for example a fetched skill that is now an owned
+        # copy, or a skill that has left the catalogue). That must not make an older
+        # generation unusable for update leases or rollback. Bytes, security results,
+        # protection and the admit/block decision stay strictly bound.
+        for key in ("protected", "admission"):
             if before.get(key) != now.get(key):
                 errors.append(f"{package_id}: admission field changed: {key}")
+        if before.get("admission") != "admitted":
+            errors.append(f"{package_id}: stored admission is not admitted")
         if before.get("integrity") != now.get("integrity"):
             errors.append(f"{package_id}: integrity evidence changed")
         if before.get("security") != now.get("security"):
