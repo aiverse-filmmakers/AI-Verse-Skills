@@ -292,9 +292,14 @@ def install_plan(profile_name, root):
     reg = load("registry/packages.json")
     profiles = load("registry/profiles.json")
     employees, support = expand_registry(reg)
-    if profile_name not in profiles["profiles"]:
-        raise RuntimeError(f"Unknown profile: {profile_name}")
-    prof = profiles["profiles"][profile_name]
+    # Packs combine with "+": "universal+filmmaker" installs both, each skill once.
+    names = [n for n in str(profile_name).split("+") if n]
+    unknown = [n for n in names if n not in profiles["profiles"]]
+    if not names or unknown:
+        raise RuntimeError(f"Unknown profile: {', '.join(unknown) or profile_name}")
+    chosen = [profiles["profiles"][n] for n in names]
+    prof = {"include_foundation": any(p.get("include_foundation", True) for p in chosen),
+            "employee_skills": list(dict.fromkeys(cid for p in chosen for cid in p["employee_skills"]))}
     out, deps = [], set()
     if prof.get("include_foundation", True):
         for d in sorted((REPO_ROOT / "skills" / "foundation").iterdir()):
@@ -754,6 +759,10 @@ def cmd_update(a):
     root = Path(a.root).expanduser()
     existing = load_manifest(root)
     profile = a.profile or existing.get("profile", "full")
+    for pack in getattr(a, "add_pack", None) or []:
+        current = profile.split("+")
+        if "full" not in current and pack not in current:
+            profile = "+".join(current + [pack])
     folders = _wanted_chat_folders(a, root)
     installed, previous, legacy_backup, generation_id = transactional_install(
         profile, root, Path(a.cache).expanduser(), a.offline
@@ -1225,6 +1234,7 @@ def parser():
 
     q = sub.add_parser("update")
     q.add_argument("--profile")
+    q.add_argument("--add-pack", action="append", metavar="PACK", help="add a skill pack (a profile name such as filmmaker or marketing) to what is installed")
     q.add_argument("--offline", action="store_true")
     q.add_argument("--expose", action="append", metavar="RUNTIME=FOLDER", help="also list every skill in this chat skills folder (repeatable, remembered for later updates)")
     q.add_argument("--expose-default", action="store_true", help="list every skill for Claude (~/.claude/skills) and Codex (~/.agents/skills)")
