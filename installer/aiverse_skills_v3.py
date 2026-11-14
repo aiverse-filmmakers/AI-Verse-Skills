@@ -911,6 +911,7 @@ def _previous_adapter_ids(target):
     try:
         data = json.loads(mf.read_text(encoding="utf-8"))
         ids |= {str(x.get("id")) for x in data.get("packages", []) if isinstance(x, dict) and x.get("id")}
+        ids |= {str(x) for x in data.get("redirects", []) if isinstance(x, str) and x}
     except (OSError, ValueError):
         pass
     try:
@@ -929,6 +930,19 @@ def _clear_adapter_leftovers(target, owned_ids):
             if name.startswith(".") and marker in name and name[1:name.index(marker)] in owned_ids:
                 _remove_adapter_entry(entry)
                 break
+
+
+REDIRECT_RUNTIMES = {"codex", "agent-skills"}
+
+
+def _write_redirect(target, old, new):
+    """A tiny skill under a retired name that points to its replacement (Codex only matches exact names)."""
+    folder = Path(target) / old
+    folder.mkdir(parents=True, exist_ok=True)
+    (folder / "SKILL.md").write_text(
+        f"---\nname: {old}\ndescription: Retired name. Use the {new} skill instead; it replaces {old}.\n---\n\n"
+        f"`{old}` was renamed. Use the `{new}` skill for this request and follow its instructions.\n",
+        encoding="utf-8")
 
 
 def materialize_adapter(root, target, runtime, *, force=False, prefer_copy=False, sync=False):
@@ -973,9 +987,24 @@ def materialize_adapter(root, target, runtime, *, force=False, prefer_copy=False
             "mode": mode,
             "digest_sha256": p["digest_sha256"],
         })
+    redirects = []
+    if sync and runtime in REDIRECT_RUNTIMES:
+        try:
+            retired = load("registry/aliases.json").get("retired_skill_redirects", {})
+        except (OSError, ValueError):
+            retired = {}
+        listed = {x["id"] for x in index}
+        for old, new in sorted(retired.items()):
+            dst = target / old
+            if new not in listed or old in listed or ((dst.exists() or dst.is_symlink()) and old not in previous):
+                continue
+            if dst.exists() or dst.is_symlink():
+                _remove_adapter_entry(dst)
+            _write_redirect(target, old, new)
+            redirects.append(old)
     pruned = []
     if sync:
-        keep = {x["id"] for x in index}
+        keep = {x["id"] for x in index} | set(redirects)
         for old_id in sorted(previous - keep):
             old_path = target / old_id
             if old_path.parent == target and (old_path.exists() or old_path.is_symlink()):
@@ -991,6 +1020,7 @@ def materialize_adapter(root, target, runtime, *, force=False, prefer_copy=False
         "packages": index,
         "skipped_collisions": collisions,
         "pruned": pruned,
+        "redirects": redirects,
     }
     _atomic_json_write(target / ".aiverse-adapter.json", adapter_manifest)
     if sync:

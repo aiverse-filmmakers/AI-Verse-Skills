@@ -37,5 +37,12 @@
     "meeting-action-items": "action-items",
     "document-to-action-items": "action-items",
     "product-marketing-context": "copywriting"
+  },
+  "retired_skill_redirects": {
+    "ai-storyboard-director": "ai-video-director",
+    "produce-ai-video": "ai-video-director",
+    "meeting-action-items": "action-items",
+    "document-to-action-items": "action-items",
+    "product-marketing-context": "copywriting"
   }
 }
