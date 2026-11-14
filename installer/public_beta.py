@@ -583,6 +583,19 @@ def apply_public_beta(impl: Any) -> None:
             success: Optional[bool] = True if a.success else (False if a.failure else None)
             _print(learning.record_usage(impl, Path(a.root), a.skill_id, success=success), a.json)
         x.set_defaults(fn=usage_cmd)
+        x = us.add_parser("list", help="how often each skill was used and when it was last used")
+        x.add_argument("--json", action="store_true")
+        def usage_list(a):
+            report = learning.usage_report(impl, Path(a.root))
+            if a.json:
+                _print(report, True)
+                return
+            for row in report["skills"]:
+                when = (row["last_used"] or "")[:10]
+                times = "never used" if not row["used"] else f"used {row['used']} time{'s' if row['used'] != 1 else ''}, last {when}"
+                extra = "" if row["in_library"] else " (no longer in the library)"
+                print(f"{row['skill_id']}: {times}{extra}")
+        x.set_defaults(fn=usage_list)
 
         return p
 
