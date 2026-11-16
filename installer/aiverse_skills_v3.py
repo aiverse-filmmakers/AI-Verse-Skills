@@ -125,6 +125,34 @@ def front_name(skill_md):
 
 
 SKILL_NAME_OK = re.compile(r"^[A-Za-z0-9]+(-[A-Za-z0-9]+)*$")  # ExtractWisdom keeps its identifier by decision of 13 November
+SAFE_SKILL_ID = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]{0,127}")  # every real id starts with a letter or digit
+
+
+def _id_is_safe(value):
+    return isinstance(value, str) and bool(SAFE_SKILL_ID.fullmatch(value)) and value not in {".", ".."}
+
+
+def safe_skill_id(value):
+    """Return value if it is safe to use as one folder name, else raise.
+
+    Refuses '', '.', '..', separators, absolute paths and NUL."""
+    if not _id_is_safe(value):
+        raise RuntimeError(f"Unsafe skill id refused: {value!r}")
+    return value
+
+
+def confined_entry(folder, skill_id):
+    """folder/skill_id, only when it sits strictly inside folder once resolved. Raises otherwise."""
+    safe_skill_id(skill_id)
+    root = Path(folder).resolve()
+    entry = Path(folder) / skill_id
+    # Resolve the parent, not the entry: a symlinked entry must be removed as a link, never followed.
+    parent = entry.parent.resolve()
+    if parent != root or entry.name in {"", ".", ".."} or entry.resolve(strict=False) == root:
+        raise RuntimeError(f"Skill folder escapes {folder}: {skill_id!r}")
+    return entry
+
+
 DESCRIPTION_MAX = 1024  # Agent Skills limit for the description line
 USE_CUE = re.compile(r"\b(use|used|using|when|whenever|trigger|triggers|asks?|ask for|run when)\b", re.I)
 
@@ -720,8 +748,11 @@ def unexpose_chat_folders(root):
         ids = _previous_adapter_ids(folder) if folder.is_dir() else set()
         gone = []
         for skill_id in sorted(ids):
-            entry = folder / skill_id
-            if entry.parent == folder and (entry.exists() or entry.is_symlink()):
+            try:
+                entry = confined_entry(folder, skill_id)
+            except RuntimeError:
+                continue
+            if entry.exists() or entry.is_symlink():
                 _remove_adapter_entry(entry)
                 gone.append(skill_id)
         for name in (".aiverse-adapter.json", ADAPTER_PENDING):
@@ -928,7 +959,7 @@ def _previous_adapter_ids(target):
         ids |= {str(x) for x in pending.get("ids", []) if isinstance(x, str) and x}
     except (OSError, ValueError, AttributeError):
         pass
-    return ids
+    return {i for i in ids if _id_is_safe(i)}
 
 
 def _clear_adapter_leftovers(target, owned_ids):
@@ -946,7 +977,7 @@ REDIRECT_RUNTIMES = {"codex", "agent-skills"}
 
 def _write_redirect(target, old, new):
     """A tiny skill under a retired name that points to its replacement (Codex only matches exact names)."""
-    folder = Path(target) / old
+    folder = confined_entry(target, old)
     folder.mkdir(parents=True, exist_ok=True)
     (folder / "SKILL.md").write_text(
         f"---\nname: {old}\ndescription: Retired name. Use the {new} skill instead; it replaces {old}.\n---\n\n"
@@ -1004,7 +1035,10 @@ def materialize_adapter(root, target, runtime, *, force=False, prefer_copy=False
             retired = {}
         listed = {x["id"] for x in index}
         for old, new in sorted(retired.items()):
-            dst = target / old
+            try:
+                dst = confined_entry(target, old)
+            except RuntimeError:
+                continue
             if new not in listed or old in listed or ((dst.exists() or dst.is_symlink()) and old not in previous):
                 continue
             if dst.exists() or dst.is_symlink():
@@ -1015,8 +1049,11 @@ def materialize_adapter(root, target, runtime, *, force=False, prefer_copy=False
     if sync:
         keep = {x["id"] for x in index} | set(redirects)
         for old_id in sorted(previous - keep):
-            old_path = target / old_id
-            if old_path.parent == target and (old_path.exists() or old_path.is_symlink()):
+            try:
+                old_path = confined_entry(target, old_id)
+            except RuntimeError:
+                continue
+            if old_path.exists() or old_path.is_symlink():
                 _remove_adapter_entry(old_path)
                 pruned.append(old_id)
     adapter_manifest = {
@@ -1154,7 +1191,11 @@ def resolve_package_alias(name):
 def cmd_pin(a):
     root = Path(a.root).expanduser().resolve()
     requested = a.package
+    if requested:
+        safe_skill_id(requested)
     a.package = resolve_package_alias(requested)
+    if a.package:
+        safe_skill_id(a.package)
     if requested and a.package != requested:
         print(f"note: {requested} was replaced by {a.package}", file=sys.stderr)
     owner_pid = a.lease_owner_pid if a.lease_owner_pid is not None else os.getppid()

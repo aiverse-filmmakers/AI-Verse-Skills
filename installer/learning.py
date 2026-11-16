@@ -925,6 +925,8 @@ def rollback_learning_change(impl: Any, root: Path, proposal_id: str) -> Dict[st
 
 def record_usage(impl: Any, root: Path, skill_id: str, *, success: Optional[bool], selected: bool = True) -> Dict[str, Any]:
     root = Path(root).expanduser().resolve()
+    if _safe_skill_id(skill_id, "skill id") is None:
+        raise RuntimeError("skill id must be a safe bounded Skill id")
     with impl.lifecycle_lock(root):
         ensure_learning_state(impl, root)
         path = _paths(root)["usage"]
@@ -970,7 +972,15 @@ def usage_report(impl: Any, root: Path) -> Dict[str, Any]:
 
 
 def _archive_record_path(root: Path, skill_id: str) -> Path:
-    return _paths(root)["archive"] / skill_id / "archive.json"
+    if _safe_skill_id(skill_id, "skill id") is None:
+        raise RuntimeError("skill id must be a safe bounded Skill id")
+    base = _paths(root)["archive"]
+    record = base / skill_id / "archive.json"
+    try:
+        record.resolve().relative_to(base.resolve())
+    except ValueError:
+        raise RuntimeError("skill id escapes the archive folder")
+    return record
 
 
 def _archive_skill_locked(
@@ -1032,6 +1042,7 @@ def _archive_skill_locked(
 
 def archive_skill(impl: Any, root: Path, skill_id: str, *, approved_by: str) -> Dict[str, Any]:
     root = Path(root).expanduser().resolve()
+    _archive_record_path(root, skill_id)
     with impl.lifecycle_lock(root):
         ensure_learning_state(impl, root)
         return _archive_skill_locked(impl, root, skill_id, proposal_id=None, approved_by=approved_by)
@@ -1039,6 +1050,7 @@ def archive_skill(impl: Any, root: Path, skill_id: str, *, approved_by: str) -> 
 
 def restore_archived(impl: Any, root: Path, skill_id: str) -> Dict[str, Any]:
     root = Path(root).expanduser().resolve()
+    _archive_record_path(root, skill_id)
     with impl.lifecycle_lock(root):
         ensure_learning_state(impl, root)
         archive = _read_json(_archive_record_path(root, skill_id), None)
