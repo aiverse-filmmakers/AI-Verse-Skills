@@ -9,13 +9,53 @@ command -v git >/dev/null 2>&1 || { echo "git is required" >&2; exit 2; }
 command -v python3 >/dev/null 2>&1 || { echo "python3 is required" >&2; exit 2; }
 
 mkdir -p "$(dirname "$DEST")" "$BIN_DIR"
+
+CREATED=0
+stop() {
+  echo "Stopped: $1 Nothing was changed." >&2
+  if [ "$CREATED" = 1 ]; then rm -rf "$DEST"; fi
+  exit 2
+}
+
 if [ -d "$DEST/.git" ]; then
-  git -C "$DEST" fetch --quiet origin main
-  git -C "$DEST" checkout --quiet main
-  git -C "$DEST" pull --quiet --ff-only origin main
+  git -C "$DEST" fetch --quiet origin main 2>/dev/null || stop "could not download the latest release information."
 else
-  git clone --quiet "$REPO_URL" "$DEST"
+  git clone --quiet --no-checkout "$REPO_URL" "$DEST" 2>/dev/null || stop "could not download AI-Verse Skills."
+  CREATED=1
 fi
+
+# Members get the accepted release recorded in release/component-release.json,
+# never whatever is newest on main (same rule as the OS update command).
+# AI_VERSE_SKILLS_REF is a developer only override (any branch, tag or commit).
+if [ -n "${AI_VERSE_SKILLS_REF:-}" ]; then
+  git -C "$DEST" fetch --quiet origin "$AI_VERSE_SKILLS_REF" 2>/dev/null || true
+  TARGET="$(git -C "$DEST" rev-parse --verify --quiet "${AI_VERSE_SKILLS_REF}^{commit}" || git -C "$DEST" rev-parse --verify --quiet "origin/${AI_VERSE_SKILLS_REF}^{commit}" || true)"
+  [ -n "$TARGET" ] || stop "developer ref not found: $AI_VERSE_SKILLS_REF."
+  echo "Developer override: installing $AI_VERSE_SKILLS_REF"
+else
+  TIP="$(git -C "$DEST" rev-parse --verify --quiet origin/main^{commit} || true)"
+  [ -n "$TIP" ] || stop "the latest release information is missing."
+  RELEASE="$(git -C "$DEST" show "$TIP:release/component-release.json" 2>/dev/null || true)"
+  ACCEPTED="$(printf '%s' "$RELEASE" | python3 -c 'import json,re,sys
+r=json.load(sys.stdin)
+if r.get("release_status")=="accepted" and re.fullmatch(r"[a-f0-9]{40}",str(r.get("revision",""))):
+    print(r["revision"])' 2>/dev/null || true)"
+  [ -n "$ACCEPTED" ] || stop "no valid accepted release was found."
+  git -C "$DEST" cat-file -e "$ACCEPTED^{commit}" 2>/dev/null || stop "the accepted release $ACCEPTED is not in the downloaded copy."
+  TARGET="$ACCEPTED"
+  # An acceptance commit only touches release/, so such a tip is that release.
+  if git -C "$DEST" merge-base --is-ancestor "$ACCEPTED" "$TIP" 2>/dev/null; then
+    CHANGED="$(git -C "$DEST" diff --no-renames --name-only "$ACCEPTED" "$TIP")" || stop "could not compare the release with the latest version."
+    OTHER="$(printf '%s\n' "$CHANGED" | grep -v '^release/' | grep -v '^$' || true)"
+    if [ -z "$OTHER" ]; then TARGET="$TIP"; fi
+  fi
+fi
+
+if [ "$CREATED" = 0 ] && [ -n "$(git -C "$DEST" status --porcelain --untracked-files=no 2>/dev/null)" ]; then
+  stop "your copy at $DEST has local changes. Commit, stash or revert them, then run this again."
+fi
+git -C "$DEST" checkout --quiet --detach "$TARGET" 2>/dev/null || stop "could not switch to the accepted release."
+echo "AI-Verse Skills release: $(git -C "$DEST" rev-parse --short HEAD)"
 
 ln -sfn "$DEST/aiverse-skills" "$BIN_DIR/ai-verse-skills"
 
