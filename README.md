@@ -21,6 +21,11 @@ release. It never automatically moves existing skills.
 
 ### macOS and Linux
 
+The one line installer `bootstrap.sh` installs the accepted release recorded in
+`release/component-release.json`, not whatever is newest on `main`. Setting
+`AI_VERSE_SKILLS_REF` overrides this (developer only). The plain `git clone`
+below gives you the newest `main`, which can be ahead of the accepted release.
+
 ```bash
 git clone https://github.com/aiverse-filmmakers/AI-Verse-Skills.git
 cd AI-Verse-Skills
