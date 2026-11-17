@@ -177,7 +177,8 @@ class ReleaseRecordGuardTests(unittest.TestCase):
             problems, _ = guard.check(repo)
         finally:
             os.environ["PATH"] = old
-        self.assertTrue(any("git could not be run" in p or "does not exist" in p for p in problems))
+        self.assertTrue(any("git could not be run" in p for p in problems))
+        self.assertFalse(any("does not exist" in p for p in problems))
 
     def test_main_swallows_crash_unless_strict(self):
         import contextlib
@@ -190,6 +191,18 @@ class ReleaseRecordGuardTests(unittest.TestCase):
                 with mock.patch.dict(os.environ, env), contextlib.redirect_stdout(io.StringIO()) as out:
                     self.assertEqual(guard.main([str(repo)]), want)
                 self.assertIn("::", out.getvalue())
+
+    def test_binary_file_does_not_hide_other_findings(self):
+        repo, _ = self.make_repo(code_version=OLD)
+        (repo / "VERSION").write_bytes(b"\xff\xfe\x00\x80")
+        git(repo, "add", "-A")
+        git(repo, "commit", "-qm", "binary")
+        sha = git(repo, "rev-parse", "HEAD")
+        self.put_record(repo, record(sha, ci="7", acceptance="7"))
+        problems, _ = guard.check(repo)
+        self.assertTrue(any("listed twice" in p for p in problems))
+        self.assertTrue(any("PUBLIC_BETA.md" in p for p in problems))
+        self.assertFalse(any("crashed" in p for p in problems))
 
     def test_git_missing_in_default_mode_exits_zero(self):
         import contextlib

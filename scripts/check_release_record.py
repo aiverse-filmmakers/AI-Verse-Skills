@@ -27,7 +27,7 @@ SCHEMA = "ai-verse.component-release/v1"
 def git(repo, *args):
     try:
         proc = subprocess.run(
-            ["git", "-C", str(repo), *args], capture_output=True, text=True, encoding="utf-8"
+            ["git", "-C", str(repo), *args], capture_output=True, text=True, encoding="utf-8", errors="replace"
         )
     except OSError as exc:
         return 127, "", f"git could not be run ({exc})"
@@ -132,6 +132,9 @@ def check(repo):
     if not (isinstance(revision, str) and SHA.match(revision) and isinstance(version, str)):
         return problems, warnings
     code, _, _ = git(repo, "cat-file", "-e", f"{revision}^{{commit}}")
+    if code == 127:
+        problems.append("git could not be run, so the accepted commit could not be checked.")
+        return problems, warnings
     if code != 0:
         problems.append(
             f"The accepted commit {revision} does not exist in this repository "
