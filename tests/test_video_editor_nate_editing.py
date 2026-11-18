@@ -43,6 +43,7 @@ class NateEditingPreservationTests(unittest.TestCase):
             text=True,
             capture_output=True,
             check=False,
+            encoding="utf-8",
         )
 
     def scratch(self):
@@ -63,7 +64,7 @@ class NateEditingPreservationTests(unittest.TestCase):
                 td,
             )
             self.assertEqual(0, result.returncode, result.stderr)
-            doc = json.loads((Path(td) / "nate-source.silence-transcript.json").read_text())
+            doc = json.loads((Path(td) / "nate-source.silence-transcript.json").read_text(encoding="utf-8"))
             self.assertEqual(
                 "We we build a small garden. Plants need light.",
                 " ".join(word["text"] for word in doc["words"]),
@@ -88,7 +89,7 @@ class NateEditingPreservationTests(unittest.TestCase):
                 td,
             )
             self.assertEqual(0, result.returncode, result.stderr)
-            doc = json.loads((Path(td) / "nate-source.mistakes-transcript.json").read_text())
+            doc = json.loads((Path(td) / "nate-source.mistakes-transcript.json").read_text(encoding="utf-8"))
             self.assertEqual(7.71, doc["audio_duration_secs"])
             self.assertEqual("we", doc["words"][0]["text"])
             self.assertEqual(0.61, doc["words"][0]["start"])
@@ -107,7 +108,7 @@ class NateEditingPreservationTests(unittest.TestCase):
                 td,
             )
             self.assertEqual(0, result.returncode, result.stderr)
-            doc = json.loads((Path(td) / "nate-source.mistakes-transcript.json").read_text())
+            doc = json.loads((Path(td) / "nate-source.mistakes-transcript.json").read_text(encoding="utf-8"))
             self.assertEqual(8, doc["audio_duration_secs"])
             self.assertEqual(9, len(doc["words"]))
             self.assertEqual(0.6, doc["words"][0]["start"])
@@ -139,7 +140,7 @@ class NateEditingPreservationTests(unittest.TestCase):
             summary = json.loads(result.stdout)
             self.assertIn("candidates", summary)
             self.assertTrue((Path(td) / "nate-source.cut-candidates.json").is_file())
-            doc = json.loads((Path(td) / "nate-source.cut-candidates.json").read_text())
+            doc = json.loads((Path(td) / "nate-source.cut-candidates.json").read_text(encoding="utf-8"))
             self.assertEqual("cut-mistakes", doc["agent"])
             self.assertIsInstance(doc["candidates"], list)
 

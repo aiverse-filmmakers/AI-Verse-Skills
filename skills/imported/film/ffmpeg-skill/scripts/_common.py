@@ -285,7 +285,7 @@ def run_keeping_subtitles(cmd: List[str], output: str) -> bool:
 
 def _run_captured(cmd: List[str], check: bool) -> subprocess.CompletedProcess:
     """Plain run with stdout/stderr captured."""
-    proc = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    proc = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, encoding="utf-8")
     if proc.returncode != 0:
         # Cleanup happens for every failed ffmpeg invocation, not just the check=True/_fail()
         # path: a handful of scripts (cut.py, loudness.py, silence.py, sync.py) call run() with
@@ -314,7 +314,7 @@ def _run_with_progress(cmd: List[str], check: bool) -> subprocess.CompletedProce
     total = STATE.duration_hint or 0.0
     full = cmd[:1] + ["-progress", "pipe:1", "-nostats"] + cmd[1:]
     t0 = time.time()
-    proc = subprocess.Popen(full, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    proc = subprocess.Popen(full, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, encoding="utf-8")
     last = ""
     assert proc.stdout is not None
     for line in proc.stdout:
@@ -626,7 +626,7 @@ def default_font_file(font_name: str) -> Optional[str]:
     if not exe:
         return None
     try:
-        proc = subprocess.run([exe, "--format=%{file}\n", font_name], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, timeout=5)
+        proc = subprocess.run([exe, "--format=%{file}\n", font_name], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, timeout=5, encoding="utf-8")
     except (subprocess.TimeoutExpired, OSError):
         return None
     if proc.returncode != 0:
@@ -730,7 +730,7 @@ def analyze_levels(path: str, seconds: float = 20.0) -> Dict[str, Any]:
     ffmpeg = require_tool("ffmpeg")
     cmd = [ffmpeg, "-hide_banner", "-nostdin", "-t", f"{seconds:.1f}", "-i", path, "-an",
            "-vf", "fps=2,signalstats,metadata=print:file=-", "-f", "null", "-"]
-    proc = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    proc = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, encoding="utf-8")
     vals: Dict[str, List[float]] = {}
     for line in proc.stdout.splitlines():
         if "lavfi.signalstats." in line and "=" in line:

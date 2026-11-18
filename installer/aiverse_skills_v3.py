@@ -76,8 +76,43 @@ def load(rel):
     return json.loads((REPO_ROOT / rel).read_text(encoding="utf-8"))
 
 
-def run(cmd, cwd=None):
-    p = subprocess.run(cmd, cwd=cwd, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+GIT_TIMEOUT_ENV = "AIVERSE_GIT_TIMEOUT"
+DEFAULT_GIT_TIMEOUT = 120
+
+
+class UpstreamFetchError(RuntimeError):
+    """One third party repository could not be fetched. Other repositories can still install."""
+
+
+def git_timeout():
+    """Seconds each git step may take. Set AIVERSE_GIT_TIMEOUT to change it."""
+    raw = os.environ.get(GIT_TIMEOUT_ENV, "").strip()
+    try:
+        value = float(raw) if raw else DEFAULT_GIT_TIMEOUT
+    except ValueError:
+        return DEFAULT_GIT_TIMEOUT
+    return value if value > 0 else DEFAULT_GIT_TIMEOUT
+
+
+def git_env():
+    """Environment that makes git fail fast instead of waiting for a password."""
+    env = dict(os.environ)
+    env["GIT_TERMINAL_PROMPT"] = "0"
+    env["GIT_ASKPASS"] = "true"
+    env["SSH_ASKPASS"] = "true"
+    env.setdefault("GCM_INTERACTIVE", "never")
+    return env
+
+
+def run(cmd, cwd=None, timeout=None):
+    is_git = bool(cmd) and Path(str(cmd[0])).stem == "git"
+    try:
+        p = subprocess.run(
+            cmd, cwd=cwd, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding="utf-8",
+            timeout=timeout, env=git_env() if is_git else None, stdin=subprocess.DEVNULL if is_git else None,
+        )
+    except subprocess.TimeoutExpired:
+        raise RuntimeError(f"Command timed out after {timeout:g} seconds: {' '.join(map(str, cmd))}")
     if p.returncode:
         raise RuntimeError(f"Command failed ({p.returncode}): {' '.join(map(str, cmd))}\n{p.stderr.strip()}")
     return p.stdout
@@ -85,6 +120,21 @@ def run(cmd, cwd=None):
 
 def cache_name(repo, commit):
     return repo.replace("/", "__") + "@" + commit
+
+
+def _upstream_url(repo):
+    base = os.environ.get("AIVERSE_UPSTREAM_BASE", "https://github.com").rstrip("/")
+    return f"{base}/{repo}.git"
+
+
+def _first_line(exc):
+    """Short plain reason for a failed git step (drops the command line and git hints)."""
+    text = str(exc)
+    if "timed out" in text:
+        return text.split(": ", 1)[0].replace("Command timed out", "git timed out")
+    lines = [x.strip() for x in text.splitlines()[1:] if x.strip()]
+    lines = [x for x in lines if not x.startswith("hint:")]
+    return " ".join(lines[:2]) if lines else "git could not fetch it"
 
 
 def checkout(repo, commit, cache, offline=False):
@@ -104,14 +154,15 @@ def checkout(repo, commit, cache, offline=False):
     tmp = dst.with_name(dst.name + ".partial-" + uuid.uuid4().hex[:8])
     tmp.mkdir()
     try:
-        run(["git", "init", "-q"], tmp)
-        run(["git", "remote", "add", "origin", f"https://github.com/{repo}.git"], tmp)
-        run(["git", "fetch", "-q", "--depth", "1", "origin", commit], tmp)
-        run(["git", "checkout", "-q", "--detach", "FETCH_HEAD"], tmp)
+        limit = git_timeout()
+        run(["git", "init", "-q"], tmp, timeout=limit)
+        run(["git", "remote", "add", "origin", _upstream_url(repo)], tmp, timeout=limit)
+        run(["git", "fetch", "-q", "--depth", "1", "origin", commit], tmp, timeout=limit)
+        run(["git", "checkout", "-q", "--detach", "FETCH_HEAD"], tmp, timeout=limit)
         os.replace(tmp, dst)
-    except Exception:
+    except Exception as exc:
         shutil.rmtree(tmp, ignore_errors=True)
-        raise
+        raise UpstreamFetchError(f"{repo}: {_first_line(exc)}") from exc
     return dst
 
 
@@ -369,15 +420,35 @@ def manifest_relative_path(stage, path):
     return path.relative_to(stage).as_posix()
 
 
+LAST_FETCH_FAILURES = {}
+LAST_SKIPPED_PACKAGES = []
+
+
 def build_stage(profile, stage, cache, generation_id, offline=False):
+    """Stage every package. A third party repo that cannot be fetched is skipped, not fatal.
+
+    Skipped repos are left in LAST_FETCH_FAILURES as {repo: reason} and the
+    packages that needed them in LAST_SKIPPED_PACKAGES.
+    """
     jobs = install_plan(profile, stage)
     installed, checkouts = [], {}
+    LAST_FETCH_FAILURES.clear()
+    LAST_SKIPPED_PACKAGES.clear()
     for kind, cid, src, dst, p in jobs:
         if src is None:
             key = (p["repo"], p["commit"])
+            if key in LAST_FETCH_FAILURES:
+                LAST_SKIPPED_PACKAGES.append(cid)
+                continue
             co = checkouts.get(key)
             if co is None:
-                co = checkout(*key, cache, offline)
+                try:
+                    co = checkout(*key, cache, offline)
+                except UpstreamFetchError as exc:
+                    LAST_FETCH_FAILURES[key] = str(exc)
+                    LAST_SKIPPED_PACKAGES.append(cid)
+                    print("skipped", cid, "(could not fetch", p["repo"] + ")")
+                    continue
                 checkouts[key] = co
             src = resolve(co, p["selector"], cid)
         if not (src / "SKILL.md").exists():
@@ -663,6 +734,30 @@ def _print_install_result(verb, root, installed, previous, legacy_backup, genera
         print("Legacy migration backup:", legacy_backup)
 
 
+EXIT_PARTIAL_INSTALL = 3
+
+
+def report_upstream_failures(installed):
+    """Say in plain English which third party repos worked and which did not.
+
+    Returns the exit code: 0 when every repo was fetched, EXIT_PARTIAL_INSTALL otherwise.
+    """
+    if not LAST_FETCH_FAILURES:
+        return 0
+    failed = sorted({k[0] for k in LAST_FETCH_FAILURES})
+    worked = sorted({x["source_repo"] for x in installed if x.get("source_commit")})
+    print()
+    print("Some third party skill sources could not be downloaded, so the install is partial.")
+    if worked:
+        print("Downloaded fine:", ", ".join(worked))
+    print("Could not be downloaded:")
+    for key, reason in sorted(LAST_FETCH_FAILURES.items()):
+        print(f"  {key[0]}: {reason.split(': ', 1)[-1]}")
+    print(f"Skipped {len(LAST_SKIPPED_PACKAGES)} skills that need them: {', '.join(sorted(LAST_SKIPPED_PACKAGES))}")
+    print("Everything else is installed. Check your internet connection, then run the same command again to add the rest.")
+    return EXIT_PARTIAL_INSTALL
+
+
 CHAT_FOLDERS_FILE = "chat-folders.json"
 DEFAULT_CHAT_FOLDERS = {"claude": "~/.claude/skills", "codex": "~/.agents/skills"}
 
@@ -783,7 +878,10 @@ def cmd_install(a):
     folders = _wanted_chat_folders(a, root)
     installed, previous, legacy_backup, generation_id = transactional_install(a.profile, root, cache, a.offline)
     _print_install_result("Installed", root, installed, previous, legacy_backup, generation_id)
+    exit_code = report_upstream_failures(installed)
     _finish_with_chat_folders(a, root, folders)
+    if exit_code:
+        raise SystemExit(exit_code)
 
 
 def cmd_update(a):
@@ -799,7 +897,10 @@ def cmd_update(a):
         profile, root, Path(a.cache).expanduser(), a.offline
     )
     _print_install_result("Updated", root, installed, previous, legacy_backup, generation_id)
+    exit_code = report_upstream_failures(installed)
     _finish_with_chat_folders(a, root, folders)
+    if exit_code:
+        raise SystemExit(exit_code)
 
 
 def cmd_rollback(a):

@@ -120,7 +120,7 @@ CAPTION_UNSAFE = {
 
 def load_copy(copy_path):
     """Read the copy JSON and normalize titles/descriptions to {"text": ...}."""
-    with open(copy_path) as f:
+    with open(copy_path, encoding="utf-8") as f:
         data = json.load(f)
     bodies = data.get("bodies") or []
     if not bodies:
@@ -428,7 +428,7 @@ def main():
     run_slug = datetime.now().strftime("%Y-%m-%d-%H%M%S")
     out_dir = meta_api.resolve_output_dir(run_slug)
     out_file = out_dir / "deployment_results.json"
-    with open(out_file, "w") as f:
+    with open(out_file, "w", encoding="utf-8") as f:
         json.dump(results, f, indent=2)
 
     print("\n" + "=" * 70)

@@ -54,6 +54,7 @@ class VideoEditorShortFormTests(unittest.TestCase):
             text=True,
             capture_output=True,
             check=False,
+            encoding="utf-8",
         )
 
     @staticmethod

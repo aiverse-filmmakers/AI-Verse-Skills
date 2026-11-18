@@ -40,7 +40,7 @@ def detect_scenes(path: str, threshold: float, min_len: float, duration: float, 
     ffmpeg = require_tool("ffmpeg")
     proc = subprocess.run([ffmpeg, "-hide_banner", "-nostdin", "-i", path, "-an", "-vf",
                            "scale=320:-2,scdet=threshold=0:sc_pass=1,metadata=print:file=-", "-f", "null", "-"],
-                          stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+                          stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, encoding="utf-8")
     times: List[float] = []
     scores: List[float] = []
     cur_t = None

@@ -61,7 +61,7 @@ def run_step(argv: List[str]) -> bool:
     if STATE["dry_run"]:
         cmd.append("--dry-run")
     info("  → " + " ".join(os.path.basename(c) if i < 2 else c for i, c in enumerate(cmd)))
-    proc = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    proc = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, encoding="utf-8")
     if proc.returncode != 0:
         info("    " + "\n    ".join(proc.stderr.strip().splitlines()[-4:]))
         return False

@@ -12,7 +12,7 @@ CLI = ROOT / "installer" / "aiverse_skills.py"
 
 def cli(root, *args):
     return subprocess.run([sys.executable, str(CLI), "--root", str(root), *args],
-                          capture_output=True, text=True, check=True).stdout
+                          capture_output=True, text=True, check=True, encoding="utf-8").stdout
 
 
 class UsageReportTests(unittest.TestCase):

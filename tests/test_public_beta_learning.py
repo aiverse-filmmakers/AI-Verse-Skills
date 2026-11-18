@@ -60,7 +60,7 @@ class PublicBetaLearningTests(unittest.TestCase):
         status = skills.status_report(self.root)
         self.assertEqual(status["state"], "ready")
         pin = skills.pin_active_generation(self.root, skills.digest)
-        admission = json.loads((pin.generation_path / ".aiverse" / "admission.json").read_text())
+        admission = json.loads((pin.generation_path / ".aiverse" / "admission.json").read_text(encoding="utf-8"))
         package = admission["packages"][0]
         self.assertEqual(package["integrity"]["status"], "verified")
         self.assertEqual(package["admission"], "admitted")

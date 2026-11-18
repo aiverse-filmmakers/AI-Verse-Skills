@@ -176,7 +176,7 @@ def main():
     run_slug = datetime.now().strftime("%Y-%m-%d-%H%M%S")
     out_dir = meta_api.resolve_output_dir(run_slug)
     out_file = out_dir / "top-ads.json"
-    with open(out_file, "w") as f:
+    with open(out_file, "w", encoding="utf-8") as f:
         json.dump(top_ads, f, indent=2)
     print(f"\nSaved {len(top_ads)} ranked ads → {out_file}")
 

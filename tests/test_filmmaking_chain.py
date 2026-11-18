@@ -24,7 +24,7 @@ def private_words(text):
 
 
 def body(path):
-    return (path / 'SKILL.md').read_text()
+    return (path / 'SKILL.md').read_text(encoding="utf-8")
 
 
 class FilmmakingChainTests(unittest.TestCase):
@@ -57,13 +57,13 @@ class FilmmakingChainTests(unittest.TestCase):
         for name in ('ai-realism', 'higgsfield-acting'):
             self.assertIn(name, employee)
             self.assertTrue((employee[name][2] / 'SKILL.md').is_file())
-        roles = json.loads((ROOT / 'registry/roles.json').read_text())['roles']
+        roles = json.loads((ROOT / 'registry/roles.json').read_text(encoding="utf-8"))['roles']
         filmmaker = next(r for r in roles if r['id'] == 'ai-filmmaker')
         self.assertIn('ai-realism', filmmaker['skills'])
         self.assertIn('higgsfield-acting', filmmaker['skills'])
 
     def test_higgsfield_adapter_accepts_a_user_who_works_in_higgsfield(self):
-        text = (AIV / 'cinematic-realism-director/SKILL.md').read_text()
+        text = (AIV / 'cinematic-realism-director/SKILL.md').read_text(encoding="utf-8")
         self.assertIn('working in Higgsfield', text)
 
 

@@ -24,10 +24,10 @@ class AdmissionPolicyDriftTests(unittest.TestCase):
         self.addCleanup(self.tmp.cleanup)
         self.root = Path(self.tmp.name)
         (self.root / ".aiverse").mkdir()
-        (self.root / ".aiverse" / "installed.json").write_text(json.dumps({"generation_id": "gen-old"}))
+        (self.root / ".aiverse" / "installed.json").write_text(json.dumps({"generation_id": "gen-old"}), encoding="utf-8")
         self.stored = {"schema_version": admission.ADMISSION_SCHEMA_VERSION, "generation_id": "gen-old",
                        "packages": [package()]}
-        (self.root / ".aiverse" / admission.ADMISSION_FILENAME).write_text(json.dumps(self.stored))
+        (self.root / ".aiverse" / admission.ADMISSION_FILENAME).write_text(json.dumps(self.stored), encoding="utf-8")
 
     def verify(self, now):
         current = copy.deepcopy(self.stored); current["packages"] = [now]

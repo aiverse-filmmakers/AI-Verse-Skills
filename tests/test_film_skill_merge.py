@@ -18,7 +18,7 @@ class FilmSkillMergeTests(unittest.TestCase):
             source = employee[name][2]
             self.assertTrue((source / 'SKILL.md').is_file())
             self.assertTrue((source / 'LICENSE').is_file())
-            provenance = json.loads((source / 'SOURCE.json').read_text())
+            provenance = json.loads((source / 'SOURCE.json').read_text(encoding="utf-8"))
             self.assertEqual('Apache-2.0', provenance['license'])
 
     def test_shared_film_references_and_handoff_exist(self):
@@ -27,7 +27,7 @@ class FilmSkillMergeTests(unittest.TestCase):
                      'production-contract.md', 'shot-design-engine.md', 'video-production.md'):
             self.assertTrue((merged / 'references' / name).is_file(), name)
         director = ROOT / 'skills/imported/film/director-agent'
-        self.assertIn('ai-video-director', (director / 'SKILL.md').read_text())
+        self.assertIn('ai-video-director', (director / 'SKILL.md').read_text(encoding="utf-8"))
         self.assertFalse((director / 'references/production-storyboard-compiler.md').exists())
 
 

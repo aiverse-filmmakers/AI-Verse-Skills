@@ -97,6 +97,7 @@ class ImmutableGenerationLifecycleTests(unittest.TestCase):
                 check=True,
                 capture_output=True,
                 text=True,
+                encoding="utf-8",
             )
         else:
             link.symlink_to(destination, target_is_directory=True)

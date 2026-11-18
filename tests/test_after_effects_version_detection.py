@@ -14,6 +14,7 @@ class AfterEffectsVersionDetectionTests(unittest.TestCase):
         result = subprocess.run(
             ['/bin/bash', '-c', function + '\ndetect_ae_versions "$1"\nprintf "%s\\n" "${#VERSIONS[@]}" "${VERSIONS[@]}"', 'test', str(directory)],
             check=True, capture_output=True, text=True,
+            encoding="utf-8",
         )
         return result.stdout.splitlines()
 

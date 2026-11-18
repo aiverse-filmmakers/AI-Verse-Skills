@@ -60,7 +60,7 @@ class MemberLearningTests(unittest.TestCase):
         result = learning.apply_proposal(skills, self.root, item["proposal_id"], approved_by="fixture-user")
         self.assertTrue(skills.doctor_report(self.root)["ok"])
         target = library.revision_path(self.personal, result["member_import"]["id"], result["member_import"]["revision"])
-        (target / "SKILL.md").write_text("damaged")
+        (target / "SKILL.md").write_text("damaged", encoding="utf-8")
         self.assertFalse(skills.doctor_report(self.root)["checks"]["member_library"]["ok"])
 
     def test_member_library_participates_in_learning_deduplication(self):
