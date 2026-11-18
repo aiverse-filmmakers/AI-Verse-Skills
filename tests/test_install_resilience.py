@@ -315,6 +315,46 @@ class UpdateKeepsWhatYouHaveTests(unittest.TestCase):
         self.assertEqual(code, 0, text)
         self.assertEqual(self._ids(), ["alpha", "held"])
 
+    def test_fresh_install_after_uninstall_does_not_claim_never_installed(self):
+        self._install(["alpha", "held"], "cache1")
+        code, text = self._run_cli("uninstall")
+        self.assertEqual(code, 0, text)
+        __import__("shutil").rmtree(self.base / "owner" / "held.git")
+        self._install(["alpha", "held"], "cache2")
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            code = v3.report_upstream_failures([])
+        text = out.getvalue()
+        self.assertEqual(code, v3.EXIT_PARTIAL_INSTALL)
+        self.assertNotIn("never installed before", text)
+        self.assertIn("not carried over", text)
+        self.assertIn("aiverse-skills rollback", text)
+
+    def test_damaged_legacy_record_message_is_truthful_and_manual_step_works(self):
+        legacy = Path(self.td.name) / "legacy-root"
+        (legacy / "support" / "alpha").mkdir(parents=True)
+        (legacy / "support" / "alpha" / "SKILL.md").write_text("---\nname: alpha\n---\nx\n", encoding="utf-8")
+        (legacy / ".aiverse").mkdir()
+        (legacy / ".aiverse" / "installed.json").write_text("{broken", encoding="utf-8")
+        with self.assertRaises(v3.InstallRecordDamaged) as ctx:
+            v3.previous_install(legacy)
+        self.assertTrue(ctx.exception.legacy)
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            v3.report_blocked(ctx.exception)
+        text = out.getvalue()
+        self.assertIn("older style", text)
+        self.assertIn("uninstall cannot repair it", text)
+        self.assertNotIn("then the install command (aiverse-skills install). Uninstall keeps", text)
+        self.assertIn(str(legacy), text)
+        # The manual step the message names: rename the folder, then a fresh install works.
+        moved = Path(self.td.name) / "legacy-root.old"
+        legacy.rename(moved)
+        self.root = legacy
+        self._install(["alpha", "held"], "cache7")
+        self.assertEqual(self._ids(), ["alpha", "held"])
+        self.assertTrue((moved / "support" / "alpha" / "SKILL.md").exists())
+
     def test_nothing_installed_yet_is_not_an_error(self):
         self.assertIsNone(v3.previous_install(self.root))
 

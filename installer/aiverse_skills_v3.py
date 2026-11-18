@@ -471,6 +471,15 @@ class PartialInstallBlocked(RuntimeError):
 class InstallRecordDamaged(PartialInstallBlocked):
     """The record of what is installed is missing or unreadable. Retrying will not fix it."""
 
+    def __init__(self, message, legacy=False, root=None):
+        super().__init__(message)
+        self.legacy = legacy
+        self.root = root
+
+
+# True when the library was uninstalled (or its record repaired) and older generations still exist.
+LAST_OLDER_GENERATIONS = []
+
 
 def _has_installed_content(base):
     base = Path(base)
@@ -489,14 +498,19 @@ def previous_install(root):
     member already has.
     """
     root = Path(root).expanduser()
+    LAST_OLDER_GENERATIONS.clear()
+    legacy = False
     try:
         if _is_lifecycle(root):
             pointer = read_active_pointer(root, allow_uninstalled=True)
             if pointer.get("state") != "active":
+                if pointer.get("history"):
+                    LAST_OLDER_GENERATIONS.append(True)
                 return None
             base = generation_path(root, str(pointer.get("generation_id")))
         elif _is_legacy_install(root):
             base = root
+            legacy = True
         else:
             return None
         manifest_file = _legacy_manifest_path(base)
@@ -510,7 +524,8 @@ def previous_install(root):
             raise ValueError("install manifest lists no skills although skills are installed")
     except Exception as exc:
         raise InstallRecordDamaged(
-            f"The record of your installed skills is damaged: {exc}. Nothing was changed."
+            f"The record of your installed skills is damaged: {exc}. Nothing was changed.",
+            legacy=legacy, root=str(root),
         ) from exc
     return base, entries
 
@@ -922,7 +937,12 @@ def report_upstream_failures(installed):
         print(f"Kept at the version you already had ({len(info['kept_at_old_version'])}): "
               + ", ".join(info["kept_at_old_version"]))
     if info["skipped"]:
-        print(f"Skipped, never installed before ({len(info['skipped'])}): " + ", ".join(info["skipped"]))
+        if LAST_OLDER_GENERATIONS:
+            print(f"Skipped ({len(info['skipped'])}): " + ", ".join(info["skipped"]))
+            print("These may have been installed before the uninstall or repair. Skills from before it are "
+                  "not carried over. To get them back, run the rollback command (aiverse-skills rollback).")
+        else:
+            print(f"Skipped, never installed before ({len(info['skipped'])}): " + ", ".join(info["skipped"]))
     print("Everything else is installed. Check your internet connection, then run the same command again to add the rest.")
     return EXIT_PARTIAL_INSTALL
 
@@ -934,7 +954,13 @@ def report_blocked(exc):
     LAST_BLOCKED[:] = [str(exc)]
     print()
     print("Stopped: " + str(exc))
-    if isinstance(exc, InstallRecordDamaged):
+    if isinstance(exc, InstallRecordDamaged) and exc.legacy:
+        print("Your current skills were left exactly as they were.")
+        print("The record of this older style install is damaged, and uninstall cannot repair it.")
+        print(f"To fix it by hand: rename the folder {exc.root} (for example add .old to its name), "
+              "then run the install command (aiverse-skills install) again. "
+              "Your previous skills stay on disk in the renamed folder.")
+    elif isinstance(exc, InstallRecordDamaged):
         print("Your current skills were left exactly as they were.")
         print("The install record is damaged, so trying again will not help.")
         print("To repair it, run the uninstall command (aiverse-skills uninstall), then the install command "
@@ -1080,7 +1106,8 @@ def cmd_update(a):
     except Exception as exc:
         if _is_lifecycle(root) or _is_legacy_install(root):
             raise SystemExit(report_blocked(InstallRecordDamaged(
-                f"The record of your installed skills is damaged: {exc}. Nothing was changed."
+                f"The record of your installed skills is damaged: {exc}. Nothing was changed.",
+                legacy=not _is_lifecycle(root), root=str(root),
             )))
         raise
     profile = a.profile or existing.get("profile", "full")
