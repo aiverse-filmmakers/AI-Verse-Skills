@@ -445,11 +445,11 @@ def apply_public_beta(impl: Any) -> None:
                 except SystemExit as stop:
                     # Exit 3 means a partial install: the install itself went through, so
                     # the lifecycle action must still be recorded and JSON still printed.
-                    if stop.code != getattr(impl, "EXIT_PARTIAL_INSTALL", 3):
+                    if stop.code not in (getattr(impl, "EXIT_PARTIAL_INSTALL", 3), getattr(impl, "EXIT_BLOCKED", 4)):
                         raise
                     partial_exit = stop
                     output = getattr(stop, "captured_output", None)
-                blocked = partial_exit is not None and bool(getattr(impl, "LAST_BLOCKED", None))
+                blocked = partial_exit is not None and partial_exit.code == getattr(impl, "EXIT_BLOCKED", 4)
                 if not blocked:
                     record_lifecycle_action(a.root)
                 if getattr(a, "json", False):
@@ -462,7 +462,7 @@ def apply_public_beta(impl: Any) -> None:
                         payload["activated"] = False
                         payload["ok_packages"] = []
                         payload["failed_packages"] = []
-                        payload["blocked_reason"] = impl.LAST_BLOCKED[0]
+                        payload["blocked_reason"] = (getattr(impl, "LAST_BLOCKED", None) or [""])[0]
                     elif partial_exit is not None:
                         info = impl.partial_summary(getattr(impl, "LAST_INSTALLED", ()))
                         info["partial"] = True

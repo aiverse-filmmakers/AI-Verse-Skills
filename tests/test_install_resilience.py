@@ -241,7 +241,7 @@ class UpdateKeepsWhatYouHaveTests(unittest.TestCase):
         (v3.generation_path(self.root, gid) / ".aiverse" / "installed.json").write_text("{not json", encoding="utf-8")
         with self.assertRaises(v3.PartialInstallBlocked) as ctx:
             self._install(["alpha", "held"], "cache2")
-        self.assertIn("nothing was changed", str(ctx.exception))
+        self.assertIn("Nothing was changed", str(ctx.exception))
         self.assertEqual(v3.read_active_pointer(self.root)["generation_id"], gid)
 
     def test_missing_manifest_in_active_generation_blocks_and_keeps_everything(self):
@@ -269,6 +269,52 @@ class UpdateKeepsWhatYouHaveTests(unittest.TestCase):
             v3.report_blocked(v3.PartialInstallBlocked("held could not be downloaded."))
         self.assertIn("internet connection", out.getvalue())
 
+    def test_empty_manifest_with_installed_skills_is_damage(self):
+        self._install(["alpha", "held"], "cache1")
+        gid = v3.read_active_pointer(self.root)["generation_id"]
+        (v3.generation_path(self.root, gid) / ".aiverse" / "installed.json").write_text("{}", encoding="utf-8")
+        with self.assertRaises(v3.InstallRecordDamaged) as ctx:
+            v3.previous_install(self.root)
+        self.assertNotIn("git", str(ctx.exception))
+        self.assertIn("damaged", str(ctx.exception))
+        (v3.generation_path(self.root, gid) / ".aiverse" / "installed.json").write_text("[]", encoding="utf-8")
+        with self.assertRaises(v3.InstallRecordDamaged):
+            v3.previous_install(self.root)
+
+    def _run_cli(self, *argv):
+        from installer import aiverse_skills as cli
+
+        out = io.StringIO()
+        with mock.patch.object(sys, "argv", ["aiverse-skills", "--root", str(self.root),
+                                             "--cache", str(Path(self.td.name) / "c9"), *argv]), \
+                mock.patch.object(v3, "install_plan", self._plan(["alpha", "held"])), \
+                mock.patch.dict(os.environ, {"AIVERSE_UPSTREAM_BASE": self.base.as_uri()}), \
+                contextlib.redirect_stdout(out):
+            code = 0
+            try:
+                cli.main()
+            except SystemExit as stop:
+                code = stop.code
+        return code, out.getvalue()
+
+    def test_corrupt_pointer_update_says_damaged_and_uninstall_then_install_repairs(self):
+        self._install(["alpha", "held"], "cache1")
+        pointer = v3.active_pointer_path(self.root)
+        pointer.write_text("{broken", encoding="utf-8")
+        code, text = self._run_cli("update")
+        self.assertEqual(code, v3.EXIT_BLOCKED)
+        self.assertIn("damaged", text)
+        self.assertIn("will not help", text)
+        code, text = self._run_cli("uninstall")
+        self.assertEqual(code, 0, text)
+        self.assertIn("damaged", text)
+        self.assertTrue(list(pointer.parent.glob("active.json.damaged-*")))
+        self.assertEqual(v3.read_active_pointer(self.root, allow_uninstalled=True)["state"], "uninstalled")
+        self.assertTrue(v3.read_active_pointer(self.root, allow_uninstalled=True)["history"])
+        code, text = self._run_cli("install")
+        self.assertEqual(code, 0, text)
+        self.assertEqual(self._ids(), ["alpha", "held"])
+
     def test_nothing_installed_yet_is_not_an_error(self):
         self.assertIsNone(v3.previous_install(self.root))
 
@@ -292,7 +338,8 @@ class UpdateKeepsWhatYouHaveTests(unittest.TestCase):
             with self.assertRaises(SystemExit) as ctx:
                 with mock.patch.object(sys, "argv", ["aiverse-skills", *argv]):
                     cli.main()
-        self.assertEqual(ctx.exception.code, 3)
+        self.assertEqual(ctx.exception.code, v3.EXIT_BLOCKED)
+        self.assertEqual(v3.EXIT_BLOCKED, 4)
         self.assertEqual(recorded, [])
         payload = json.loads(out.getvalue())
         self.assertTrue(payload["blocked"])

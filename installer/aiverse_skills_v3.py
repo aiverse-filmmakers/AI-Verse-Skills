@@ -472,12 +472,21 @@ class InstallRecordDamaged(PartialInstallBlocked):
     """The record of what is installed is missing or unreadable. Retrying will not fix it."""
 
 
+def _has_installed_content(base):
+    base = Path(base)
+    try:
+        return any(not child.name.startswith(".") for child in base.iterdir())
+    except OSError:
+        return False
+
+
 def previous_install(root):
     """(base folder, {package id: manifest entry}) of what is installed now.
 
-    Returns None only when nothing is installed yet. A damaged or unreadable
-    install record raises PartialInstallBlocked, so an update can never
-    silently drop skills the member already has.
+    Returns None only when nothing is installed yet (no install, or the pointer
+    says uninstalled). A damaged or unreadable install record raises
+    InstallRecordDamaged, so an update can never silently drop skills the
+    member already has.
     """
     root = Path(root).expanduser()
     try:
@@ -492,15 +501,42 @@ def previous_install(root):
             return None
         manifest_file = _legacy_manifest_path(base)
         if not manifest_file.exists():
-            raise FileNotFoundError(f"missing {manifest_file.name} in the active install")
+            raise FileNotFoundError(f"{manifest_file.name} is missing from the active install")
         manifest = _read_json(manifest_file, "install manifest")
-        entries = {x["id"]: x for x in manifest.get("packages", []) if x.get("id")}
+        if not isinstance(manifest, dict) or not isinstance(manifest.get("packages", []), list):
+            raise ValueError("install manifest is not in the expected format")
+        entries = {x["id"]: x for x in manifest.get("packages", []) if isinstance(x, dict) and x.get("id")}
+        if not entries and _has_installed_content(base):
+            raise ValueError("install manifest lists no skills although skills are installed")
     except Exception as exc:
         raise InstallRecordDamaged(
-            f"The record of your installed skills could not be read ({_first_line(exc)}), "
-            "so nothing was changed."
+            f"The record of your installed skills is damaged: {exc}. Nothing was changed."
         ) from exc
     return base, entries
+
+
+def repair_damaged_pointer(root):
+    """Replace an unreadable active.json by a valid "uninstalled" pointer.
+
+    The damaged file is kept next to it as active.json.damaged-<time> and every
+    generation folder stays on disk, so nothing is deleted. Returns the backup path.
+    """
+    root = Path(root).expanduser().resolve()
+    pointer_file = active_pointer_path(root)
+    stamp = dt.datetime.now(dt.timezone.utc).strftime("%Y%m%dT%H%M%S")
+    backup = pointer_file.with_name(f"{pointer_file.name}.damaged-{stamp}")
+    os.replace(pointer_file, backup)
+    gens = generations_dir(root)
+    found = sorted((d.name for d in gens.iterdir() if d.is_dir()), reverse=True) if gens.is_dir() else []
+    _atomic_json_write(pointer_file, {
+        "schema_version": ACTIVE_SCHEMA_VERSION,
+        "state": "uninstalled",
+        "generation_id": None,
+        "generation_digest_sha256": None,
+        "deactivated_at": dt.datetime.now(dt.timezone.utc).isoformat(),
+        "history": found,
+    })
+    return backup
 
 
 def _carry_over(previous, kind, cid, dst, stage, installed):
@@ -848,7 +884,8 @@ def _print_install_result(verb, root, installed, previous, legacy_backup, genera
         print("Legacy migration backup:", legacy_backup)
 
 
-EXIT_PARTIAL_INSTALL = 3
+EXIT_PARTIAL_INSTALL = 3  # some third party skills skipped or kept, everything else installed
+EXIT_BLOCKED = 4  # nothing was installed or changed
 
 
 def partial_summary(installed=()):
@@ -904,7 +941,7 @@ def report_blocked(exc):
               "(aiverse-skills install). Uninstall keeps the old copies, so nothing is lost.")
     else:
         print("Your current skills were left exactly as they were. Check your internet connection and try again.")
-    return EXIT_PARTIAL_INSTALL
+    return EXIT_BLOCKED
 
 
 CHAT_FOLDERS_FILE = "chat-folders.json"
@@ -1038,7 +1075,14 @@ def cmd_install(a):
 
 def cmd_update(a):
     root = Path(a.root).expanduser()
-    existing = load_manifest(root)
+    try:
+        existing = load_manifest(root)
+    except Exception as exc:
+        if _is_lifecycle(root) or _is_legacy_install(root):
+            raise SystemExit(report_blocked(InstallRecordDamaged(
+                f"The record of your installed skills is damaged: {exc}. Nothing was changed."
+            )))
+        raise
     profile = a.profile or existing.get("profile", "full")
     for pack in getattr(a, "add_pack", None) or []:
         current = profile.split("+")
@@ -1136,9 +1180,19 @@ def cmd_uninstall(a):
             _, legacy_backup = _migrate_legacy_under_lock(root)
         if not _is_lifecycle(root):
             raise RuntimeError(f"Refusing to uninstall unrecognized directory: {root}")
-        pointer = read_active_pointer(root)
-        generation_id = str(pointer["generation_id"])
-        mark_uninstalled(root)
+        try:
+            pointer = read_active_pointer(root)
+            generation_id = str(pointer["generation_id"])
+            mark_uninstalled(root)
+        except Exception as exc:
+            if not _is_lifecycle(root):
+                raise
+            print(f"The record of what is installed is damaged ({exc}).")
+            print("Repairing it: the damaged file is kept next to it with the word damaged in its name, "
+                  "your skill folders are not deleted, and the library is marked as uninstalled.")
+            backup = repair_damaged_pointer(root)
+            print("Damaged record kept at:", backup)
+            generation_id = "(unknown, damaged record)"
     unexpose_chat_folders(root)
     print("Uninstalled", root)
     print("Recoverable immutable generation:", generation_id)

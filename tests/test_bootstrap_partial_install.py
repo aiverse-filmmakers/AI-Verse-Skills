@@ -62,6 +62,13 @@ class BootstrapPartialInstallTests(unittest.TestCase):
         self.assertEqual(r.returncode, 2)
         self.assertNotIn("READINESS-RAN", r.stdout)
 
+    def test_blocked_install_exit_4_is_not_treated_as_partial_success(self):
+        r = self._run(4, 0)
+        self.assertEqual(r.returncode, 4)
+        self.assertNotIn("READINESS-RAN", r.stdout)
+        self.assertNotIn("installed and ready", r.stdout)
+        self.assertIn("not installed or changed", r.stderr)
+
     def test_clean_install_prints_no_partial_note(self):
         r = self._run(0, 0)
         self.assertEqual(r.returncode, 0)

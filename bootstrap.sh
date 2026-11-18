@@ -68,10 +68,12 @@ esac
 # Exit code 3 from install means partial success: some third party skill sources could
 # not be downloaded, everything else is installed (skills already on this computer are
 # kept). We carry on to the readiness check, and the final exit code is the readiness
-# result: nonzero only when that check fails. Any other install failure stops here.
+# result: nonzero only when that check fails. Exit code 4 means the install was blocked
+# and nothing was installed or changed; that and any other install failure stop here.
 PARTIAL=0
 "$DEST/aiverse-skills" install --profile "${AI_VERSE_SKILLS_PROFILE:-full}" || {
   RC=$?
+  if [ "$RC" -eq 4 ]; then echo "AI-Verse Skills was not installed or changed. See the message above." >&2; fi
   if [ "$RC" -ne 3 ]; then exit "$RC"; fi
   PARTIAL=1
 }
