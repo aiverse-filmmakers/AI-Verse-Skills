@@ -56,7 +56,7 @@ def step(name: str, argv: List[str], timeout: float) -> Dict:
             ok, err = False, "output missing"
         return {"step": name, "ok": ok, "seconds": round(time.time() - t0, 1), "error": err}
     try:
-        proc = subprocess.run([sys.executable, str(HERE / argv[0])] + argv[1:], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, timeout=timeout)
+        proc = subprocess.run([sys.executable, str(HERE / argv[0])] + argv[1:], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, timeout=timeout, encoding="utf-8")
         ok = proc.returncode == 0
         err = "" if ok else (proc.stderr.strip().splitlines() or ["?"])[-1][:200]
     except subprocess.TimeoutExpired:

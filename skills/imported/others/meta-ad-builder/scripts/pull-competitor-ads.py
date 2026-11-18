@@ -175,7 +175,7 @@ def main():
     run_slug = datetime.now().strftime("%Y-%m-%d-%H%M%S")
     out_dir = meta_api.resolve_output_dir(run_slug)
     out_file = out_dir / "competitor-ads.json"
-    with open(out_file, "w") as f:
+    with open(out_file, "w", encoding="utf-8") as f:
         json.dump(report, f, indent=2)
     total = sum(p["ad_count"] for p in report["pages"])
     print(f"\nSaved {total} ads across {len(report['pages'])} page(s) → {out_file}")

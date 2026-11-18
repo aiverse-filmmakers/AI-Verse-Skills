@@ -463,7 +463,7 @@ def _ff_listing(binary: str, flag: str) -> Dict[str, Any]:
     if not exe:
         return {"names": [], "status": "missing", "detail": f"{binary} not on PATH"}
     try:
-        proc = subprocess.run([exe, "-hide_banner", flag], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, timeout=_DETECT_TIMEOUT)
+        proc = subprocess.run([exe, "-hide_banner", flag], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, timeout=_DETECT_TIMEOUT, encoding="utf-8")
     except subprocess.TimeoutExpired:
         return {"names": [], "status": "failed", "detail": f"{binary} {flag} did not exit within {_DETECT_TIMEOUT}s"}
     except OSError as e:
@@ -509,7 +509,7 @@ def _version_line(binary: str) -> Optional[str]:
     if not exe:
         return None
     try:
-        proc = subprocess.run([exe, "-version"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, timeout=_DETECT_TIMEOUT)
+        proc = subprocess.run([exe, "-version"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, timeout=_DETECT_TIMEOUT, encoding="utf-8")
     except subprocess.TimeoutExpired:
         return None
     first = (proc.stdout or proc.stderr).splitlines()[:1]
@@ -555,6 +555,7 @@ def _drawtext_probe() -> Dict[str, Any]:
             [exe, "-hide_banner", "-loglevel", "error", "-f", "lavfi", "-i", "color=c=black:s=64x64:d=1",
              "-vf", "drawtext=text=x", "-frames:v", "1", "-f", "null", "-"],
             stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, timeout=_DETECT_TIMEOUT,
+            encoding="utf-8",
         )
     except subprocess.TimeoutExpired:
         return {"status": "unknown", "detail": f"drawtext probe did not exit within {_DETECT_TIMEOUT}s"}
@@ -588,7 +589,7 @@ def _font_available(font_name: str) -> Dict[str, Any]:
     if not exe:
         return {"status": "unknown", "detail": "fc-match not on PATH; drawtext succeeding proves nothing (fontconfig substitutes silently), so availability cannot be verified"}
     try:
-        proc = subprocess.run([exe, "--format=%{family}\n", font_name], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, timeout=_DETECT_TIMEOUT)
+        proc = subprocess.run([exe, "--format=%{family}\n", font_name], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, timeout=_DETECT_TIMEOUT, encoding="utf-8")
     except subprocess.TimeoutExpired:
         return {"status": "unknown", "detail": f"fc-match did not exit within {_DETECT_TIMEOUT}s"}
     except OSError as e:

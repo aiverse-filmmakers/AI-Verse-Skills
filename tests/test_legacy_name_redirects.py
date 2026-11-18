@@ -22,8 +22,8 @@ class LegacyNameRedirectTests(unittest.TestCase):
             self.assertEqual(name, aiverse_skills_v3.resolve_package_alias(name))
 
     def test_every_alias_target_is_a_real_catalogue_skill(self):
-        aliases = json.loads((ROOT / 'registry/aliases.json').read_text())['legacy_user_aliases']
-        registry = (ROOT / 'registry/skills.json').read_text()
+        aliases = json.loads((ROOT / 'registry/aliases.json').read_text(encoding="utf-8"))['legacy_user_aliases']
+        registry = (ROOT / 'registry/skills.json').read_text(encoding="utf-8")
         for old, new in aliases.items():
             self.assertIn(f'"id": "{new}"', registry, f'{old} -> {new}')
 

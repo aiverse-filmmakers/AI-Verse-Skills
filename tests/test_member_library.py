@@ -270,7 +270,7 @@ class MemberLibraryTests(unittest.TestCase):
             environment.pop(key, None)
         return subprocess.run([sys.executable, "installer/aiverse_skills.py", "library", *args],
                               cwd=Path(__file__).resolve().parents[1], env=environment,
-                              capture_output=True, text=True, timeout=30)
+                              capture_output=True, text=True, timeout=30, encoding="utf-8")
 
     def test_public_cli_preview_apply_list_doctor_and_explicit_root(self):
         args = ["--library-root", str(self.root)]
@@ -290,7 +290,7 @@ class MemberLibraryTests(unittest.TestCase):
         self.assertEqual(self.cli(*args, "doctor").returncode, 0)
         self.assertNotEqual(self.cli("list").returncode, 0)
         record = next(iter(library.read_index(self.root)["skills"].values()))
-        (library.revision_path(self.root, record["id"], record["active_revision"]) / "helper.txt").write_text("damaged")
+        (library.revision_path(self.root, record["id"], record["active_revision"]) / "helper.txt").write_text("damaged", encoding="utf-8")
         failed = self.cli(*args, "doctor")
         self.assertEqual(failed.returncode, 2)
         self.assertFalse(json.loads(failed.stdout)["ok"])

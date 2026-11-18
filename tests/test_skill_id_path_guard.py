@@ -41,7 +41,7 @@ class SafeIdTests(unittest.TestCase):
             elif isinstance(o, list):
                 for v in o:
                     walk(v)
-        walk(json.loads(reg.read_text()))
+        walk(json.loads(reg.read_text(encoding="utf-8")))
         self.assertTrue(ids)
         for i in ids:
             core.safe_skill_id(i)
@@ -61,11 +61,11 @@ class UninstallTraversalTests(unittest.TestCase):
         outside = Path(tmp) / "above"
         chat = outside / "skills"
         chat.mkdir(parents=True)
-        (outside / "precious.txt").write_text("keep")
+        (outside / "precious.txt").write_text("keep", encoding="utf-8")
         (chat / "mine").mkdir()
-        (chat / "mine" / "SKILL.md").write_text("mine")
-        (chat / ".aiverse-adapter.json").write_text(json.dumps({"packages": [{"id": i} for i in ids], "redirects": ids}))
-        (chat / ".aiverse-adapter-pending.json").write_text(json.dumps({"ids": ids}))
+        (chat / "mine" / "SKILL.md").write_text("mine", encoding="utf-8")
+        (chat / ".aiverse-adapter.json").write_text(json.dumps({"packages": [{"id": i} for i in ids], "redirects": ids}), encoding="utf-8")
+        (chat / ".aiverse-adapter-pending.json").write_text(json.dumps({"ids": ids}), encoding="utf-8")
         return outside, chat
 
     def test_unexpose_never_deletes_above_the_chat_folder(self):

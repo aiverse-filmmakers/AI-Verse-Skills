@@ -124,6 +124,7 @@ def _run_registered_probe(op: Mapping[str, Any], spec: Mapping[str, Any], env: M
             timeout=timeout,
             shell=False,
             env=dict(env),
+            encoding="utf-8",
         )
     except subprocess.TimeoutExpired:
         return {
@@ -220,6 +221,7 @@ def _run_local_version(binary: str, args) -> bool:
             stderr=subprocess.DEVNULL,
             timeout=5,
             shell=False,
+            encoding="utf-8",
         )
     except (OSError, subprocess.TimeoutExpired):
         return False

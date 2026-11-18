@@ -86,7 +86,7 @@ def sh(script: str, *argv: Any, extra: List[str] = None) -> str:
     if STATE["dry_run"]:
         cmd.append("--dry-run")
     info("→ " + " ".join(os.path.basename(c) if i < 2 else c for i, c in enumerate(cmd)))
-    proc = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    proc = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, encoding="utf-8")
     for line in proc.stderr.splitlines():
         if line.startswith("$ ") or line.startswith("[dry-run]"):
             STATE["commands"].append(line[2:] if line.startswith("$ ") else line)
@@ -346,7 +346,7 @@ def main() -> int:
     check_result = None
     exit_code = 0
     if ck and ck.get("platform") and not STATE["dry_run"]:
-        proc = subprocess.run([sys.executable, str(HERE / "check.py"), output, "--platform", ck["platform"], "--json"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        proc = subprocess.run([sys.executable, str(HERE / "check.py"), output, "--platform", ck["platform"], "--json"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, encoding="utf-8")
         try:
             check_result = json.loads(proc.stdout)
         except ValueError:

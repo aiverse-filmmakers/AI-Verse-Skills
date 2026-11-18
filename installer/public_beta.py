@@ -357,8 +357,12 @@ def _print(data: Any, as_json: bool) -> None:
 
 def _capture(fn, arg) -> str:
     stream = io.StringIO()
-    with contextlib.redirect_stdout(stream):
-        fn(arg)
+    try:
+        with contextlib.redirect_stdout(stream):
+            fn(arg)
+    except SystemExit as stop:
+        stop.captured_output = stream.getvalue().strip()
+        raise
     return stream.getvalue().strip()
 
 
@@ -431,16 +435,45 @@ def apply_public_beta(impl: Any) -> None:
                         )
 
             def command(a):
-                if getattr(a, "json", False):
-                    output = _capture(original[name], a)
+                partial_exit = None
+                try:
+                    if getattr(a, "json", False):
+                        output = _capture(original[name], a)
+                    else:
+                        original[name](a)
+                        output = None
+                except SystemExit as stop:
+                    # Exit 3 means a partial install: the install itself went through, so
+                    # the lifecycle action must still be recorded and JSON still printed.
+                    if stop.code not in (getattr(impl, "EXIT_PARTIAL_INSTALL", 3), getattr(impl, "EXIT_BLOCKED", 4)):
+                        raise
+                    partial_exit = stop
+                    output = getattr(stop, "captured_output", None)
+                blocked = partial_exit is not None and partial_exit.code == getattr(impl, "EXIT_BLOCKED", 4)
+                if not blocked:
                     record_lifecycle_action(a.root)
+                if getattr(a, "json", False):
                     payload = status_report(impl, Path(a.root))
                     payload["command"] = name
-                    payload["legacy_output"] = output
+                    payload["legacy_output"] = output if output is not None else ""
+                    if blocked:
+                        payload["blocked"] = True
+                        payload["partial"] = False
+                        payload["activated"] = False
+                        payload["ok_packages"] = []
+                        payload["failed_packages"] = []
+                        payload["blocked_reason"] = (getattr(impl, "LAST_BLOCKED", None) or [""])[0]
+                    elif partial_exit is not None:
+                        info = impl.partial_summary(getattr(impl, "LAST_INSTALLED", ()))
+                        info["partial"] = True
+                        payload["partial"] = True
+                        payload["blocked"] = False
+                        payload["ok_packages"] = info["ok_packages"]
+                        payload["failed_packages"] = info["failed_packages"]
+                        payload["partial_report"] = info
                     _print(payload, True)
-                else:
-                    original[name](a)
-                    record_lifecycle_action(a.root)
+                if partial_exit is not None:
+                    raise partial_exit
             return command
 
         for name in ("install", "update", "rollback", "uninstall"):

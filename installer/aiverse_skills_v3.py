@@ -76,15 +76,103 @@ def load(rel):
     return json.loads((REPO_ROOT / rel).read_text(encoding="utf-8"))
 
 
-def run(cmd, cwd=None):
-    p = subprocess.run(cmd, cwd=cwd, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    if p.returncode:
-        raise RuntimeError(f"Command failed ({p.returncode}): {' '.join(map(str, cmd))}\n{p.stderr.strip()}")
-    return p.stdout
+GIT_TIMEOUT_ENV = "AIVERSE_GIT_TIMEOUT"
+DEFAULT_GIT_TIMEOUT = 120
+
+
+class UpstreamFetchError(RuntimeError):
+    """One third party repository could not be fetched. Other repositories can still install."""
+
+
+def git_timeout():
+    """Seconds each git step may take. Set AIVERSE_GIT_TIMEOUT to change it."""
+    raw = os.environ.get(GIT_TIMEOUT_ENV, "").strip()
+    try:
+        value = float(raw) if raw else DEFAULT_GIT_TIMEOUT
+    except ValueError:
+        return DEFAULT_GIT_TIMEOUT
+    return value if value > 0 else DEFAULT_GIT_TIMEOUT
+
+
+def git_env():
+    """Environment that makes git fail fast instead of waiting for a password."""
+    env = dict(os.environ)
+    env["GIT_TERMINAL_PROMPT"] = "0"
+    env["GIT_ASKPASS"] = "true"
+    env["SSH_ASKPASS"] = "true"
+    env.setdefault("GCM_INTERACTIVE", "never")
+    return env
+
+
+def _kill_process_tree(proc):
+    """Stop a timed out git and everything it started (git-remote-https, helpers)."""
+    try:
+        if os.name == "nt":
+            subprocess.run(
+                ["taskkill", "/T", "/F", "/PID", str(proc.pid)],
+                stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=15,
+            )
+        else:
+            import signal
+            os.killpg(proc.pid, signal.SIGKILL)
+    except (OSError, subprocess.SubprocessError):
+        pass
+    try:
+        proc.kill()
+    except OSError:
+        pass
+
+
+def run(cmd, cwd=None, timeout=None):
+    is_git = bool(cmd) and Path(str(cmd[0])).stem == "git"
+    extra = {}
+    if is_git:
+        if os.name == "nt":
+            extra["creationflags"] = subprocess.CREATE_NEW_PROCESS_GROUP
+        else:
+            extra["start_new_session"] = True
+    proc = subprocess.Popen(
+        cmd, cwd=cwd, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding="utf-8",
+        env=git_env() if is_git else None, stdin=subprocess.DEVNULL if is_git else None, **extra,
+    )
+    try:
+        out, err = proc.communicate(timeout=timeout)
+    except subprocess.TimeoutExpired:
+        _kill_process_tree(proc)
+        try:
+            proc.communicate(timeout=5)
+        except Exception:
+            for pipe in (proc.stdout, proc.stderr):
+                try:
+                    pipe.close()
+                except Exception:
+                    pass
+        raise RuntimeError(f"Command timed out after {timeout:g} seconds: {' '.join(map(str, cmd))}")
+    except BaseException:
+        _kill_process_tree(proc)
+        raise
+    if proc.returncode:
+        raise RuntimeError(f"Command failed ({proc.returncode}): {' '.join(map(str, cmd))}\n{err.strip()}")
+    return out
 
 
 def cache_name(repo, commit):
     return repo.replace("/", "__") + "@" + commit
+
+
+def _upstream_url(repo):
+    base = os.environ.get("AIVERSE_UPSTREAM_BASE", "https://github.com").rstrip("/")
+    return f"{base}/{repo}.git"
+
+
+def _first_line(exc):
+    """Short plain reason for a failed git step (drops the command line and git hints)."""
+    text = str(exc)
+    if "timed out" in text:
+        return text.split(": ", 1)[0].replace("Command timed out", "git timed out")
+    lines = [x.strip() for x in text.splitlines()[1:] if x.strip()]
+    lines = [x for x in lines if not x.startswith("hint:")]
+    return " ".join(lines[:2]) if lines else "git could not fetch it"
 
 
 def checkout(repo, commit, cache, offline=False):
@@ -104,14 +192,15 @@ def checkout(repo, commit, cache, offline=False):
     tmp = dst.with_name(dst.name + ".partial-" + uuid.uuid4().hex[:8])
     tmp.mkdir()
     try:
-        run(["git", "init", "-q"], tmp)
-        run(["git", "remote", "add", "origin", f"https://github.com/{repo}.git"], tmp)
-        run(["git", "fetch", "-q", "--depth", "1", "origin", commit], tmp)
-        run(["git", "checkout", "-q", "--detach", "FETCH_HEAD"], tmp)
+        limit = git_timeout()
+        run(["git", "init", "-q"], tmp, timeout=limit)
+        run(["git", "remote", "add", "origin", _upstream_url(repo)], tmp, timeout=limit)
+        run(["git", "fetch", "-q", "--depth", "1", "origin", commit], tmp, timeout=limit)
+        run(["git", "checkout", "-q", "--detach", "FETCH_HEAD"], tmp, timeout=limit)
         os.replace(tmp, dst)
-    except Exception:
+    except Exception as exc:
         shutil.rmtree(tmp, ignore_errors=True)
-        raise
+        raise UpstreamFetchError(f"{repo}: {_first_line(exc)}") from exc
     return dst
 
 
@@ -369,15 +458,161 @@ def manifest_relative_path(stage, path):
     return path.relative_to(stage).as_posix()
 
 
-def build_stage(profile, stage, cache, generation_id, offline=False):
+LAST_FETCH_FAILURES = {}
+LAST_SKIPPED_PACKAGES = []
+LAST_KEPT_PACKAGES = []
+LAST_INSTALLED = []
+
+
+class PartialInstallBlocked(RuntimeError):
+    """A package we already have could not be downloaded and its old copy is gone too."""
+
+
+class InstallRecordDamaged(PartialInstallBlocked):
+    """The record of what is installed is missing or unreadable. Retrying will not fix it."""
+
+    def __init__(self, message, legacy=False, root=None):
+        super().__init__(message)
+        self.legacy = legacy
+        self.root = root
+
+
+# True when the library was uninstalled (or its record repaired) and older generations still exist.
+LAST_OLDER_GENERATIONS = []
+
+
+def _has_installed_content(base):
+    base = Path(base)
+    try:
+        return any(not child.name.startswith(".") for child in base.iterdir())
+    except OSError:
+        return False
+
+
+def previous_install(root):
+    """(base folder, {package id: manifest entry}) of what is installed now.
+
+    Returns None only when nothing is installed yet (no install, or the pointer
+    says uninstalled). A damaged or unreadable install record raises
+    InstallRecordDamaged, so an update can never silently drop skills the
+    member already has.
+    """
+    root = Path(root).expanduser()
+    LAST_OLDER_GENERATIONS.clear()
+    legacy = False
+    try:
+        if _is_lifecycle(root):
+            pointer = read_active_pointer(root, allow_uninstalled=True)
+            if pointer.get("state") != "active":
+                if pointer.get("history"):
+                    LAST_OLDER_GENERATIONS.append(True)
+                return None
+            base = generation_path(root, str(pointer.get("generation_id")))
+        elif _is_legacy_install(root):
+            base = root
+            legacy = True
+        else:
+            return None
+        manifest_file = _legacy_manifest_path(base)
+        if not manifest_file.exists():
+            raise FileNotFoundError(f"{manifest_file.name} is missing from the active install")
+        manifest = _read_json(manifest_file, "install manifest")
+        if not isinstance(manifest, dict) or not isinstance(manifest.get("packages", []), list):
+            raise ValueError("install manifest is not in the expected format")
+        entries = {x["id"]: x for x in manifest.get("packages", []) if isinstance(x, dict) and x.get("id")}
+        if not entries and _has_installed_content(base):
+            raise ValueError("install manifest lists no skills although skills are installed")
+    except Exception as exc:
+        raise InstallRecordDamaged(
+            f"The record of your installed skills is damaged: {exc}. Nothing was changed.",
+            legacy=legacy, root=str(root),
+        ) from exc
+    return base, entries
+
+
+def repair_damaged_pointer(root):
+    """Replace an unreadable active.json by a valid "uninstalled" pointer.
+
+    The damaged file is kept next to it as active.json.damaged-<time> and every
+    generation folder stays on disk, so nothing is deleted. Returns the backup path.
+    """
+    root = Path(root).expanduser().resolve()
+    pointer_file = active_pointer_path(root)
+    stamp = dt.datetime.now(dt.timezone.utc).strftime("%Y%m%dT%H%M%S")
+    backup = pointer_file.with_name(f"{pointer_file.name}.damaged-{stamp}")
+    os.replace(pointer_file, backup)
+    gens = generations_dir(root)
+    found = sorted((d.name for d in gens.iterdir() if d.is_dir()), reverse=True) if gens.is_dir() else []
+    _atomic_json_write(pointer_file, {
+        "schema_version": ACTIVE_SCHEMA_VERSION,
+        "state": "uninstalled",
+        "generation_id": None,
+        "generation_digest_sha256": None,
+        "deactivated_at": dt.datetime.now(dt.timezone.utc).isoformat(),
+        "history": found,
+    })
+    return backup
+
+
+def _carry_over(previous, kind, cid, dst, stage, installed):
+    """Reuse the installed copy of a package whose download failed.
+
+    Returns True when kept. Returns False when the package was never installed
+    (it is simply skipped). Raises PartialInstallBlocked when it was installed
+    but its old copy cannot be found, so the current install stays untouched.
+    """
+    if not previous:
+        return False
+    base, entries = previous
+    entry = entries.get(cid)
+    if not entry:
+        return False
+    old = Path(base) / str(entry.get("path", ""))
+    if not entry.get("path") or not (old / "SKILL.md").exists():
+        raise PartialInstallBlocked(
+            f"{cid} could not be downloaded and its installed copy is missing, so nothing was changed."
+        )
+    copy_pkg(old, dst)
+    kept = dict(entry)
+    kept["path"] = manifest_relative_path(stage, dst)
+    kept["digest_sha256"] = digest(dst)
+    installed.append(kept)
+    LAST_KEPT_PACKAGES.append((cid, entry.get("source_commit")))
+    print("kept", cid, "(download failed, keeping the installed version)")
+    return True
+
+
+def build_stage(profile, stage, cache, generation_id, offline=False, previous=None):
+    """Stage every package. A third party repo that cannot be fetched is skipped, not fatal.
+
+    Skipped repos are left in LAST_FETCH_FAILURES as {repo: reason} and the
+    packages that needed them in LAST_SKIPPED_PACKAGES.
+    """
     jobs = install_plan(profile, stage)
     installed, checkouts = [], {}
+    LAST_FETCH_FAILURES.clear()
+    LAST_SKIPPED_PACKAGES.clear()
+    LAST_KEPT_PACKAGES.clear()
+    LAST_BLOCKED.clear()
     for kind, cid, src, dst, p in jobs:
         if src is None:
             key = (p["repo"], p["commit"])
+            if key in LAST_FETCH_FAILURES:
+                if _carry_over(previous, kind, cid, dst, stage, installed):
+                    continue
+                LAST_SKIPPED_PACKAGES.append(cid)
+                continue
             co = checkouts.get(key)
             if co is None:
-                co = checkout(*key, cache, offline)
+                try:
+                    co = checkout(*key, cache, offline)
+                except UpstreamFetchError as exc:
+                    LAST_FETCH_FAILURES[key] = str(exc)
+                    if _carry_over(previous, kind, cid, dst, stage, installed):
+                        continue
+                    LAST_SKIPPED_PACKAGES.append(cid)
+                    print("skipped", cid, "(could not fetch", p["repo"] + ")")
+                    continue
                 checkouts[key] = co
             src = resolve(co, p["selector"], cid)
         if not (src / "SKILL.md").exists():
@@ -394,6 +629,7 @@ def build_stage(profile, stage, cache, generation_id, offline=False):
         })
         print("staged", cid)
     _write_stage_manifest(profile, installed, generation_id, stage)
+    LAST_INSTALLED[:] = installed
     return installed
 
 
@@ -537,7 +773,7 @@ def transactional_install(profile, root, cache, offline=False):
             if root.exists() and not _is_lifecycle(root) and not _is_legacy_install(root):
                 if any(root.iterdir()):
                     raise RuntimeError(f"Refusing to replace unrecognized non-empty directory: {root}")
-            installed = build_stage(profile, stage, cache, generation_id, offline)
+            installed = build_stage(profile, stage, cache, generation_id, offline, previous_install(root))
             errors = verify_stage(stage, generation_id)
             if errors:
                 raise RuntimeError("Staged install failed verification:\n" + "\n".join(errors))
@@ -663,6 +899,77 @@ def _print_install_result(verb, root, installed, previous, legacy_backup, genera
         print("Legacy migration backup:", legacy_backup)
 
 
+EXIT_PARTIAL_INSTALL = 3  # some third party skills skipped or kept, everything else installed
+EXIT_BLOCKED = 4  # nothing was installed or changed
+
+
+def partial_summary(installed=()):
+    """Machine readable version of what report_upstream_failures prints."""
+    kept = [cid for cid, _ in LAST_KEPT_PACKAGES]
+    worked = sorted({x["source_repo"] for x in installed if x.get("source_commit") and x["id"] not in kept})
+    return {
+        "partial": bool(LAST_FETCH_FAILURES),
+        "ok_packages": sorted(x["id"] for x in installed if x["id"] not in kept),
+        "failed_packages": sorted(set(LAST_SKIPPED_PACKAGES) | set(kept)),
+        "ok_repos": worked,
+        "failed_repos": sorted({k[0] for k in LAST_FETCH_FAILURES}),
+        "kept_at_old_version": sorted(kept),
+        "skipped": sorted(LAST_SKIPPED_PACKAGES),
+    }
+
+
+def report_upstream_failures(installed):
+    """Say in plain English which third party repos worked and which did not.
+
+    Returns the exit code: 0 when every repo was fetched, EXIT_PARTIAL_INSTALL otherwise.
+    """
+    if not LAST_FETCH_FAILURES:
+        return 0
+    info = partial_summary(installed)
+    print()
+    print("Some third party skill sources could not be downloaded, so the install is partial.")
+    if info["ok_repos"]:
+        print("Downloaded fine:", ", ".join(info["ok_repos"]))
+    print("Could not be downloaded:")
+    for key, reason in sorted(LAST_FETCH_FAILURES.items()):
+        print(f"  {key[0]}: {reason.split(': ', 1)[-1]}")
+    if info["kept_at_old_version"]:
+        print(f"Kept at the version you already had ({len(info['kept_at_old_version'])}): "
+              + ", ".join(info["kept_at_old_version"]))
+    if info["skipped"]:
+        if LAST_OLDER_GENERATIONS:
+            print(f"Skipped ({len(info['skipped'])}): " + ", ".join(info["skipped"]))
+            print("These may have been installed before the uninstall or repair. Skills from before it are "
+                  "not carried over. To get them back, run the rollback command (aiverse-skills rollback).")
+        else:
+            print(f"Skipped, never installed before ({len(info['skipped'])}): " + ", ".join(info["skipped"]))
+    print("Everything else is installed. Check your internet connection, then run the same command again to add the rest.")
+    return EXIT_PARTIAL_INSTALL
+
+
+LAST_BLOCKED = []
+
+
+def report_blocked(exc):
+    LAST_BLOCKED[:] = [str(exc)]
+    print()
+    print("Stopped: " + str(exc))
+    if isinstance(exc, InstallRecordDamaged) and exc.legacy:
+        print("Your current skills were left exactly as they were.")
+        print("The record of this older style install is damaged, and uninstall cannot repair it.")
+        print(f"To fix it by hand: rename the folder {exc.root} (for example add .old to its name), "
+              "then run the install command (aiverse-skills install) again. "
+              "Your previous skills stay on disk in the renamed folder.")
+    elif isinstance(exc, InstallRecordDamaged):
+        print("Your current skills were left exactly as they were.")
+        print("The install record is damaged, so trying again will not help.")
+        print("To repair it, run the uninstall command (aiverse-skills uninstall), then the install command "
+              "(aiverse-skills install). Uninstall keeps the old copies, so nothing is lost.")
+    else:
+        print("Your current skills were left exactly as they were. Check your internet connection and try again.")
+    return EXIT_BLOCKED
+
+
 CHAT_FOLDERS_FILE = "chat-folders.json"
 DEFAULT_CHAT_FOLDERS = {"claude": "~/.claude/skills", "codex": "~/.agents/skills"}
 
@@ -781,25 +1088,45 @@ def cmd_install(a):
             print(f"{kind:10} {cid:32} -> <new-generation>/{dst.relative_to(root)} [{origin}]")
         return
     folders = _wanted_chat_folders(a, root)
-    installed, previous, legacy_backup, generation_id = transactional_install(a.profile, root, cache, a.offline)
+    try:
+        installed, previous, legacy_backup, generation_id = transactional_install(a.profile, root, cache, a.offline)
+    except PartialInstallBlocked as exc:
+        raise SystemExit(report_blocked(exc))
     _print_install_result("Installed", root, installed, previous, legacy_backup, generation_id)
+    exit_code = report_upstream_failures(installed)
     _finish_with_chat_folders(a, root, folders)
+    if exit_code:
+        raise SystemExit(exit_code)
 
 
 def cmd_update(a):
     root = Path(a.root).expanduser()
-    existing = load_manifest(root)
+    try:
+        existing = load_manifest(root)
+    except Exception as exc:
+        if _is_lifecycle(root) or _is_legacy_install(root):
+            raise SystemExit(report_blocked(InstallRecordDamaged(
+                f"The record of your installed skills is damaged: {exc}. Nothing was changed.",
+                legacy=not _is_lifecycle(root), root=str(root),
+            )))
+        raise
     profile = a.profile or existing.get("profile", "full")
     for pack in getattr(a, "add_pack", None) or []:
         current = profile.split("+")
         if "full" not in current and pack not in current:
             profile = "+".join(current + [pack])
     folders = _wanted_chat_folders(a, root)
-    installed, previous, legacy_backup, generation_id = transactional_install(
-        profile, root, Path(a.cache).expanduser(), a.offline
-    )
+    try:
+        installed, previous, legacy_backup, generation_id = transactional_install(
+            profile, root, Path(a.cache).expanduser(), a.offline
+        )
+    except PartialInstallBlocked as exc:
+        raise SystemExit(report_blocked(exc))
     _print_install_result("Updated", root, installed, previous, legacy_backup, generation_id)
+    exit_code = report_upstream_failures(installed)
     _finish_with_chat_folders(a, root, folders)
+    if exit_code:
+        raise SystemExit(exit_code)
 
 
 def cmd_rollback(a):
@@ -880,9 +1207,19 @@ def cmd_uninstall(a):
             _, legacy_backup = _migrate_legacy_under_lock(root)
         if not _is_lifecycle(root):
             raise RuntimeError(f"Refusing to uninstall unrecognized directory: {root}")
-        pointer = read_active_pointer(root)
-        generation_id = str(pointer["generation_id"])
-        mark_uninstalled(root)
+        try:
+            pointer = read_active_pointer(root)
+            generation_id = str(pointer["generation_id"])
+            mark_uninstalled(root)
+        except Exception as exc:
+            if not _is_lifecycle(root):
+                raise
+            print(f"The record of what is installed is damaged ({exc}).")
+            print("Repairing it: the damaged file is kept next to it with the word damaged in its name, "
+                  "your skill folders are not deleted, and the library is marked as uninstalled.")
+            backup = repair_damaged_pointer(root)
+            print("Damaged record kept at:", backup)
+            generation_id = "(unknown, damaged record)"
     unexpose_chat_folders(root)
     print("Uninstalled", root)
     print("Recoverable immutable generation:", generation_id)

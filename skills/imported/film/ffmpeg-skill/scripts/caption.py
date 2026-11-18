@@ -101,7 +101,7 @@ def transcribe(video: str, out_srt: str, language: Optional[str], model: str, au
         cmd = [cli, "-m", model_path, "-f", wav, "-osrt", "-of", base]
         if language:
             cmd += ["-l", language]
-        proc = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        proc = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, encoding="utf-8")
         if proc.returncode == 0 and os.path.exists(base + ".srt"):
             info(f"transcribed with whisper.cpp ({os.path.basename(cli)}, model {os.path.basename(model_path)})")
             cues = parse_srt(base + ".srt")
@@ -125,7 +125,7 @@ def transcribe(video: str, out_srt: str, language: Optional[str], model: str, au
         cmd = ["whisper", wav, "--model", model, "--output_format", "srt", "--output_dir", tmpdir]
         if language:
             cmd += ["--language", language]
-        proc = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        proc = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, encoding="utf-8")
         srt = os.path.join(tmpdir, "audio.srt")
         if proc.returncode == 0 and os.path.exists(srt):
             info("transcribed with openai-whisper")

@@ -54,6 +54,8 @@ jobs:
           python -m unittest discover -s tests -v
 
       - name: Full pinned upstream install
+        # Exit code 3 means some third party repo could not be downloaded (partial install).
+        # This check wants every pinned repo, so any nonzero code, 3 included, fails the step.
         run: |
           python installer/aiverse_skills.py \
             --root "$RUNNER_TEMP/aiverse-skills" \

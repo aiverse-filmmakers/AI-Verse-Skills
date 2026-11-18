@@ -10,7 +10,7 @@ CLI = Path(__file__).resolve().parents[1] / "installer" / "aiverse_skills.py"
 
 
 def cli(root, *args, check=True):
-    return subprocess.run([sys.executable, str(CLI), "--root", str(root), *args], capture_output=True, text=True, check=check)
+    return subprocess.run([sys.executable, str(CLI), "--root", str(root), *args], capture_output=True, text=True, check=check, encoding="utf-8")
 
 
 class RetiredRedirectTests(unittest.TestCase):
@@ -20,12 +20,12 @@ class RetiredRedirectTests(unittest.TestCase):
             cli(root, "--cache", str(Path(tmp) / "cache"), "install", "--profile", "universal", "--offline")
             cli(root, "adapt", "--runtime", "codex", "--target", str(codex), "--sync")
             cli(root, "adapt", "--runtime", "claude", "--target", str(claude), "--sync")
-            stub = (codex / "meeting-action-items" / "SKILL.md").read_text()
+            stub = (codex / "meeting-action-items" / "SKILL.md").read_text(encoding="utf-8")
             self.assertIn("Use the action-items skill instead", stub)
             self.assertTrue((codex / "document-to-action-items" / "SKILL.md").is_file())
             self.assertFalse((codex / "produce-ai-video").exists(), "no redirect when the replacement is not installed")
             self.assertFalse((claude / "meeting-action-items").exists(), "Claude follows old names by itself")
-            manifest = json.loads((codex / ".aiverse-adapter.json").read_text())
+            manifest = json.loads((codex / ".aiverse-adapter.json").read_text(encoding="utf-8"))
             self.assertEqual(sorted(manifest["redirects"]), ["document-to-action-items", "meeting-action-items"])
             self.assertEqual(cli(root, "adapter-verify", "--target", str(codex), "--complete", check=False).returncode, 0)
             cli(root, "adapt", "--runtime", "codex", "--target", str(codex), "--sync")
@@ -37,9 +37,9 @@ class RetiredRedirectTests(unittest.TestCase):
             cli(root, "--cache", str(Path(tmp) / "cache"), "install", "--profile", "universal", "--offline")
             mine = codex / "meeting-action-items"
             mine.mkdir(parents=True)
-            (mine / "SKILL.md").write_text("my own skill")
+            (mine / "SKILL.md").write_text("my own skill", encoding="utf-8")
             cli(root, "adapt", "--runtime", "codex", "--target", str(codex), "--sync")
-            self.assertEqual((mine / "SKILL.md").read_text(), "my own skill")
+            self.assertEqual((mine / "SKILL.md").read_text(encoding="utf-8"), "my own skill")
 
 
 if __name__ == "__main__":

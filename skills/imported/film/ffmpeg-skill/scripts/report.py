@@ -28,14 +28,14 @@ def sheet_b64(path: str, tiles: str = "4x2", width: int = 1200) -> Optional[str]
     with tempfile.TemporaryDirectory(prefix="ffskill_report_") as tmp:
         png = os.path.join(tmp, "sheet.png")
         proc = subprocess.run([sys.executable, str(HERE / "look.py"), path, "--tiles", tiles, "--width", str(width), "-o", png],
-                              stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+                              stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, encoding="utf-8")
         if proc.returncode != 0 or not os.path.exists(png):
             return None
         return base64.b64encode(Path(png).read_bytes()).decode("ascii")
 
 
 def loudness(path: str) -> Dict[str, Any]:
-    proc = subprocess.run([sys.executable, str(HERE / "loudness.py"), path, "--measure-only"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    proc = subprocess.run([sys.executable, str(HERE / "loudness.py"), path, "--measure-only"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, encoding="utf-8")
     try:
         d = json.loads(proc.stdout)
         return {"lufs": round(float(d["input_i"]), 1), "tp": round(float(d["input_tp"]), 1), "lra": round(float(d["input_lra"]), 1)}
@@ -44,7 +44,7 @@ def loudness(path: str) -> Dict[str, Any]:
 
 
 def check(path: str, platform: str) -> Optional[Dict[str, Any]]:
-    proc = subprocess.run([sys.executable, str(HERE / "check.py"), path, "--platform", platform, "--json"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    proc = subprocess.run([sys.executable, str(HERE / "check.py"), path, "--platform", platform, "--json"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, encoding="utf-8")
     try:
         return json.loads(proc.stdout)
     except ValueError:

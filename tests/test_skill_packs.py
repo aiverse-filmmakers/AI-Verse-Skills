@@ -11,13 +11,13 @@ CLI = Path(__file__).resolve().parents[1] / "installer" / "aiverse_skills.py"
 
 def cli(root, cache, *args):
     return subprocess.run([sys.executable, str(CLI), "--root", str(root), "--cache", str(cache), *args],
-                          capture_output=True, text=True, check=True).stdout
+                          capture_output=True, text=True, check=True, encoding="utf-8").stdout
 
 
 def ids(root):
-    active = json.loads((root / ".aiverse" / "active.json").read_text())
+    active = json.loads((root / ".aiverse" / "active.json").read_text(encoding="utf-8"))
     gen = active.get("generation_id") or active.get("generation")
-    manifest = json.loads((root / ".aiverse" / "generations" / gen / ".aiverse" / "installed.json").read_text())
+    manifest = json.loads((root / ".aiverse" / "generations" / gen / ".aiverse" / "installed.json").read_text(encoding="utf-8"))
     return manifest["profile"], {p["id"] for p in manifest["packages"]}
 
 
@@ -40,7 +40,7 @@ class SkillPackTests(unittest.TestCase):
     def test_unknown_pack_is_refused(self):
         with tempfile.TemporaryDirectory() as tmp:
             result = subprocess.run([sys.executable, str(CLI), "--root", str(Path(tmp) / "s"), "--cache", str(Path(tmp) / "c"),
-                                     "install", "--profile", "universal+nope", "--offline"], capture_output=True, text=True)
+                                     "install", "--profile", "universal+nope", "--offline"], capture_output=True, text=True, encoding="utf-8")
             self.assertNotEqual(result.returncode, 0)
             self.assertIn("nope", result.stdout + result.stderr)
 
