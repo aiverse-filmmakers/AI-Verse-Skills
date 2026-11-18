@@ -468,6 +468,10 @@ class PartialInstallBlocked(RuntimeError):
     """A package we already have could not be downloaded and its old copy is gone too."""
 
 
+class InstallRecordDamaged(PartialInstallBlocked):
+    """The record of what is installed is missing or unreadable. Retrying will not fix it."""
+
+
 def previous_install(root):
     """(base folder, {package id: manifest entry}) of what is installed now.
 
@@ -488,11 +492,11 @@ def previous_install(root):
             return None
         manifest_file = _legacy_manifest_path(base)
         if not manifest_file.exists():
-            return None
+            raise FileNotFoundError(f"missing {manifest_file.name} in the active install")
         manifest = _read_json(manifest_file, "install manifest")
         entries = {x["id"]: x for x in manifest.get("packages", []) if x.get("id")}
     except Exception as exc:
-        raise PartialInstallBlocked(
+        raise InstallRecordDamaged(
             f"The record of your installed skills could not be read ({_first_line(exc)}), "
             "so nothing was changed."
         ) from exc
@@ -893,7 +897,13 @@ def report_blocked(exc):
     LAST_BLOCKED[:] = [str(exc)]
     print()
     print("Stopped: " + str(exc))
-    print("Your current skills were left exactly as they were. Check your internet connection and try again.")
+    if isinstance(exc, InstallRecordDamaged):
+        print("Your current skills were left exactly as they were.")
+        print("The install record is damaged, so trying again will not help.")
+        print("To repair it, run the uninstall command (aiverse-skills uninstall), then the install command "
+              "(aiverse-skills install). Uninstall keeps the old copies, so nothing is lost.")
+    else:
+        print("Your current skills were left exactly as they were. Check your internet connection and try again.")
     return EXIT_PARTIAL_INSTALL
 
 

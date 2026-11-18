@@ -244,6 +244,31 @@ class UpdateKeepsWhatYouHaveTests(unittest.TestCase):
         self.assertIn("nothing was changed", str(ctx.exception))
         self.assertEqual(v3.read_active_pointer(self.root)["generation_id"], gid)
 
+    def test_missing_manifest_in_active_generation_blocks_and_keeps_everything(self):
+        self._install(["alpha", "held"], "cache1")
+        gid = v3.read_active_pointer(self.root)["generation_id"]
+        (v3.generation_path(self.root, gid) / ".aiverse" / "installed.json").unlink()
+        __import__("shutil").rmtree(self.base / "owner" / "held.git")
+        with self.assertRaises(v3.InstallRecordDamaged):
+            self._install(["alpha", "held"], "cache2")
+        self.assertEqual(v3.read_active_pointer(self.root)["generation_id"], gid)
+        self.assertTrue((v3.generation_path(self.root, gid) / "support" / "held" / "SKILL.md").exists())
+
+    def test_damaged_record_message_names_the_repair_and_network_message_does_not(self):
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            v3.report_blocked(v3.InstallRecordDamaged("The record could not be read, so nothing was changed."))
+        text = out.getvalue()
+        self.assertIn("damaged", text)
+        self.assertIn("will not help", text)
+        self.assertIn("aiverse-skills uninstall", text)
+        self.assertIn("aiverse-skills install", text)
+        self.assertNotIn("internet connection", text)
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            v3.report_blocked(v3.PartialInstallBlocked("held could not be downloaded."))
+        self.assertIn("internet connection", out.getvalue())
+
     def test_nothing_installed_yet_is_not_an_error(self):
         self.assertIsNone(v3.previous_install(self.root))
 
