@@ -104,18 +104,56 @@ def git_env():
     return env
 
 
+def _kill_process_tree(proc):
+    """Stop a timed out git and everything it started (git-remote-https, helpers)."""
+    try:
+        if os.name == "nt":
+            subprocess.run(
+                ["taskkill", "/T", "/F", "/PID", str(proc.pid)],
+                stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=15,
+            )
+        else:
+            import signal
+            os.killpg(proc.pid, signal.SIGKILL)
+    except (OSError, subprocess.SubprocessError):
+        pass
+    try:
+        proc.kill()
+    except OSError:
+        pass
+
+
 def run(cmd, cwd=None, timeout=None):
     is_git = bool(cmd) and Path(str(cmd[0])).stem == "git"
+    extra = {}
+    if is_git:
+        if os.name == "nt":
+            extra["creationflags"] = subprocess.CREATE_NEW_PROCESS_GROUP
+        else:
+            extra["start_new_session"] = True
+    proc = subprocess.Popen(
+        cmd, cwd=cwd, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding="utf-8",
+        env=git_env() if is_git else None, stdin=subprocess.DEVNULL if is_git else None, **extra,
+    )
     try:
-        p = subprocess.run(
-            cmd, cwd=cwd, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding="utf-8",
-            timeout=timeout, env=git_env() if is_git else None, stdin=subprocess.DEVNULL if is_git else None,
-        )
+        out, err = proc.communicate(timeout=timeout)
     except subprocess.TimeoutExpired:
+        _kill_process_tree(proc)
+        try:
+            proc.communicate(timeout=5)
+        except Exception:
+            for pipe in (proc.stdout, proc.stderr):
+                try:
+                    pipe.close()
+                except Exception:
+                    pass
         raise RuntimeError(f"Command timed out after {timeout:g} seconds: {' '.join(map(str, cmd))}")
-    if p.returncode:
-        raise RuntimeError(f"Command failed ({p.returncode}): {' '.join(map(str, cmd))}\n{p.stderr.strip()}")
-    return p.stdout
+    except BaseException:
+        _kill_process_tree(proc)
+        raise
+    if proc.returncode:
+        raise RuntimeError(f"Command failed ({proc.returncode}): {' '.join(map(str, cmd))}\n{err.strip()}")
+    return out
 
 
 def cache_name(repo, commit):
@@ -422,9 +460,62 @@ def manifest_relative_path(stage, path):
 
 LAST_FETCH_FAILURES = {}
 LAST_SKIPPED_PACKAGES = []
+LAST_KEPT_PACKAGES = []
+LAST_INSTALLED = []
 
 
-def build_stage(profile, stage, cache, generation_id, offline=False):
+class PartialInstallBlocked(RuntimeError):
+    """A package we already have could not be downloaded and its old copy is gone too."""
+
+
+def previous_install(root):
+    """(base folder, {package id: manifest entry}) of what is installed now, or None."""
+    root = Path(root).expanduser()
+    try:
+        if _is_lifecycle(root):
+            pointer = read_active_pointer(root, allow_uninstalled=True)
+            if pointer.get("state") != "active":
+                return None
+            base = generation_path(root, str(pointer.get("generation_id")))
+        elif _is_legacy_install(root):
+            base = root
+        else:
+            return None
+        manifest = _read_json(_legacy_manifest_path(base), "install manifest")
+    except Exception:
+        return None
+    return base, {x["id"]: x for x in manifest.get("packages", []) if x.get("id")}
+
+
+def _carry_over(previous, kind, cid, dst, stage, installed):
+    """Reuse the installed copy of a package whose download failed.
+
+    Returns True when kept. Returns False when the package was never installed
+    (it is simply skipped). Raises PartialInstallBlocked when it was installed
+    but its old copy cannot be found, so the current install stays untouched.
+    """
+    if not previous:
+        return False
+    base, entries = previous
+    entry = entries.get(cid)
+    if not entry:
+        return False
+    old = Path(base) / str(entry.get("path", ""))
+    if not entry.get("path") or not (old / "SKILL.md").exists():
+        raise PartialInstallBlocked(
+            f"{cid} could not be downloaded and its installed copy is missing, so nothing was changed."
+        )
+    copy_pkg(old, dst)
+    kept = dict(entry)
+    kept["path"] = manifest_relative_path(stage, dst)
+    kept["digest_sha256"] = digest(dst)
+    installed.append(kept)
+    LAST_KEPT_PACKAGES.append((cid, entry.get("source_commit")))
+    print("kept", cid, "(download failed, keeping the installed version)")
+    return True
+
+
+def build_stage(profile, stage, cache, generation_id, offline=False, previous=None):
     """Stage every package. A third party repo that cannot be fetched is skipped, not fatal.
 
     Skipped repos are left in LAST_FETCH_FAILURES as {repo: reason} and the
@@ -434,10 +525,13 @@ def build_stage(profile, stage, cache, generation_id, offline=False):
     installed, checkouts = [], {}
     LAST_FETCH_FAILURES.clear()
     LAST_SKIPPED_PACKAGES.clear()
+    LAST_KEPT_PACKAGES.clear()
     for kind, cid, src, dst, p in jobs:
         if src is None:
             key = (p["repo"], p["commit"])
             if key in LAST_FETCH_FAILURES:
+                if _carry_over(previous, kind, cid, dst, stage, installed):
+                    continue
                 LAST_SKIPPED_PACKAGES.append(cid)
                 continue
             co = checkouts.get(key)
@@ -446,6 +540,8 @@ def build_stage(profile, stage, cache, generation_id, offline=False):
                     co = checkout(*key, cache, offline)
                 except UpstreamFetchError as exc:
                     LAST_FETCH_FAILURES[key] = str(exc)
+                    if _carry_over(previous, kind, cid, dst, stage, installed):
+                        continue
                     LAST_SKIPPED_PACKAGES.append(cid)
                     print("skipped", cid, "(could not fetch", p["repo"] + ")")
                     continue
@@ -465,6 +561,7 @@ def build_stage(profile, stage, cache, generation_id, offline=False):
         })
         print("staged", cid)
     _write_stage_manifest(profile, installed, generation_id, stage)
+    LAST_INSTALLED[:] = installed
     return installed
 
 
@@ -608,7 +705,7 @@ def transactional_install(profile, root, cache, offline=False):
             if root.exists() and not _is_lifecycle(root) and not _is_legacy_install(root):
                 if any(root.iterdir()):
                     raise RuntimeError(f"Refusing to replace unrecognized non-empty directory: {root}")
-            installed = build_stage(profile, stage, cache, generation_id, offline)
+            installed = build_stage(profile, stage, cache, generation_id, offline, previous_install(root))
             errors = verify_stage(stage, generation_id)
             if errors:
                 raise RuntimeError("Staged install failed verification:\n" + "\n".join(errors))
@@ -737,6 +834,21 @@ def _print_install_result(verb, root, installed, previous, legacy_backup, genera
 EXIT_PARTIAL_INSTALL = 3
 
 
+def partial_summary(installed=()):
+    """Machine readable version of what report_upstream_failures prints."""
+    kept = [cid for cid, _ in LAST_KEPT_PACKAGES]
+    worked = sorted({x["source_repo"] for x in installed if x.get("source_commit") and x["id"] not in kept})
+    return {
+        "partial": bool(LAST_FETCH_FAILURES),
+        "ok_packages": sorted(x["id"] for x in installed if x["id"] not in kept),
+        "failed_packages": sorted(set(LAST_SKIPPED_PACKAGES) | set(kept)),
+        "ok_repos": worked,
+        "failed_repos": sorted({k[0] for k in LAST_FETCH_FAILURES}),
+        "kept_at_old_version": sorted(kept),
+        "skipped": sorted(LAST_SKIPPED_PACKAGES),
+    }
+
+
 def report_upstream_failures(installed):
     """Say in plain English which third party repos worked and which did not.
 
@@ -744,17 +856,27 @@ def report_upstream_failures(installed):
     """
     if not LAST_FETCH_FAILURES:
         return 0
-    failed = sorted({k[0] for k in LAST_FETCH_FAILURES})
-    worked = sorted({x["source_repo"] for x in installed if x.get("source_commit")})
+    info = partial_summary(installed)
     print()
     print("Some third party skill sources could not be downloaded, so the install is partial.")
-    if worked:
-        print("Downloaded fine:", ", ".join(worked))
+    if info["ok_repos"]:
+        print("Downloaded fine:", ", ".join(info["ok_repos"]))
     print("Could not be downloaded:")
     for key, reason in sorted(LAST_FETCH_FAILURES.items()):
         print(f"  {key[0]}: {reason.split(': ', 1)[-1]}")
-    print(f"Skipped {len(LAST_SKIPPED_PACKAGES)} skills that need them: {', '.join(sorted(LAST_SKIPPED_PACKAGES))}")
+    if info["kept_at_old_version"]:
+        print(f"Kept at the version you already had ({len(info['kept_at_old_version'])}): "
+              + ", ".join(info["kept_at_old_version"]))
+    if info["skipped"]:
+        print(f"Skipped, never installed before ({len(info['skipped'])}): " + ", ".join(info["skipped"]))
     print("Everything else is installed. Check your internet connection, then run the same command again to add the rest.")
+    return EXIT_PARTIAL_INSTALL
+
+
+def report_blocked(exc):
+    print()
+    print("Stopped: " + str(exc))
+    print("Your current skills were left exactly as they were. Check your internet connection and try again.")
     return EXIT_PARTIAL_INSTALL
 
 
@@ -876,7 +998,10 @@ def cmd_install(a):
             print(f"{kind:10} {cid:32} -> <new-generation>/{dst.relative_to(root)} [{origin}]")
         return
     folders = _wanted_chat_folders(a, root)
-    installed, previous, legacy_backup, generation_id = transactional_install(a.profile, root, cache, a.offline)
+    try:
+        installed, previous, legacy_backup, generation_id = transactional_install(a.profile, root, cache, a.offline)
+    except PartialInstallBlocked as exc:
+        raise SystemExit(report_blocked(exc))
     _print_install_result("Installed", root, installed, previous, legacy_backup, generation_id)
     exit_code = report_upstream_failures(installed)
     _finish_with_chat_folders(a, root, folders)
@@ -893,9 +1018,12 @@ def cmd_update(a):
         if "full" not in current and pack not in current:
             profile = "+".join(current + [pack])
     folders = _wanted_chat_folders(a, root)
-    installed, previous, legacy_backup, generation_id = transactional_install(
-        profile, root, Path(a.cache).expanduser(), a.offline
-    )
+    try:
+        installed, previous, legacy_backup, generation_id = transactional_install(
+            profile, root, Path(a.cache).expanduser(), a.offline
+        )
+    except PartialInstallBlocked as exc:
+        raise SystemExit(report_blocked(exc))
     _print_install_result("Updated", root, installed, previous, legacy_backup, generation_id)
     exit_code = report_upstream_failures(installed)
     _finish_with_chat_folders(a, root, folders)

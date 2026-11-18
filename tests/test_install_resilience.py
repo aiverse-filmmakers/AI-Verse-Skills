@@ -1,9 +1,12 @@
 """One broken third party repo must not abort the whole install (FL-73)."""
 import contextlib
 import io
+import json
 import os
 import subprocess
+import sys
 import tempfile
+import time
 import unittest
 from pathlib import Path
 from unittest import mock
@@ -35,16 +38,48 @@ class GitGuardTests(unittest.TestCase):
     def test_git_never_prompts_and_has_a_timeout(self):
         seen = {}
 
-        def fake_run(cmd, **kw):
-            seen.update(kw)
-            return subprocess.CompletedProcess(cmd, 0, "", "")
+        class FakeProc:
+            returncode = 0
+            pid = 1
 
-        with mock.patch.object(v3.subprocess, "run", fake_run):
+            def __init__(self, cmd, **kw):
+                seen.update(kw)
+
+            def communicate(self, timeout=None):
+                seen["timeout"] = timeout
+                return "", ""
+
+        with mock.patch.object(v3.subprocess, "Popen", FakeProc):
             v3.run(["git", "status"], timeout=7)
         self.assertEqual(seen["timeout"], 7)
         self.assertEqual(seen["env"]["GIT_TERMINAL_PROMPT"], "0")
         self.assertEqual(seen["env"]["GIT_ASKPASS"], "true")
         self.assertEqual(seen["stdin"], subprocess.DEVNULL)
+        if os.name != "nt":
+            self.assertTrue(seen["start_new_session"])
+
+    @unittest.skipIf(os.name == "nt", "process groups are POSIX here; Windows uses taskkill")
+    def test_a_hung_git_and_its_child_are_both_killed(self):
+        with tempfile.TemporaryDirectory() as td:
+            bindir = Path(td) / "bin"
+            bindir.mkdir()
+            marker = Path(td) / "child.pid"
+            fake = bindir / "git"
+            fake.write_text(
+                f"#!/bin/sh\nsleep 300 &\necho $! > '{marker}'\nsleep 300\n", encoding="utf-8"
+            )
+            fake.chmod(0o755)
+            env = {**os.environ, "PATH": f"{bindir}{os.pathsep}{os.environ['PATH']}"}
+            started = time.time()
+            with mock.patch.dict(os.environ, env):
+                with self.assertRaises(RuntimeError) as ctx:
+                    v3.run(["git", "fetch"], timeout=1)
+            self.assertLess(time.time() - started, 20)
+            self.assertIn("timed out", str(ctx.exception))
+            child = int(marker.read_text(encoding="utf-8").strip())
+            time.sleep(0.3)
+            with self.assertRaises(ProcessLookupError):
+                os.kill(child, 0)
 
     def test_timeout_comes_from_environment(self):
         with mock.patch.dict(os.environ, {v3.GIT_TIMEOUT_ENV: "5"}):
@@ -56,10 +91,10 @@ class GitGuardTests(unittest.TestCase):
             self.assertEqual(v3.git_timeout(), 120)
 
     def test_a_hung_git_is_stopped_and_reported_in_plain_words(self):
-        def hang(cmd, **kw):
-            raise subprocess.TimeoutExpired(cmd, kw["timeout"])
+        def hang(cmd, cwd=None, timeout=None):
+            raise RuntimeError(f"Command timed out after {timeout:g} seconds: {' '.join(cmd)}")
 
-        with tempfile.TemporaryDirectory() as td, mock.patch.object(v3.subprocess, "run", hang), \
+        with tempfile.TemporaryDirectory() as td, mock.patch.object(v3, "run", hang), \
                 mock.patch.dict(os.environ, {v3.GIT_TIMEOUT_ENV: "2"}):
             with self.assertRaises(v3.UpstreamFetchError) as ctx:
                 v3.checkout("owner/slow", "a" * 40, Path(td))
@@ -82,6 +117,9 @@ class GitGuardTests(unittest.TestCase):
                 with self.assertRaises(v3.UpstreamFetchError):
                     v3.checkout("owner/gone", "b" * 40, Path(td) / "cache")
             self.assertEqual([p for p in (Path(td) / "cache").iterdir()], [])
+
+
+REPO_ROOT = Path(__file__).resolve().parent.parent
 
 
 class PartialInstallTests(unittest.TestCase):
@@ -137,6 +175,85 @@ class PartialInstallTests(unittest.TestCase):
             with self.assertRaises(RuntimeError) as ctx:
                 v3.checkout("owner/x", "d" * 40, Path(td), offline=True)
             self.assertNotIsInstance(ctx.exception, v3.UpstreamFetchError)
+
+
+class UpdateKeepsWhatYouHaveTests(unittest.TestCase):
+    """An update with a dead repo must never remove skills the member already has."""
+
+    def setUp(self):
+        self.td = tempfile.TemporaryDirectory()
+        self.addCleanup(self.td.cleanup)
+        self.base = Path(self.td.name) / "up"
+        self.root = Path(self.td.name) / "root"
+        self.shas = {n: make_repo(self.base, n) for n in ("alpha", "held")}
+
+    def _plan(self, names):
+        def plan(profile, root):
+            return [
+                ("support", n, None, root / "support" / n, {
+                    "repo": f"owner/{n}", "commit": self.shas.get(n, "e" * 40),
+                    "selector": {"type": "repo_root"}, "operators": [],
+                })
+                for n in names
+            ]
+        return plan
+
+    def _install(self, names, cache):
+        with mock.patch.object(v3, "install_plan", self._plan(names)), \
+                mock.patch.dict(os.environ, {"AIVERSE_UPSTREAM_BASE": self.base.as_uri()}), \
+                contextlib.redirect_stdout(io.StringIO()):
+            return v3.transactional_install("full", self.root, Path(self.td.name) / cache)
+
+    def _ids(self):
+        return sorted(x["id"] for x in v3.load_manifest(self.root)["packages"])
+
+    def test_dead_repo_keeps_the_installed_copy_and_skips_the_never_installed(self):
+        self._install(["alpha", "held"], "cache1")
+        shutil_rmtree = __import__("shutil").rmtree
+        shutil_rmtree(self.base / "owner" / "held.git")
+        installed, *_ = self._install(["alpha", "held", "newbie"], "cache2")
+        self.assertEqual(sorted(x["id"] for x in installed), ["alpha", "held"])
+        self.assertEqual(self._ids(), ["alpha", "held"])
+        self.assertEqual([c for c, _ in v3.LAST_KEPT_PACKAGES], ["held"])
+        self.assertEqual(v3.LAST_SKIPPED_PACKAGES, ["newbie"])
+        kept = next(x for x in installed if x["id"] == "held")
+        self.assertEqual(kept["source_commit"], self.shas["held"])
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            code = v3.report_upstream_failures(installed)
+        self.assertEqual(code, v3.EXIT_PARTIAL_INSTALL)
+        self.assertIn("Kept at the version you already had (1): held", out.getvalue())
+        self.assertIn("never installed before (1): newbie", out.getvalue())
+
+    def test_missing_old_copy_blocks_activation_and_leaves_install_untouched(self):
+        self._install(["alpha", "held"], "cache1")
+        before = v3.read_active_pointer(self.root)["generation_id"]
+        pkg = v3.generation_path(self.root, before) / "support" / "held"
+        __import__("shutil").rmtree(pkg)
+        __import__("shutil").rmtree(self.base / "owner" / "held.git")
+        with self.assertRaises(v3.PartialInstallBlocked):
+            self._install(["alpha", "held"], "cache2")
+        self.assertEqual(v3.read_active_pointer(self.root)["generation_id"], before)
+
+    def test_cli_exit_code_json_and_lifecycle_for_a_fully_dead_upstream(self):
+        empty = Path(self.td.name) / "empty"
+        empty.mkdir()
+        env = {**os.environ, "AIVERSE_UPSTREAM_BASE": empty.as_uri(), "HOME": self.td.name,
+               v3.GIT_TIMEOUT_ENV: "20"}
+        root = Path(self.td.name) / "cli-root"
+        proc = subprocess.run(
+            [sys.executable, str(REPO_ROOT / "installer" / "aiverse_skills.py"), "--root", str(root),
+             "--cache", str(Path(self.td.name) / "cli-cache"), "install", "--profile", "full", "--json"],
+            capture_output=True, text=True, encoding="utf-8", env=env, cwd=str(REPO_ROOT),
+        )
+        self.assertEqual(proc.returncode, 3, proc.stderr)
+        self.assertNotIn("Traceback", proc.stderr)
+        payload = json.loads(proc.stdout)
+        self.assertTrue(payload["partial"])
+        self.assertTrue(payload["partial_report"]["failed_repos"])
+        self.assertTrue(payload["partial_report"]["ok_packages"])
+        self.assertTrue(payload["partial_report"]["failed_packages"])
+        self.assertTrue((root / ".aiverse").exists())
 
 
 if __name__ == "__main__":

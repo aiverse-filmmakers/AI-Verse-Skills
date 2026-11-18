@@ -357,8 +357,12 @@ def _print(data: Any, as_json: bool) -> None:
 
 def _capture(fn, arg) -> str:
     stream = io.StringIO()
-    with contextlib.redirect_stdout(stream):
-        fn(arg)
+    try:
+        with contextlib.redirect_stdout(stream):
+            fn(arg)
+    except SystemExit as stop:
+        stop.captured_output = stream.getvalue().strip()
+        raise
     return stream.getvalue().strip()
 
 
@@ -431,16 +435,33 @@ def apply_public_beta(impl: Any) -> None:
                         )
 
             def command(a):
+                partial_exit = None
+                try:
+                    if getattr(a, "json", False):
+                        output = _capture(original[name], a)
+                    else:
+                        original[name](a)
+                        output = None
+                except SystemExit as stop:
+                    # Exit 3 means a partial install: the install itself went through, so
+                    # the lifecycle action must still be recorded and JSON still printed.
+                    if stop.code != getattr(impl, "EXIT_PARTIAL_INSTALL", 3):
+                        raise
+                    partial_exit = stop
+                    output = getattr(stop, "captured_output", None)
+                record_lifecycle_action(a.root)
                 if getattr(a, "json", False):
-                    output = _capture(original[name], a)
-                    record_lifecycle_action(a.root)
                     payload = status_report(impl, Path(a.root))
                     payload["command"] = name
-                    payload["legacy_output"] = output
+                    payload["legacy_output"] = output if output is not None else ""
+                    if partial_exit is not None:
+                        info = impl.partial_summary(getattr(impl, "LAST_INSTALLED", ()))
+                        info["partial"] = True
+                        payload["partial"] = True
+                        payload["partial_report"] = info
                     _print(payload, True)
-                else:
-                    original[name](a)
-                    record_lifecycle_action(a.root)
+                if partial_exit is not None:
+                    raise partial_exit
             return command
 
         for name in ("install", "update", "rollback", "uninstall"):

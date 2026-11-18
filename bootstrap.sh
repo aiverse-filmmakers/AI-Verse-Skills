@@ -65,5 +65,17 @@ case ":${PATH}:" in
   *) echo "Add $BIN_DIR to PATH to use ai-verse-skills globally." ;;
 esac
 
-"$DEST/aiverse-skills" install --profile "${AI_VERSE_SKILLS_PROFILE:-full}"
+# Exit code 3 from install means partial success: some third party skill sources could
+# not be downloaded, everything else is installed (skills already on this computer are
+# kept). We carry on to the readiness check, and the final exit code is the readiness
+# result: nonzero only when that check fails. Any other install failure stops here.
+PARTIAL=0
+"$DEST/aiverse-skills" install --profile "${AI_VERSE_SKILLS_PROFILE:-full}" || {
+  RC=$?
+  if [ "$RC" -ne 3 ]; then exit "$RC"; fi
+  PARTIAL=1
+}
 "$DEST/aiverse-skills" doctor --readiness
+if [ "$PARTIAL" = 1 ]; then
+  echo "AI-Verse Skills is installed and ready, but some third party skills were skipped or kept at an older version (listed above). Run this same command again when your connection is stable to add them."
+fi
