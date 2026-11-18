@@ -469,7 +469,12 @@ class PartialInstallBlocked(RuntimeError):
 
 
 def previous_install(root):
-    """(base folder, {package id: manifest entry}) of what is installed now, or None."""
+    """(base folder, {package id: manifest entry}) of what is installed now.
+
+    Returns None only when nothing is installed yet. A damaged or unreadable
+    install record raises PartialInstallBlocked, so an update can never
+    silently drop skills the member already has.
+    """
     root = Path(root).expanduser()
     try:
         if _is_lifecycle(root):
@@ -481,10 +486,17 @@ def previous_install(root):
             base = root
         else:
             return None
-        manifest = _read_json(_legacy_manifest_path(base), "install manifest")
-    except Exception:
-        return None
-    return base, {x["id"]: x for x in manifest.get("packages", []) if x.get("id")}
+        manifest_file = _legacy_manifest_path(base)
+        if not manifest_file.exists():
+            return None
+        manifest = _read_json(manifest_file, "install manifest")
+        entries = {x["id"]: x for x in manifest.get("packages", []) if x.get("id")}
+    except Exception as exc:
+        raise PartialInstallBlocked(
+            f"The record of your installed skills could not be read ({_first_line(exc)}), "
+            "so nothing was changed."
+        ) from exc
+    return base, entries
 
 
 def _carry_over(previous, kind, cid, dst, stage, installed):
@@ -526,6 +538,7 @@ def build_stage(profile, stage, cache, generation_id, offline=False, previous=No
     LAST_FETCH_FAILURES.clear()
     LAST_SKIPPED_PACKAGES.clear()
     LAST_KEPT_PACKAGES.clear()
+    LAST_BLOCKED.clear()
     for kind, cid, src, dst, p in jobs:
         if src is None:
             key = (p["repo"], p["commit"])
@@ -873,7 +886,11 @@ def report_upstream_failures(installed):
     return EXIT_PARTIAL_INSTALL
 
 
+LAST_BLOCKED = []
+
+
 def report_blocked(exc):
+    LAST_BLOCKED[:] = [str(exc)]
     print()
     print("Stopped: " + str(exc))
     print("Your current skills were left exactly as they were. Check your internet connection and try again.")

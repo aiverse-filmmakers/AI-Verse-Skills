@@ -449,15 +449,27 @@ def apply_public_beta(impl: Any) -> None:
                         raise
                     partial_exit = stop
                     output = getattr(stop, "captured_output", None)
-                record_lifecycle_action(a.root)
+                blocked = partial_exit is not None and bool(getattr(impl, "LAST_BLOCKED", None))
+                if not blocked:
+                    record_lifecycle_action(a.root)
                 if getattr(a, "json", False):
                     payload = status_report(impl, Path(a.root))
                     payload["command"] = name
                     payload["legacy_output"] = output if output is not None else ""
-                    if partial_exit is not None:
+                    if blocked:
+                        payload["blocked"] = True
+                        payload["partial"] = False
+                        payload["activated"] = False
+                        payload["ok_packages"] = []
+                        payload["failed_packages"] = []
+                        payload["blocked_reason"] = impl.LAST_BLOCKED[0]
+                    elif partial_exit is not None:
                         info = impl.partial_summary(getattr(impl, "LAST_INSTALLED", ()))
                         info["partial"] = True
                         payload["partial"] = True
+                        payload["blocked"] = False
+                        payload["ok_packages"] = info["ok_packages"]
+                        payload["failed_packages"] = info["failed_packages"]
                         payload["partial_report"] = info
                     _print(payload, True)
                 if partial_exit is not None:

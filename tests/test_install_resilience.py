@@ -235,6 +235,46 @@ class UpdateKeepsWhatYouHaveTests(unittest.TestCase):
             self._install(["alpha", "held"], "cache2")
         self.assertEqual(v3.read_active_pointer(self.root)["generation_id"], before)
 
+    def test_corrupt_install_record_blocks_instead_of_dropping_skills(self):
+        self._install(["alpha", "held"], "cache1")
+        gid = v3.read_active_pointer(self.root)["generation_id"]
+        (v3.generation_path(self.root, gid) / ".aiverse" / "installed.json").write_text("{not json", encoding="utf-8")
+        with self.assertRaises(v3.PartialInstallBlocked) as ctx:
+            self._install(["alpha", "held"], "cache2")
+        self.assertIn("nothing was changed", str(ctx.exception))
+        self.assertEqual(v3.read_active_pointer(self.root)["generation_id"], gid)
+
+    def test_nothing_installed_yet_is_not_an_error(self):
+        self.assertIsNone(v3.previous_install(self.root))
+
+    def test_blocked_update_json_says_blocked_and_records_nothing(self):
+        from installer import aiverse_skills as cli
+
+        self._install(["alpha", "held"], "cache1")
+        gid = v3.read_active_pointer(self.root)["generation_id"]
+        pkg = v3.generation_path(self.root, gid) / "support" / "held"
+        __import__("shutil").rmtree(pkg)
+        __import__("shutil").rmtree(self.base / "owner" / "held.git")
+        # Keep the manifest valid so the update starts, then block on the missing old copy.
+        recorded = []
+        out = io.StringIO()
+        argv = ["--root", str(self.root), "--cache", str(Path(self.td.name) / "c3"), "update", "--json"]
+        with mock.patch.object(v3, "install_plan", self._plan(["alpha", "held"])), \
+                mock.patch.object(v3, "load_manifest", lambda root: {"profile": "full"}), \
+                mock.patch.dict(os.environ, {"AIVERSE_UPSTREAM_BASE": self.base.as_uri()}), \
+                mock.patch("installer.public_beta._write_integration", lambda *a, **k: recorded.append(a)), \
+                contextlib.redirect_stdout(out):
+            with self.assertRaises(SystemExit) as ctx:
+                with mock.patch.object(sys, "argv", ["aiverse-skills", *argv]):
+                    cli.main()
+        self.assertEqual(ctx.exception.code, 3)
+        self.assertEqual(recorded, [])
+        payload = json.loads(out.getvalue())
+        self.assertTrue(payload["blocked"])
+        self.assertFalse(payload["partial"])
+        self.assertEqual(payload["ok_packages"], [])
+        self.assertEqual(v3.read_active_pointer(self.root)["generation_id"], gid)
+
     def test_cli_exit_code_json_and_lifecycle_for_a_fully_dead_upstream(self):
         empty = Path(self.td.name) / "empty"
         empty.mkdir()
@@ -251,6 +291,9 @@ class UpdateKeepsWhatYouHaveTests(unittest.TestCase):
         payload = json.loads(proc.stdout)
         self.assertTrue(payload["partial"])
         self.assertTrue(payload["partial_report"]["failed_repos"])
+        self.assertFalse(payload["blocked"])
+        self.assertEqual(payload["ok_packages"], payload["partial_report"]["ok_packages"])
+        self.assertEqual(payload["failed_packages"], payload["partial_report"]["failed_packages"])
         self.assertTrue(payload["partial_report"]["ok_packages"])
         self.assertTrue(payload["partial_report"]["failed_packages"])
         self.assertTrue((root / ".aiverse").exists())
