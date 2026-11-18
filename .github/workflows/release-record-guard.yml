@@ -1,0 +1,33 @@
+name: Release Record Guard
+
+# Reports when release/component-release.json and the code at its accepted commit
+# disagree, and when HEAD is more than 50 commits past it. Warn only: never blocks.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  release-record-guard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Test the guard
+        continue-on-error: true
+        run: python -m unittest tests.test_release_record_guard -v
+      - name: Check the release record against the accepted commit
+        # Warn only for now. When switching to strict (RELEASE_GUARD_STRICT "1"),
+        # remove the continue-on-error line below so a mismatch fails the job.
+        continue-on-error: true
+        env:
+          RELEASE_GUARD_STRICT: "0"
+        run: python scripts/check_release_record.py .
