@@ -210,7 +210,13 @@ def disable_component(impl: Any, root: Path) -> Dict[str, Any]:
     return status_report(impl, root)
 
 
-def doctor_report(impl: Any, root: Path, depth: str = "system") -> Dict[str, Any]:
+def doctor_report(
+    impl: Any,
+    root: Path,
+    depth: str = "system",
+    targets: Any = None,
+    want_readiness: bool = False,
+) -> Dict[str, Any]:
     if depth not in DOCTOR_DEPTHS:
         raise RuntimeError("Unsupported doctor depth")
     root = Path(root).expanduser().resolve()
@@ -247,6 +253,23 @@ def doctor_report(impl: Any, root: Path, depth: str = "system") -> Dict[str, Any
             checks["member_library"] = verify(member_root)
     except (RuntimeError, OSError, ValueError) as exc:
         checks["member_library"] = {"ok": False, "error": str(exc)}
+    # --target: every catalogue skill must be listed, with a usable description, in each
+    # chat skills folder the caller names. Ignoring this used to report "healthy" (FL-22).
+    for target in targets or ():
+        problems = impl.verify_adapter_target(root, target, require_complete=True)
+        checks[f"target:{Path(target).expanduser()}"] = {"ok": not problems, "errors": problems}
+    # --readiness: the installer and CI run this and trust the exit code, so a readiness
+    # check that cannot be worked out must fail rather than pass silently (FL-22).
+    if want_readiness:
+        try:
+            r = impl.readiness(root)
+            checks["readiness"] = {
+                "ok": True,
+                "ready": len(r["skills"]["ready"]),
+                "conditional": len(r["skills"]["conditional"]),
+            }
+        except Exception as exc:
+            checks["readiness"] = {"ok": False, "error": str(exc)}
     ok = all(bool(v.get("ok")) for v in checks.values())
     return {
         "component_id": "ai-verse-skills",
@@ -480,7 +503,13 @@ def apply_public_beta(impl: Any) -> None:
             choices[name].set_defaults(fn=wrap_existing(name))
 
         def doctor_cmd(a):
-            data = doctor_report(impl, Path(a.root), a.depth)
+            data = doctor_report(
+                impl,
+                Path(a.root),
+                a.depth,
+                targets=getattr(a, "target", None),
+                want_readiness=bool(getattr(a, "readiness", False)),
+            )
             if a.json:
                 _print(data, True)
                 if not data["ok"]:
@@ -488,6 +517,12 @@ def apply_public_beta(impl: Any) -> None:
             else:
                 if data["ok"]:
                     print(f"AI-Verse-Skills doctor: healthy depth={data['depth']} state={data['state']}")
+                    for name, check in data["checks"].items():
+                        if name.startswith("target:"):
+                            print(f"Every catalogue skill is listed in {name[len('target:'):]} with a usable description")
+                    if "readiness" in data["checks"]:
+                        print(f"Skills immediately ready: {data['checks']['readiness']['ready']}")
+                        print(f"Skills requiring app/connection/runtime support: {data['checks']['readiness']['conditional']}")
                 else:
                     print(f"AI-Verse-Skills doctor: unhealthy depth={data['depth']} state={data['state']}")
                     for name, check in data["checks"].items():
@@ -637,7 +672,7 @@ def apply_public_beta(impl: Any) -> None:
     impl.setup_component = lambda root: setup_component(impl, Path(root))
     impl.enable_component = lambda root: enable_component(impl, Path(root))
     impl.disable_component = lambda root: disable_component(impl, Path(root))
-    impl.doctor_report = lambda root, depth="system": doctor_report(impl, Path(root), depth)
+    impl.doctor_report = lambda root, depth="system", **kw: doctor_report(impl, Path(root), depth, **kw)
     impl.component_descriptor = lambda root: component_descriptor(impl, Path(root))
     impl.purge_generations = lambda root, keep=2, confirmed=False: purge_generations(
         impl, Path(root), keep=keep, confirmed=confirmed
