@@ -78,6 +78,9 @@ def load(rel):
 
 GIT_TIMEOUT_ENV = "AIVERSE_GIT_TIMEOUT"
 DEFAULT_GIT_TIMEOUT = 120
+# A pin taken without --lease-owner-pid is held this long unless unpin releases it (FL-25).
+DEFAULT_PIN_LEASE_HOURS = 24
+MAX_PIN_LEASE_HOURS = 24 * 30  # matches generation_lifecycle.MAX_LEASE_HOLD
 
 
 class UpstreamFetchError(RuntimeError):
@@ -1535,13 +1538,28 @@ def cmd_pin(a):
         safe_skill_id(a.package)
     if requested and a.package != requested:
         print(f"note: {requested} was replaced by {a.package}", file=sys.stderr)
-    owner_pid = a.lease_owner_pid if a.lease_owner_pid is not None else os.getppid()
+    hold_until = None
+    if a.lease_owner_pid is not None:
+        owner_pid = a.lease_owner_pid
+    else:
+        # Without an explicit owner the caller is usually an agent's one shot shell,
+        # which exits right after this command. Binding only to that pid let the lease
+        # lapse at once (FL-25), so the lease is also held for a fixed time; unpin
+        # still releases it early.
+        owner_pid = os.getppid()
+        hours = getattr(a, "lease_hours", None)
+        hours = DEFAULT_PIN_LEASE_HOURS if hours is None else hours
+        # Bounded so a typo cannot crash pin or keep a generation for years (FL-25 review).
+        if not (0 < hours <= MAX_PIN_LEASE_HOURS):
+            raise RuntimeError(f"--lease-hours must be greater than zero and at most {MAX_PIN_LEASE_HOURS}")
+        hold_until = dt.datetime.now(dt.timezone.utc) + dt.timedelta(hours=hours)
     lease = acquire_generation_lease(
         root,
         digest,
         owner_pid=owner_pid,
         generation_id=getattr(a, "generation_id", None),
         package_id=a.package,
+        hold_until=hold_until,
     )
     data = {
         "generation_id": lease.generation_id,
@@ -1553,6 +1571,8 @@ def cmd_pin(a):
         "lease_owner_hostname": lease.hostname,
         "lease_release_required": True,
     }
+    if hold_until is not None:
+        data["lease_hold_until"] = hold_until.isoformat()
     if a.package:
         package = lease.package_path(a.package)
         data["package_id"] = a.package
@@ -1653,7 +1673,8 @@ def parser():
     q = sub.add_parser("pin")
     q.add_argument("--package")
     q.add_argument("--generation-id", help="lease this exact previously selected generation")
-    q.add_argument("--lease-owner-pid", type=int)
+    q.add_argument("--lease-owner-pid", type=int, help="tie the lease to this long lived process instead of a fixed hold time")
+    q.add_argument("--lease-hours", type=float, help=f"without --lease-owner-pid, keep the lease this many hours (default {DEFAULT_PIN_LEASE_HOURS}) unless unpin releases it")
     q.add_argument("--json", action="store_true")
     q.set_defaults(fn=cmd_pin)
 

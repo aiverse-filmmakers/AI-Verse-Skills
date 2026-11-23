@@ -510,6 +510,11 @@ def _generation_lease_path(root: Path, generation_id: str, lease_id: str) -> Pat
     return controller_path(root, "leases", generation_id, lease_id + ".json")
 
 
+# No lease may be held by time alone for longer than this, whatever its file says,
+# so a typo or hand edited hold_until can never pin a generation for years (FL-25).
+MAX_LEASE_HOLD = dt.timedelta(days=30)
+
+
 def acquire_generation_lease(
     root: Path,
     digest_fn,
@@ -517,6 +522,7 @@ def acquire_generation_lease(
     owner_pid: Optional[int] = None,
     generation_id: Optional[str] = None,
     package_id: Optional[str] = None,
+    hold_until: Optional[dt.datetime] = None,
 ) -> GenerationLease:
     """Atomically pin an active or explicitly selected generation for execution.
 
@@ -532,6 +538,12 @@ def acquire_generation_lease(
         raise RuntimeError("Generation lease owner PID must be a positive integer")
     if _process_is_alive(pid) is not True:
         raise RuntimeError(f"Generation lease owner process is not verifiably live: {pid}")
+    if hold_until is not None:
+        now = dt.datetime.now(dt.timezone.utc)
+        if hold_until.tzinfo is None or hold_until <= now:
+            raise RuntimeError("Generation lease hold_until must be a future, timezone aware time")
+        if hold_until - now > MAX_LEASE_HOLD:
+            raise RuntimeError("Generation lease hold_until may be at most 30 days ahead")
 
     with lifecycle_lock(root):
         pin = (
@@ -548,7 +560,7 @@ def acquire_generation_lease(
         hostname = socket.gethostname()
         path = _generation_lease_path(root, pin.generation_id, lease_id)
         path.parent.mkdir(parents=True, exist_ok=True)
-        _atomic_json_write(path, {
+        record = {
             "schema_version": GENERATION_LEASE_SCHEMA_VERSION,
             "generation_id": pin.generation_id,
             "lease_id": lease_id,
@@ -556,7 +568,12 @@ def acquire_generation_lease(
             "pid": pid,
             "hostname": hostname,
             "created_at": dt.datetime.now(dt.timezone.utc).isoformat(),
-        })
+        }
+        if hold_until is not None:
+            # A lease taken from a short lived shell must not lapse the moment that
+            # shell exits (FL-25): it is kept until this time even if the pid is gone.
+            record["hold_until"] = hold_until.astimezone(dt.timezone.utc).isoformat()
+        _atomic_json_write(path, record)
         return GenerationLease(
             generation_id=pin.generation_id,
             lease_id=lease_id,
@@ -671,6 +688,24 @@ def active_generation_leases(root: Path) -> Dict[str, object]:
                 protected.add(generation_id)
                 result["unverifiable"].append({**identity, "reason": "foreign-host holder"})
                 continue
+            if "hold_until" in data:
+                try:
+                    hold_until = dt.datetime.fromisoformat(str(data["hold_until"]))
+                    created_at = dt.datetime.fromisoformat(str(data.get("created_at")))
+                    if hold_until.tzinfo is None or created_at.tzinfo is None:
+                        raise ValueError("naive time")
+                    # Honour the hold for at most MAX_LEASE_HOLD after the lease was made.
+                    hold_until = min(hold_until, created_at + MAX_LEASE_HOLD)
+                except (ValueError, TypeError, OverflowError):
+                    protected.add(generation_id)
+                    result["unverifiable"].append({**identity, "reason": "malformed lease hold time"})
+                    continue
+                if hold_until > dt.datetime.now(dt.timezone.utc):
+                    # Still inside its hold time: protected whatever happened to the pid.
+                    protected.add(generation_id)
+                    result["live"].append({**identity, "pid": data["pid"], "hostname": host,
+                                           "hold_until": data["hold_until"]})
+                    continue
             alive = _process_is_alive(data["pid"])
             if alive is True:
                 protected.add(generation_id)
