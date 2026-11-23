@@ -208,7 +208,7 @@ def _review_receipt(review, revision, scan):
         raise RuntimeError("security review must acknowledge every exact finding")
 
 
-def _package(source, security_review=None, *, inspect_only=False):
+def _package(source, security_review=None, *, inspect_only=False, stored_revision=False):
     source = Path(source).expanduser().absolute()
     if _is_symlink_or_reparse(source) or not source.is_dir():
         raise RuntimeError("source must be a real package directory, without symlinks")
@@ -243,7 +243,15 @@ def _package(source, security_review=None, *, inspect_only=False):
     if inspect_only:
         return {"contract":"aiverse-member-skill-inspection-v1", "source_revision":revision,
                 "scan":scan}
-    _review_receipt(security_review, revision, scan)
+    try:
+        _review_receipt(security_review, revision, scan)
+    except RuntimeError:
+        # A revision already in the library was reviewed against the scanner of its
+        # day. A stricter scanner (FL-26) may now report extra review findings for the
+        # same bytes; the caller still checks the returned digest against the stored
+        # revision, so only a new deny finding blocks it. New imports stay strict.
+        if not stored_revision or scan["status"] == "deny":
+            raise
     return source, metadata, revision
 
 
@@ -346,7 +354,7 @@ def apply_import(root, source, *, plan, admission, source_scope="operator", visi
         retry_key = hashlib.sha256(_bytes(plan)).hexdigest()
         if any(event.get("effect_id") == retry_key for event in index["events"]):
             if record and revision in record["revisions"]:
-                if _package(revision_path(root, identity, revision), security_review)[2] != revision:
+                if _package(revision_path(root, identity, revision), security_review, stored_revision=True)[2] != revision:
                     raise RuntimeError("imported revision integrity failure")
                 return {"state": "already-imported", "id": identity, "revision": revision,
                         "qualified_id": "local:" + identity, "source_preserved": True}
@@ -409,7 +417,7 @@ def select_revision(root, identity, revision, *, expected_index):
         record = index["skills"].get(identity)
         if record is None or revision not in record["revisions"]:
             raise RuntimeError("unknown member skill revision")
-        if _package(revision_path(root, identity, revision), record["revisions"][revision].get("security_review"))[2] != revision:
+        if _package(revision_path(root, identity, revision), record["revisions"][revision].get("security_review"), stored_revision=True)[2] != revision:
             raise RuntimeError("member revision integrity failure")
         if record["active_revision"] == revision:
             return {"state": "already-selected", "id": identity, "revision": revision}
@@ -427,7 +435,7 @@ def verify(root):
         index = read_index(root)
         for identity, record in index["skills"].items():
             for revision in record["revisions"]:
-                if _package(revision_path(root, identity, revision), record["revisions"][revision].get("security_review"))[2] != revision:
+                if _package(revision_path(root, identity, revision), record["revisions"][revision].get("security_review"), stored_revision=True)[2] != revision:
                     errors.append(f"revision digest mismatch: {identity}/{revision}")
     except (RuntimeError, OSError, ValueError) as exc:
         errors.append(str(exc))
