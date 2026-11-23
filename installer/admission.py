@@ -23,16 +23,22 @@ except ImportError:
 
 ADMISSION_SCHEMA_VERSION = 1
 ADMISSION_FILENAME = "admission.json"
-# Files are scanned whatever their name or extension (FL-26): a fixed list of text
-# suffixes let .jsx, .mjs, .cjs, .tsx, .rb and extensionless scripts through unread.
-# Only content that looks binary (a NUL byte near the start, as in fonts and images)
-# is skipped, because the text patterns below cannot match inside it meaningfully.
-_BINARY_SNIFF_BYTES = 8192
-
-
-def _looks_binary(path: Path) -> bool:
-    with path.open("rb") as handle:
-        return b"\x00" in handle.read(_BINARY_SNIFF_BYTES)
+# Every file is scanned whatever its name (FL-26): a fixed list of text suffixes
+# let .jsx, .mjs, .cjs, .tsx, .rb and extensionless scripts through unread.
+# A file is read as text when it decodes as UTF-8 (NUL bytes included). Only a
+# file that does not decode AND has a known binary media or archive suffix is
+# skipped; any other undecodable file needs review, so a NUL byte or UTF-16
+# encoding cannot hide a script from the scan.
+_BINARY_SUFFIXES = {
+    ".ttf", ".otf", ".woff", ".woff2", ".eot",
+    ".png", ".jpg", ".jpeg", ".gif", ".webp", ".ico", ".bmp", ".tif", ".tiff", ".avif", ".heic",
+    ".pdf", ".mp3", ".wav", ".ogg", ".flac", ".m4a", ".aac",
+    ".mp4", ".mov", ".webm", ".mkv", ".avi",
+    ".zip", ".gz", ".tgz", ".bz2", ".xz", ".7z",
+}
+# Scan results carry the scanner version, so a stricter scanner can be told apart
+# from changed bytes when an older stored admission report is re-verified.
+SCANNER_VERSION = 2
 
 
 _BIDI = {chr(x) for x in list(range(0x202A, 0x202F)) + list(range(0x2066, 0x206A))}
@@ -122,20 +128,22 @@ def scan_package(package_root: Path, *, max_text_bytes: int = 2_000_000) -> Dict
         if not path.is_file():
             continue
         files_scanned += 1
+        known_binary = path.suffix.lower() in _BINARY_SUFFIXES
         try:
-            if _looks_binary(path):
-                continue
             size = path.stat().st_size
+            if size > max_text_bytes or text_bytes + size > max_text_bytes:
+                if not known_binary:
+                    findings.append({"severity": "review", "code": "text-scan-budget", "path": rel_path.as_posix()})
+                continue
+            raw = path.read_bytes()
         except OSError:
             findings.append({"severity": "deny", "code": "unreadable-file", "path": rel_path.as_posix()})
             continue
-        if size > max_text_bytes or text_bytes + size > max_text_bytes:
-            findings.append({"severity": "review", "code": "text-scan-budget", "path": rel_path.as_posix()})
-            continue
         try:
-            text = path.read_text(encoding="utf-8")
+            text = raw.decode("utf-8")
         except UnicodeDecodeError:
-            findings.append({"severity": "review", "code": "non-utf8-text", "path": rel_path.as_posix()})
+            if not known_binary:
+                findings.append({"severity": "review", "code": "non-utf8-text", "path": rel_path.as_posix()})
             continue
         text_bytes += len(text.encode("utf-8"))
         if any(ch in text for ch in _BIDI):
@@ -151,6 +159,7 @@ def scan_package(package_root: Path, *, max_text_bytes: int = 2_000_000) -> Dict
     review = any(item["severity"] == "review" for item in findings)
     return {
         "status": "deny" if denied else ("review-required" if review else "pass"),
+        "scanner_version": SCANNER_VERSION,
         "files_scanned": files_scanned,
         "text_bytes_scanned": text_bytes,
         "findings": findings,
@@ -284,8 +293,16 @@ def verify_admission_generation(impl: Any, generation_root: Path, expected_gener
             errors.append(f"{package_id}: stored admission is not admitted")
         if before.get("integrity") != now.get("integrity"):
             errors.append(f"{package_id}: integrity evidence changed")
-        if before.get("security") != now.get("security"):
-            errors.append(f"{package_id}: security scan result changed")
+        before_security = before.get("security")
+        now_security = now.get("security") or {}
+        if isinstance(before_security, dict) and before_security.get("scanner_version") == now_security.get("scanner_version"):
+            if before_security != now_security:
+                errors.append(f"{package_id}: security scan result changed")
+        elif now_security.get("status") == "deny":
+            # Stored by an older scanner. Bytes are still bound by the integrity check
+            # above, so a stricter scanner's new review findings must not make an
+            # installed generation unusable; a new deny finding still blocks it.
+            errors.append(f"{package_id}: security scan now denies this package")
         if before.get("authorized") is not False:
             errors.append(f"{package_id}: admission metadata must never grant authorization")
     return errors
