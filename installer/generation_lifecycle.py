@@ -510,6 +510,11 @@ def _generation_lease_path(root: Path, generation_id: str, lease_id: str) -> Pat
     return controller_path(root, "leases", generation_id, lease_id + ".json")
 
 
+# No lease may be held by time alone for longer than this, whatever its file says,
+# so a typo or hand edited hold_until can never pin a generation for years (FL-25).
+MAX_LEASE_HOLD = dt.timedelta(days=30)
+
+
 def acquire_generation_lease(
     root: Path,
     digest_fn,
@@ -533,8 +538,12 @@ def acquire_generation_lease(
         raise RuntimeError("Generation lease owner PID must be a positive integer")
     if _process_is_alive(pid) is not True:
         raise RuntimeError(f"Generation lease owner process is not verifiably live: {pid}")
-    if hold_until is not None and (hold_until.tzinfo is None or hold_until <= dt.datetime.now(dt.timezone.utc)):
-        raise RuntimeError("Generation lease hold_until must be a future, timezone aware time")
+    if hold_until is not None:
+        now = dt.datetime.now(dt.timezone.utc)
+        if hold_until.tzinfo is None or hold_until <= now:
+            raise RuntimeError("Generation lease hold_until must be a future, timezone aware time")
+        if hold_until - now > MAX_LEASE_HOLD:
+            raise RuntimeError("Generation lease hold_until may be at most 30 days ahead")
 
     with lifecycle_lock(root):
         pin = (
@@ -682,9 +691,12 @@ def active_generation_leases(root: Path) -> Dict[str, object]:
             if "hold_until" in data:
                 try:
                     hold_until = dt.datetime.fromisoformat(str(data["hold_until"]))
-                    if hold_until.tzinfo is None:
+                    created_at = dt.datetime.fromisoformat(str(data.get("created_at")))
+                    if hold_until.tzinfo is None or created_at.tzinfo is None:
                         raise ValueError("naive time")
-                except ValueError:
+                    # Honour the hold for at most MAX_LEASE_HOLD after the lease was made.
+                    hold_until = min(hold_until, created_at + MAX_LEASE_HOLD)
+                except (ValueError, TypeError, OverflowError):
                     protected.add(generation_id)
                     result["unverifiable"].append({**identity, "reason": "malformed lease hold time"})
                     continue

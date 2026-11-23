@@ -80,6 +80,7 @@ GIT_TIMEOUT_ENV = "AIVERSE_GIT_TIMEOUT"
 DEFAULT_GIT_TIMEOUT = 120
 # A pin taken without --lease-owner-pid is held this long unless unpin releases it (FL-25).
 DEFAULT_PIN_LEASE_HOURS = 24
+MAX_PIN_LEASE_HOURS = 24 * 30  # matches generation_lifecycle.MAX_LEASE_HOLD
 
 
 class UpstreamFetchError(RuntimeError):
@@ -1548,8 +1549,9 @@ def cmd_pin(a):
         owner_pid = os.getppid()
         hours = getattr(a, "lease_hours", None)
         hours = DEFAULT_PIN_LEASE_HOURS if hours is None else hours
-        if not hours > 0:
-            raise RuntimeError("--lease-hours must be greater than zero")
+        # Bounded so a typo cannot crash pin or keep a generation for years (FL-25 review).
+        if not (0 < hours <= MAX_PIN_LEASE_HOURS):
+            raise RuntimeError(f"--lease-hours must be greater than zero and at most {MAX_PIN_LEASE_HOURS}")
         hold_until = dt.datetime.now(dt.timezone.utc) + dt.timedelta(hours=hours)
     lease = acquire_generation_lease(
         root,

@@ -99,6 +99,25 @@ class PinLeaseOutlivesShell(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, "lease-hours"):
             self.pin_from_short_shell(lease_hours=0)
 
+    def test_huge_or_infinite_hours_are_refused_cleanly(self):
+        # These used to crash with OverflowError or hold a generation for a century.
+        for hours in (float("inf"), float("nan"), 1e12, 24 * 30 + 1):
+            with self.subTest(hours=hours):
+                with self.assertRaisesRegex(RuntimeError, "lease-hours"):
+                    self.pin_from_short_shell(lease_hours=hours)
+
+    def test_far_future_hold_in_the_file_is_capped_at_30_days(self):
+        pinned = self.pin_from_short_shell()
+        lease_file = generation_leases_dir(self.root) / "gen-v1" / (pinned["lease_id"] + ".json")
+        data = json.loads(lease_file.read_text(encoding="utf-8"))
+        old = dt.datetime.now(dt.timezone.utc) - dt.timedelta(days=31)
+        data["created_at"] = old.isoformat()
+        data["hold_until"] = (old + dt.timedelta(days=36500)).isoformat()
+        lease_file.write_text(json.dumps(data), encoding="utf-8")
+        GenerationFixture.commit(self.root, self.base, "gen-v2", "v2")
+        report = skills.purge_generations(self.root, keep=0, confirmed=True)
+        self.assertEqual(len(report["stale_execution_leases_reaped"]), 1)
+
     def test_past_hold_time_is_refused_by_the_library(self):
         with self.assertRaisesRegex(RuntimeError, "hold_until"):
             acquire_generation_lease(self.root, skills.digest,
