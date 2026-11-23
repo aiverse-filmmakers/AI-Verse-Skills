@@ -23,10 +23,18 @@ except ImportError:
 
 ADMISSION_SCHEMA_VERSION = 1
 ADMISSION_FILENAME = "admission.json"
-_TEXT_SUFFIXES = {
-    ".md", ".txt", ".json", ".yaml", ".yml", ".toml", ".py", ".js", ".ts",
-    ".sh", ".ps1", ".cmd", ".bat", ".html", ".xml", ".ini", ".cfg", ".env",
-}
+# Files are scanned whatever their name or extension (FL-26): a fixed list of text
+# suffixes let .jsx, .mjs, .cjs, .tsx, .rb and extensionless scripts through unread.
+# Only content that looks binary (a NUL byte near the start, as in fonts and images)
+# is skipped, because the text patterns below cannot match inside it meaningfully.
+_BINARY_SNIFF_BYTES = 8192
+
+
+def _looks_binary(path: Path) -> bool:
+    with path.open("rb") as handle:
+        return b"\x00" in handle.read(_BINARY_SNIFF_BYTES)
+
+
 _BIDI = {chr(x) for x in list(range(0x202A, 0x202F)) + list(range(0x2066, 0x206A))}
 _SECRET_PATTERNS = [
     ("private-key", re.compile(r"-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----")),
@@ -114,9 +122,9 @@ def scan_package(package_root: Path, *, max_text_bytes: int = 2_000_000) -> Dict
         if not path.is_file():
             continue
         files_scanned += 1
-        if path.suffix.lower() not in _TEXT_SUFFIXES and path.name != "SKILL.md":
-            continue
         try:
+            if _looks_binary(path):
+                continue
             size = path.stat().st_size
         except OSError:
             findings.append({"severity": "deny", "code": "unreadable-file", "path": rel_path.as_posix()})
